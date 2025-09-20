@@ -1,0 +1,15 @@
+{
+    "files": [
+        "app.py",
+        "window/form.ui",
+        "requirements.txt",
+        "window/ui_form.py",
+        ".qtcreator",
+        "install_service.py",
+        "components/server.py",
+        "arquivo_inicial",
+        "window/Uniq.ui",
+        "window/Clientes.ui",
+        "models/models.py"
+    ]
+}

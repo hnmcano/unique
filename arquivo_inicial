@@ -1,0 +1,437 @@
+
+class TicketPrinterApp(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Sistema de Impressão de Tickets")
+
+
+        # Cria um widget central e aplica o layout do UI
+        self.central_widget = QWidget()
+        self.setCentralWidget(self.central_widget)
+
+        # Instancia a UI
+        self.ui = Ui_TicketApp()
+        self.ui.setupUi(self.central_widget)
+
+        self.ui.label_data.setText(date)
+
+        # Lista para armazenar os itens
+        self.itens_pedido = []
+
+        # Configurações de entrega com taxas
+        self.config_entregas = {
+            "Retirada no Local": 0.00,
+            "Entrega Padrão (1-2h)": 5.00,
+            "Entrega Expressa (30-45min)": 10.00,
+            "Entrega Agendada": 7.00,
+            "Entrega Gratuita (acima de R$ 50)": 0.00
+        }
+
+        # Status do servidor
+        self.server_status = False
+        self.server_url = "http://localhost:5000"
+
+        self.setup_connections()
+        self.setup_items_ui()
+        self.setup_entregas()
+
+        if not HAS_WIN32:
+            self.ui.btn_preview.setEnabled(False)
+            self.ui.label_19.setText("pywin32 não instalado")
+
+    def setup_connections(self):
+        # Conectar botões
+        self.ui.btn_add_item.clicked.connect(self.adicionar_item)
+        self.ui.btn_enviar.clicked.connect(self.enviar_servidor)
+        self.ui.btn_preview.clicked.connect(self.previsualizar_ticket)
+        self.ui.btn_viacep.clicked.connect(self.buscar_cep)
+
+        # Conectar sinais de mudança
+        self.ui.taxa_input.textChanged.connect(self.calcular_totais)
+        self.ui.subtotal_input.textChanged.connect(self.verificar_entrega_gratuita)
+
+    def setup_entregas(self):
+        """Configura as opções de entrega no dropdown"""
+        # Limpa opções existentes
+        self.ui.previsao_input.clear()
+
+        # Adiciona opções de entrega
+        for entrega in self.config_entregas.keys():
+            self.ui.previsao_input.addItem(entrega)
+
+        # Conecta a mudança de seleção
+        self.ui.previsao_input.currentTextChanged.connect(self.atualizar_taxa_entrega)
+
+    def setup_items_ui(self):
+        # Layout para os campos de adição de item
+        self.item_layout = QVBoxLayout()
+
+        # Campos para novo item
+        item_widget = QWidget()
+        item_layout = QHBoxLayout(item_widget)
+
+        # Quantidade
+        self.quantidade_input = QLineEdit()
+        self.quantidade_input.setPlaceholderText("Qtd")
+        self.quantidade_input.setMaximumWidth(50)
+        item_layout.addWidget(QLabel("Qtd:"))
+        item_layout.addWidget(self.quantidade_input)
+
+        # Nome do item
+        self.nome_item_input = QLineEdit()
+        self.nome_item_input.setPlaceholderText("Nome do item")
+        item_layout.addWidget(QLabel("Item:"))
+        item_layout.addWidget(self.nome_item_input)
+
+        # Preço
+        self.preco_item_input = QLineEdit()
+        self.preco_item_input.setPlaceholderText("Preço")
+        self.preco_item_input.setMaximumWidth(80)
+        item_layout.addWidget(QLabel("Preço:"))
+        item_layout.addWidget(self.preco_item_input)
+
+        # Botão para adicionar
+        btn_add = QPushButton("+")
+        btn_add.clicked.connect(self.adicionar_item_ui)
+        btn_add.setMaximumWidth(30)
+        item_layout.addWidget(btn_add)
+
+        self.item_layout.addWidget(item_widget)
+
+        # Adiciona ao scroll area
+        if hasattr(self.ui, 'scrollAreaWidgetContents'):
+            self.ui.scrollAreaWidgetContents.layout().addLayout(self.item_layout)
+
+    def atualizar_taxa_entrega(self, entrega_selecionada):
+        """Atualiza a taxa de entrega baseado na seleção"""
+        try:
+            taxa = self.config_entregas.get(entrega_selecionada, 0.00)
+
+            # Verifica se é entrega gratuita e aplica condições
+            if entrega_selecionada == "Entrega Gratuita (acima de R$ 50)":
+                try:
+                    subtotal = float(self.ui.subtotal_input.text().replace(",", ".").replace("R$", "").strip())
+                    if subtotal >= 50.00:
+                        taxa = 0.00
+                    else:
+                        # Se subtotal for menor que R$ 50, mantém a taxa padrão ou define outra lógica
+                        taxa = 5.00  # Taxa padrão para pedidos abaixo de R$ 50
+                        self.ui.previsao_input.setCurrentText("Entrega Padrão (1-2h)")
+                except ValueError:
+                    taxa = 5.00
+
+            # Atualiza o campo de taxa
+            self.ui.taxa_input.setText(f"{taxa:.2f}")
+
+            # Recalcula totais
+            self.calcular_totais()
+
+        except Exception as e:
+            print(f"Erro ao atualizar taxa: {str(e)}")
+
+    def verificar_entrega_gratuita(self):
+        """Verifica se o subtotal qualifica para entrega gratuita"""
+        try:
+            subtotal_text = self.ui.subtotal_input.text().replace(",", ".").replace("R$", "").strip()
+            if not subtotal_text:
+                return
+
+            subtotal = float(subtotal_text)
+            entrega_atual = self.ui.previsao_input.currentText()
+
+            # Se o subtotal for >= 50, oferece entrega gratuita
+            if subtotal >= 50.00:
+                if "Entrega Gratuita" not in [self.ui.previsao_input.itemText(i) for i in range(self.ui.previsao_input.count())]:
+                    self.ui.previsao_input.addItem("Entrega Gratuita (acima de R$ 50)")
+
+                # Se já está selecionada a gratuita, atualiza taxa para 0
+                if entrega_atual == "Entrega Gratuita (acima de R$ 50)":
+                    self.ui.taxa_input.setText("0.00")
+                    self.calcular_totais()
+
+            # Se subtotal cai abaixo de 50, remove a opção gratuita se estiver selecionada
+            else:
+                if entrega_atual == "Entrega Gratuita (acima de R$ 50)":
+                    self.ui.previsao_input.setCurrentText("Entrega Padrão (1-2h)")
+
+                # Remove a opção gratuita do dropdown
+                index = self.ui.previsao_input.findText("Entrega Gratuita (acima de R$ 50)")
+                if index >= 0:
+                    self.ui.previsao_input.removeItem(index)
+
+        except ValueError:
+            pass
+
+    def adicionar_item_ui(self):
+        """Adiciona um item visualmente na interface"""
+        try:
+            quantidade = self.quantidade_input.text().strip()
+            nome = self.nome_item_input.text().strip()
+            preco = self.preco_item_input.text().strip()
+
+            if not quantidade or not nome or not preco:
+                QMessageBox.warning(self, "Aviso", "Preencha todos os campos do item!")
+                return
+
+            # Valida se quantidade é número
+            try:
+                int(quantidade)
+            except ValueError:
+                QMessageBox.warning(self, "Aviso", "Quantidade deve ser um número!")
+                return
+
+            # Valida se preço é número
+            try:
+                float(preco.replace(",", "."))
+            except ValueError:
+                QMessageBox.warning(self, "Aviso", "Preço deve ser um número válido!")
+                return
+
+            # Cria widget do item
+            item_widget = QWidget()
+            item_layout = QHBoxLayout(item_widget)
+            item_layout.setContentsMargins(0, 0, 0, 0)
+
+            # Labels do item
+            lbl_item = QLabel(f"{quantidade}x {nome} - R$ {preco}")
+            lbl_item.setStyleSheet("background-color: #f0f0f0; padding: 5px; border-radius: 3px;")
+
+            # Botão remover
+            btn_remover = QPushButton("×")
+            btn_remover.setMaximumWidth(30)
+            btn_remover.setStyleSheet("background-color: #ff4444; color: white; border: none;")
+            btn_remover.clicked.connect(lambda: self.remover_item(item_widget, quantidade, nome, preco))
+
+            item_layout.addWidget(lbl_item)
+            item_layout.addWidget(btn_remover)
+
+            # Adiciona ao layout
+            self.item_layout.addWidget(item_widget)
+
+            # Adiciona à lista de itens
+            self.itens_pedido.append({
+                "quantidade": quantidade,
+                "nome": nome,
+                "preco": preco
+            })
+
+            # Limpa os campos
+            self.quantidade_input.clear()
+            self.nome_item_input.clear()
+            self.preco_item_input.clear()
+
+            # Atualiza totais
+            self.calcular_totais()
+            self.verificar_entrega_gratuita()
+
+        except Exception as e:
+            QMessageBox.critical(self, "Erro", f"Erro ao adicionar item: {str(e)}")
+
+    def remover_item(self, widget, quantidade, nome, preco):
+        """Remove um item da lista"""
+        try:
+            # Remove da lista
+            for item in self.itens_pedido[:]:
+                if (item["quantidade"] == quantidade and
+                    item["nome"] == nome and
+                    item["preco"] == preco):
+                    self.itens_pedido.remove(item)
+                    break
+
+            # Remove da interface
+            self.item_layout.removeWidget(widget)
+            widget.deleteLater()
+
+            # Atualiza totais
+            self.calcular_totais()
+            self.verificar_entrega_gratuita()
+
+        except Exception as e:
+            QMessageBox.critical(self, "Erro", f"Erro ao remover item: {str(e)}")
+
+    def calcular_totais(self):
+        """Calcula subtotal, taxa e total"""
+        try:
+            subtotal = 0.0
+
+            for item in self.itens_pedido:
+                try:
+                    preco = float(item["preco"].replace(",", ".").replace("R$", "").strip())
+                    quantidade = float(item["quantidade"])
+                    subtotal += preco * quantidade
+                except ValueError:
+                    continue
+
+            # Atualiza o subtotal
+            self.ui.subtotal_input.setText(f"{subtotal:.2f}")
+
+            # Pega a taxa de entrega
+            try:
+                taxa_text = self.ui.taxa_input.text().replace(",", ".").replace("R$", "").strip()
+                taxa = float(taxa_text) if taxa_text else 0.0
+            except ValueError:
+                taxa = 0.0
+
+            # Calcula total
+            total = subtotal + taxa
+            self.ui.total_input.setText(f"{total:.2f}")
+
+        except Exception as e:
+            print(f"Erro no cálculo: {str(e)}")
+
+    def adicionar_item(self):
+        """Método original - agora chama a adição UI"""
+        self.adicionar_item_ui()
+
+    def previsualizar_ticket(self):
+        """Gera pré-visualização do ticket"""
+        try:
+            preview_text = "=== PRÉ-VISUALIZAÇÃO DO TICKET ===\n\n"
+            preview_text += f"Loja: {self.ui.label_titulo.text()}\n"
+            preview_text += f"Data: {self.ui.label_data.text()}\n"
+            preview_text += f"Pedido: {self.ui.pedido_input.text()}\n"
+            preview_text += f"Cliente: {self.ui.cliente_input.text()}\n"
+            preview_text += f"Entrega: {self.ui.previsao_input.currentText()}\n\n"
+
+            preview_text += "ITENS:\n"
+            for item in self.itens_pedido:
+                preview_text += f"{item['quantidade']}x {item['nome']} - R$ {item['preco']}\n"
+
+            preview_text += f"\nSubtotal: R$ {self.ui.subtotal_input.text()}\n"
+            preview_text += f"Taxa de Entrega: R$ {self.ui.taxa_input.text()}\n"
+            preview_text += f"Total: R$ {self.ui.total_input.text()}\n"
+
+            self.ui.preview_area.setPlainText(preview_text)
+
+        except Exception as e:
+            QMessageBox.critical(self, "Erro", f"Erro na pré-visualização: {str(e)}")
+
+    def enviar_servidor(self):
+        """Envia os dados para o servidor Flask"""
+        if not self.server_status:
+            QMessageBox.warning(self, "Servidor Offline",
+                               "O servidor não está rodando. Clique em 'Iniciar Servidor' primeiro.")
+            return
+
+        try:
+            dados = self.get_dados_ticket()
+
+            # Prepara os dados no formato que o servidor espera
+            dados_servidor = {
+                "nome_loja": dados["nome_loja"],
+                "pedido": dados["pedido"],
+                "data": dados["data"],
+                "entrega": {
+                    "cep": dados["cep"],
+                    "endereco": dados["endereco"],
+                    "bairro": dados["bairro"],
+                    "complemento": dados["complemento"],
+                    "ref": dados["ref"],
+                    "cidade": dados["cidade"],
+                    "previsao": dados["previsao_entrega"]
+                },
+                "cliente": {
+                    "nome": dados["cliente"],
+                    "email": dados["email"],
+                    "telefone": dados["telefone"]
+                },
+                "itens": dados["itens"],
+                "subtotal": dados["subtotal"],
+                "taxa": dados["taxa_entrega"],
+                "total": dados["total"],
+                "pagamento": dados["pagamento"],
+                "observacoes": dados["observacoes"],
+                "cpf": dados["cpf"]
+            }
+
+            response = requests.post(f"{self.server_url}/imprimir_ticket",
+                                   json=dados_servidor, timeout=10)
+
+            if response.status_code == 200:
+                resultado = response.json()
+                self.ui.label_19.setText(resultado.get("mensagem", "Enviado com sucesso!"))
+                QMessageBox.information(self, "Sucesso", "Ticket enviado para impressão!")
+            else:
+                self.ui.label_19.setText(f"Erro no servidor: {response.status_code}")
+                QMessageBox.critical(self, "Erro", f"Erro no servidor: {response.status_code}")
+
+        except requests.exceptions.ConnectionError:
+            self.ui.label_19.setText("Servidor offline")
+            QMessageBox.critical(self, "Erro", "Não foi possível conectar ao servidor.")
+            self.check_server_status()
+
+        except Exception as e:
+            self.ui.label_19.setText(f"Erro: {str(e)}")
+            QMessageBox.critical(self, "Erro", f"Erro ao enviar: {str(e)}")
+
+    def buscar_cep(self):
+        """Busca CEP usando ViaCEP"""
+        try:
+            cep = self.ui.cepinput.text().replace("-", "").replace(".", "").strip()
+            if len(cep) != 8:
+                QMessageBox.warning(self, "CEP Inválido", "Digite um CEP válido com 8 dígitos")
+                return
+
+            response = requests.get(f"https://viacep.com.br/ws/{cep}/json/")
+            if response.status_code == 200:
+                data = response.json()
+                if "erro" not in data:
+                    self.ui.endereco_input.setText(data.get("logradouro", ""))
+                    self.ui.bairro_input.setText(data.get("bairro", ""))
+                    self.ui.cidade_input.setText(f"{data.get('localidade', '')}/{data.get('uf', '')}")
+                    self.ui.resultado_cep.setText("CEP encontrado!")
+                else:
+                    QMessageBox.warning(self, "CEP não encontrado", "O CEP informado não foi encontrado")
+            else:
+                QMessageBox.critical(self, "Erro", "Falha ao buscar CEP")
+
+        except Exception as e:
+            QMessageBox.critical(self, "Erro", f"Erro na busca do CEP: {str(e)}")
+
+    def get_dados_ticket(self):
+        """Retorna todos os dados do formulário"""
+        return {
+            "nome_loja": self.ui.label_titulo.text(),
+            "data": self.ui.label_data.text(),
+            "pedido": self.ui.pedido_input.text(),
+            "cliente": self.ui.cliente_input.text(),
+            "email": self.ui.email_input.text(),
+            "telefone": self.ui.telefone_input.text(),
+            "cep": self.ui.cepinput.text(),
+            "endereco": self.ui.endereco_input.text(),
+            "bairro": self.ui.bairro_input.text(),
+            "complemento": self.ui.complemento_input.text(),
+            "ref": self.ui.ref_input.text(),
+            "cidade": self.ui.cidade_input.text(),
+            "previsao_entrega": self.ui.previsao_input.currentText(),
+            "taxa_entrega": self.ui.taxa_input.text(),
+            "itens": self.itens_pedido,
+            "subtotal": self.ui.subtotal_input.text(),
+            "total": self.ui.total_input.text(),
+            "pagamento": self.ui.pagamento_input.text(),
+            "observacoes": self.ui.obs_input.toPlainText(),
+            "cpf": self.ui.cpf_input.text()
+        }
+
+    def limpar_campos(self):
+        """Limpa todos os campos"""
+        # Limpa campos de texto
+        for widget in self.central_widget.findChildren(QLineEdit):
+            widget.clear()
+
+        # Limpa text edit
+        self.ui.obs_input.clear()
+        self.ui.preview_area.clear()
+
+        # Limpa itens
+        for i in reversed(range(self.item_layout.count())):
+            widget = self.item_layout.itemAt(i).widget()
+            if widget:
+                widget.deleteLater()
+
+        # Reseta dropdown de entrega
+        self.ui.previsao_input.setCurrentIndex(0)
+        self.setup_entregas()
+
+        self.itens_pedido.clear()
+        self.ui.label_19.setText("Campos limpos")
