@@ -23,7 +23,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(519, 600)
+        MainWindow.resize(519, 610)
         palette = QPalette()
         brush = QBrush(QColor(255, 255, 255, 255))
         brush.setStyle(Qt.BrushStyle.SolidPattern)
@@ -99,7 +99,26 @@ class Ui_MainWindow(object):
         palette.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.Accent, brush1)
 #endif
         MainWindow.setPalette(palette)
-        MainWindow.setStyleSheet(u"background-color: rgb(0, 0, 0);")
+        MainWindow.setStyleSheet(u"QLineEdit{\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"        stop: 0 #000000, stop: 1 #000000);\n"
+"    color: white;\n"
+"    border: 1px solid red;\n"
+"    padding: 4px 2px;\n"
+"    border-radius: 8px;\n"
+"    font-weight: bold;\n"
+"    font-size: 10px;\n"
+"}\n"
+"\n"
+"QLineEdit:hover {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"        stop: 0 #4e4e4e, stop: 1 #4e4e4e);\n"
+"}\n"
+"\n"
+"QLineEdit:pressed {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"        stop: 0 #1a5fb4, stop: 1 #4a00e0);\n"
+"}")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         palette1 = QPalette()
@@ -180,31 +199,52 @@ class Ui_MainWindow(object):
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.widget = QWidget(self.centralwidget)
         self.widget.setObjectName(u"widget")
-        self.widget.setMaximumSize(QSize(16777215, 75))
+        self.widget.setMaximumSize(QSize(16777215, 90))
         palette2 = QPalette()
         palette2.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.WindowText, brush1)
-        palette2.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.Button, brush1)
-        brush8 = QBrush(QColor(255, 0, 0, 255))
-        brush8.setStyle(Qt.BrushStyle.SolidPattern)
-        palette2.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.Light, brush8)
-        brush9 = QBrush(QColor(212, 0, 0, 255))
+        gradient = QLinearGradient(0, 0, 0, 1)
+        gradient.setSpread(QGradient.Spread.PadSpread)
+        gradient.setCoordinateMode(QGradient.CoordinateMode.ObjectBoundingMode)
+        gradient.setColorAt(0, QColor(0, 0, 0, 255))
+        gradient.setColorAt(0.5, QColor(0, 0, 0, 255))
+        gradient.setColorAt(1, QColor(0, 0, 0, 255))
+        brush8 = QBrush(gradient)
+        palette2.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.Button, brush8)
+        brush9 = QBrush(QColor(255, 0, 0, 255))
         brush9.setStyle(Qt.BrushStyle.SolidPattern)
-        palette2.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.Midlight, brush9)
-        brush10 = QBrush(QColor(85, 0, 0, 255))
+        palette2.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.Light, brush9)
+        brush10 = QBrush(QColor(212, 0, 0, 255))
         brush10.setStyle(Qt.BrushStyle.SolidPattern)
-        palette2.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.Dark, brush10)
-        brush11 = QBrush(QColor(113, 0, 0, 255))
+        palette2.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.Midlight, brush10)
+        brush11 = QBrush(QColor(85, 0, 0, 255))
         brush11.setStyle(Qt.BrushStyle.SolidPattern)
-        palette2.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.Mid, brush11)
+        palette2.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.Dark, brush11)
+        brush12 = QBrush(QColor(113, 0, 0, 255))
+        brush12.setStyle(Qt.BrushStyle.SolidPattern)
+        palette2.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.Mid, brush12)
         palette2.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.Text, brush1)
         palette2.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.BrightText, brush)
         palette2.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.ButtonText, brush1)
-        palette2.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.Base, brush1)
-        palette2.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.Window, brush1)
+        gradient1 = QLinearGradient(0, 0, 0, 1)
+        gradient1.setSpread(QGradient.Spread.PadSpread)
+        gradient1.setCoordinateMode(QGradient.CoordinateMode.ObjectBoundingMode)
+        gradient1.setColorAt(0, QColor(0, 0, 0, 255))
+        gradient1.setColorAt(0.5, QColor(0, 0, 0, 255))
+        gradient1.setColorAt(1, QColor(0, 0, 0, 255))
+        brush13 = QBrush(gradient1)
+        palette2.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.Base, brush13)
+        gradient2 = QLinearGradient(0, 0, 0, 1)
+        gradient2.setSpread(QGradient.Spread.PadSpread)
+        gradient2.setCoordinateMode(QGradient.CoordinateMode.ObjectBoundingMode)
+        gradient2.setColorAt(0, QColor(0, 0, 0, 255))
+        gradient2.setColorAt(0.5, QColor(0, 0, 0, 255))
+        gradient2.setColorAt(1, QColor(0, 0, 0, 255))
+        brush14 = QBrush(gradient2)
+        palette2.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.Window, brush14)
         palette2.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.Shadow, brush1)
-        brush12 = QBrush(QColor(212, 127, 127, 255))
-        brush12.setStyle(Qt.BrushStyle.SolidPattern)
-        palette2.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.AlternateBase, brush12)
+        brush15 = QBrush(QColor(212, 127, 127, 255))
+        brush15.setStyle(Qt.BrushStyle.SolidPattern)
+        palette2.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.AlternateBase, brush15)
         palette2.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.ToolTipBase, brush2)
         palette2.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.ToolTipText, brush1)
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
@@ -214,18 +254,39 @@ class Ui_MainWindow(object):
         palette2.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.Accent, brush)
 #endif
         palette2.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.WindowText, brush1)
-        palette2.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.Button, brush1)
-        palette2.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.Light, brush8)
-        palette2.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.Midlight, brush9)
-        palette2.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.Dark, brush10)
-        palette2.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.Mid, brush11)
+        gradient3 = QLinearGradient(0, 0, 0, 1)
+        gradient3.setSpread(QGradient.Spread.PadSpread)
+        gradient3.setCoordinateMode(QGradient.CoordinateMode.ObjectBoundingMode)
+        gradient3.setColorAt(0, QColor(0, 0, 0, 255))
+        gradient3.setColorAt(0.5, QColor(0, 0, 0, 255))
+        gradient3.setColorAt(1, QColor(0, 0, 0, 255))
+        brush16 = QBrush(gradient3)
+        palette2.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.Button, brush16)
+        palette2.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.Light, brush9)
+        palette2.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.Midlight, brush10)
+        palette2.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.Dark, brush11)
+        palette2.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.Mid, brush12)
         palette2.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.Text, brush1)
         palette2.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.BrightText, brush)
         palette2.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.ButtonText, brush1)
-        palette2.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.Base, brush1)
-        palette2.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.Window, brush1)
+        gradient4 = QLinearGradient(0, 0, 0, 1)
+        gradient4.setSpread(QGradient.Spread.PadSpread)
+        gradient4.setCoordinateMode(QGradient.CoordinateMode.ObjectBoundingMode)
+        gradient4.setColorAt(0, QColor(0, 0, 0, 255))
+        gradient4.setColorAt(0.5, QColor(0, 0, 0, 255))
+        gradient4.setColorAt(1, QColor(0, 0, 0, 255))
+        brush17 = QBrush(gradient4)
+        palette2.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.Base, brush17)
+        gradient5 = QLinearGradient(0, 0, 0, 1)
+        gradient5.setSpread(QGradient.Spread.PadSpread)
+        gradient5.setCoordinateMode(QGradient.CoordinateMode.ObjectBoundingMode)
+        gradient5.setColorAt(0, QColor(0, 0, 0, 255))
+        gradient5.setColorAt(0.5, QColor(0, 0, 0, 255))
+        gradient5.setColorAt(1, QColor(0, 0, 0, 255))
+        brush18 = QBrush(gradient5)
+        palette2.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.Window, brush18)
         palette2.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.Shadow, brush1)
-        palette2.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.AlternateBase, brush12)
+        palette2.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.AlternateBase, brush15)
         palette2.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.ToolTipBase, brush2)
         palette2.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.ToolTipText, brush1)
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
@@ -234,39 +295,83 @@ class Ui_MainWindow(object):
 #if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
         palette2.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.Accent, brush)
 #endif
-        palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText, brush10)
-        palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.Button, brush1)
-        palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.Light, brush8)
-        palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.Midlight, brush9)
-        palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.Dark, brush10)
-        palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.Mid, brush11)
-        palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.Text, brush10)
+        palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText, brush11)
+        gradient6 = QLinearGradient(0, 0, 0, 1)
+        gradient6.setSpread(QGradient.Spread.PadSpread)
+        gradient6.setCoordinateMode(QGradient.CoordinateMode.ObjectBoundingMode)
+        gradient6.setColorAt(0, QColor(0, 0, 0, 255))
+        gradient6.setColorAt(0.5, QColor(0, 0, 0, 255))
+        gradient6.setColorAt(1, QColor(0, 0, 0, 255))
+        brush19 = QBrush(gradient6)
+        palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.Button, brush19)
+        palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.Light, brush9)
+        palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.Midlight, brush10)
+        palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.Dark, brush11)
+        palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.Mid, brush12)
+        palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.Text, brush11)
         palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.BrightText, brush)
-        palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.ButtonText, brush10)
-        palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.Base, brush1)
-        palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.Window, brush1)
+        palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.ButtonText, brush11)
+        gradient7 = QLinearGradient(0, 0, 0, 1)
+        gradient7.setSpread(QGradient.Spread.PadSpread)
+        gradient7.setCoordinateMode(QGradient.CoordinateMode.ObjectBoundingMode)
+        gradient7.setColorAt(0, QColor(0, 0, 0, 255))
+        gradient7.setColorAt(0.5, QColor(0, 0, 0, 255))
+        gradient7.setColorAt(1, QColor(0, 0, 0, 255))
+        brush20 = QBrush(gradient7)
+        palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.Base, brush20)
+        gradient8 = QLinearGradient(0, 0, 0, 1)
+        gradient8.setSpread(QGradient.Spread.PadSpread)
+        gradient8.setCoordinateMode(QGradient.CoordinateMode.ObjectBoundingMode)
+        gradient8.setColorAt(0, QColor(0, 0, 0, 255))
+        gradient8.setColorAt(0.5, QColor(0, 0, 0, 255))
+        gradient8.setColorAt(1, QColor(0, 0, 0, 255))
+        brush21 = QBrush(gradient8)
+        palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.Window, brush21)
         palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.Shadow, brush1)
-        brush13 = QBrush(QColor(170, 0, 0, 255))
-        brush13.setStyle(Qt.BrushStyle.SolidPattern)
-        palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.AlternateBase, brush13)
+        brush22 = QBrush(QColor(170, 0, 0, 255))
+        brush22.setStyle(Qt.BrushStyle.SolidPattern)
+        palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.AlternateBase, brush22)
         palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.ToolTipBase, brush2)
         palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.ToolTipText, brush1)
-        brush14 = QBrush(QColor(85, 0, 0, 127))
-        brush14.setStyle(Qt.BrushStyle.SolidPattern)
+        brush23 = QBrush(QColor(85, 0, 0, 127))
+        brush23.setStyle(Qt.BrushStyle.SolidPattern)
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.PlaceholderText, brush14)
+        palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.PlaceholderText, brush23)
 #endif
-        brush15 = QBrush(QColor(221, 0, 0, 255))
-        brush15.setStyle(Qt.BrushStyle.SolidPattern)
+        brush24 = QBrush(QColor(221, 0, 0, 255))
+        brush24.setStyle(Qt.BrushStyle.SolidPattern)
 #if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
-        palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.Accent, brush15)
+        palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.Accent, brush24)
 #endif
         self.widget.setPalette(palette2)
-        self.widget.setStyleSheet(u"background-color: rgb(0, 0, 0);\n"
-"color: white;")
+        self.widget.setStyleSheet(u"QWidget {\n"
+"	background-color: rgb(0, 0, 0);\n"
+"    border-bottom: 1px solid red;\n"
+"    \n"
+"    /* Gradiente para profundidade */\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"        stop: 0 #000000, \n"
+"        stop: 0.5 #000000,\n"
+"        stop: 1 #000000);\n"
+"    \n"
+"    /* Sombra externa para efeito 3D */\n"
+"    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2),\n"
+"                -1px -1px 2px rgba(255, 255, 255, 0.3);\n"
+"}")
+        self.horizontalLayout_3 = QHBoxLayout(self.widget)
+        self.horizontalLayout_3.setSpacing(0)
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
         self.label = QLabel(self.widget)
         self.label.setObjectName(u"label")
-        self.label.setGeometry(QRect(9, 9, 132, 16))
+        font = QFont()
+        font.setFamilies([u"Monotype Corsiva"])
+        font.setPointSize(45)
+        self.label.setFont(font)
+        self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.horizontalLayout_3.addWidget(self.label)
+
 
         self.verticalLayout.addWidget(self.widget)
 
@@ -294,17 +399,13 @@ class Ui_MainWindow(object):
         self.frame_2.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame_2.setFrameShadow(QFrame.Shadow.Raised)
         self.gridLayout_2 = QGridLayout(self.frame_2)
+        self.gridLayout_2.setSpacing(9)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.email_input = QLineEdit(self.frame_2)
-        self.email_input.setObjectName(u"email_input")
-        self.email_input.setStyleSheet(u"border: 1px solid red;")
+        self.gridLayout_2.setContentsMargins(9, 9, 9, 9)
+        self.label_telefone = QLabel(self.frame_2)
+        self.label_telefone.setObjectName(u"label_telefone")
 
-        self.gridLayout_2.addWidget(self.email_input, 3, 1, 1, 1)
-
-        self.label_email = QLabel(self.frame_2)
-        self.label_email.setObjectName(u"label_email")
-
-        self.gridLayout_2.addWidget(self.label_email, 3, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.label_telefone, 1, 0, 1, 1)
 
         self.telefone_input = QLineEdit(self.frame_2)
         self.telefone_input.setObjectName(u"telefone_input")
@@ -312,22 +413,47 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2.addWidget(self.telefone_input, 1, 1, 1, 1)
 
-        self.label_telefone = QLabel(self.frame_2)
-        self.label_telefone.setObjectName(u"label_telefone")
+        self.label_email = QLabel(self.frame_2)
+        self.label_email.setObjectName(u"label_email")
 
-        self.gridLayout_2.addWidget(self.label_telefone, 1, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.label_email, 3, 0, 1, 1)
+
+        self.nome_input = QLineEdit(self.frame_2)
+        self.nome_input.setObjectName(u"nome_input")
+        self.nome_input.setStyleSheet(u"QPushButton {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"        stop: 0 #000000, stop: 1 #000000);\n"
+"    color: white;\n"
+"    border: 1px solid red;\n"
+"    padding: 12px 24px;\n"
+"    border-radius: 8px;\n"
+"    font-weight: bold;\n"
+"    font-size: 14px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"        stop: 0 #4e4e4e, stop: 1 #4e4e4e);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"        stop: 0 #1a5fb4, stop: 1 #4a00e0);\n"
+"}")
+        self.nome_input.setCursorPosition(0)
+
+        self.gridLayout_2.addWidget(self.nome_input, 0, 1, 1, 1)
 
         self.label_nome = QLabel(self.frame_2)
         self.label_nome.setObjectName(u"label_nome")
 
         self.gridLayout_2.addWidget(self.label_nome, 0, 0, 1, 1)
 
-        self.nome_input = QLineEdit(self.frame_2)
-        self.nome_input.setObjectName(u"nome_input")
-        self.nome_input.setStyleSheet(u"border: 1px solid red;")
-        self.nome_input.setCursorPosition(0)
+        self.email_input = QLineEdit(self.frame_2)
+        self.email_input.setObjectName(u"email_input")
+        self.email_input.setStyleSheet(u"border: 1px solid red;")
 
-        self.gridLayout_2.addWidget(self.nome_input, 0, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.email_input, 3, 1, 1, 1)
 
 
         self.verticalLayout_2.addWidget(self.frame_2)
@@ -340,47 +466,32 @@ class Ui_MainWindow(object):
         self.gridLayout_3 = QGridLayout(self.frame)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
         self.gridLayout_3.setContentsMargins(9, -1, -1, -1)
-        self.label_22 = QLabel(self.frame)
-        self.label_22.setObjectName(u"label_22")
-
-        self.gridLayout_3.addWidget(self.label_22, 2, 1, 1, 1)
-
-        self.cepinput_2 = QLineEdit(self.frame)
-        self.cepinput_2.setObjectName(u"cepinput_2")
-        self.cepinput_2.setStyleSheet(u"border: 1px solid red;")
-
-        self.gridLayout_3.addWidget(self.cepinput_2, 0, 2, 1, 1)
-
-        self.endereco_input_2 = QLineEdit(self.frame)
-        self.endereco_input_2.setObjectName(u"endereco_input_2")
-        self.endereco_input_2.setStyleSheet(u"border: 1px solid red;")
-
-        self.gridLayout_3.addWidget(self.endereco_input_2, 2, 2, 1, 1)
-
-        self.label_29 = QLabel(self.frame)
-        self.label_29.setObjectName(u"label_29")
-
-        self.gridLayout_3.addWidget(self.label_29, 9, 1, 1, 1)
-
-        self.label_25 = QLabel(self.frame)
+        self.frame_3 = QFrame(self.frame)
+        self.frame_3.setObjectName(u"frame_3")
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.frame_3.sizePolicy().hasHeightForWidth())
+        self.frame_3.setSizePolicy(sizePolicy)
+        self.frame_3.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_3.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout = QHBoxLayout(self.frame_3)
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.label_25 = QLabel(self.frame_3)
         self.label_25.setObjectName(u"label_25")
 
-        self.gridLayout_3.addWidget(self.label_25, 0, 1, 1, 1)
+        self.horizontalLayout.addWidget(self.label_25)
 
-        self.label_28 = QLabel(self.frame)
-        self.label_28.setObjectName(u"label_28")
+        self.cepinput = QLineEdit(self.frame_3)
+        self.cepinput.setObjectName(u"cepinput")
+        self.cepinput.setStyleSheet(u"border: 1px solid red;")
 
-        self.gridLayout_3.addWidget(self.label_28, 8, 1, 1, 1)
+        self.horizontalLayout.addWidget(self.cepinput)
 
-        self.label_27 = QLabel(self.frame)
-        self.label_27.setObjectName(u"label_27")
-
-        self.gridLayout_3.addWidget(self.label_27, 5, 1, 1, 1)
-
-        self.btn_viacep_2 = QPushButton(self.frame)
-        self.btn_viacep_2.setObjectName(u"btn_viacep_2")
-        self.btn_viacep_2.setEnabled(True)
-        self.btn_viacep_2.setStyleSheet(u"QPushButton {\n"
+        self.btn_viacep = QPushButton(self.frame_3)
+        self.btn_viacep.setObjectName(u"btn_viacep")
+        self.btn_viacep.setEnabled(True)
+        self.btn_viacep.setStyleSheet(u"QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
 "        stop: 0 #000000, stop: 1 #000000);\n"
 "    color: white;\n"
@@ -401,36 +512,65 @@ class Ui_MainWindow(object):
 "        stop: 0 #1a5fb4, stop: 1 #4a00e0);\n"
 "}")
 
-        self.gridLayout_3.addWidget(self.btn_viacep_2, 0, 7, 1, 1)
+        self.horizontalLayout.addWidget(self.btn_viacep)
 
-        self.cidade_input_2 = QLineEdit(self.frame)
-        self.cidade_input_2.setObjectName(u"cidade_input_2")
-        self.cidade_input_2.setStyleSheet(u"border: 1px solid red;")
 
-        self.gridLayout_3.addWidget(self.cidade_input_2, 6, 2, 1, 1)
+        self.gridLayout_3.addWidget(self.frame_3, 0, 0, 1, 3)
 
-        self.cliente_input = QLineEdit(self.frame)
-        self.cliente_input.setObjectName(u"cliente_input")
-        self.cliente_input.setStyleSheet(u"border: 1px solid red;")
+        self.complemento_input = QLineEdit(self.frame)
+        self.complemento_input.setObjectName(u"complemento_input")
+        self.complemento_input.setStyleSheet(u"border: 1px solid red;")
 
-        self.gridLayout_3.addWidget(self.cliente_input, 5, 2, 1, 1)
+        self.gridLayout_3.addWidget(self.complemento_input, 10, 1, 1, 1)
+
+        self.label_28 = QLabel(self.frame)
+        self.label_28.setObjectName(u"label_28")
+
+        self.gridLayout_3.addWidget(self.label_28, 10, 0, 1, 1)
+
+        self.endereco_input = QLineEdit(self.frame)
+        self.endereco_input.setObjectName(u"endereco_input")
+        self.endereco_input.setStyleSheet(u"border: 1px solid red;")
+
+        self.gridLayout_3.addWidget(self.endereco_input, 3, 1, 1, 1)
+
+        self.bairro_input = QLineEdit(self.frame)
+        self.bairro_input.setObjectName(u"bairro_input")
+        self.bairro_input.setStyleSheet(u"border: 1px solid red;")
+
+        self.gridLayout_3.addWidget(self.bairro_input, 7, 1, 1, 1)
 
         self.label_30 = QLabel(self.frame)
         self.label_30.setObjectName(u"label_30")
 
-        self.gridLayout_3.addWidget(self.label_30, 6, 1, 1, 1)
+        self.gridLayout_3.addWidget(self.label_30, 8, 0, 1, 1)
 
-        self.complemento_input_2 = QLineEdit(self.frame)
-        self.complemento_input_2.setObjectName(u"complemento_input_2")
-        self.complemento_input_2.setStyleSheet(u"border: 1px solid red;")
+        self.cidade_input = QLineEdit(self.frame)
+        self.cidade_input.setObjectName(u"cidade_input")
+        self.cidade_input.setStyleSheet(u"border: 1px solid red;")
 
-        self.gridLayout_3.addWidget(self.complemento_input_2, 9, 2, 1, 1)
+        self.gridLayout_3.addWidget(self.cidade_input, 8, 1, 1, 1)
 
-        self.telefone_input_2 = QLineEdit(self.frame)
-        self.telefone_input_2.setObjectName(u"telefone_input_2")
-        self.telefone_input_2.setStyleSheet(u"border: 1px solid red;")
+        self.label_27 = QLabel(self.frame)
+        self.label_27.setObjectName(u"label_27")
 
-        self.gridLayout_3.addWidget(self.telefone_input_2, 8, 2, 1, 1)
+        self.gridLayout_3.addWidget(self.label_27, 7, 0, 1, 1)
+
+        self.label_22 = QLabel(self.frame)
+        self.label_22.setObjectName(u"label_22")
+
+        self.gridLayout_3.addWidget(self.label_22, 3, 0, 1, 1)
+
+        self.referencia_input = QLineEdit(self.frame)
+        self.referencia_input.setObjectName(u"referencia_input")
+        self.referencia_input.setStyleSheet(u"border: 1px solid red;")
+
+        self.gridLayout_3.addWidget(self.referencia_input, 11, 1, 1, 1)
+
+        self.label_29 = QLabel(self.frame)
+        self.label_29.setObjectName(u"label_29")
+
+        self.gridLayout_3.addWidget(self.label_29, 11, 0, 1, 1)
 
 
         self.verticalLayout_2.addWidget(self.frame)
@@ -531,14 +671,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         QWidget.setTabOrder(self.nome_input, self.telefone_input)
         QWidget.setTabOrder(self.telefone_input, self.email_input)
-        QWidget.setTabOrder(self.email_input, self.cepinput_2)
-        QWidget.setTabOrder(self.cepinput_2, self.btn_viacep_2)
-        QWidget.setTabOrder(self.btn_viacep_2, self.endereco_input_2)
-        QWidget.setTabOrder(self.endereco_input_2, self.cliente_input)
-        QWidget.setTabOrder(self.cliente_input, self.cidade_input_2)
-        QWidget.setTabOrder(self.cidade_input_2, self.telefone_input_2)
-        QWidget.setTabOrder(self.telefone_input_2, self.complemento_input_2)
-        QWidget.setTabOrder(self.complemento_input_2, self.cad_clientes)
+        QWidget.setTabOrder(self.email_input, self.cad_clientes)
         QWidget.setTabOrder(self.cad_clientes, self.pushButton_2)
         QWidget.setTabOrder(self.pushButton_2, self.pushButton_3)
 
@@ -549,19 +682,19 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.label.setText(QCoreApplication.translate("MainWindow", u"CADASTRO DE CLIENTES", None))
-        self.label_email.setText(QCoreApplication.translate("MainWindow", u"E-mail:", None))
+        self.label.setText(QCoreApplication.translate("MainWindow", u"Cadastro de Clientes", None))
         self.label_telefone.setText(QCoreApplication.translate("MainWindow", u"Telefone:", None))
+        self.label_email.setText(QCoreApplication.translate("MainWindow", u"E-mail:", None))
         self.label_nome.setText(QCoreApplication.translate("MainWindow", u"Cliente:", None))
-        self.label_22.setText(QCoreApplication.translate("MainWindow", u"Endere\u00e7o:", None))
-        self.cepinput_2.setText(QCoreApplication.translate("MainWindow", u"17031728", None))
-        self.cepinput_2.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Digite seu CEP aqui...", None))
-        self.label_29.setText(QCoreApplication.translate("MainWindow", u"Ref:", None))
         self.label_25.setText(QCoreApplication.translate("MainWindow", u"Cep:", None))
+        self.cepinput.setText("")
+        self.cepinput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Digite seu CEP aqui...", None))
+        self.btn_viacep.setText(QCoreApplication.translate("MainWindow", u"Buscar", None))
         self.label_28.setText(QCoreApplication.translate("MainWindow", u"Complemento:", None))
-        self.label_27.setText(QCoreApplication.translate("MainWindow", u"Bairro:", None))
-        self.btn_viacep_2.setText(QCoreApplication.translate("MainWindow", u"Buscar", None))
         self.label_30.setText(QCoreApplication.translate("MainWindow", u"Cidade:", None))
+        self.label_27.setText(QCoreApplication.translate("MainWindow", u"Bairro:", None))
+        self.label_22.setText(QCoreApplication.translate("MainWindow", u"Endere\u00e7o:", None))
+        self.label_29.setText(QCoreApplication.translate("MainWindow", u"Ref:", None))
         self.cad_clientes.setText(QCoreApplication.translate("MainWindow", u"PushButton", None))
         self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"PushButton", None))
         self.pushButton_3.setText(QCoreApplication.translate("MainWindow", u"PushButton", None))

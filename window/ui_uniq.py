@@ -15,9 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMainWindow,
-    QMenuBar, QPushButton, QSizePolicy, QStackedWidget,
-    QStatusBar, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QHBoxLayout, QHeaderView, QLabel,
+    QMainWindow, QMenuBar, QPushButton, QSizePolicy,
+    QStackedWidget, QStatusBar, QTableWidget, QTableWidgetItem,
+    QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -170,9 +171,9 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_2.addWidget(self.btn_mesas)
 
-        self.btn_produtto = QPushButton(self.widget)
-        self.btn_produtto.setObjectName(u"btn_produtto")
-        self.btn_produtto.setStyleSheet(u"QPushButton {\n"
+        self.btn_produtos = QPushButton(self.widget)
+        self.btn_produtos.setObjectName(u"btn_produtos")
+        self.btn_produtos.setStyleSheet(u"QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
 "        stop: 0 #000000, stop: 1 #000000);\n"
 "    color: white;\n"
@@ -193,10 +194,10 @@ class Ui_MainWindow(object):
 "        stop: 0 #1a5fb4, stop: 1 #4a00e0);\n"
 "}")
         icon4 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.Computer))
-        self.btn_produtto.setIcon(icon4)
-        self.btn_produtto.setIconSize(QSize(35, 35))
+        self.btn_produtos.setIcon(icon4)
+        self.btn_produtos.setIconSize(QSize(35, 35))
 
-        self.horizontalLayout_2.addWidget(self.btn_produtto)
+        self.horizontalLayout_2.addWidget(self.btn_produtos)
 
         self.btn_loggout = QPushButton(self.widget)
         self.btn_loggout.setObjectName(u"btn_loggout")
@@ -232,9 +233,16 @@ class Ui_MainWindow(object):
 
         self.stackedWidget_container = QStackedWidget(self.centralwidget)
         self.stackedWidget_container.setObjectName(u"stackedWidget_container")
-        self.stackedWidget_2Page1 = QWidget()
-        self.stackedWidget_2Page1.setObjectName(u"stackedWidget_2Page1")
-        self.stackedWidget_container.addWidget(self.stackedWidget_2Page1)
+        self.Produtos_atuais = QWidget()
+        self.Produtos_atuais.setObjectName(u"Produtos_atuais")
+        self.horizontalLayout_3 = QHBoxLayout(self.Produtos_atuais)
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.tableWidget = QTableWidget(self.Produtos_atuais)
+        self.tableWidget.setObjectName(u"tableWidget")
+
+        self.horizontalLayout_3.addWidget(self.tableWidget)
+
+        self.stackedWidget_container.addWidget(self.Produtos_atuais)
 
         self.verticalLayout.addWidget(self.stackedWidget_container)
 
@@ -301,7 +309,7 @@ class Ui_MainWindow(object):
         self.btn_clientes.setText(QCoreApplication.translate("MainWindow", u"Cliente", None))
         self.btn_delivery.setText(QCoreApplication.translate("MainWindow", u"Delivery", None))
         self.btn_mesas.setText(QCoreApplication.translate("MainWindow", u"Mesas", None))
-        self.btn_produtto.setText(QCoreApplication.translate("MainWindow", u"Produtos", None))
+        self.btn_produtos.setText(QCoreApplication.translate("MainWindow", u"Produtos", None))
         self.btn_loggout.setText(QCoreApplication.translate("MainWindow", u"Loggout", None))
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Teste1", None))

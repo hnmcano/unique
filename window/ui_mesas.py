@@ -48,65 +48,217 @@ class Ui_MainWindow(object):
         self.gridLayout.setObjectName(u"gridLayout")
         self.Mesa_01 = QPushButton(self.widget_3)
         self.Mesa_01.setObjectName(u"Mesa_01")
-        self.Mesa_01.setMinimumSize(QSize(100, 100))
-        self.Mesa_01.setMaximumSize(QSize(100, 100))
-        self.Mesa_01.setStyleSheet(u"background-color: black; border: 1px solid red;")
+        self.Mesa_01.setMinimumSize(QSize(120, 120))
+        self.Mesa_01.setMaximumSize(QSize(120, 120))
+        self.Mesa_01.setStyleSheet(u"QPushButton {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"        stop: 0 #000000, stop: 1 #000000);\n"
+"    color: white;\n"
+"    border: 1px solid red;\n"
+"    padding: 12px 24px;\n"
+"    border-radius: 8px;\n"
+"    font-weight: bold;\n"
+"    font-size: 14px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"        stop: 0 #4e4e4e, stop: 1 #4e4e4e);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"        stop: 0 #1a5fb4, stop: 1 #4a00e0);\n"
+"}")
 
         self.gridLayout.addWidget(self.Mesa_01, 0, 2, 1, 1)
 
         self.Mesa_02 = QPushButton(self.widget_3)
         self.Mesa_02.setObjectName(u"Mesa_02")
-        self.Mesa_02.setMinimumSize(QSize(100, 100))
-        self.Mesa_02.setMaximumSize(QSize(100, 100))
-        self.Mesa_02.setStyleSheet(u"background-color: black; border: 1px solid red;")
+        self.Mesa_02.setMinimumSize(QSize(120, 120))
+        self.Mesa_02.setMaximumSize(QSize(120, 120))
+        self.Mesa_02.setStyleSheet(u"QPushButton {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"        stop: 0 #000000, stop: 1 #000000);\n"
+"    color: white;\n"
+"    border: 1px solid red;\n"
+"    padding: 12px 24px;\n"
+"    border-radius: 8px;\n"
+"    font-weight: bold;\n"
+"    font-size: 14px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"        stop: 0 #4e4e4e, stop: 1 #4e4e4e);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"        stop: 0 #1a5fb4, stop: 1 #4a00e0);\n"
+"}")
 
         self.gridLayout.addWidget(self.Mesa_02, 0, 3, 1, 1)
 
         self.Mesa_03 = QPushButton(self.widget_3)
         self.Mesa_03.setObjectName(u"Mesa_03")
-        self.Mesa_03.setMinimumSize(QSize(100, 100))
-        self.Mesa_03.setMaximumSize(QSize(100, 100))
-        self.Mesa_03.setStyleSheet(u"background-color: black; border: 1px solid red;")
+        self.Mesa_03.setMinimumSize(QSize(120, 120))
+        self.Mesa_03.setMaximumSize(QSize(120, 120))
+        self.Mesa_03.setStyleSheet(u"QPushButton {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"        stop: 0 #000000, stop: 1 #000000);\n"
+"    color: white;\n"
+"    border: 1px solid red;\n"
+"    padding: 12px 24px;\n"
+"    border-radius: 8px;\n"
+"    font-weight: bold;\n"
+"    font-size: 14px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"        stop: 0 #4e4e4e, stop: 1 #4e4e4e);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"        stop: 0 #1a5fb4, stop: 1 #4a00e0);\n"
+"}")
 
         self.gridLayout.addWidget(self.Mesa_03, 0, 4, 1, 1)
 
         self.Mesa_04 = QPushButton(self.widget_3)
         self.Mesa_04.setObjectName(u"Mesa_04")
-        self.Mesa_04.setMinimumSize(QSize(100, 100))
-        self.Mesa_04.setMaximumSize(QSize(100, 100))
-        self.Mesa_04.setStyleSheet(u"background-color: black; border: 1px solid red;")
+        self.Mesa_04.setMinimumSize(QSize(120, 120))
+        self.Mesa_04.setMaximumSize(QSize(120, 120))
+        self.Mesa_04.setStyleSheet(u"QPushButton {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"        stop: 0 #000000, stop: 1 #000000);\n"
+"    color: white;\n"
+"    border: 1px solid red;\n"
+"    padding: 12px 24px;\n"
+"    border-radius: 8px;\n"
+"    font-weight: bold;\n"
+"    font-size: 14px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"        stop: 0 #4e4e4e, stop: 1 #4e4e4e);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"        stop: 0 #1a5fb4, stop: 1 #4a00e0);\n"
+"}")
 
         self.gridLayout.addWidget(self.Mesa_04, 0, 5, 1, 1)
 
         self.Mesa_07 = QPushButton(self.widget_3)
         self.Mesa_07.setObjectName(u"Mesa_07")
-        self.Mesa_07.setMinimumSize(QSize(100, 100))
-        self.Mesa_07.setMaximumSize(QSize(100, 100))
-        self.Mesa_07.setStyleSheet(u"background-color: black; border: 1px solid red;")
+        self.Mesa_07.setMinimumSize(QSize(120, 120))
+        self.Mesa_07.setMaximumSize(QSize(120, 120))
+        self.Mesa_07.setStyleSheet(u"QPushButton {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"        stop: 0 #000000, stop: 1 #000000);\n"
+"    color: white;\n"
+"    border: 1px solid red;\n"
+"    padding: 12px 24px;\n"
+"    border-radius: 8px;\n"
+"    font-weight: bold;\n"
+"    font-size: 14px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"        stop: 0 #4e4e4e, stop: 1 #4e4e4e);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"        stop: 0 #1a5fb4, stop: 1 #4a00e0);\n"
+"}")
 
         self.gridLayout.addWidget(self.Mesa_07, 1, 4, 1, 1)
 
         self.Mesa_06 = QPushButton(self.widget_3)
         self.Mesa_06.setObjectName(u"Mesa_06")
-        self.Mesa_06.setMinimumSize(QSize(100, 100))
-        self.Mesa_06.setMaximumSize(QSize(100, 100))
-        self.Mesa_06.setStyleSheet(u"background-color: black; border: 1px solid red;")
+        self.Mesa_06.setMinimumSize(QSize(120, 120))
+        self.Mesa_06.setMaximumSize(QSize(120, 120))
+        self.Mesa_06.setStyleSheet(u"QPushButton {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"        stop: 0 #000000, stop: 1 #000000);\n"
+"    color: white;\n"
+"    border: 1px solid red;\n"
+"    padding: 12px 24px;\n"
+"    border-radius: 8px;\n"
+"    font-weight: bold;\n"
+"    font-size: 14px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"        stop: 0 #4e4e4e, stop: 1 #4e4e4e);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"        stop: 0 #1a5fb4, stop: 1 #4a00e0);\n"
+"}")
 
         self.gridLayout.addWidget(self.Mesa_06, 1, 3, 1, 1)
 
         self.Mesa_05 = QPushButton(self.widget_3)
         self.Mesa_05.setObjectName(u"Mesa_05")
-        self.Mesa_05.setMinimumSize(QSize(100, 100))
-        self.Mesa_05.setMaximumSize(QSize(100, 100))
-        self.Mesa_05.setStyleSheet(u"background-color: black; border: 1px solid red;")
+        self.Mesa_05.setMinimumSize(QSize(120, 120))
+        self.Mesa_05.setMaximumSize(QSize(120, 120))
+        self.Mesa_05.setStyleSheet(u"QPushButton {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"        stop: 0 #000000, stop: 1 #000000);\n"
+"    color: white;\n"
+"    border: 1px solid red;\n"
+"    padding: 12px 24px;\n"
+"    border-radius: 8px;\n"
+"    font-weight: bold;\n"
+"    font-size: 14px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"        stop: 0 #4e4e4e, stop: 1 #4e4e4e);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"        stop: 0 #1a5fb4, stop: 1 #4a00e0);\n"
+"}")
 
         self.gridLayout.addWidget(self.Mesa_05, 1, 2, 1, 1)
 
         self.Mesa_08 = QPushButton(self.widget_3)
         self.Mesa_08.setObjectName(u"Mesa_08")
-        self.Mesa_08.setMinimumSize(QSize(100, 100))
-        self.Mesa_08.setMaximumSize(QSize(100, 100))
-        self.Mesa_08.setStyleSheet(u"background-color: black; border: 1px solid red;")
+        self.Mesa_08.setMinimumSize(QSize(120, 120))
+        self.Mesa_08.setMaximumSize(QSize(120, 120))
+        self.Mesa_08.setStyleSheet(u"QPushButton {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"        stop: 0 #000000, stop: 1 #000000);\n"
+"    color: white;\n"
+"    border: 1px solid red;\n"
+"    padding: 12px 24px;\n"
+"    border-radius: 8px;\n"
+"    font-weight: bold;\n"
+"    font-size: 14px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"        stop: 0 #4e4e4e, stop: 1 #4e4e4e);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"        stop: 0 #1a5fb4, stop: 1 #4a00e0);\n"
+"}")
 
         self.gridLayout.addWidget(self.Mesa_08, 1, 5, 1, 1)
 

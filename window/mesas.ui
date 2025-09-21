@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>995</width>
+    <width>994</width>
     <height>618</height>
    </rect>
   </property>
@@ -58,18 +58,37 @@ boder-right: 1px solid black;
         <widget class="QPushButton" name="Mesa_01">
          <property name="minimumSize">
           <size>
-           <width>100</width>
-           <height>100</height>
+           <width>120</width>
+           <height>120</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>100</width>
-           <height>100</height>
+           <width>120</width>
+           <height>120</height>
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: black; border: 1px solid red;</string>
+          <string notr="true">QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #000000, stop: 1 #000000);
+    color: white;
+    border: 1px solid red;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #4e4e4e, stop: 1 #4e4e4e);
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #1a5fb4, stop: 1 #4a00e0);
+}</string>
          </property>
          <property name="text">
           <string>Mesa 01</string>
@@ -80,18 +99,37 @@ boder-right: 1px solid black;
         <widget class="QPushButton" name="Mesa_02">
          <property name="minimumSize">
           <size>
-           <width>100</width>
-           <height>100</height>
+           <width>120</width>
+           <height>120</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>100</width>
-           <height>100</height>
+           <width>120</width>
+           <height>120</height>
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: black; border: 1px solid red;</string>
+          <string notr="true">QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #000000, stop: 1 #000000);
+    color: white;
+    border: 1px solid red;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #4e4e4e, stop: 1 #4e4e4e);
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #1a5fb4, stop: 1 #4a00e0);
+}</string>
          </property>
          <property name="text">
           <string>Mesa 02</string>
@@ -102,18 +140,37 @@ boder-right: 1px solid black;
         <widget class="QPushButton" name="Mesa_03">
          <property name="minimumSize">
           <size>
-           <width>100</width>
-           <height>100</height>
+           <width>120</width>
+           <height>120</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>100</width>
-           <height>100</height>
+           <width>120</width>
+           <height>120</height>
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: black; border: 1px solid red;</string>
+          <string notr="true">QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #000000, stop: 1 #000000);
+    color: white;
+    border: 1px solid red;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #4e4e4e, stop: 1 #4e4e4e);
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #1a5fb4, stop: 1 #4a00e0);
+}</string>
          </property>
          <property name="text">
           <string>Mesa 03</string>
@@ -124,18 +181,37 @@ boder-right: 1px solid black;
         <widget class="QPushButton" name="Mesa_04">
          <property name="minimumSize">
           <size>
-           <width>100</width>
-           <height>100</height>
+           <width>120</width>
+           <height>120</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>100</width>
-           <height>100</height>
+           <width>120</width>
+           <height>120</height>
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: black; border: 1px solid red;</string>
+          <string notr="true">QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #000000, stop: 1 #000000);
+    color: white;
+    border: 1px solid red;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #4e4e4e, stop: 1 #4e4e4e);
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #1a5fb4, stop: 1 #4a00e0);
+}</string>
          </property>
          <property name="text">
           <string>Mesa 04</string>
@@ -146,18 +222,37 @@ boder-right: 1px solid black;
         <widget class="QPushButton" name="Mesa_07">
          <property name="minimumSize">
           <size>
-           <width>100</width>
-           <height>100</height>
+           <width>120</width>
+           <height>120</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>100</width>
-           <height>100</height>
+           <width>120</width>
+           <height>120</height>
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: black; border: 1px solid red;</string>
+          <string notr="true">QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #000000, stop: 1 #000000);
+    color: white;
+    border: 1px solid red;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #4e4e4e, stop: 1 #4e4e4e);
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #1a5fb4, stop: 1 #4a00e0);
+}</string>
          </property>
          <property name="text">
           <string>Mesa 07</string>
@@ -168,18 +263,37 @@ boder-right: 1px solid black;
         <widget class="QPushButton" name="Mesa_06">
          <property name="minimumSize">
           <size>
-           <width>100</width>
-           <height>100</height>
+           <width>120</width>
+           <height>120</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>100</width>
-           <height>100</height>
+           <width>120</width>
+           <height>120</height>
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: black; border: 1px solid red;</string>
+          <string notr="true">QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #000000, stop: 1 #000000);
+    color: white;
+    border: 1px solid red;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #4e4e4e, stop: 1 #4e4e4e);
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #1a5fb4, stop: 1 #4a00e0);
+}</string>
          </property>
          <property name="text">
           <string>Mesa 06</string>
@@ -190,18 +304,37 @@ boder-right: 1px solid black;
         <widget class="QPushButton" name="Mesa_05">
          <property name="minimumSize">
           <size>
-           <width>100</width>
-           <height>100</height>
+           <width>120</width>
+           <height>120</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>100</width>
-           <height>100</height>
+           <width>120</width>
+           <height>120</height>
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: black; border: 1px solid red;</string>
+          <string notr="true">QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #000000, stop: 1 #000000);
+    color: white;
+    border: 1px solid red;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #4e4e4e, stop: 1 #4e4e4e);
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #1a5fb4, stop: 1 #4a00e0);
+}</string>
          </property>
          <property name="text">
           <string>Mesa 05</string>
@@ -212,18 +345,37 @@ boder-right: 1px solid black;
         <widget class="QPushButton" name="Mesa_08">
          <property name="minimumSize">
           <size>
-           <width>100</width>
-           <height>100</height>
+           <width>120</width>
+           <height>120</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>100</width>
-           <height>100</height>
+           <width>120</width>
+           <height>120</height>
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: black; border: 1px solid red;</string>
+          <string notr="true">QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #000000, stop: 1 #000000);
+    color: white;
+    border: 1px solid red;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #4e4e4e, stop: 1 #4e4e4e);
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #1a5fb4, stop: 1 #4a00e0);
+}</string>
          </property>
          <property name="text">
           <string>Mesa 08</string>

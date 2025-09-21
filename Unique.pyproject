@@ -10,6 +10,7 @@
         "arquivo_inicial",
         "window/Uniq.ui",
         "window/Clientes.ui",
-        "models/models.py"
+        "models/models.py",
+        "aux_tratamento_dados.py"
     ]
 }
