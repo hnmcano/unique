@@ -11,6 +11,7 @@
         "window/Uniq.ui",
         "window/Clientes.ui",
         "models/models.py",
-        "aux_tratamento_dados.py"
+        "window/window_pedidos/pedido_mesa.ui",
+        "window/window_pedidos/pedidos_delivery.ui"
     ]
 }
