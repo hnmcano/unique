@@ -1,12 +1,8 @@
-from fastapi import APIRouter
-from back_end.schemas.products import Product
-from fastapi import HTTPException, FastAPI, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 DATABASE_URL = "sqlite:///./banco.db"
-
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
@@ -16,14 +12,3 @@ def get_db():
         yield db
     finally:
         db.close()
-
-router = APIRouter()
-
-@router.get("/products")
-def get_user(product: Product, db: Session = Depends(get_db)):
-    db_product = Product(**product.dict())
-    db.add(db_product)
-    db.commit()
-    db.refresh(db_product)
-    return db_product
-

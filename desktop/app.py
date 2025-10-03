@@ -1,15 +1,15 @@
-import sys
-import requests
 from PySide6.QtWidgets import (QApplication, QPushButton, QMainWindow, QMessageBox, QFileDialog)
-from PySide6.QtGui import QPixmap, QImage
-from PySide6.QtCore import Signal, Qt
-from window.ui_clientes import Ui_MainWindow as clientes
-from window.ui_uniq import Ui_MainWindow as uniq
-from window.ui_mesas import Ui_MainWindow as mesas
-from window.ui_produtos import Ui_MainWindow as produtos
+from PySide6.QtNetwork import ( QNetworkAccessManager, QNetworkRequest, QNetworkReply)
 from window.window_pedidos.ui_pedido_mesa import Ui_MainWindow as pedido_mesa
-from models.models import inicializar_banco, adicionar_novo_usuario, adicionar_novo_produto
-
+from window.ui_produtos import Ui_MainWindow as produtos
+from window.ui_clientes import Ui_MainWindow as clientes
+from PySide6.QtCore import Signal, Qt, QUrl, QByteArray
+from window.ui_mesas import Ui_MainWindow as mesas
+from window.ui_uniq import Ui_MainWindow as uniq
+from PySide6.QtGui import QPixmap, QImage
+import requests
+import json
+import sys
 
 # Defina a JanelaSecundaria aqui (código acima)
 class window_table(QMainWindow, pedido_mesa):
@@ -19,7 +19,7 @@ class window_table(QMainWindow, pedido_mesa):
         super().__init__(parent)
         self.setupUi(self)
         # 3. Chame a função para inicializar o banco de dados.
-        inicializar_banco()
+        #inicializar_banco()
 
         self.label.setText(f"{name_button}")
         self.btn_excluir.clicked.connect(self.exibir_confirmacao_exclusao)
@@ -55,44 +55,13 @@ class Clientes(QMainWindow, clientes):
         # A classe 'clientes' é a que tem o método setupUi.
         self.setupUi(self)
 
-        # 3. Chame a função para inicializar o banco de dados.
-        inicializar_banco()
-
         self.btn_viacep.clicked.connect(self.buscar_cep)
+
+        self.network_manager = QNetworkAccessManager(self)
 
         # 4. Conecte os sinais aos seus métodos.
         # Agora você pode acessar os widgets diretamente.
         self.cad_clientes.clicked.connect(self.salvar_dados)
-
-    def salvar_dados(self):
-        # O self.nome_input é acessível diretamente
-        Cliente = self.nome_input.text()
-        email = self.email_input.text()
-        telefone = self.telefone_input.text()
-        cep = self.cepinput.text()
-        endereco = self.endereco_input.text()
-        bairro = self.bairro_input.text()
-        cidade= self.cidade_input.text()
-        complemento = self.complemento_input.text()
-        referencia = self.referencia_input.text()
-
-        try:
-            adicionar_novo_usuario(Cliente, email, telefone, cep, endereco, bairro, cidade, complemento, referencia)
-            QMessageBox.information(self, "Sucesso", "Usuário adicionado com sucesso!")
-            # Limpa os campos após salvar
-            self.nome_input.clear()
-            self.email_input.clear()
-            self.telefone_input.clear()
-            self.cepinput.clear()
-            self.endereco_input.clear()
-            self.bairro_input.clear()
-            self.cidade_input.clear()
-            self.complemento_input.clear()
-            self.referencia_input.clear()
-        except ValueError:
-            QMessageBox.warning(self, "Erro", "A informação está incorreta.")
-        except Exception as e:
-            QMessageBox.critical(self, "Erro de BD", f"Ocorreu um erro: {e}")
 
     def buscar_cep(self):
         """Busca CEP usando ViaCEP"""
@@ -109,7 +78,6 @@ class Clientes(QMainWindow, clientes):
                     self.endereco_input.setText(data.get("logradouro", ""))
                     self.bairro_input.setText(data.get("bairro", ""))
                     self.cidade_input.setText(f"{data.get('localidade', '')}/{data.get('uf', '')}")
-                    self.resultado_cep.setText("CEP encontrado!")
                 else:
                     QMessageBox.warning(self, "CEP não encontrado", "O CEP informado não foi encontrado")
             else:
@@ -117,6 +85,106 @@ class Clientes(QMainWindow, clientes):
 
         except Exception as e:
             QMessageBox.critical(self, "Erro", f"Erro na busca do CEP: {str(e)}")
+
+    def salvar_dados(self):
+        # O self.nome_input é acessível diretamente
+        cliente = self.nome_input.text()
+        email = self.email_input.text()
+        telefone = self.telefone_input.text()
+        cep = self.cepinput.text()
+        endereco = self.endereco_input.text()
+        bairro = self.bairro_input.text()
+        cidade= self.cidade_input.text()
+        complemento = self.complemento_input.text()
+        referencia = self.referencia_input.text()
+
+        try:
+            QMessageBox.information(self, "Aguarde", "Enviando dados para o servidor!")
+
+            url= QUrl("http://127.0.0.1:8000/users/users")
+
+            data_json = {
+
+                    "cliente": f"{cliente}",
+                    "telefone": f"{telefone}",
+                    "email": f"{email}",
+                    "cep": f"{cep}",
+                    "endereco": f"{endereco}",
+                    "bairro": f"{bairro}",
+                    "cidade": f"{cidade}",
+                    "complemento": f"{complemento}",
+                    "referencia": f"{referencia}"
+            }
+            
+            print(data_json)
+
+            json_data=json.dumps(data_json).encode("utf-8")
+            data_to_send=QByteArray(json_data)
+
+            request= QNetworkRequest(url)
+
+            request.setHeader(QNetworkRequest.ContentTypeHeader, "application/json")
+
+            reply= self.network_manager.post(request, data_to_send)
+
+            reply.finished.connect(lambda: self.handle_network_reply(reply))
+
+            #adicionar_novo_usuario(Cliente, email, telefone, cep, endereco, bairro, cidade, complemento, referencia)
+            QMessageBox.information(self, "Sucesso", "Usuário adicionado com sucesso!")
+            # Limpa os campos após salvar
+            self.nome_input.clear()
+            self.email_input.clear()
+            self.telefone_input.clear()
+            self.cepinput.clear()
+            self.endereco_input.clear()
+            self.bairro_input.clear()
+            self.cidade_input.clear()
+            self.complemento_input.clear()
+            self.referencia_input.clear()
+        except ValueError:
+            QMessageBox.warning(self, "Erro", "A informação está incorreta.")
+        except Exception as e:
+            QMessageBox.critical(self, "Erro de BD", f"Ocorreu um erro: {e}")
+
+
+    def handle_network_reply(self, reply: QNetworkReply):
+        """Processa a resposta do servidor."""
+
+        # 1. Verifica se houve algum erro de rede (ex: falha de conexão)
+        if reply.error() != QNetworkReply.NetworkError.NoError:
+            QMessageBox.warning(self, "Erro", "Erro na rede!")
+        else:
+            # 2. Lê os dados da resposta
+            response_bytes = reply.readAll().data()
+               
+            # 2. Obtém o status HTTP
+            http_status = reply.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute)
+
+            if http_status == 422:
+                # AQUI VOCÊ EXIBE A MENSAGEM DE ERRO DETALHADA DA API
+                try:
+                    error_details = json.loads(response_bytes.decode('utf-8'))
+                    QMessageBox.warning(self, "Erro", f"Erro 422: Dados Inválidos!\nDetalhes do Servidor:\n{error_details}")
+                except json.JSONDecodeError:
+                    QMessageBox.warning(self, "Erro", f"Erro 422, mas a resposta de erro não é JSON:\n{response_bytes.decode('utf-8')}")
+
+            # Tenta decodificar a resposta JSON
+            try:
+                response_json = json.loads(response_bytes.decode('utf-8'))
+                
+                # Exibe o resultado formatado
+                status_text = f"Requisição bem-sucedida!\n"
+                status_text += f"Status HTTP: {reply.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute)}\n"
+                status_text += "Dados Recebidos:\n"
+                status_text += json.dumps(response_json, indent=2)
+                
+                QMessageBox.information(self, "Sucesso", f"{status_text}")
+                
+            except json.JSONDecodeError:
+                QMessageBox.warning(self, "Erro", f"{status_text}")
+
+            # Limpa o objeto de resposta para evitar vazamento de memória (melhor prática)
+            reply.deleteLater()
 
 class Produtos(QMainWindow, produtos):
     def __init__(self, parent=None):
@@ -129,9 +197,9 @@ class Produtos(QMainWindow, produtos):
         self.setupUi(self)
 
         # 3. Chame a função para inicializar o banco de dados.
-        inicializar_banco()
+        #inicializar_banco()
 
-        self.add_produto.clicked.connect(self.salvar_produto)
+        #self.add_produto.clicked.connect(self.salvar_produto)
         self.selecionar_imagem.clicked.connect(self.inserir_imagem)
 
     def salvar_produto(self):
@@ -147,7 +215,7 @@ class Produtos(QMainWindow, produtos):
         sit_estoque = self.sit_estoque_input.text()
         ficha_tec = self.ficha_tec_input.text()
         status_venda = self.status_venda_input.text()
-
+    
         try:
             adicionar_novo_produto(cod_pdv, cod_sistema, categoria, nome,
                                             preco_custo, preco_venda, medida, estoque,
@@ -182,7 +250,6 @@ class Produtos(QMainWindow, produtos):
                 self.image_label.setText("")  # Remove o texto quando a imagem é carregada
             else:
                 self.image_label.setText("Erro ao carregar a imagem.")
-
 class Mesas(QMainWindow, mesas):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -258,9 +325,6 @@ class Mesas(QMainWindow, mesas):
                 }
             """)
             print(f"Cor do botão {botao_a_restaurar.objectName()} restaurada para um estilo fixo.")
-
-
-# Classe para a tela principal
 class Uniq(QMainWindow, uniq):
     def __init__(self):
         super().__init__()
