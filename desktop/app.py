@@ -1,255 +1,218 @@
-from PySide6.QtWidgets import (QApplication, QPushButton, QMainWindow, QMessageBox, QFileDialog)
-from PySide6.QtNetwork import ( QNetworkAccessManager, QNetworkRequest, QNetworkReply)
-from window.window_pedidos.ui_pedido_mesa import Ui_MainWindow as pedido_mesa
-from window.ui_produtos import Ui_MainWindow as produtos
-from window.ui_clientes import Ui_MainWindow as clientes
-from PySide6.QtCore import Signal, Qt, QUrl, QByteArray
-from window.ui_mesas import Ui_MainWindow as mesas
-from window.ui_uniq import Ui_MainWindow as uniq
-from PySide6.QtGui import QPixmap, QImage
+from scripts.aux_func import (exibir_confirmacao_exclusao, inserir_imagem, salvar_dados_produtos,
+                              salvar_dados_clientes, buscar_cep)
+from PySide6.QtWidgets import (QApplication, QPushButton, QMainWindow, QMessageBox, QTableWidgetItem, QLabel)
+from window.form_orders.ui_pedido_mesa import Ui_MainWindow as pedido_mesa
+from window.form_products.ui_add_categorias import Ui_Category as addcategorias
+from window.form_products.ui_add_produtos import Ui_MainWindow as addprodutos
+from window.form_products.ui_produtos import Ui_MainWindow as produtos
+from window.form_clients.ui_clientes import Ui_MainWindow as clientes
+from window.form_orders.ui_mesas import Ui_MainWindow as mesas
+from window.ui_unique import Ui_Unique as uniq
+from PySide6.QtNetwork import ( QNetworkAccessManager)
+from PySide6.QtCore import Signal, Qt
+from PySide6.QtGui import QPixmap
 import requests
 import json
 import sys
 
-# Defina a JanelaSecundaria aqui (código acima)
+# Classe para gerenciar categorias
+class AddCategory(QMainWindow, addcategorias):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setupUi(self)
+        
+        self.drop_modificar.hide() # Esconde o dropdown inicialmente
+        self.btn_excluir.hide() # Esconde o botão de excluir inicialmente   
+
+        self.modificar_botao.clicked.connect(self.mostrar_dropdown_categoria)
+        self.adicionar_botao.clicked.connect(self.mostrar_input_categoria)
+        self.btn_adicionar.clicked.connect(self.adicionar_categoria)
+        self.btn_excluir.clicked.connect(self.excluir_categoria)
+
+    # Função definida para adicionar categoria ao banco de dados
+    def adicionar_categoria(self):
+        nova_categoria = self.adicionar_cat_input.text().strip()
+        if not nova_categoria:
+            QMessageBox.warning(self, "Erro", "O campo de categoria não pode estar vazio.")
+            return
+
+        try:
+            response = requests.post(
+                "http://127.0.0.1:8000/products/category",
+                json={"categoria": nova_categoria}
+            )
+            if response.status_code == 200:
+                QMessageBox.information(self, "Sucesso", "Categoria adicionada com sucesso!")
+                self.adicionar_cat_input.clear()
+                self.preencher_dropdown()  # Atualiza o dropdown
+            else:
+                QMessageBox.critical(self, "Erro", "Falha ao adicionar categoria.") 
+        except Exception as e:
+            QMessageBox.critical(self, "Erro", f"Erro ao adicionar categoria: {str(e)}")
+
+    # Função definida para mostrar o input de categoria e ocultar o dropdown
+    def mostrar_input_categoria(self):
+        self.adicionar_cat_input.show()
+        self.btn_adicionar.show()
+
+        if self.btn_excluir.isVisible():
+            self.btn_excluir.hide()
+            self.drop_modificar.hide()
+
+    # Função definida para mostrar o dropdown de categorias e ocultar o input
+    def mostrar_dropdown_categoria(self):
+        if self.adicionar_cat_input.isVisible():
+            self.adicionar_cat_input.hide()
+            self.btn_adicionar.hide()
+
+        self.btn_excluir.show()
+        self.drop_modificar.show()
+        self.preencher_dropdown()
+
+    # Função definida para preencher o dropdown com categorias do servidor
+    def preencher_dropdown(self):
+        self.drop_modificar.clear()
+        self.drop_modificar.addItem("")  # espaço em branco
+
+        try:
+            response = requests.get("http://127.0.0.1:8000/products/dropdown/categories")
+            if response.status_code == 200:
+                categories = response.json()
+                for category in categories:
+                    self.drop_modificar.addItem(category["categoria"])
+            else:
+                # Falha na requisição
+                QMessageBox.critical(self, "Erro", "Falha ao buscar categorias")
+        except Exception as e:
+            QMessageBox.critical(self, "Erro", f"Erro na busca das categorias: {str(e)}")# type: ignore      
+
+    def excluir_categoria(self):
+        categoria_selecionada = self.drop_modificar.currentText()
+        if not categoria_selecionada:
+            QMessageBox.warning(self, "Erro", "Nenhuma categoria selecionada para exclusão.")
+            return
+
+        try:
+            response = requests.delete(f"http://127.0.0.1:8000/products/category/{categoria_selecionada}")
+            if response.status_code == 200:
+                QMessageBox.information(self, "Sucesso", "Categoria excluída com sucesso!")
+                self.preencher_dropdown()  # Atualiza o dropdown
+            else:
+                QMessageBox.critical(self, "Erro", "Falha ao excluir categoria.")
+        except Exception as e:
+            QMessageBox.critical(self, "Erro", f"Erro ao excluir categoria: {str(e)}")
+
+# classe para gerenciar pedidos por mesa
 class window_table(QMainWindow, pedido_mesa):
     janela_fechada = Signal()
 
     def __init__(self, name_button, parent=None):
         super().__init__(parent)
         self.setupUi(self)
-        # 3. Chame a função para inicializar o banco de dados.
-        #inicializar_banco()
 
         self.label.setText(f"{name_button}")
-        self.btn_excluir.clicked.connect(self.exibir_confirmacao_exclusao)
+        # Ao clicar no botão cancelar, Aciona a função de confirmação de exclusão localizada em scripts/aux_func.py
+        self.btn_excluir.clicked.connect(lambda: exibir_confirmacao_exclusao(self))
 
+    # Override do método closeEvent para emitir o sinal quando a janela for fechada
     def closeEvent(self, event):
-        # Remove a emissão do sinal aqui, pois a lógica agora está no QMessageBox
         event.accept()
 
-    def exibir_confirmacao_exclusao(self):
-        msg_box = QMessageBox(self)
-        msg_box.setIcon(QMessageBox.Question)
-        msg_box.setWindowTitle("Confirmar Exclusão")
-        msg_box.setText("Tem certeza de que deseja fechar esta janela?")
-        msg_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-
-        # A resposta é armazenada aqui, o código é bloqueado até o usuário interagir
-        resposta = msg_box.exec()
-
-        if resposta == QMessageBox.Yes:
-            # Se o usuário confirmar, emita o sinal e feche a janela
-            self.janela_fechada.emit()
-            self.close()
-        # Se a resposta for QMessageBox.No, o diálogo simplesmente fecha e nada acontece
-
-# Classe para a tela de clientes (secundária)
+# classe para gerenciar clientes
 class Clientes(QMainWindow, clientes):
+    janela_fechada = Signal()
+
     def __init__(self, parent=None):
-        # 1. Chame o __init__ do QMainWindow para configurar a janela.
-        # O 'parent' é a janela que a criou (opcional).
         super().__init__(parent)
 
-        # 2. Chame o setupUi() para construir a interface.
-        # A classe 'clientes' é a que tem o método setupUi.
         self.setupUi(self)
+        self.setWindowFlag(Qt.WindowCloseButtonHint, False)# type: ignore
 
-        self.btn_viacep.clicked.connect(self.buscar_cep)
-
+        # Ao clicar no botão buscar CEP, Aciona a função de buscar CEP localizada em scripts/aux_func.py
+        self.btn_viacep.clicked.connect(lambda: buscar_cep(self))
+        # Gerenciador de rede para requisições HTTP
         self.network_manager = QNetworkAccessManager(self)
+        # Ao clicar no botão salvar, Aciona a função de salvar dados clientes localizada em scripts/aux_func.py
+        self.cad_clientes.clicked.connect(lambda: salvar_dados_clientes(self))
+        # Ao clicar no botão cancelar, Aciona a função de confirmação de exclusão localizada em scripts/aux_func.py
+        self.cancelar.clicked.connect(lambda: exibir_confirmacao_exclusao(self))
 
-        # 4. Conecte os sinais aos seus métodos.
-        # Agora você pode acessar os widgets diretamente.
-        self.cad_clientes.clicked.connect(self.salvar_dados)
+# classe para gerenciar produtos
+class AddProdutos(QMainWindow, addprodutos):
+    janela_fechada = Signal()
 
-    def buscar_cep(self):
-        """Busca CEP usando ViaCEP"""
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setupUi(self)
+        # Esconde o botão do windows de fechar(X) a janela
+        self.setWindowFlag(Qt.WindowCloseButtonHint, False)# type: ignore
+
+        # Gerenciador de rede para requisições HTTP
+        self.network_manager = QNetworkAccessManager(self)
+        # Limpa e preenche o dropdown de categorias
+        self.categoria_combo.clear()
+        self.categoria_combo.addItem("")
+
+        # Realiza a requisição para obter as categorias do servidor e preencher o dropdown
         try:
-            cep = self.cepinput.text().replace("-", "").replace(".", "").strip()
-            if len(cep) != 8:
-                QMessageBox.warning(self, "CEP Inválido", "Digite um CEP válido com 8 dígitos")
-                return
-
-            response = requests.get(f"https://viacep.com.br/ws/{cep}/json/")
+            response = requests.get("http://127.0.0.1:8000/products/dropdown/categories")
             if response.status_code == 200:
-                data = response.json()
-                if "erro" not in data:
-                    self.endereco_input.setText(data.get("logradouro", ""))
-                    self.bairro_input.setText(data.get("bairro", ""))
-                    self.cidade_input.setText(f"{data.get('localidade', '')}/{data.get('uf', '')}")
-                else:
-                    QMessageBox.warning(self, "CEP não encontrado", "O CEP informado não foi encontrado")
+                categories = response.json()
+                for category in categories:
+                    self.categoria_combo.addItem(category["categoria"])
             else:
-                QMessageBox.critical(self, "Erro", "Falha ao buscar CEP")
-
+                # Falha na requisição
+                QMessageBox.critical(self, "Erro", "Falha ao buscar categorias")
         except Exception as e:
-            QMessageBox.critical(self, "Erro", f"Erro na busca do CEP: {str(e)}")
+            QMessageBox.critical(self, "Erro", f"Erro na busca das categorias: {str(e)}")
+        
+        # Ao clicar no botão selecionar imagem, Aciona a função de inserir imagem localizada em scripts/aux_func.py
+        self.selecionar_imagem.clicked.connect(lambda: inserir_imagem(self))
+        # Ao clicar no botão salvar, Aciona a função de salvar dados produtos localizada em scripts/aux_func.py
+        self.add_produto.clicked.connect(lambda: salvar_dados_produtos(self))
+        # Ao clicar no botão adicionar categoria, Aciona a função de abrir a janela de categorias localizada em scripts/aux_func.py
+        self.add_categoria.clicked.connect(self.abrir_categoria)
+        # Ao clicar no botão cancelar, Aciona a função de confirmação de exclusão localizada em scripts/aux_func.py
+        self.cancelar.clicked.connect(lambda: exibir_confirmacao_exclusao(self))
 
-    def salvar_dados(self):
-        # O self.nome_input é acessível diretamente
-        cliente = self.nome_input.text()
-        email = self.email_input.text()
-        telefone = self.telefone_input.text()
-        cep = self.cepinput.text()
-        endereco = self.endereco_input.text()
-        bairro = self.bairro_input.text()
-        cidade= self.cidade_input.text()
-        complemento = self.complemento_input.text()
-        referencia = self.referencia_input.text()
-
-        try:
-            QMessageBox.information(self, "Aguarde", "Enviando dados para o servidor!")
-
-            url= QUrl("http://127.0.0.1:8000/users/users")
-
-            data_json = {
-
-                    "cliente": f"{cliente}",
-                    "telefone": f"{telefone}",
-                    "email": f"{email}",
-                    "cep": f"{cep}",
-                    "endereco": f"{endereco}",
-                    "bairro": f"{bairro}",
-                    "cidade": f"{cidade}",
-                    "complemento": f"{complemento}",
-                    "referencia": f"{referencia}"
-            }
-            
-            print(data_json)
-
-            json_data=json.dumps(data_json).encode("utf-8")
-            data_to_send=QByteArray(json_data)
-
-            request= QNetworkRequest(url)
-
-            request.setHeader(QNetworkRequest.ContentTypeHeader, "application/json")
-
-            reply= self.network_manager.post(request, data_to_send)
-
-            reply.finished.connect(lambda: self.handle_network_reply(reply))
-
-            #adicionar_novo_usuario(Cliente, email, telefone, cep, endereco, bairro, cidade, complemento, referencia)
-            QMessageBox.information(self, "Sucesso", "Usuário adicionado com sucesso!")
-            # Limpa os campos após salvar
-            self.nome_input.clear()
-            self.email_input.clear()
-            self.telefone_input.clear()
-            self.cepinput.clear()
-            self.endereco_input.clear()
-            self.bairro_input.clear()
-            self.cidade_input.clear()
-            self.complemento_input.clear()
-            self.referencia_input.clear()
-        except ValueError:
-            QMessageBox.warning(self, "Erro", "A informação está incorreta.")
-        except Exception as e:
-            QMessageBox.critical(self, "Erro de BD", f"Ocorreu um erro: {e}")
-
-
-    def handle_network_reply(self, reply: QNetworkReply):
-        """Processa a resposta do servidor."""
-
-        # 1. Verifica se houve algum erro de rede (ex: falha de conexão)
-        if reply.error() != QNetworkReply.NetworkError.NoError:
-            QMessageBox.warning(self, "Erro", "Erro na rede!")
-        else:
-            # 2. Lê os dados da resposta
-            response_bytes = reply.readAll().data()
-               
-            # 2. Obtém o status HTTP
-            http_status = reply.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute)
-
-            if http_status == 422:
-                # AQUI VOCÊ EXIBE A MENSAGEM DE ERRO DETALHADA DA API
-                try:
-                    error_details = json.loads(response_bytes.decode('utf-8'))
-                    QMessageBox.warning(self, "Erro", f"Erro 422: Dados Inválidos!\nDetalhes do Servidor:\n{error_details}")
-                except json.JSONDecodeError:
-                    QMessageBox.warning(self, "Erro", f"Erro 422, mas a resposta de erro não é JSON:\n{response_bytes.decode('utf-8')}")
-
-            # Tenta decodificar a resposta JSON
-            try:
-                response_json = json.loads(response_bytes.decode('utf-8'))
-                
-                # Exibe o resultado formatado
-                status_text = f"Requisição bem-sucedida!\n"
-                status_text += f"Status HTTP: {reply.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute)}\n"
-                status_text += "Dados Recebidos:\n"
-                status_text += json.dumps(response_json, indent=2)
-                
-                QMessageBox.information(self, "Sucesso", f"{status_text}")
-                
-            except json.JSONDecodeError:
-                QMessageBox.warning(self, "Erro", f"{status_text}")
-
-            # Limpa o objeto de resposta para evitar vazamento de memória (melhor prática)
-            reply.deleteLater()
+    def abrir_categoria(self):
+        self.categoria_window = Category(parent=self)# type: ignore
+        self.categoria_window.show()# type: ignore
 
 class Produtos(QMainWindow, produtos):
     def __init__(self, parent=None):
-        # 1. Chame o __init__ do QMainWindow para configurar a janela.
-        # O 'parent' é a janela que a criou (opcional).
         super().__init__(parent)
-
-        # 2. Chame o setupUi() para construir a interface.
-        # A classe 'clientes' é a que tem o método setupUi.
         self.setupUi(self)
 
-        # 3. Chame a função para inicializar o banco de dados.
-        #inicializar_banco()
-
-        #self.add_produto.clicked.connect(self.salvar_produto)
-        self.selecionar_imagem.clicked.connect(self.inserir_imagem)
-
-    def salvar_produto(self):
-        cod_pdv = self.cod_pdv_input.text()
-        cod_sistema = self.cod_sistema_input.text()
-        categoria = self.categoria_input.text()
-        nome = self.nome_input.text()
-        preco_custo = self.preco_custo_input.text()
-        preco_venda = self.preco_venda_input.text()
-        medida = self.Medida_input.text()
-        estoque = self.Estoque_input.text()
-        estoque_min = self.estoque_min_input.text()
-        sit_estoque = self.sit_estoque_input.text()
-        ficha_tec = self.ficha_tec_input.text()
-        status_venda = self.status_venda_input.text()
-    
         try:
-            adicionar_novo_produto(cod_pdv, cod_sistema, categoria, nome,
-                                            preco_custo, preco_venda, medida, estoque,
-                                                estoque_min, sit_estoque,ficha_tec, status_venda)
-            QMessageBox.information(self, "Sucesso", "Produto adicionado com sucesso!")
-            self.cod_pdv_input.clear()
-            self.cod_sistema_input.clear()
-            self.categoria_input.clear()
-            self.nome_input.clear()
-            self.preco_custo_input.clear()
-            self.preco_venda_input.clear()
-            self.Medida_input.clear()
-            self.Estoque_input.clear()
-            self.estoque_min_input.clear()
-            self.sit_estoque_input.clear()
-            self.ficha_tec_input.clear()
-            self.status_venda_input.clear()
-        except ValueError:
-            QMessageBox.warning(self, "Erro", "A informação está incorreta.")
-        except Exception as e:
-            QMessageBox.critical(self, "Erro de BD", f"Ocorreu um erro: {e}")
+            response = requests.get("http://127.0.0.1:8000/products/table")
+            response.raise_for_status()  # Levanta um erro para códigos de status HTTP ruins
+            products = response.json()
 
-    def inserir_imagem(self):
-        file_dialog = QFileDialog()
-        file_path, _ = file_dialog.getOpenFileName(self, "Selecionar Imagem", "", "Arquivos de Imagem (*.png *.jpg *.jpeg *.bmp *.gif)")
-        if file_path:
-            # Agora sim, imprima o caminho do arquivo para depuração
-            print(f"Caminho do arquivo selecionado: {file_path}")
-            pixmap = QPixmap(file_path)
-            if not pixmap.isNull():
-                self.image_label.setPixmap(pixmap.scaled(self.image_label.size(), aspectMode=Qt.KeepAspectRatio))
-                self.image_label.setText("")  # Remove o texto quando a imagem é carregada
-            else:
-                self.image_label.setText("Erro ao carregar a imagem.")
+
+            self.table_products.setRowCount(len(products))
+
+            keys = ["cod_sistema", "cod_pdv", "categoria", "nome", "preco_custo", "preco_venda", "medida", "estoque", "estoque_min", "sit_estoque", "descricao", "ficha_tecnica", "status_venda", "imagem_url"]
+
+            self.table_products.setColumnCount(len(keys))
+            self.table_products.setHorizontalHeaderLabels(keys)
+
+            for row_idx, product in enumerate(products):
+                for col_idx, key in enumerate(keys):
+                    item = QTableWidgetItem(str(product.get(key, "")))
+                    self.table_products.setItem(row_idx, col_idx, item)
+
+        except requests.RequestException as e:
+            QMessageBox.critical(self, "Erro", f"Erro ao buscar produtos: {str(e)}")
+
+        # Ao clicar no botão adicionar produto, abre a janela de adicionar produtos
+        self.add_products.clicked.connect(self.abrir_add_produto)
+
+    def abrir_add_produto(self):
+        self.add_produto_window = AddProdutos(parent=self)# type: ignore
+        self.add_produto_window.show()# type: ignore
+
+# classe para gerenciar mesas
 class Mesas(QMainWindow, mesas):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -271,18 +234,18 @@ class Mesas(QMainWindow, mesas):
         name_button = botao_clicado.objectName()
 
         # Mude a cor do botão clicado chamando o método diretamente no objeto.
-        botao_clicado.setStyleSheet("""
-        QPushButton {
-            background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                stop: 0 #000000, stop: 1 #000000);
-            color: white;
-            border: 2px solid green;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 14px;
-        }""")
-
+        if isinstance(botao_clicado, QPushButton):
+            botao_clicado.setStyleSheet("""
+            QPushButton {
+                background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                    stop: 0 #000000, stop: 1 #000000);
+                color: white;
+                border: 2px solid green;
+                padding: 12px 24px;
+                border-radius: 8px;
+                font-weight: bold;
+                font-size: 14px;
+            }""")
 
         # 2. Criar e abrir a nova janela
         self.window_table = window_table(name_button=name_button, parent=self)
@@ -291,7 +254,6 @@ class Mesas(QMainWindow, mesas):
         self.window_table.janela_fechada.connect(
             lambda: self.restaurar_cor(botao_clicado.objectName())
         )
-
 
     def restaurar_cor(self, nome_do_botao):
 
@@ -325,34 +287,45 @@ class Mesas(QMainWindow, mesas):
                 }
             """)
             print(f"Cor do botão {botao_a_restaurar.objectName()} restaurada para um estilo fixo.")
+
+# classe principal da aplicação            
 class Uniq(QMainWindow, uniq):
     def __init__(self):
+        # inicializa a classe pai
         super().__init__()
+        # instancia a interface do uniq
         self.setupUi(self)
 
-        # O self.ticket_window é declarado aqui, mas a instância é criada no método
+        file_path = "desktop/pictures/boas_vindas.png"
+        pixmap = QPixmap(file_path)
+        if not pixmap.isNull():
+            self.boas_vindas.setPixmap(pixmap.scaled(self.boas_vindas.size(), aspectMode=Qt.KeepAspectRatio))# type: ignore
+
+       # Inicializa as janelas como None
         self.clientes_window = None
         self.mesas_window = None
         self.produtos_window = None
 
-        # Conecta o botão para abrir a janela de tickets
+
+        # Ao clicar nos botões, abre as respectivas janelas
+        # janela clientes
         self.btn_clientes.clicked.connect(self.abrir_clientes)
+        # janela mesas
         self.btn_mesas.clicked.connect(self.abrir_mesas)
+        # janela produtos
         self.btn_produtos.clicked.connect(self.abrir_produtos)
 
+    # Funções para abrir a janela filhas de mesas, clientes e produtos
+    # considerando que a janela Uniq é a janela pai, que ao fechada, fecha as janelas filhas
     def abrir_mesas(self):
         self.mesas_window = Mesas(parent=self)
         self.mesas_window.show()
 
     def abrir_clientes(self):
-        # A nova tela é criada aqui, e 'self' (a janela principal) é o pai.
-        # Isso garante que a janela de tickets será fechada quando a janela principal for.
         self.clientes_window = Clientes(parent=self)
         self.clientes_window.show()
 
     def abrir_produtos(self):
-        # A nova tela é criada aqui, e 'self' (a janela principal) é o pai.
-        # Isso garante que a janela de tickets será fechada quando a janela principal for.
         self.produtos_window= Produtos(parent=self)
         self.produtos_window.show()
 

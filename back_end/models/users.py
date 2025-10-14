@@ -1,9 +1,9 @@
 from sqlalchemy import Column, Integer, String, Float
 from sqlalchemy.ext.declarative import declarative_base
 
-
 Base = declarative_base()
 
+# Iserção da tabela de usuários no banco de dados
 class User(Base):
     __tablename__ = "users"
     

@@ -1,5 +1,6 @@
 from pydantic import  BaseModel, Field, EmailStr
 
+# Modelo padrão para usuários
 class User(BaseModel):
     cliente: str = Field(..., min_length= 3, max_length=50)
     telefone: str = Field(..., min_length=11, max_length=11)
@@ -10,4 +11,3 @@ class User(BaseModel):
     cidade: str
     complemento: str
     referencia: str | None = None
-
