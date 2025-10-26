@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="unique">
+    <file>boas_vindas.png</file>
+  </qresource>
+</RCC>

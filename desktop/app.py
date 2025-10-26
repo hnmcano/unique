@@ -176,7 +176,7 @@ class AddProdutos(QMainWindow, addprodutos):
         self.cancelar.clicked.connect(lambda: exibir_confirmacao_exclusao(self))
 
     def abrir_categoria(self):
-        self.categoria_window = Category(parent=self)# type: ignore
+        self.categoria_window = AddCategory(parent=self)# type: ignore
         self.categoria_window.show()# type: ignore
 
 class Produtos(QMainWindow, produtos):
@@ -185,7 +185,7 @@ class Produtos(QMainWindow, produtos):
         self.setupUi(self)
 
         try:
-            response = requests.get("http://127.0.0.1:8000/products/table")
+            response = requests.get("http://127.0.0.1:8000/products/desktop/table")
             response.raise_for_status()  # Levanta um erro para códigos de status HTTP ruins
             products = response.json()
 
@@ -295,12 +295,7 @@ class Uniq(QMainWindow, uniq):
         super().__init__()
         # instancia a interface do uniq
         self.setupUi(self)
-
-        file_path = "desktop/pictures/boas_vindas.png"
-        pixmap = QPixmap(file_path)
-        if not pixmap.isNull():
-            self.boas_vindas.setPixmap(pixmap.scaled(self.boas_vindas.size(), aspectMode=Qt.KeepAspectRatio))# type: ignore
-
+        
        # Inicializa as janelas como None
         self.clientes_window = None
         self.mesas_window = None

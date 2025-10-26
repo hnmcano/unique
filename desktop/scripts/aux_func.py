@@ -167,6 +167,7 @@ def salvar_dados_produtos(parent=None):
             QMessageBox.critical(parent, "Erro de BD", f"Ocorreu um erro: {e}")
             # Limpa o objeto de resposta para evitar vazamento de memória (melhor prática)
             reply.deleteLater()
+            
 def inserir_imagem(parent=None):
     file_dialog = QFileDialog()
     file_path, _ = file_dialog.getOpenFileName(parent, "Selecionar Imagem", "", "Arquivos de Imagem (*.png *.jpg *.jpeg *.bmp *.gif)")

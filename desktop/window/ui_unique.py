@@ -18,6 +18,7 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMainWindow,
     QMenuBar, QPushButton, QSizePolicy, QStatusBar,
     QVBoxLayout, QWidget)
+from pictures import imagens_rc
 
 class Ui_Unique(object):
     def setupUi(self, Unique):
@@ -236,11 +237,15 @@ class Ui_Unique(object):
         self.widget_2 = QWidget(self.centralwidget)
         self.widget_2.setObjectName(u"widget_2")
         self.horizontalLayout_3 = QHBoxLayout(self.widget_2)
+        self.horizontalLayout_3.setSpacing(0)
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-        self.boas_vindas = QLabel(self.widget_2)
-        self.boas_vindas.setObjectName(u"boas_vindas")
+        self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
+        self.label_3 = QLabel(self.widget_2)
+        self.label_3.setObjectName(u"label_3")
+        self.label_3.setStyleSheet(u"image: url(:/unique/boas_vindas.png);\n"
+"background-color: rgb(0, 0, 0);")
 
-        self.horizontalLayout_3.addWidget(self.boas_vindas)
+        self.horizontalLayout_3.addWidget(self.label_3)
 
 
         self.verticalLayout.addWidget(self.widget_2)
@@ -310,7 +315,7 @@ class Ui_Unique(object):
         self.btn_mesas.setText(QCoreApplication.translate("Unique", u"Mesas", None))
         self.btn_produtos.setText(QCoreApplication.translate("Unique", u"Produtos", None))
         self.btn_loggout.setText(QCoreApplication.translate("Unique", u"Loggout", None))
-        self.boas_vindas.setText("")
+        self.label_3.setText("")
         self.label_2.setText(QCoreApplication.translate("Unique", u"TextLabel", None))
         self.label.setText(QCoreApplication.translate("Unique", u"Teste1", None))
     # retranslateUi

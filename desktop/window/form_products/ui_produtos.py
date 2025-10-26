@@ -178,6 +178,9 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.table_products = QTableWidget(self.widget_2)
         self.table_products.setObjectName(u"table_products")
+        self.table_products.setStyleSheet(u"background- color: white;\n"
+"border: 1px solid blue;\n"
+"boder-radius: 5px;")
 
         self.verticalLayout_2.addWidget(self.table_products)
 
