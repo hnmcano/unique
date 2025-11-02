@@ -1,0 +1,35 @@
+    
+    
+Criação de um layout com manipulção de categorias e produtos
+    <div 
+        className="button_menu" 
+        style={{ marginLeft: isMenuOpen ? '130px' : '20px'
+        }}
+        >
+            <button onClick={toggleMenu} class="menu-icon">☰</button>
+        </div>
+        <div className={`container_ ${isMenuOpen ? 'open' : 'closed'}`}
+                style={{ display: isMenuOpen ? 'block' : 'none'}}>
+            <div className="icon_menu">
+                <div className="label-menu">
+                    <label>Menu Items</label>
+                </div>
+            </div>
+            <div>
+                <li className="list_buttons">teste</li>
+                <li className="list_buttons" >teste1</li>
+            </div>
+        </div>
+        <div className="container__">
+            <div className="logo"></div>
+            <div className="produtos">
+                    {base && base.map((categoria, index) => (
+                        <div key={index}>
+                        <div className="categoria" onClick={() => toggleVisibility(index)}>{categoria.categoria}</div>
+                            <div>
+                                {categoriaVisible[String(index)] && ( <ProdutosAcionados categoria={categoria}/>)}
+                            </div>
+                        </div> 
+                    ))}
+            </div>
+        </div>

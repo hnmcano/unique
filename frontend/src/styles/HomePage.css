@@ -1,0 +1,142 @@
+body{
+    margin: 0px;
+    padding: 0px;
+    background-color: rgb(255, 255, 255);
+}
+
+.container_products{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.produtos {
+    
+    width: 720px;
+    height: 45px;
+    background-color: rgb(228, 132, 6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    border: 1px solid black;
+    font-size: 16px;
+    margin: 10px;
+}
+
+input {
+
+    width: 250px;
+    margin-right: 20px;
+    padding: 3px;
+    border-radius: 5px;
+    border: 1px solid black;
+    font-size: 16px;
+}
+
+button {
+
+    width: 110px;
+    background-color: antiquewhite;
+    padding: 3px;
+    border-radius: 5px;
+    border: 1px solid black;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: rgb(255, 172, 172);
+    color: antiquewhite;
+}
+
+button:active {
+    background-color: rgb(255, 172, 172);
+    color: antiquewhite;
+}
+
+.produto_item{
+    background-color: blanchedalmond;
+    margin: 2px;
+    border: 1px solid black;
+    padding: 5px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 600px;
+}
+
+.dados {
+    margin-left: 10px;
+    margin-right: 10px;
+    display: inline-flex; 
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.descricao{
+    display: flex;
+    flex-grow: 1;
+    align-items: left;
+    justify-content: center;
+}
+
+.produtos_agrupados{
+    display: flex;
+    flex-direction: row-reverse;
+    flex-wrap: wrap;
+    max-width: 720px;
+    align-items: center;
+    justify-content: center;
+}
+
+.menusuperior {
+    height: 45px;
+    width: 100%;
+    background-color: antiquewhite;
+    display: flex;
+    align-items: center;
+}
+
+.filter{
+    margin: 10px;
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: left;
+    flex-direction: row;
+}
+
+.filter label{
+    margin-right: 10px;
+}
+
+.filter input{
+    width: 350px;
+    border: 1px solid rgba(65, 129, 131, 0.685);
+    padding: 3px;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.buttonsuperior{
+    width: 250px;
+    height: 45px;
+    background-color: transparent;
+    display: flex;
+    align-items: left;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.iconShoppingCart{
+    color: #007bff; /* Mude a cor */
+    font-size: 2em; /* Mude o tamanho */
+    transition: color 0.3s;
+}
+
+.iconShoppingCart:hover {
+    color: #b30000; /* Mude a cor ao passar o mouse */
+}
