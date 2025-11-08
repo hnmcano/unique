@@ -6,7 +6,7 @@ import json
 
 # Carregar CSV
 df = pd.read_csv(
-    "C:/Users/eu/Downloads/PRODUTOS.csv",
+    r"C:\Users\Pichau\Downloads\PRODUTOS.csv",
     sep=';',
     encoding='latin1'
 )
@@ -27,12 +27,17 @@ for idx, row in df.iterrows():
     # Transformar a linha em um dicionário JSON
     data_json = sanitize_row(row)
 
-    data_json["cod_sistema"] = str(data_json["cod_sistema"])
-    data_json["cod_pdv"] = str(data_json["cod_pdv"])
-    data_json["preco_custo"] = float(data_json["preco_custo"].replace(",", "."))# type: ignore
-    data_json["preco_venda"] = float(data_json["preco_venda"].replace(",", "."))
+    data_json["cod_sistema"] = int(data_json["cod_sistema"])
+    data_json["cod_pdv"] = str(int(data_json["cod_pdv"]))
+    data_json["estoque"] = int(data_json["estoque"])
+    data_json["estoque_min"] = int(data_json["estoque_min"])
     
-    print(data_json)
+    try:
+        data_json["preco_custo"] = float(data_json["preco_custo"].replace(",", "."))# type: ignore
+        data_json["preco_venda"] = float(data_json["preco_venda"].replace(",", "."))
+    except ValueError:
+        data_json["preco_custo"] = data_json["preco_custo"]
+        data_json["preco_venda"] = data_json["preco_venda"]
 
       # Pequena pausa para evitar sobrecarga no servidor
 

@@ -15,3 +15,4 @@ class Carrinho(BaseModel):
     ficha_tecnica: str | None = None
     status_venda: str = Field(..., min_length=3, max_length=20)
     imagem_url: str | None = None
+    quantidade: int = Field(..., ge=1)

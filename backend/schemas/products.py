@@ -6,7 +6,7 @@ class Product(BaseModel):
     cod_pdv: str | None = None
     categoria: str = Field(..., min_length=3, max_length=30)
     nome: str = Field(..., min_length= 3, max_length=50)
-    preco_custo: float = Field(..., gt=0)
+    preco_custo: float = Field(..., ge=0)
     preco_venda: float = Field(..., gt=0)
     medida: str = Field(..., min_length=1, max_length=2)
     estoque: int = Field(..., ge=0)

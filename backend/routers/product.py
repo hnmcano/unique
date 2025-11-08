@@ -63,3 +63,4 @@ async def delete_category(category_id: str, db: Session = Depends(get_db)):
         return {"message": "Categoria excluída com sucesso"}
     return {"message": "Categoria não encontrada"}
 
+

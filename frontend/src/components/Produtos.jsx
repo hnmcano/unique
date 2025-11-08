@@ -25,7 +25,8 @@ function ProdutosAcionados({categoria}) {
             descricao: produto.descricao,
             ficha_tecnica: produto.ficha_tecnica,
             status_venda: produto.status_venda,
-            imagem_url: produto.imagem_url
+            imagem_url: produto.imagem_url,
+            quantidade: 1
         };
 
         console.log('Dados a enviar:',dadosEnviar);
@@ -46,7 +47,7 @@ function ProdutosAcionados({categoria}) {
     };
     
     return (
-        <div className="produtos_agrupados">
+        <div className="products-gouped">
             {categoria.produtos.map((produto) => (
                 <div key={produto.cod_sistema} className="produto_item">
                     <div className="descricao">

@@ -1,142 +1,209 @@
-body{
+body {
     margin: 0px;
     padding: 0px;
-    background-color: rgb(255, 255, 255);
+    background-color: rgba(20, 19, 19, 0.904);
+    height: 100vh;
 }
 
-.container_products{
+div.home {
     display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.produtos {
-    
-    width: 720px;
-    height: 45px;
-    background-color: rgb(228, 132, 6);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 5px;
-    border: 1px solid black;
-    font-size: 16px;
-    margin: 10px;
-}
-
-input {
-
-    width: 250px;
-    margin-right: 20px;
-    padding: 3px;
-    border-radius: 5px;
-    border: 1px solid black;
-    font-size: 16px;
-}
-
-button {
-
-    width: 110px;
-    background-color: antiquewhite;
-    padding: 3px;
-    border-radius: 5px;
-    border: 1px solid black;
-    font-size: 16px;
-}
-
-button:hover {
-    background-color: rgb(255, 172, 172);
-    color: antiquewhite;
-}
-
-button:active {
-    background-color: rgb(255, 172, 172);
-    color: antiquewhite;
-}
-
-.produto_item{
-    background-color: blanchedalmond;
-    margin: 2px;
-    border: 1px solid black;
-    padding: 5px;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 600px;
-}
-
-.dados {
-    margin-left: 10px;
-    margin-right: 10px;
-    display: inline-flex; 
-    flex-grow: 1;
-    align-items: center;
-    justify-content: center;
     flex-direction: row;
+    flex-wrap: nowrap;
+    height: 100vh;
 }
 
-.descricao{
+div.options {
+    background-color: rgba(0, 0, 0, 0.315);
+    width: 60px;
+    height: 100vh;
     display: flex;
+    flex-direction: column;
+    align-items: top;
+    justify-content: top;
+}
+
+div.container {
+    display: flex;
+    flex-direction: column;
     flex-grow: 1;
-    align-items: left;
-    justify-content: center;
+    overflow-y: auto;  
 }
 
-.produtos_agrupados{
-    display: flex;
-    flex-direction: row-reverse;
-    flex-wrap: wrap;
-    max-width: 720px;
-    align-items: center;
-    justify-content: center;
-}
-
-.menusuperior {
-    height: 45px;
-    width: 100%;
-    background-color: antiquewhite;
-    display: flex;
-    align-items: center;
-}
-
-.filter{
-    margin: 10px;
-    display: flex;
-    flex-grow: 1;
-    align-items: center;
-    justify-content: left;
-    flex-direction: row;
-}
-
-.filter label{
-    margin-right: 10px;
-}
-
-.filter input{
-    width: 350px;
-    border: 1px solid rgba(65, 129, 131, 0.685);
-    padding: 3px;
-    border-radius: 5px;
-    font-size: 16px;
-}
-
-.buttonsuperior{
-    width: 250px;
-    height: 45px;
+div.header {
     background-color: transparent;
+    height: 600px;
     display: flex;
-    align-items: left;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+.logotipo-hookah {
+    background-color: aliceblue;
+    flex-grow: 1;
+    height: 200px;
+    max-height: 200px;
+}
+
+div.data {
+    display: flex;
+    flex-direction: column;
+    height: 120px;
+    align-items: center;
     justify-content: center;
+    background-color: transparent;
+    color: white;
+    font-size: 20px;
+}
+
+div.buttons-filters {
+    display: flex;
     flex-direction: row;
+    align-items: self-end;
+    overflow-x: auto;
+    height: 55px;
+    background-color: transparent;
+    border-bottom: 2px solid rgba(19, 17, 17, 0.733);
 }
 
-.iconShoppingCart{
-    color: #007bff; /* Mude a cor */
-    font-size: 2em; /* Mude o tamanho */
-    transition: color 0.3s;
+div.buttons-filters::-webkit-scrollbar {
+    width: 120px;
+    height: 5px;
 }
 
-.iconShoppingCart:hover {
-    color: #b30000; /* Mude a cor ao passar o mouse */
+div.buttons-filters::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    cursor: pointer;
+}
+
+div.buttons-filters::-webkit-scrollbar-thumb {
+    background: #000000; /* Cor preta */
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button.buttons-filters {
+    min-width: 145px;
+    background-color: transparent;
+    height: 35px;
+    border: 0px;
+    border-left: 2px solid rgba(19, 17, 17, 0.733);
+    border-right: 2px solid rgba(19, 17, 17, 0.733);
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+button.buttons-filters:hover {
+    background-color: rgba(39, 35, 35, 0.733);
+}
+
+button.buttons-filters.active {
+    background-color: rgba(39, 35, 35, 0.733);
+}
+
+button.buttons-filters:focus {
+    background-color: rgba(39, 35, 35, 0.733);
+}
+
+div.container-categories {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+div.categories-details {
+    padding: 25px;
+    background-color: rgb(24, 22, 22);
+    margin-top: 10px;
+    margin-left: 45px;
+    margin-right: 45px;
+    border: 2px solid rgba(32, 29, 29, 0.678);
+    border-radius: 20px;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+}
+
+div.categories-details:hover {
+    background-color: rgba(39, 35, 35, 0.733);
+}
+
+div.categories-details:focus {
+    background-color: rgba(39, 35, 35, 0.733);
+}
+
+div.categories-details.active {
+    background-color: rgba(39, 35, 35, 0.733);
+}
+
+.products-gouped {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(250px, 1fr));
+    grid-gap: 20px;
+    padding: 20px;
+    overflow-y: auto;
+    margin-top: 10px;
+    margin-left: 45px;
+    margin-right: 45px;
+}
+
+.products-gouped::-webkit-scrollbar {
+    display: none;
+}
+
+.produto_item {
+
+    background-color: rgb(24, 22, 22);
+    color: white;
+    padding: 35px;
+    border: 2px solid rgba(32, 29, 29, 0.678);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.produto_item:hover {
+    background-color: rgba(39, 35, 35, 0.733);
+}
+
+.produto_item:focus {
+    background-color: rgba(39, 35, 35, 0.733);
+}
+
+.produto_item.active {
+    background-color: rgba(39, 35, 35, 0.733);
+}
+
+div.icons-ajustes {
+    margin-top: 35px;
+}
+
+div.icons-options {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icons {
+    color: white;
+    width: 40px;
+    height: 40px;
+}
+
+.icons:hover {
+    color: rgba(122, 1, 116, 0.733);
+}   
+
+img.logo {
+    height: 200px;
+    width: 100%;
 }
