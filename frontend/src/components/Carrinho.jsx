@@ -1,16 +1,22 @@
-import React, { useRef, useState, useEffect, use} from "react";
-import axios from "axios";
+import React, { useRef, useState, useEffect} from "react";
 import "../styles/Carrinho.css"
 import Draggable from "react-draggable";
 import { removerProduto } from "../api/carrinhoServices";
-import { useCarrinho } from "../hooks/useCarrinho";
-
+import { useCarrinho, useProdutosCartShopping } from "../hooks/useCarrinho";
 
 function ModalShopping({closeModal, openModal, children}){
     const [total, setTotal] = useState(0);
     const [carrinho, setCarrinho] = useState([]);
     const { produtos, setProdutos } = useCarrinho();
+    const { baseCartShopping } = useProdutosCartShopping(openModal);
+    
     const nodeRef = useRef(null);
+
+    useEffect(() => {
+        if (openModal && baseCartShopping.length > 0) {
+            setProdutos(baseCartShopping);
+        }
+    }, [openModal, baseCartShopping, setProdutos]);
 
     //Somar o total por produtos
     const handleQuantidade = (id, delta) => {
@@ -23,9 +29,11 @@ function ModalShopping({closeModal, openModal, children}){
     }
     //Calcular o total
     useEffect(() => {
+        if(openModal){
         const soma = produtos.reduce((acc, p) => acc + (p.preco_venda * p.quantidade), 0);
-        setTotal(soma);    
-    }, [produtos]);
+        setTotal(soma);
+        }
+    }, [produtos, openModal]);
 
 
     const handleRemover = async (cod_sistema) => {
@@ -55,19 +63,19 @@ function ModalShopping({closeModal, openModal, children}){
 
                 <div className="listproductsshoppingcart">
                     {produtos.map((p) => (
-                    <div className="shoppingcartproducts" key={p.cod_sistema}>
-                        <div className="nameproductsshoppingcart">{p.nome}</div>
-                        <div className=""></div>
-                        <div className="valueproductsshoppingcart">
-                        <label>R${(p.preco_venda * p.quantidade).toFixed(2)}</label>
+                        <div className="shoppingcartproducts" key={p.cod_sistema}>
+                            <div className="nameproductsshoppingcart">{p.nome}</div>
+                            <div className=""></div>
+                            <div className="valueproductsshoppingcart">
+                            <label>R${(p.preco_venda * p.quantidade).toFixed(2)}</label>
+                            </div>
+                            <div className="modifyproductsshoppingcart">
+                            <button onClick={() => handleQuantidade(p.cod_sistema, 1)} className="buttonquantitymore">+</button>
+                            <label className="quantity-number">{p.quantidade}</label>
+                            <button onClick={() => handleQuantidade(p.cod_sistema, -1)} className="buttonquantityless">-</button>
+                            <button onClick={() => handleRemover(p.cod_sistema)} className="buttondeleteitem">-</button>
+                            </div>
                         </div>
-                        <div className="modifyproductsshoppingcart">
-                        <button onClick={() => handleQuantidade(p.cod_sistema, 1)} className="buttonquantitymore">+</button>
-                        <label className="quantity-number">{p.quantidade}</label>
-                        <button onClick={() => handleQuantidade(p.cod_sistema, -1)} className="buttonquantityless">-</button>
-                        <button onClick={() => handleRemover(p.cod_sistema)} className="buttondeleteitem">-</button>
-                        </div>
-                    </div>
                     ))}
                     <div style={{"flex-grow": "1"}}></div>
                 </div>

@@ -45,22 +45,33 @@ function ProdutosAcionados({categoria}) {
     const toggleVisibility = () => {
         setIsVisible(!isVisible);
     };
+
     
     return (
         <div className="products-gouped">
             {categoria.produtos.map((produto) => (
-                <div key={produto.cod_sistema} className="produto_item">
-                    <div className="descricao">
-                        <div className="dados_name">
-                            <div className="dados">{produto.nome}</div>
+            <div key={produto.cod_sistema} className="produto_item">
+                <div className="data-itens-product">
+                    <div className="itens-product-img">
+                    </div>
+                    <div className="data-itens-unique">
+                        <div className="data-itens-unique-name">
+                            {produto.nome}
                         </div>
-                        <div className="dados">{produto.descricao}</div>
-                        <div>
-                            <div className="dados">R${parseFloat(produto.preco_venda).toFixed(2)}</div>
+                        <div className="data-itens-unique-description">
+                            {produto.descricao}
                         </div>
-                    </div>   
-                    <button onClick={() => addProduct(categoria, produto)}>+</button>
+                        <div className="data-itens-unique-select">
+                            <div className="data-itens-unique-select-quantity">
+                                <button className="buttonquantitymore">+</button>
+                                <label className="quantity-number"></label>
+                                <button className="buttonquantityless">-</button>
+                                <button onClick={() => addProduct(categoria, produto)} className="data-itens-unique-select-adicionar">ADICIONAR</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            </div>
             ))}
         </div>
     );

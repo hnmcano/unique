@@ -15,13 +15,13 @@ async def read_products(db: Session = Depends(get_db)):
     db = db.query(CarrinhoModel).all()
     db = [p.__dict__ for p in db]
     dataframe = pd.DataFrame(db).drop(columns=["_sa_istance_state"], errors="ignore")
-
-    dataframe["valor_total"] = dataframe["preco_venda"] * dataframe["quantidade"]
+    
+    if not dataframe.empty:
+        dataframe["valor_total"] = dataframe["preco_venda"] * dataframe["quantidade"]
 
     dataframe = dataframe.to_dict(orient='records')
 
     return dataframe
-
 
 @router.post("/postagem/{product_id}")
 async def post_product(product_id: int, format: CarrinhoSchema, db: Session = Depends(get_db)):
@@ -38,8 +38,6 @@ async def post_product(product_id: int, format: CarrinhoSchema, db: Session = De
     db.refresh(db_product)
     return db_product
 
-
-
 @router.delete("/delete/{product_id}")
 async def delete_product(product_id: str, db: Session = Depends(get_db)):
     db_carrinho = db.query(CarrinhoModel).filter(CarrinhoModel.cod_sistema == product_id).first()
@@ -48,9 +46,6 @@ async def delete_product(product_id: str, db: Session = Depends(get_db)):
         db.commit()
         return {"message": "Produto excluído com sucesso"}
     return {"message": "Produto nao encontrado"}
-
-
-
 
 
 @router.put("/carrinho")

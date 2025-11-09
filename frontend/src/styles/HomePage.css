@@ -31,7 +31,7 @@ div.container {
 
 div.header {
     background-color: transparent;
-    height: 600px;
+    height: 400px;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -42,6 +42,9 @@ div.header {
     flex-grow: 1;
     height: 200px;
     max-height: 200px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 div.data {
@@ -49,7 +52,7 @@ div.data {
     flex-direction: column;
     height: 120px;
     align-items: center;
-    justify-content: center;
+    justify-content: top;
     background-color: transparent;
     color: white;
     font-size: 20px;
@@ -91,6 +94,7 @@ button.buttons-filters {
     color: white;
     font-size: 14px;
     cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 button.buttons-filters:hover {
@@ -146,7 +150,7 @@ div.categories-details.active {
     grid-gap: 20px;
     padding: 20px;
     overflow-y: auto;
-    margin-top: 10px;
+    margin-top: 5px;
     margin-left: 45px;
     margin-right: 45px;
 }
@@ -156,10 +160,9 @@ div.categories-details.active {
 }
 
 .produto_item {
-
     background-color: rgb(24, 22, 22);
     color: white;
-    padding: 35px;
+    padding: 10px;
     border: 2px solid rgba(32, 29, 29, 0.678);
     border-radius: 20px;
     display: flex;
@@ -167,19 +170,92 @@ div.categories-details.active {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.896);
 }
 
-.produto_item:hover {
-    background-color: rgba(39, 35, 35, 0.733);
+.data-itens-product {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: left;
+    width: 100%;
+    height: 200px;
+    font-size: 16px;
+    margin-top: 0px;
 }
 
-.produto_item:focus {
-    background-color: rgba(39, 35, 35, 0.733);
+.itens-product-img {
+    width: 200px;
+    height: 200px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    background-color: #f1f1f1;
 }
 
-.produto_item.active {
-    background-color: rgba(39, 35, 35, 0.733);
+.data-itens-unique {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: left;
+    width: 100%;
+    height: 200px;
+    font-size: 16px;
+    margin-top: 0px;
+    border-bottom-right-radius: 20px;
+    border-top-right-radius: 20px;
 }
+.data-itens-unique-name {
+    margin-top: 2px;
+    height: 30px;
+    border-top-right-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.data-itens-unique-description {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    border: 1px solid rgb(73, 69, 69);
+    margin: 10px;
+}
+
+.data-itens-unique-select {
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    margin-right: 25px;
+    height: 35px;
+    border-bottom-right-radius: 20px;
+}
+
+.data-itens-unique-select-quantity {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+}
+
+.data-itens-unique-select-adicionar {
+    padding: 8px;
+    width: 125px;
+    border-radius: 10px;
+    background-color: rgb(78, 4, 97);
+    color: white;
+    cursor: pointer;
+    border: 2px solid rgba(32, 29, 29, 0.678);
+}
+
+.data-itens-unique-select-adicionar:hover {
+    background-color: rgba(78, 4, 97, 0.733);
+}
+
+.data-itens-unique-select-adicionar:focus {
+    background-color: rgba(78, 4, 97, 0.733);
+}
+
 
 div.icons-ajustes {
     margin-top: 35px;
@@ -206,4 +282,48 @@ div.icons-options {
 img.logo {
     height: 200px;
     width: 100%;
+    position: relative;
+}
+
+.status-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-top: -12px; /* Metade da altura do status para sobrepor */
+    z-index: 10;
+}
+
+.status {
+    background-color: #27ae60;
+    width: 120px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    color: white;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+.infos{
+    margin-top: 10px;
+}
+
+.infos-data {
+
+    margin-top: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    color: rgb(128, 128, 128);
+    height: 25px;
+    width: 100%;
+    font: bold;
+    font-size: 22px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }

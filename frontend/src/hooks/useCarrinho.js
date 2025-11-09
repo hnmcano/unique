@@ -23,3 +23,23 @@ export const useCarrinho = () => {
 
     return {produtos, setProdutos};
 };
+
+
+export const useProdutosCartShopping = (shouldFecth) => {
+    const [baseCartShopping, setBaseCartShopping] = useState([]);
+
+    useEffect(() => {      
+        const fechData = async () => {
+            try {
+                const response = await api.get("/carrinho/carrinho");
+                setBaseCartShopping(response.data);
+            } catch (error) {
+                console.error('Erro ao receber os dados da tabela:', error);
+
+            }
+        };
+        fechData();
+    }, [shouldFecth]);
+    
+    return {baseCartShopping, setBaseCartShopping};
+};
