@@ -16,3 +16,7 @@ class Carrinho(BaseModel):
     status_venda: str = Field(..., min_length=3, max_length=20)
     imagem_url: str | None = None
     quantidade: int = Field(..., ge=1)
+
+class CarrinhoUpdate(Carrinho):
+    id: int = Field(..., gt=0)
+    quantidade: int = Field(..., ge=1)

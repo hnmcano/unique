@@ -1,32 +1,47 @@
 import React, { useRef, useState, useEffect} from "react";
+import axios from "axios";
 import "../styles/Carrinho.css"
 import Draggable from "react-draggable";
 import { removerProduto } from "../api/carrinhoServices";
-import { useCarrinho, useProdutosCartShopping } from "../hooks/useCarrinho";
+import { useCarrinho} from "../hooks/useCarrinho";
 
 function ModalShopping({closeModal, openModal, children}){
     const [total, setTotal] = useState(0);
-    const [carrinho, setCarrinho] = useState([]);
-    const { produtos, setProdutos } = useCarrinho();
-    const { baseCartShopping } = useProdutosCartShopping(openModal);
-    
+    const { produtos, setProdutos, delCartShopping, isLoading, fetchCarrinho  } = useCarrinho();
+
     const nodeRef = useRef(null);
 
     useEffect(() => {
-        if (openModal && baseCartShopping.length > 0) {
-            setProdutos(baseCartShopping);
+        if (openModal) {
+            fetchCarrinho();  
         }
-    }, [openModal, baseCartShopping, setProdutos]);
+    }, [openModal, fetchCarrinho]);
 
     //Somar o total por produtos
-    const handleQuantidade = (id, delta) => {
-        setProdutos(prev => 
-            prev.map(p => 
-                p.cod_sistema === id 
-                ? {...p, quantidade: Math.max(1, p.quantidade + delta) } : p
-            )
+    const handleQuantidade = async(id, delta) => {
+        setProdutos(prev => {
+        const novaQuantidade = prev.map(p =>
+            p.cod_sistema === id 
+            ? {...p, quantidade: Math.max(1, p.quantidade + delta) } : p
         );
+
+        const produtoAtualizado = novaQuantidade.find(p => p.cod_sistema === id);
+
+        axios.put(`http://127.0.0.1:8000/carrinho/atualizar/quantidade/${id}/${produtoAtualizado.quantidade}`, { produtoAtualizado })
+        .then(response => {
+            
+            console.log('Quantidade atualizada com sucesso:', response.data);
+        })
+        .catch(error => {
+            console.log('Resposta do servidor:', produtoAtualizado);
+            console.error('Erro ao atualizar a quantidade:', error);
+        });
+        return novaQuantidade;
+
+        });
     }
+
+
     //Calcular o total
     useEffect(() => {
         if(openModal){
@@ -83,11 +98,10 @@ function ModalShopping({closeModal, openModal, children}){
                 <div className="modal-footer">
                     <div className="totalvalueshoppingcart">
                         <label className="totalvalueshoppingcart">Total: R$ {total.toFixed(2)}</label>
-                        <label className="totalvalueshoppingcart">Desconto: R$ 0,00</label>
                         <label className="totalvalueshoppingcart">Qtd: 0</label>
                     </div>
                     <button className="buttonfinishbuy">Finalizar Compra</button>
-                    <button className="buttonfinishcancel">Excluir</button>
+                    <button onClick={() => delCartShopping()} className="buttonfinishcancel" disabled={isLoading}>Excluir</button>
                 </div>
             </div>
         </Draggable>

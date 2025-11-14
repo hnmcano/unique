@@ -37,10 +37,13 @@ function ProdutosAcionados({categoria}) {
         } catch (error) {
             console.error('Erro ao enviar os dados:', error);
             setError(error.message);
+            console.error('Erro ao enviar os dados:', dadosEnviar);
         } finally {
             setLoading(false);
         }
     }
+
+
 
     const toggleVisibility = () => {
         setIsVisible(!isVisible);
@@ -63,9 +66,6 @@ function ProdutosAcionados({categoria}) {
                         </div>
                         <div className="data-itens-unique-select">
                             <div className="data-itens-unique-select-quantity">
-                                <button className="buttonquantitymore">+</button>
-                                <label className="quantity-number"></label>
-                                <button className="buttonquantityless">-</button>
                                 <button onClick={() => addProduct(categoria, produto)} className="data-itens-unique-select-adicionar">ADICIONAR</button>
                             </div>
                         </div>

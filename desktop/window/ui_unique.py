@@ -28,10 +28,11 @@ class Ui_Unique(object):
         Unique.resize(1086, 720)
         Unique.setMinimumSize(QSize(1086, 720))
         Unique.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
+        Unique.setStyleSheet(u"")
         Unique.setInputMethodHints(Qt.InputMethodHint.ImhNone)
         self.centralwidget = QWidget(Unique)
         self.centralwidget.setObjectName(u"centralwidget")
-        self.centralwidget.setStyleSheet(u"")
+        self.centralwidget.setStyleSheet(u"background-color: rgb(162, 165, 171);")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -45,18 +46,10 @@ class Ui_Unique(object):
         self.widget.setSizePolicy(sizePolicy)
         self.widget.setMaximumSize(QSize(16777215, 100))
         self.widget.setStyleSheet(u"QWidget {\n"
-"	background-color: rgb(0, 0, 0);\n"
-"    border-bottom: 1px solid red;\n"
+"	\n"
+"	background-color: rgb(181, 184, 190);\n"
 "    \n"
-"    /* Gradiente para profundidade */\n"
-"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"        stop: 0 #000000, \n"
-"        stop: 0.5 #000000,\n"
-"        stop: 1 #000000);\n"
-"    \n"
-"    /* Sombra externa para efeito 3D */\n"
-"    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2),\n"
-"                -1px -1px 2px rgba(255, 255, 255, 0.3);\n"
+"    box-shadow: 0px 64px 64px rgba(0, 0, 0, 0);\n"
 "}")
         self.horizontalLayout_2 = QHBoxLayout(self.widget)
         self.horizontalLayout_2.setSpacing(15)
@@ -242,8 +235,7 @@ class Ui_Unique(object):
         self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
         self.label_3 = QLabel(self.widget_2)
         self.label_3.setObjectName(u"label_3")
-        self.label_3.setStyleSheet(u"image: url(:/unique/boas_vindas.png);\n"
-"background-color: rgb(0, 0, 0);")
+        self.label_3.setStyleSheet(u"image: url(:/unique/boas_vindas.png);")
 
         self.horizontalLayout_3.addWidget(self.label_3)
 
@@ -308,7 +300,7 @@ class Ui_Unique(object):
     # setupUi
 
     def retranslateUi(self, Unique):
-        Unique.setWindowTitle(QCoreApplication.translate("Unique", u"Unique", None))
+        Unique.setWindowTitle(QCoreApplication.translate("Unique", u"unique", None))
         self.btn_caixa.setText(QCoreApplication.translate("Unique", u"Caixa", None))
         self.btn_clientes.setText(QCoreApplication.translate("Unique", u"Cliente", None))
         self.btn_delivery.setText(QCoreApplication.translate("Unique", u"Delivery", None))

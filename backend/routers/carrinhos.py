@@ -6,7 +6,7 @@ from bd.connection import get_db
 from typing import List, Dict
 from models.carrinhos import Carrinho as CarrinhoModel
 from schemas.carrinhos import Carrinho as CarrinhoSchema
-from time import sleep
+from schemas.carrinhos import CarrinhoUpdate as CarrinhoUpdateSchema
 
 router = APIRouter()
 
@@ -15,13 +15,18 @@ async def read_products(db: Session = Depends(get_db)):
     db = db.query(CarrinhoModel).all()
     db = [p.__dict__ for p in db]
     dataframe = pd.DataFrame(db).drop(columns=["_sa_istance_state"], errors="ignore")
-    
     if not dataframe.empty:
         dataframe["valor_total"] = dataframe["preco_venda"] * dataframe["quantidade"]
 
     dataframe = dataframe.to_dict(orient='records')
 
     return dataframe
+
+@router.delete("/delete/all")
+async def delete_all(db: Session = Depends(get_db)):
+    db.query(CarrinhoModel).delete()
+    db.commit()
+    return {"message": "Carrinho excluido com sucesso"}
 
 @router.post("/postagem/{product_id}")
 async def post_product(product_id: int, format: CarrinhoSchema, db: Session = Depends(get_db)):
@@ -48,12 +53,11 @@ async def delete_product(product_id: str, db: Session = Depends(get_db)):
     return {"message": "Produto nao encontrado"}
 
 
-@router.put("/carrinho")
-async def update_product(product: CarrinhoSchema, db: Session = Depends(get_db)):
-    db_product = db.query(CarrinhoModel).filter(CarrinhoModel.cod_sistema == product.cod_sistema).first()
+@router.put("/atualizar/quantidade/{product_id}/{quantidade}")
+async def update_product(product_id: int, quantidade: int, db: Session = Depends(get_db)):
+    db_product = db.query(CarrinhoModel).filter(CarrinhoModel.cod_sistema == product_id).first()
     if db_product:
-        db_product.preco = product.preco
-        db_product.quantidade = product.quantidade
+        db_product.quantidade = quantidade
         db.commit()
         return {"message": "Produto atualizado com sucesso"}
     return {"message": "Produto nao encontrado"}
