@@ -1,20 +1,14 @@
-import ProdutosAcionados from "./Produtos";
 import { useState } from "react";
 import { useProdutos } from "../hooks/useProdutos";
+import CategoriesLoop from "../components/Categories";
 
 function ContainerCategories() {
     const { base: setBaseProdutos } = useProdutos();
-    const [categoriaVisible, setCategoriaVisible] = useState({});
+    const [CategoriesLoopList, setCategoriesLoopList] = useState(true);
+    const [selectedCategories, setSelectedCategories] = useState(null);
 
-    const toggleVisibility = (index) => {
-        // Converte o índice para string, se necessário, para ser uma chave de objeto consistente
-        const indexString = String(index); 
-        
-        setCategoriaVisible((prevState) => ({
-            ...prevState,
-            // Usa o índice como chave no estado
-            [indexString]: !prevState[indexString],
-        }));
+    const handleFilterClick = (categoryName) => {
+        setSelectedCategories(prevCategory => prevCategory === categoryName ? null : categoryName);
     };
 
     return (
@@ -43,21 +37,18 @@ function ContainerCategories() {
                         </div>
                     </div>
                 </div>
-                
+                <div style={{width: "100%", "display": "flex", "alignItems": "right", "justifyContent": "right"}}>
+                    <button onClick={() => setSelectedCategories(null)} className="buttons-filters clear-filter">Limpar filtro</button>
+                </div>
                 <div className="buttons-filters">
                     {setBaseProdutos && setBaseProdutos.map((categoria, index) => (
-                        <button className="buttons-filters">{categoria.categoria}</button>
+                        <button onClick={() => handleFilterClick(categoria.categoria)} className={`buttons-filters ${selectedCategories === categoria.categoria ? 'active' : ''}`}>{categoria.categoria}</button>
                     ))}
                 </div>
             </div>
-            {setBaseProdutos && setBaseProdutos.map((categoria, index) => (
-                <div key={index}>
-                <div className="categories-details" onClick={() => toggleVisibility(index)}>{categoria.categoria}</div>
-                    <div>
-                        {categoriaVisible[String(index)] && ( <ProdutosAcionados categoria={categoria}/>)}
-                    </div>
-                </div> 
-            ))}
+            <div class="container_">
+                {CategoriesLoopList && <CategoriesLoop selectedCategories={selectedCategories} />}
+            </div>
         </div>
     );
 }

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "../styles/HomePage.css"
 import ModalShopping from "../components/Carrinho";
 import ContainerCategories from "../components/Home";
-import DataClient from "../components/Cliente";
+import DataFinalizacao from "../components/Finalizacao";
 import { GiShoppingCart } from "react-icons/gi";
 import { CiBoxList } from "react-icons/ci";
 import { FaRegUserCircle} from "react-icons/fa";
@@ -11,7 +11,7 @@ import { FaRegUserCircle} from "react-icons/fa";
 function HomePage(){
     const [modalShoppingOpen, setModalShoppingOpen] = useState(false);
     const [Categories, setCategories] = useState(true);
-    const [ClientOpen, setClientOpen] = useState(false);
+    const [FinalizacaoOpen, setFinalizacaoOpen] = useState(false);
     
     const openModal = () => setModalShoppingOpen(true);
     const closeModal = () => setModalShoppingOpen(false);
@@ -21,7 +21,7 @@ function HomePage(){
         <div className="options">
             <div className="icons-ajustes">
                 <div className="icons-options">
-                    <CiBoxList className="icons" onClick={() => { setCategories(true); setClientOpen(false);}}/>             
+                    <CiBoxList className="icons" onClick={() => { setCategories(true); setFinalizacaoOpen(false);}}/>             
                 </div>
                 <div className="icons-options">
                     <GiShoppingCart onClick={openModal} className="icons"/>
@@ -31,7 +31,7 @@ function HomePage(){
                     </ModalShopping>                   
                 </div>
                 <div className="icons-options" >
-                    <FaRegUserCircle className="icons" onClick={() => { setCategories(false); setClientOpen(true);}} />
+                    <FaRegUserCircle className="icons" onClick={() => { setCategories(false); setFinalizacaoOpen(true);}} />
 
                 </div>
                 <div className="icons-options">           
@@ -40,9 +40,9 @@ function HomePage(){
                 </div>
             </div>
         </div>
-        <div className="container">       
+        <div className="container">
             {Categories && <ContainerCategories/>}
-            {ClientOpen && <DataClient/>}
+            {FinalizacaoOpen && <DataFinalizacao/>}
         </div>
     </div>
 );

@@ -64,3 +64,7 @@ async def delete_category(category_id: str, db: Session = Depends(get_db)):
     return {"message": "Categoria não encontrada"}
 
 
+@router.get("/category/filter/{category_id}")
+async def delete_category(category_id: str, db: Session = Depends(get_db)):
+    return db.query(ProductModel).filter(ProductModel.categoria == category_id).all()
+

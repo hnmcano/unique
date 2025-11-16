@@ -2,12 +2,11 @@ import React, { useRef, useState, useEffect} from "react";
 import axios from "axios";
 import "../styles/Carrinho.css"
 import Draggable from "react-draggable";
-import { removerProduto } from "../api/carrinhoServices";
 import { useCarrinho} from "../hooks/useCarrinho";
 
 function ModalShopping({closeModal, openModal, children}){
     const [total, setTotal] = useState(0);
-    const { produtos, setProdutos, delCartShopping, isLoading, fetchCarrinho  } = useCarrinho();
+    const { produtos, setProdutos, delCartShopping, isLoading, fetchCarrinho, quantidadeItems, removerProduto  } = useCarrinho();
 
     const nodeRef = useRef(null);
 
@@ -29,7 +28,6 @@ function ModalShopping({closeModal, openModal, children}){
 
         axios.put(`http://127.0.0.1:8000/carrinho/atualizar/quantidade/${id}/${produtoAtualizado.quantidade}`, { produtoAtualizado })
         .then(response => {
-            
             console.log('Quantidade atualizada com sucesso:', response.data);
         })
         .catch(error => {
@@ -40,7 +38,6 @@ function ModalShopping({closeModal, openModal, children}){
 
         });
     }
-
 
     //Calcular o total
     useEffect(() => {
@@ -55,6 +52,7 @@ function ModalShopping({closeModal, openModal, children}){
         try {
             await removerProduto(cod_sistema);
             setProdutos(prev => prev.filter(p => p.cod_sistema !== cod_sistema));
+
         } catch (error) {
             console.error('Erro ao remover:', error);
         }
@@ -98,10 +96,10 @@ function ModalShopping({closeModal, openModal, children}){
                 <div className="modal-footer">
                     <div className="totalvalueshoppingcart">
                         <label className="totalvalueshoppingcart">Total: R$ {total.toFixed(2)}</label>
-                        <label className="totalvalueshoppingcart">Qtd: 0</label>
+                        <label className="totalvalueshoppingcart">Qtd: {quantidadeItems}</label>
                     </div>
                     <button className="buttonfinishbuy">Finalizar Compra</button>
-                    <button onClick={() => delCartShopping()} className="buttonfinishcancel" disabled={isLoading}>Excluir</button>
+                    <button onClick={() => delCartShopping()} className="buttonfinishcancel" disabled={isLoading}>Excluir Carrinho</button>
                 </div>
             </div>
         </Draggable>

@@ -98,15 +98,15 @@ button.buttons-filters {
 }
 
 button.buttons-filters:hover {
-    background-color: rgba(39, 35, 35, 0.733);
+    background-color: rgba(141, 2, 206, 0.733);
 }
 
 button.buttons-filters.active {
-    background-color: rgba(39, 35, 35, 0.733);
+    background-color: rgba(141, 2, 206, 0.733);
 }
 
 button.buttons-filters:focus {
-    background-color: rgba(39, 35, 35, 0.733);
+    background-color: rgba(141, 2, 206, 0.733);
 }
 
 div.container-categories {

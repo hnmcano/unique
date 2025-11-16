@@ -44,7 +44,6 @@ function ProdutosAcionados({categoria}) {
     }
 
 
-
     const toggleVisibility = () => {
         setIsVisible(!isVisible);
     };

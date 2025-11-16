@@ -47,10 +47,15 @@
     height: 30px;
     background: none;
     border: none;
+    border-radius: 3px;
     font-size: 24px;
     cursor: pointer;
-    background-color: brown;
+    background-color: rgb(255, 0, 0);
     color: white;
+}
+
+.modal-close-btn:hover {
+    background-color: rgb(197, 79, 79);
 }
 
 .shoppingcartproducts{
@@ -96,6 +101,7 @@
     cursor: pointer;
     margin-left: 5px;
     margin-right: 5px;
+    border-radius: 3px;
 }
 
 .shoppingcartproducts button:hover{
@@ -158,6 +164,7 @@
     background-color: rgb(21, 255, 0);
     border: 1px solid rgb(0, 0, 0);
     cursor: pointer;
+    border-radius: 3px;
 }
 
 .buttonquantityless {
@@ -166,6 +173,7 @@
     background-color: rgb(255, 255, 255);
     border: 1px solid rgb(0, 0, 0);
     cursor: pointer;
+    border-radius: 3px;
 }
 
 .quantity-number{
@@ -186,6 +194,11 @@
     border: 1px solid rgb(0, 0, 0);
     cursor: pointer;
     margin-right: 10px;
+    border-radius: 5px;
+}
+
+.buttonfinishbuy:hover {
+    background-color: rgb(172, 238, 172);
 }
 
 .buttonfinishcancel {
@@ -195,6 +208,11 @@
     cursor: pointer;
     margin-right: 10px;
     color: white;
+    border-radius: 5px;
+}
+
+.buttonfinishcancel:hover {
+    background-color: rgb(238, 172, 172);
 }
 
 .totalvalueshoppingcart {
@@ -204,5 +222,6 @@
     justify-content: left;
     margin-left: 10px;
     color: white;
+
 }
 

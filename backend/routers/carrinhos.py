@@ -18,9 +18,10 @@ async def read_products(db: Session = Depends(get_db)):
     if not dataframe.empty:
         dataframe["valor_total"] = dataframe["preco_venda"] * dataframe["quantidade"]
 
+    qtdprodutos = dataframe["cod_sistema"].count().item() if not dataframe.empty else 0
     dataframe = dataframe.to_dict(orient='records')
 
-    return dataframe
+    return {"dataframe": dataframe, "qtdprodutos": qtdprodutos}
 
 @router.delete("/delete/all")
 async def delete_all(db: Session = Depends(get_db)):
@@ -49,7 +50,15 @@ async def delete_product(product_id: str, db: Session = Depends(get_db)):
     if db_carrinho:
         db.delete(db_carrinho)
         db.commit()
-        return {"message": "Produto excluído com sucesso"}
+
+        db = db.query(CarrinhoModel).all()
+        db = [p.__dict__ for p in db]
+        dataframe = pd.DataFrame(db).drop(columns=["_sa_istance_state"], errors="ignore")
+
+        qtdprodutos = dataframe["cod_sistema"].count().item() if not dataframe.empty else 0
+
+        return {"qtdprodutos": qtdprodutos}
+    
     return {"message": "Produto nao encontrado"}
 
 

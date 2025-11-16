@@ -20,3 +20,4 @@ class Product(BaseModel):
 # Modelo para categorias
 class Category(BaseModel):
     categoria: str = Field(..., min_length=3, max_length=30)
+
