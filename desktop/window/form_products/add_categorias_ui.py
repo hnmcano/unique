@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'Categorias.ui'
+## Form generated from reading UI file 'add_categorias.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.9.2
 ##
@@ -26,9 +26,11 @@ class Ui_Category(object):
         Category.resize(812, 159)
         Category.setMinimumSize(QSize(812, 159))
         Category.setMaximumSize(QSize(812, 159))
-        Category.setStyleSheet(u"QWidget{\n"
-"		background-color: black;\n"
-"		border: 1px solid red;\n"
+        Category.setStyleSheet(u"QFrame{\n"
+"	\n"
+"	background-color: transparent;\n"
+"	border: transparent;	\n"
+"\n"
 "}")
         self.centralwidget = QWidget(Category)
         self.centralwidget.setObjectName(u"centralwidget")
@@ -40,19 +42,7 @@ class Ui_Category(object):
         self.widget.setObjectName(u"widget")
         self.widget.setMinimumSize(QSize(130, 0))
         self.widget.setMaximumSize(QSize(130, 16777215))
-        self.widget.setStyleSheet(u"QPushButton{\n"
-"			min-height: 45px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"        stop: 0 #4e4e4e, stop: 1 #4e4e4e);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"        stop: 0 #1a5fb4, stop: 1 #4a00e0);\n"
-"}")
+        self.widget.setStyleSheet(u"")
         self.verticalLayout = QVBoxLayout(self.widget)
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -65,7 +55,7 @@ class Ui_Category(object):
 
         self.modificar_botao = QPushButton(self.widget)
         self.modificar_botao.setObjectName(u"modificar_botao")
-        self.modificar_botao.setStyleSheet(u"border: 1px solid red;")
+        self.modificar_botao.setStyleSheet(u"")
 
         self.verticalLayout.addWidget(self.modificar_botao)
 
@@ -81,9 +71,7 @@ class Ui_Category(object):
 
         self.widget_2 = QWidget(self.centralwidget)
         self.widget_2.setObjectName(u"widget_2")
-        self.widget_2.setStyleSheet(u"QFrame{\n"
-"	border: solid transparent;\n"
-"}")
+        self.widget_2.setStyleSheet(u"")
         self.horizontalLayout_2 = QHBoxLayout(self.widget_2)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.widget_3 = QWidget(self.widget_2)
@@ -94,7 +82,7 @@ class Ui_Category(object):
         sizePolicy.setHeightForWidth(self.widget_3.sizePolicy().hasHeightForWidth())
         self.widget_3.setSizePolicy(sizePolicy)
         self.widget_3.setMaximumSize(QSize(90, 16777215))
-        self.widget_3.setStyleSheet(u"border: transparent;")
+        self.widget_3.setStyleSheet(u"")
         self.verticalLayout_2 = QVBoxLayout(self.widget_3)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.label = QLabel(self.widget_3)
@@ -154,7 +142,7 @@ class Ui_Category(object):
     # setupUi
 
     def retranslateUi(self, Category):
-        Category.setWindowTitle(QCoreApplication.translate("Category", u"MainWindow", None))
+        Category.setWindowTitle(QCoreApplication.translate("Category", u"Categorias", None))
         self.adicionar_botao.setText(QCoreApplication.translate("Category", u"ADICIONAR", None))
         self.modificar_botao.setText(QCoreApplication.translate("Category", u"MODIFICAR", None))
         self.label.setText(QCoreApplication.translate("Category", u"CATEGORIA", None))

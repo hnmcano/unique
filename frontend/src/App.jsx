@@ -7,6 +7,7 @@ function App() {
     <Router>
         <main>
           <Routes>
+            // rotas de paginas do site, sendo HomePage a primeira, caminho: /src/pages
             <Route path='/' element={<HomePage />} />
           </Routes>
         </main>

@@ -26,9 +26,11 @@
    <string>Categorias</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QWidget{
-		background-color: black;
-		border: 1px solid red;
+   <string notr="true">QFrame{
+	
+	background-color: transparent;
+	border: transparent;	
+
 }</string>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -63,19 +65,7 @@
        </size>
       </property>
       <property name="styleSheet">
-       <string notr="true">QPushButton{
-			min-height: 45px;
-}
-
-QPushButton:hover {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #4e4e4e, stop: 1 #4e4e4e);
-}
-
-QPushButton:pressed {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #1a5fb4, stop: 1 #4a00e0);
-}</string>
+       <string notr="true"/>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
        <property name="spacing">
@@ -106,7 +96,7 @@ QPushButton:pressed {
        <item>
         <widget class="QPushButton" name="modificar_botao">
          <property name="styleSheet">
-          <string notr="true">border: 1px solid red;</string>
+          <string notr="true"/>
          </property>
          <property name="text">
           <string>MODIFICAR</string>
@@ -129,9 +119,7 @@ QPushButton:pressed {
     <item>
      <widget class="QWidget" name="widget_2" native="true">
       <property name="styleSheet">
-       <string notr="true">QFrame{
-	border: solid transparent;
-}</string>
+       <string notr="true"/>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
@@ -149,7 +137,7 @@ QPushButton:pressed {
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">border: transparent;</string>
+          <string notr="true"/>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>

@@ -18,7 +18,7 @@ async def read_products(db: Session = Depends(get_db)):
     if not dataframe.empty:
         dataframe["valor_total"] = dataframe["preco_venda"] * dataframe["quantidade"]
 
-    qtdprodutos = dataframe["cod_sistema"].count().item() if not dataframe.empty else 0
+    qtdprodutos = dataframe["produto_id"].count().item() if not dataframe.empty else 0
     dataframe = dataframe.to_dict(orient='records')
 
     return {"dataframe": dataframe, "qtdprodutos": qtdprodutos}
@@ -31,7 +31,7 @@ async def delete_all(db: Session = Depends(get_db)):
 
 @router.post("/postagem/{product_id}")
 async def post_product(product_id: int, format: CarrinhoSchema, db: Session = Depends(get_db)):
-    db_product = db.query(CarrinhoModel).filter(CarrinhoModel.cod_sistema == product_id).first()
+    db_product = db.query(CarrinhoModel).filter(CarrinhoModel.produto_id == product_id).first()
     if not db_product:
         db_product = CarrinhoModel(**format.dict())
         db.add(db_product)
@@ -46,7 +46,7 @@ async def post_product(product_id: int, format: CarrinhoSchema, db: Session = De
 
 @router.delete("/delete/{product_id}")
 async def delete_product(product_id: str, db: Session = Depends(get_db)):
-    db_carrinho = db.query(CarrinhoModel).filter(CarrinhoModel.cod_sistema == product_id).first()
+    db_carrinho = db.query(CarrinhoModel).filter(CarrinhoModel.produto_id == product_id).first()
     if db_carrinho:
         db.delete(db_carrinho)
         db.commit()
@@ -55,7 +55,7 @@ async def delete_product(product_id: str, db: Session = Depends(get_db)):
         db = [p.__dict__ for p in db]
         dataframe = pd.DataFrame(db).drop(columns=["_sa_istance_state"], errors="ignore")
 
-        qtdprodutos = dataframe["cod_sistema"].count().item() if not dataframe.empty else 0
+        qtdprodutos = dataframe["produto_id"].count().item() if not dataframe.empty else 0
 
         return {"qtdprodutos": qtdprodutos}
     
@@ -64,7 +64,7 @@ async def delete_product(product_id: str, db: Session = Depends(get_db)):
 
 @router.put("/atualizar/quantidade/{product_id}/{quantidade}")
 async def update_product(product_id: int, quantidade: int, db: Session = Depends(get_db)):
-    db_product = db.query(CarrinhoModel).filter(CarrinhoModel.cod_sistema == product_id).first()
+    db_product = db.query(CarrinhoModel).filter(CarrinhoModel.produto_id == product_id).first()
     if db_product:
         db_product.quantidade = quantidade
         db.commit()

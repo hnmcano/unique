@@ -39,19 +39,14 @@
        </size>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: black;
-border: 1px solid red;
-</string>
+       <string notr="true"/>
       </property>
      </widget>
     </item>
     <item>
      <widget class="QWidget" name="widget_3" native="true">
       <property name="styleSheet">
-       <string notr="true">background-color:white;
-border-left: 1px solid black;
-boder-right: 1px solid black;
-</string>
+       <string notr="true"/>
       </property>
       <layout class="QGridLayout" name="gridLayout">
        <item row="0" column="2">
@@ -69,26 +64,7 @@ boder-right: 1px solid black;
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">QPushButton {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #000000, stop: 1 #000000);
-    color: white;
-    border: 1px solid red;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-QPushButton:hover {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #4e4e4e, stop: 1 #4e4e4e);
-}
-
-QPushButton:pressed {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #1a5fb4, stop: 1 #4a00e0);
-}</string>
+          <string notr="true"/>
          </property>
          <property name="text">
           <string>Mesa 01</string>
@@ -110,26 +86,7 @@ QPushButton:pressed {
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">QPushButton {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #000000, stop: 1 #000000);
-    color: white;
-    border: 1px solid red;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-QPushButton:hover {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #4e4e4e, stop: 1 #4e4e4e);
-}
-
-QPushButton:pressed {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #1a5fb4, stop: 1 #4a00e0);
-}</string>
+          <string notr="true"/>
          </property>
          <property name="text">
           <string>Mesa 02</string>
@@ -151,26 +108,7 @@ QPushButton:pressed {
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">QPushButton {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #000000, stop: 1 #000000);
-    color: white;
-    border: 1px solid red;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-QPushButton:hover {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #4e4e4e, stop: 1 #4e4e4e);
-}
-
-QPushButton:pressed {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #1a5fb4, stop: 1 #4a00e0);
-}</string>
+          <string notr="true"/>
          </property>
          <property name="text">
           <string>Mesa 03</string>
@@ -192,26 +130,7 @@ QPushButton:pressed {
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">QPushButton {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #000000, stop: 1 #000000);
-    color: white;
-    border: 1px solid red;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-QPushButton:hover {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #4e4e4e, stop: 1 #4e4e4e);
-}
-
-QPushButton:pressed {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #1a5fb4, stop: 1 #4a00e0);
-}</string>
+          <string notr="true"/>
          </property>
          <property name="text">
           <string>Mesa 04</string>
@@ -233,26 +152,7 @@ QPushButton:pressed {
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">QPushButton {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #000000, stop: 1 #000000);
-    color: white;
-    border: 1px solid red;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-QPushButton:hover {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #4e4e4e, stop: 1 #4e4e4e);
-}
-
-QPushButton:pressed {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #1a5fb4, stop: 1 #4a00e0);
-}</string>
+          <string notr="true"/>
          </property>
          <property name="text">
           <string>Mesa 07</string>
@@ -274,26 +174,7 @@ QPushButton:pressed {
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">QPushButton {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #000000, stop: 1 #000000);
-    color: white;
-    border: 1px solid red;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-QPushButton:hover {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #4e4e4e, stop: 1 #4e4e4e);
-}
-
-QPushButton:pressed {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #1a5fb4, stop: 1 #4a00e0);
-}</string>
+          <string notr="true"/>
          </property>
          <property name="text">
           <string>Mesa 06</string>
@@ -315,26 +196,7 @@ QPushButton:pressed {
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">QPushButton {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #000000, stop: 1 #000000);
-    color: white;
-    border: 1px solid red;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-QPushButton:hover {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #4e4e4e, stop: 1 #4e4e4e);
-}
-
-QPushButton:pressed {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #1a5fb4, stop: 1 #4a00e0);
-}</string>
+          <string notr="true"/>
          </property>
          <property name="text">
           <string>Mesa 05</string>
@@ -356,26 +218,7 @@ QPushButton:pressed {
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">QPushButton {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #000000, stop: 1 #000000);
-    color: white;
-    border: 1px solid red;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-QPushButton:hover {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #4e4e4e, stop: 1 #4e4e4e);
-}
-
-QPushButton:pressed {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #1a5fb4, stop: 1 #4a00e0);
-}</string>
+          <string notr="true"/>
          </property>
          <property name="text">
           <string>Mesa 08</string>
@@ -394,9 +237,7 @@ QPushButton:pressed {
        </size>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: black;
-border: 1px solid red;
-</string>
+       <string notr="true"/>
       </property>
      </widget>
     </item>

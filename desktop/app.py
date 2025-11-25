@@ -1,28 +1,33 @@
 from scripts.aux_func import (exibir_confirmacao_exclusao, inserir_imagem, salvar_dados_produtos,
                               salvar_dados_clientes, buscar_cep)
-from PySide6.QtWidgets import (QApplication, QPushButton, QMainWindow, QMessageBox, QTableWidgetItem, QLabel)
-from window.form_orders.ui_pedido_mesa import Ui_MainWindow as pedido_mesa
-from window.form_products.ui_add_categorias import Ui_Category as addcategorias
-from window.form_products.ui_add_produtos import Ui_MainWindow as addprodutos
-from window.form_products.ui_produtos import Ui_MainWindow as produtos
-from window.form_clients.ui_clientes import Ui_MainWindow as clientes
-from window.form_orders.ui_mesas import Ui_MainWindow as mesas
-from window.ui_unique import Ui_Unique as uniq
+from PySide6.QtWidgets import (QApplication, QPushButton, QMainWindow, QMessageBox, QTableWidgetItem, QLabel, QVBoxLayout, QHBoxLayout, QWidget, QGridLayout, QHeaderView, QTableWidget, QAbstractItemView)
+from window.form_orders.pedido_mesa_ui import Ui_MainWindow as pedido_mesa
+from window.form_products.add_categorias_ui import Ui_Category as addcategorias
+from window.form_products.add_produtos_ui import Ui_MainWindow as addprodutos
+from window.form_products.produtos_ui import Ui_MainWindow as produtos
+from window.form_clients.clientes_ui import Ui_MainWindow as clientes
+from window.form_orders.mesas_ui import Ui_MainWindow as mesas
+from window.form_delivery.delivery_ui import Ui_MainWindow as delivery
+from window.unique_ui import Ui_Unique as uniq
 from PySide6.QtNetwork import ( QNetworkAccessManager)
-from PySide6.QtCore import Signal, Qt
+from PySide6.QtCore import Signal, Qt, QSize
 from PySide6.QtGui import QPixmap
 import requests
 import json
 import sys
 
-# Classe para gerenciar categorias
+class WidgetProdutoDetalhe(QWidget):
+    def __init__(self, id, nome, preco, estoque, descricao, parent=None):
+        super().__init__(parent)
+
+# Classe para adicionar categorias
 class AddCategory(QMainWindow, addcategorias):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
-        
+
         self.drop_modificar.hide() # Esconde o dropdown inicialmente
-        self.btn_excluir.hide() # Esconde o botão de excluir inicialmente   
+        self.btn_excluir.hide() # Esconde o botão de excluir inicialmente
 
         self.modificar_botao.clicked.connect(self.mostrar_dropdown_categoria)
         self.adicionar_botao.clicked.connect(self.mostrar_input_categoria)
@@ -39,14 +44,14 @@ class AddCategory(QMainWindow, addcategorias):
         try:
             response = requests.post(
                 "http://127.0.0.1:8000/products/category",
-                json={"categoria": nova_categoria}
+                json={"nome": nova_categoria}
             )
             if response.status_code == 200:
                 QMessageBox.information(self, "Sucesso", "Categoria adicionada com sucesso!")
                 self.adicionar_cat_input.clear()
                 self.preencher_dropdown()  # Atualiza o dropdown
             else:
-                QMessageBox.critical(self, "Erro", "Falha ao adicionar categoria.") 
+                QMessageBox.critical(self, "Erro", "Falha ao adicionar categoria.")
         except Exception as e:
             QMessageBox.critical(self, "Erro", f"Erro ao adicionar categoria: {str(e)}")
 
@@ -77,14 +82,15 @@ class AddCategory(QMainWindow, addcategorias):
         try:
             response = requests.get("http://127.0.0.1:8000/products/dropdown/categories")
             if response.status_code == 200:
-                categories = response.json()
-                for category in categories:
-                    self.drop_modificar.addItem(category["categoria"])
+                categories = response.json() 
+
+                for nome in categories:
+                    self.drop_modificar.addItem(nome["nome"])
             else:
                 # Falha na requisição
                 QMessageBox.critical(self, "Erro", "Falha ao buscar categorias")
         except Exception as e:
-            QMessageBox.critical(self, "Erro", f"Erro na busca das categorias: {str(e)}")# type: ignore      
+            QMessageBox.critical(self, "Erro", f"Erro na busca das categorias: {str(e)}")# type: ignore
 
     def excluir_categoria(self):
         categoria_selecionada = self.drop_modificar.currentText()
@@ -159,13 +165,14 @@ class AddProdutos(QMainWindow, addprodutos):
             if response.status_code == 200:
                 categories = response.json()
                 for category in categories:
-                    self.categoria_combo.addItem(category["categoria"])
+                    self.categoria_combo.addItem(category["nome"], category["id"])
+                    
             else:
                 # Falha na requisição
                 QMessageBox.critical(self, "Erro", "Falha ao buscar categorias")
         except Exception as e:
             QMessageBox.critical(self, "Erro", f"Erro na busca das categorias: {str(e)}")
-        
+
         # Ao clicar no botão selecionar imagem, Aciona a função de inserir imagem localizada em scripts/aux_func.py
         self.selecionar_imagem.clicked.connect(lambda: inserir_imagem(self))
         # Ao clicar no botão salvar, Aciona a função de salvar dados produtos localizada em scripts/aux_func.py
@@ -179,31 +186,66 @@ class AddProdutos(QMainWindow, addprodutos):
         self.categoria_window = AddCategory(parent=self)# type: ignore
         self.categoria_window.show()# type: ignore
 
+# classe para gerenciar produtos
 class Produtos(QMainWindow, produtos):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
 
+
+        self.FilterProducts.setPlaceholderText("Digite para filtrar produtos...")
+
+        columns = ["ID", "Nome", "Preço de venda", "Estoque", "Descrição"]
+
+        quantidade_columns = len(columns)
+        self.tableWidget.setColumnCount(quantidade_columns)
+        self.tableWidget.setHorizontalHeaderLabels(columns)
+        header = self.tableWidget.horizontalHeader()
+        header.setSectionResizeMode(QHeaderView.Interactive)
+        self.tableWidget.setSortingEnabled(True)
+        header.setSectionResizeMode(QHeaderView.Stretch)
+        self.tableWidget.verticalHeader().setVisible(False)
+        self.tableWidget.setSelectionBehavior(QTableWidget.SelectRows)
+        self.tableWidget.setSelectionMode(QTableWidget.SingleSelection)
+
+        self.tableWidget.setEditTriggers(QTableWidget.NoEditTriggers)
+        
         try:
             response = requests.get("http://127.0.0.1:8000/products/desktop/table")
             response.raise_for_status()  # Levanta um erro para códigos de status HTTP ruins
             products = response.json()
 
+            self.tableWidget.setRowCount(len(products))
+            linha_atual = 0
 
-            self.table_products.setRowCount(len(products))
+            for i in products:
 
-            keys = ["cod_sistema", "cod_pdv", "categoria", "nome", "preco_custo", "preco_venda", "medida", "estoque", "estoque_min", "sit_estoque", "descricao", "ficha_tecnica", "status_venda", "imagem_url"]
+                self.tableWidget.setRowHeight(linha_atual, 50)
 
-            self.table_products.setColumnCount(len(keys))
-            self.table_products.setHorizontalHeaderLabels(keys)
+                item_ordenavel_id = QTableWidgetItem(str(i["id"]))
+                self.tableWidget.setItem(linha_atual, 0, item_ordenavel_id)
 
-            for row_idx, product in enumerate(products):
-                for col_idx, key in enumerate(keys):
-                    item = QTableWidgetItem(str(product.get(key, "")))
-                    self.table_products.setItem(row_idx, col_idx, item)
+                item_ordenavel_nome = QTableWidgetItem(i["nome"])
+                self.tableWidget.setItem(linha_atual, 1, item_ordenavel_nome)
+
+                item_ordenavel_preco_venda = QTableWidgetItem(str(i["preco_venda"]))
+                self.tableWidget.setItem(linha_atual, 2, item_ordenavel_preco_venda)
+
+                item_ordenavel_estoque = QTableWidgetItem(str(i["estoque"]))
+                self.tableWidget.setItem(linha_atual, 3, item_ordenavel_estoque)
+
+                item_ordenavel_descricao = QTableWidgetItem(i["descricao"])
+                self.tableWidget.setItem(linha_atual, 4, item_ordenavel_descricao)
+
+                linha_atual += 1
+                
+            self.tableWidget.sortItems(0, Qt.AscendingOrder)
 
         except requests.RequestException as e:
             QMessageBox.critical(self, "Erro", f"Erro ao buscar produtos: {str(e)}")
+
+
+        
 
         # Ao clicar no botão adicionar produto, abre a janela de adicionar produtos
         self.add_products.clicked.connect(self.abrir_add_produto)
@@ -265,37 +307,23 @@ class Mesas(QMainWindow, mesas):
         # Verifica se o botão ainda existe
         if botao_a_restaurar is not None:
             botao_a_restaurar.setStyleSheet("""
-                QPushButton {
-                    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                        stop: 0 #000000, stop: 1 #000000);
-                    color: white;
-                    border: 1px solid red;
-                    padding: 12px 24px;
-                    border-radius: 8px;
-                    font-weight: bold;
-                    font-size: 14px;
-                }
-
-                QPushButton:hover {
-                    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                        stop: 0 #4e4e4e, stop: 1 #4e4e4e);
-                }
-
-                QPushButton:pressed {
-                    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                        stop: 0 #1a5fb4, stop: 1 #4a00e0);
-                }
             """)
             print(f"Cor do botão {botao_a_restaurar.objectName()} restaurada para um estilo fixo.")
 
-# classe principal da aplicação            
+class Delivery(QMainWindow, delivery):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setupUi(self)
+        
+
+# classe principal da aplicação
 class Uniq(QMainWindow, uniq):
     def __init__(self):
         # inicializa a classe pai
         super().__init__()
         # instancia a interface do uniq
         self.setupUi(self)
-        
+
        # Inicializa as janelas como None
         self.clientes_window = None
         self.mesas_window = None
@@ -310,6 +338,8 @@ class Uniq(QMainWindow, uniq):
         # janela produtos
         self.btn_produtos.clicked.connect(self.abrir_produtos)
 
+        self.btn_delivery.clicked.connect(self.abrir_delivery)
+
     # Funções para abrir a janela filhas de mesas, clientes e produtos
     # considerando que a janela Uniq é a janela pai, que ao fechada, fecha as janelas filhas
     def abrir_mesas(self):
@@ -323,6 +353,10 @@ class Uniq(QMainWindow, uniq):
     def abrir_produtos(self):
         self.produtos_window= Produtos(parent=self)
         self.produtos_window.show()
+
+    def abrir_delivery(self):
+        self.delivery_window = Delivery(parent=self)
+        self.delivery_window.show()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

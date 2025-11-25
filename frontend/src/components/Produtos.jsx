@@ -6,33 +6,35 @@ function ProdutosAcionados({categoria}) {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
 
-    const addProduct =  async (categoria, produto) => {
+    const addProduct =  async (categoria, produtos) => {
+
+        console.log(produtos);
 
         setLoading(true);
         setError(null);
 
         const dadosEnviar = {
-            cod_sistema: produto.cod_sistema,
-            cod_pdv: produto.cod_pdv,
-            categoria: categoria.categoria,
-            nome: produto.nome,
-            preco_custo: produto.preco_custo,
-            preco_venda: produto.preco_venda,
-            medida: produto.medida,
-            estoque: produto.estoque,
-            estoque_min: produto.estoque_min,
-            sit_estoque: produto.sit_estoque,
-            descricao: produto.descricao,
-            ficha_tecnica: produto.ficha_tecnica,
-            status_venda: produto.status_venda,
-            imagem_url: produto.imagem_url,
+            produto_id: produtos.produto_id,
+            cod_pdv: produtos.codigo_pdv,
+            categoria: categoria.nome_categoria,
+            nome: produtos.nome_produto,
+            preco_custo: produtos.preco_custo,
+            preco_venda: produtos.preco_venda,
+            medida: produtos.medida,
+            estoque: produtos.estoque,
+            estoque_min: produtos.estoque_min,
+            sit_estoque: produtos.sit_estoque,
+            descricao: produtos.descricao,
+            ficha_tecnica: produtos.ficha_tecnica,
+            status_venda: produtos.status_venda,
+            imagem_url: produtos.imagem_url,
             quantidade: 1
         };
 
         console.log('Dados a enviar:',dadosEnviar);
 
         try {
-            const response = await axios.post(`http://127.0.0.1:8000/carrinho/postagem/${produto.cod_sistema}`, dadosEnviar);
+            const response = await axios.post(`http://127.0.0.1:8000/carrinho/postagem/${produtos.produto_id}`, dadosEnviar);
             console.log('Resposta do servidor:', response.data);
         } catch (error) {
             console.error('Erro ao enviar os dados:', error);
@@ -51,21 +53,21 @@ function ProdutosAcionados({categoria}) {
     
     return (
         <div className="products-gouped">
-            {categoria.produtos.map((produto) => (
-            <div key={produto.cod_sistema} className="produto_item">
+            {categoria.produtos.map((produtos) => (
+            <div key={produtos.produto_id} className="produto_item">
                 <div className="data-itens-product">
                     <div className="itens-product-img">
                     </div>
                     <div className="data-itens-unique">
                         <div className="data-itens-unique-name">
-                            {produto.nome}
+                            {produtos.nome_produto}
                         </div>
                         <div className="data-itens-unique-description">
-                            {produto.descricao}
+                            {produtos.descricao}
                         </div>
                         <div className="data-itens-unique-select">
                             <div className="data-itens-unique-select-quantity">
-                                <button onClick={() => addProduct(categoria, produto)} className="data-itens-unique-select-adicionar">ADICIONAR</button>
+                                <button onClick={() => addProduct(categoria, produtos)} className="data-itens-unique-select-adicionar">ADICIONAR</button>
                             </div>
                         </div>
                     </div>

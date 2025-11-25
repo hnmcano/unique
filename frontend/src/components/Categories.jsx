@@ -17,15 +17,15 @@ function CategoriesLoop({selectedCategories}) {
         }));
     };
 
-    const filteredCategories = selectedCategories ? setBaseProdutos.filter(categoria => categoria.categoria === selectedCategories) : setBaseProdutos;
+    const filteredCategories = selectedCategories ? setBaseProdutos.filter(categoria => categoria.nome_categoria === selectedCategories) : setBaseProdutos;
 
     return (
         <div>
             {filteredCategories && filteredCategories.map((categoria) => (
-                <div key={categoria.categoria}>
-                <div className="categories-details" onClick={() => toggleVisibility(categoria.categoria)}>{categoria.categoria}</div>
+                <div key={categoria.nome_categoria}>
+                <div className="categories-details" onClick={() => toggleVisibility(categoria.nome_categoria)}>{categoria.nome_categoria}</div>
                     <div>
-                        {categoriaVisible[categoria.categoria] && ( <ProdutosAcionados categoria={categoria}/>)}
+                        {categoriaVisible[categoria.nome_categoria] && ( <ProdutosAcionados categoria={categoria}/>)}
                     </div>
                 </div> 
             ))}

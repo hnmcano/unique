@@ -23,61 +23,7 @@
    <string>Produtos</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QWidget {
-	background-color: rgb(0,0,0);
-	border: 1px solid red;
-}
-
-QLineEdit, QComboBox{
-    color: white;
-    border: 1px solid red;
-    padding: 4px 2px;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 16px;
-}
-
-QPushButton {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #000000, stop: 1 #000000);
-    color: white;
-    border: 1px solid red;
-    padding: 5px 17px;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-QPushButton:hover {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #4e4e4e, stop: 1 #4e4e4e);
-}
-
-QPushButton:pressed {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #1a5fb4, stop: 1 #4a00e0);
-}
-
-QTextEdit{
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #000000, stop: 1 #000000);
-    color: white;
-    border: 1px solid red;
-    padding: 4px 2px;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 10px;
-}
-
-QTextEdit:hover {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #4e4e4e, stop: 1 #4e4e4e);
-}
-
-QTextEdit:pressed {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #1a5fb4, stop: 1 #4a00e0);
-}</string>
+   <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="styleSheet">
@@ -114,10 +60,7 @@ QTextEdit:pressed {
        </size>
       </property>
       <property name="styleSheet">
-       <string notr="true">QWidget  {
-		border-left: transparent;
-		border-right: transparent;
-}</string>
+       <string notr="true"/>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <property name="spacing">
@@ -150,8 +93,7 @@ QTextEdit:pressed {
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">border-right: transparent;
-border-left: 1px solid red;</string>
+          <string notr="true"/>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_4">
           <item>
@@ -201,7 +143,7 @@ border-left: 1px solid red;</string>
            <number>0</number>
           </property>
           <item>
-           <widget class="QLineEdit" name="lineEdit">
+           <widget class="QLineEdit" name="FilterProducts">
             <property name="maximumSize">
              <size>
               <width>550</width>
@@ -226,13 +168,7 @@ border-right: 1px solid red;</string>
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">QPushButton {
-				border: 1px solid red;
-				min-right: 35px;
-}
-QWidget {
-	border-right: 1px solid red;
-}</string>
+          <string notr="true"/>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item>
@@ -280,31 +216,10 @@ QWidget {
      </widget>
     </item>
     <item>
-     <widget class="QWidget" name="widget_2" native="true">
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <property name="spacing">
-        <number>0</number>
-       </property>
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
+     <widget class="QFrame" name="products">
+      <layout class="QVBoxLayout" name="verticalLayout_5">
        <item>
-        <widget class="QTableWidget" name="table_products">
-         <property name="styleSheet">
-          <string notr="true">background- color: white;
-border: 1px solid blue;
-boder-radius: 5px;</string>
-         </property>
-        </widget>
+        <widget class="QTableWidget" name="tableWidget"/>
        </item>
       </layout>
      </widget>

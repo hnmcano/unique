@@ -1,3 +1,10 @@
+* {
+
+    caret-color: transparent;
+
+}
+
+
 /* Fundo Escuro que cobre toda a tela */
 .modal-overlay {
     position: fixed; /* Fixa na tela, independente da rolagem */

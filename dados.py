@@ -11,6 +11,7 @@ df = pd.read_csv(
     encoding='latin1'
 )
 
+
 def sanitize_row(row):
     """Converte NaN ou Inf para None"""
     row_dict = row.to_dict()
@@ -22,12 +23,11 @@ def sanitize_row(row):
 
 # Iterar sobre cada linha
 for idx, row in df.iterrows():
-    url = "http://127.0.0.1:8000/products/products"
+    url = "http://127.0.0.1:8000/products/desktop/add"
 
     # Transformar a linha em um dicionário JSON
     data_json = sanitize_row(row)
 
-    data_json["cod_sistema"] = int(data_json["cod_sistema"])
     data_json["cod_pdv"] = str(int(data_json["cod_pdv"]))
     data_json["estoque"] = int(data_json["estoque"])
     data_json["estoque_min"] = int(data_json["estoque_min"])

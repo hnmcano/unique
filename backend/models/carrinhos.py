@@ -5,7 +5,7 @@ Base = declarative_base()
 
 class Carrinho(Base):
     __tablename__ = "carrinhos"
-    cod_sistema = Column(Integer, primary_key=True, nullable=False)
+    produto_id = Column(Integer, primary_key=True, nullable=False)
     cod_pdv = Column(String(20), nullable=False)
     categoria = Column(String(30), nullable=False)
     nome = Column(String(80), nullable=False)

@@ -23,31 +23,10 @@ class Ui_MainWindow(object):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.resize(523, 569)
-        MainWindow.setStyleSheet(u"QPushButton {\n"
-"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"        stop: 0 #000000, stop: 1 #000000);\n"
-"    color: white;\n"
-"    border: 1px solid red;\n"
-"    padding: 5px 17px;\n"
-"    border-radius: 8px;\n"
-"    font-weight: bold;\n"
-"    font-size: 8px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"        stop: 0 #4e4e4e, stop: 1 #4e4e4e);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"        stop: 0 #1a5fb4, stop: 1 #4a00e0);\n"
-"}")
+        MainWindow.setStyleSheet(u"")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
-        self.centralwidget.setStyleSheet(u"QWidget {\n"
-"	background-color: black;\n"
-"}")
+        self.centralwidget.setStyleSheet(u"")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -69,14 +48,14 @@ class Ui_MainWindow(object):
         self.widget = QWidget(self.widget_2)
         self.widget.setObjectName(u"widget")
         self.widget.setMaximumSize(QSize(180, 16777215))
-        self.widget.setStyleSheet(u"border-top: 2px solid red;")
+        self.widget.setStyleSheet(u"")
         self.verticalLayout_2 = QVBoxLayout(self.widget)
         self.verticalLayout_2.setSpacing(0)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.verticalLayout_2.setContentsMargins(0, 2, 0, 0)
         self.widget_5 = QWidget(self.widget)
         self.widget_5.setObjectName(u"widget_5")
-        self.widget_5.setStyleSheet(u"border: transparent;")
+        self.widget_5.setStyleSheet(u"")
         self.label = QLabel(self.widget_5)
         self.label.setObjectName(u"label")
         self.label.setGeometry(QRect(10, 5, 160, 61))
@@ -86,30 +65,7 @@ class Ui_MainWindow(object):
         self.widget_6 = QWidget(self.widget)
         self.widget_6.setObjectName(u"widget_6")
         self.widget_6.setMaximumSize(QSize(16777215, 75))
-        self.widget_6.setStyleSheet(u"QWidget {\n"
-"	border: transparent;\n"
-"}\n"
-"\n"
-"QPushButton {\n"
-"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"        stop: 0 #000000, stop: 1 #000000);\n"
-"    color: white;\n"
-"    border: 1px solid red;\n"
-"    padding: 5px 17px;\n"
-"    border-radius: 8px;\n"
-"    font-weight: bold;\n"
-"    font-size: 8px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"        stop: 0 #4e4e4e, stop: 1 #4e4e4e);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"        stop: 0 #1a5fb4, stop: 1 #4a00e0);\n"
-"}")
+        self.widget_6.setStyleSheet(u"")
         self.btn_excluir = QPushButton(self.widget_6)
         self.btn_excluir.setObjectName(u"btn_excluir")
         self.btn_excluir.setGeometry(QRect(34, 23, 91, 31))
@@ -121,8 +77,7 @@ class Ui_MainWindow(object):
 
         self.widget_4 = QWidget(self.widget_2)
         self.widget_4.setObjectName(u"widget_4")
-        self.widget_4.setStyleSheet(u"border-top: 2px solid red;\n"
-"border-left: 2px solid red;")
+        self.widget_4.setStyleSheet(u"")
 
         self.horizontalLayout.addWidget(self.widget_4)
 
@@ -137,7 +92,7 @@ class Ui_MainWindow(object):
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Pedido", None))
         self.label.setText("")
         self.btn_excluir.setText(QCoreApplication.translate("MainWindow", u"Excluir", None))
     # retranslateUi

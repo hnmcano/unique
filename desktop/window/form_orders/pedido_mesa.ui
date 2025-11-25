@@ -14,32 +14,11 @@
    <string>Pedido</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QPushButton {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #000000, stop: 1 #000000);
-    color: white;
-    border: 1px solid red;
-    padding: 5px 17px;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 8px;
-}
-
-QPushButton:hover {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #4e4e4e, stop: 1 #4e4e4e);
-}
-
-QPushButton:pressed {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #1a5fb4, stop: 1 #4a00e0);
-}</string>
+   <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="styleSheet">
-    <string notr="true">QWidget {
-	background-color: black;
-}</string>
+    <string notr="true"/>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0">
     <property name="spacing">
@@ -100,7 +79,7 @@ QPushButton:pressed {
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">border-top: 2px solid red;</string>
+          <string notr="true"/>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <property name="spacing">
@@ -121,7 +100,7 @@ QPushButton:pressed {
           <item>
            <widget class="QWidget" name="widget_5" native="true">
             <property name="styleSheet">
-             <string notr="true">border: transparent;</string>
+             <string notr="true"/>
             </property>
             <widget class="QLabel" name="label">
              <property name="geometry">
@@ -147,30 +126,7 @@ QPushButton:pressed {
              </size>
             </property>
             <property name="styleSheet">
-             <string notr="true">QWidget {
-	border: transparent;
-}
-
-QPushButton {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #000000, stop: 1 #000000);
-    color: white;
-    border: 1px solid red;
-    padding: 5px 17px;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 8px;
-}
-
-QPushButton:hover {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #4e4e4e, stop: 1 #4e4e4e);
-}
-
-QPushButton:pressed {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #1a5fb4, stop: 1 #4a00e0);
-}</string>
+             <string notr="true"/>
             </property>
             <widget class="QPushButton" name="btn_excluir">
              <property name="geometry">
@@ -193,8 +149,7 @@ QPushButton:pressed {
        <item>
         <widget class="QWidget" name="widget_4" native="true">
          <property name="styleSheet">
-          <string notr="true">border-top: 2px solid red;
-border-left: 2px solid red;</string>
+          <string notr="true"/>
          </property>
         </widget>
        </item>

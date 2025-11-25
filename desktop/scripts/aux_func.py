@@ -5,6 +5,7 @@ from PySide6.QtCore import QUrl, QByteArray, Qt, Signal
 from PySide6.QtGui import QPixmap
 import requests
 import json
+from time import sleep
 
 def exibir_confirmacao_exclusao(parent= None):
     msg_box = QMessageBox(parent)
@@ -21,6 +22,7 @@ def exibir_confirmacao_exclusao(parent= None):
         parent.janela_fechada.emit() # type: ignore
         parent.close() # type: ignore
     # Se a resposta for QMessageBox.No, o diálogo simplesmente fecha e nada acontece
+
 def buscar_cep(parent=None):
     """Busca CEP usando ViaCEP"""
     try:
@@ -43,6 +45,7 @@ def buscar_cep(parent=None):
 
     except Exception as e:
         QMessageBox.critical(parent, "Erro", f"Erro na busca do CEP: {str(e)}")
+
 def salvar_dados_clientes(parent=None):
 
     # O parent.nome_input é acessível diretamente
@@ -98,39 +101,34 @@ def salvar_dados_clientes(parent=None):
         QMessageBox.critical(parent, "Erro de BD", f"Ocorreu um erro: {e}")
         # Limpa o objeto de resposta para evitar vazamento de memória (melhor prática)
         reply.deleteLater()
+
 def salvar_dados_produtos(parent=None):
+        categoria_id = parent.categoria_combo.currentData()
         cod_pdv = parent.cod_pdv_input.text()# type: ignore
-        cod_sistema = int(parent.cod_sistema_input.text())# type: ignore
-        categoria = parent.categoria_combo.currentText()# type: ignore
         nome = parent.nome_input.text()# type: ignore
         preco_custo = float(parent.preco_custo_input.text().replace(",", "."))# type: ignore
         preco_venda = float(parent.preco_venda_input.text().replace(",", "."))# type: ignore
         medida = parent.Medida_input.text()# type: ignore
         estoque = int(parent.Estoque_input.text())# type: ignore
         estoque_min = int(parent.estoque_min_input.text())# type: ignore
-        sit_estoque = parent.sit_estoque_input.text()# type: ignore
-        ficha_tec = parent.ficha_tec_input.text()# type: ignore
-        status_venda = parent.status_venda_input.text()# type: ignore
         descricao_ = parent.desc_input.text()# type: ignore
         
         try:
 
             QMessageBox.information(parent, "Aguarde", "Enviando dados para o servidor!")
-            url= QUrl("http://127.0.0.1:8000/products/products")
+            url= QUrl("http://127.0.0.1:8000/products/desktop/add")
             data_json = {
-                    "cod_sistema": cod_sistema,
+                    "categoria_id": f"{categoria_id}",
                     "cod_pdv": f"{cod_pdv}",
-                    "categoria": f"{categoria}",
                     "nome": f"{nome}",
                     "preco_custo": preco_custo,
                     "preco_venda": preco_venda,
                     "medida": f"{medida}",
                     "estoque": estoque,
                     "estoque_min": estoque_min,
-                    "sit_estoque": f"{sit_estoque}",
                     "descricao": f"{descricao_}",
-                    "ficha_tecnica": f"{ficha_tec}",
-                    "status_venda": f"{status_venda}",
+                    "ficha_tecnica": "Não",
+                    "status_venda": "Ativo",
                     "imagem_url": ""
             }
 
@@ -146,7 +144,6 @@ def salvar_dados_produtos(parent=None):
             QMessageBox.information(parent, "Sucesso", "Produto adicionado com sucesso!")
             # Limpa os campos após salvar
             parent.cod_pdv_input.clear()# type: ignore
-            parent.cod_sistema_input.clear()# type: ignore
             parent.categoria_combo.clear()# type: ignore
             parent.nome_input.clear()# type: ignore
             parent.preco_custo_input.clear()# type: ignore
@@ -154,9 +151,6 @@ def salvar_dados_produtos(parent=None):
             parent.Medida_input.clear()# type: ignore
             parent.Estoque_input.clear()# type: ignore
             parent.estoque_min_input.clear()# type: ignore
-            parent.sit_estoque_input.clear()# type: ignore
-            parent.ficha_tec_input.clear()# type: ignore
-            parent.status_venda_input.clear()# type: ignore
             parent.desc_input.clear()# type: ignore
             parent.image_label.clear()# type: ignore
             parent.image_label.setText("Nenhuma imagem selecionada")# type: ignore
@@ -180,3 +174,4 @@ def inserir_imagem(parent=None):
             parent.image_label.setText("")  # Remove o texto quando a imagem é carregada # type: ignore
         else:
             parent.image_label.setText("Erro ao carregar a imagem.")# type: ignore
+

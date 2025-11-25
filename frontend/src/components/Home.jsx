@@ -42,7 +42,7 @@ function ContainerCategories() {
                 </div>
                 <div className="buttons-filters">
                     {setBaseProdutos && setBaseProdutos.map((categoria, index) => (
-                        <button onClick={() => handleFilterClick(categoria.categoria)} className={`buttons-filters ${selectedCategories === categoria.categoria ? 'active' : ''}`}>{categoria.categoria}</button>
+                        <button onClick={() => handleFilterClick(categoria.nome_categoria)} className={`buttons-filters ${selectedCategories === categoria.nome_categoria ? 'active' : ''}`}>{categoria.nome_categoria}</button>
                     ))}
                 </div>
             </div>

@@ -1,7 +1,12 @@
+* {
+
+    caret-color: transparent;
+
+}
+
 body {
     margin: 0px;
     padding: 0px;
-    background-color: rgba(20, 19, 19, 0.904);
     height: 100vh;
 }
 
@@ -13,7 +18,7 @@ div.home {
 }
 
 div.options {
-    background-color: rgba(0, 0, 0, 0.315);
+    background-color: rgb(51, 51, 51);
     width: 60px;
     height: 100vh;
     display: flex;
@@ -26,7 +31,8 @@ div.container {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    overflow-y: auto;  
+    overflow-y: auto;
+    background-color: rgb(31, 31, 31); 
 }
 
 div.header {
