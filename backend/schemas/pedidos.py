@@ -7,7 +7,6 @@ class ItemPedidoInput(BaseModel):
     produto_id: int = Field(..., description="ID do produto")
     quantidade: int = Field(..., ge=1)
     valor_unitario: Decimal = Field(..., ge=0, description="Valor unitário do produto no pedido")
-    observacoes: Optional[str] = None
 
 class ClienteInput(BaseModel):
     nome: str = Field(..., min_length=3, description="Nome do cliente")
@@ -32,6 +31,8 @@ class NovoPedidoSchema(BaseModel):
     metodo_pagamento: str = Field(..., description="Método de pagamento")
 
     valor_total: Decimal = Field(..., ge=0, description="Valor total do pedido")
+    
+    observacoes: Optional[str] = None
 
     cliente: ClienteInput
 

@@ -2,11 +2,12 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from decimal import Decimal
 from typing import Tuple
+import requests
 
 # --- Importações (Assuma que estão nos seus respectivos arquivos) ---
 from schemas.pedidos import NovoPedidoSchema, PedidoResponse
-from models.pedidos import Pedido, Cliente, EnderecoPedido, ItemPedido
-from bd.connection import get_db 
+from models.pedidos import Pedido, Cliente, EnderecoPedido, ItemPedido, PedidoDesktopView
+from bd.connection import get_db
 
 router = APIRouter()
 
@@ -32,19 +33,11 @@ def get_or_create_cliente(cliente_data, db: Session) -> Tuple[int, Cliente]:
 
     return cliente_db.id, cliente_db
 
-
 # --- ROTA PRINCIPAL ---
 
-@router.post(
-    "/react", 
-    status_code=status.HTTP_201_CREATED, 
-    # Usa o schema de resposta completo para serializar o pedido final
-    response_model=PedidoResponse 
-)
-async def criar_novo_pedido(
-    novo_pedido_data: NovoPedidoSchema, 
-    db: Session = Depends(get_db)
-):
+#  Usa o schema de resposta completo para serializar o pedido final em response_model=PedidoResponse
+@router.post("/react", status_code=status.HTTP_201_CREATED, response_model=PedidoResponse)
+async def criar_novo_pedido(novo_pedido_data: NovoPedidoSchema,db: Session = Depends(get_db)):
     """
     Processa e salva um novo pedido, incluindo endereço histórico e itens.
     """
@@ -54,8 +47,6 @@ async def criar_novo_pedido(
         # Esta função garante que tenhamos o ID do cliente logado ou recém-criado
         cliente_id, cliente_objeto = get_or_create_cliente(novo_pedido_data.cliente, db)
         
-
-
         # 2. VALIDAÇÃO DE PRECISÃO (Opcional: Verifica a soma do frontend)
         # O Pydantic já garantiu que valor_total, preco_unitario e taxa_entrega são Decimais.
         valor_total_calculado = (
@@ -64,6 +55,7 @@ async def criar_novo_pedido(
         )
 
         print(f"Valor total calculado: {valor_total_calculado}")
+        print(f"Valor total do pedido: {novo_pedido_data.valor_total}")
 
         print(valor_total_calculado - novo_pedido_data.valor_total)
 
@@ -102,9 +94,9 @@ async def criar_novo_pedido(
         for item_data in novo_pedido_data.itens:
             db_item = ItemPedido(
                 pedido_id=db_pedido.id,
+                produto_id=item_data.produto_id,
                 quantidade=item_data.quantidade,
                 valor_unitario=item_data.valor_unitario,
-                observacoes=item_data.observacoes
             )
             db.add(db_item)
 
@@ -130,4 +122,10 @@ async def criar_novo_pedido(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Erro interno do servidor. Não foi possível finalizar o pedido."
-        )     
+        )
+    
+
+@router.get("/delivery/desktop")
+async def read_pedidos(db: Session = Depends(get_db)):
+    return db.query(PedidoDesktopView).all()
+

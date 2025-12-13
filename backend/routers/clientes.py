@@ -1,15 +1,15 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from bd.connection import get_db
-from schemas.users import User as UserSchema
-from models.users import User as UserModel
+from schemas.clientes import Clientes as ClientesSchema
+from models.clientes import Clientes as ClientesModel
 
 router = APIRouter()
 
 # Rotas para inserir usuários ao banco de dados, com a validação do Pydantic
 @router.post("/users")
-def create_user(user: UserSchema, db: Session = Depends(get_db)):
-    db_user = UserModel(**user.dict())
+def create_user(user: ClientesSchema, db: Session = Depends(get_db)):
+    db_user = ClientesModel(**user.dict())
     db.add(db_user)
     db.commit()
     db.refresh(db_user)

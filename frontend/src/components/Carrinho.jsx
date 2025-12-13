@@ -8,6 +8,8 @@ import "../styles/Carrinho.css"
 import Draggable from "react-draggable";
 // importando hook de carrinho, que contem as funções para manipular o carrinho.
 import { useCarrinho} from "../hooks/useCarrinho";
+import { Link } from "react-router-dom";
+
 
 // Função principal do modal carrinho, recebendo o estado de abertura e fechamento do modal
 function ModalShopping({closeModal, openModal, children}){
@@ -16,8 +18,6 @@ function ModalShopping({closeModal, openModal, children}){
     // importando hooks (caminho: src/hooks/useCarrinho ) de carrinho que contem as funções para manipular o carrinho, como produtos, 
     // deletar todos os produtos, quantidade de produtos e remover produto.
     const { produtos, setProdutos, delCartShopping, isLoading, fetchCarrinho, quantidadeItems, removerProduto  } = useCarrinho();
-
-    console.log(produtos);
 
     // definindo referencia para o modal como null
     const nodeRef = useRef(null);
@@ -161,7 +161,9 @@ function ModalShopping({closeModal, openModal, children}){
                         <label className="totalvalueshoppingcart">Qtd: {quantidadeItems}</label>
                     </div>
                     {/* Botão para finalizar compra */}
-                    <button className="buttonfinishbuy">Finalizar Compra</button>
+                    <Link to="/conclusao">
+                        <button onClick={() => closeModal()} className="buttonfinishbuy">Finalizar Compra</button>
+                    </Link>
                     {/* Botão para excluir carrinho */}
                     <button onClick={() => delCartShopping()} className="buttonfinishcancel" disabled={isLoading}>Excluir Carrinho</button>
                 </div>

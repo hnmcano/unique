@@ -12,7 +12,7 @@ export const useCarrinho = () => {
         setIsLoading(true);
         setError(null);
         try {
-            const response = await api.get("/carrinho/carrinho");
+            const response = await api.get("/carrinho/preencher-react");
             let dados = response.data.dataframe;
             let qtd = response.data.qtdprodutos;
             
@@ -46,7 +46,7 @@ export const useCarrinho = () => {
     const delCartShopping = async () => {
         try {
             // Ação: Chama a API DELETE
-            await api.delete("/carrinho/delete/all");
+            await api.delete("/carrinho/excluir-all-produtos");
             
             // Sucesso: Limpa o estado local
             setProdutos([]); 
@@ -61,9 +61,9 @@ export const useCarrinho = () => {
     
     // Você pode adicionar outras funções como update e delete de item individual aqui...
 
-    const removerProduto = async (product_id) => {
+    const removerProduto = async (produto_id) => {
         try {
-            let response = await api.delete(`/carrinho/delete/${product_id}`);
+            let response = await api.delete(`carrinho/deletar-produto-selecionado/${produto_id}`);
             let qtdprodutos = response.data.qtdprodutos
 
             console.log('Resposta do servidor:', qtdprodutos);
@@ -81,7 +81,7 @@ export const useCarrinho = () => {
         setProdutos, 
         isLoading, 
         error,
-        fetchCarrinho, // Permite refazer a busca manualmente
+        fetchCarrinho,
         delCartShopping, 
         quantidadeItems,
         removerProduto

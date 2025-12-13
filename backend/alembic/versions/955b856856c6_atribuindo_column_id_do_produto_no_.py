@@ -1,8 +1,8 @@
-"""Recomeço 2
+"""Atribuindo column id do produto no itens do pedido
 
-Revision ID: 897b27ac9a54
+Revision ID: 955b856856c6
 Revises: 
-Create Date: 2025-11-24 19:00:21.941020
+Create Date: 2025-12-07 14:15:11.024794
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '897b27ac9a54'
+revision: str = '955b856856c6'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -39,6 +39,67 @@ def upgrade() -> None:
     sa.Column('quantidade', sa.Integer(), nullable=False),
     sa.PrimaryKeyConstraint('produto_id')
     )
+    op.create_table('users',
+    sa.Column('cliente', sa.String(length=100), nullable=False),
+    sa.Column('telefone', sa.String(length=11), nullable=False),
+    sa.Column('email', sa.String(length=100), nullable=False),
+    sa.Column('cep', sa.String(length=8), nullable=False),
+    sa.Column('endereco', sa.String(length=200), nullable=False),
+    sa.Column('bairro', sa.String(length=100), nullable=False),
+    sa.Column('cidade', sa.String(length=100), nullable=False),
+    sa.Column('complemento', sa.String(length=200), nullable=False),
+    sa.Column('referencia', sa.String(length=200), nullable=True),
+    sa.PrimaryKeyConstraint('telefone'),
+    sa.UniqueConstraint('email')
+    )
+    op.create_table('clientes',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('nome', sa.String(length=100), nullable=False),
+    sa.Column('email', sa.String(length=100), nullable=False),
+    sa.Column('telefone', sa.String(length=11), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_clientes_id'), 'clientes', ['id'], unique=False)
+    op.create_table('pedidos',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('cliente_id', sa.Integer(), nullable=False),
+    sa.Column('data_criacao', sa.DateTime(timezone=True), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
+    sa.Column('data_atualizacao', sa.DateTime(timezone=True), nullable=True),
+    sa.Column('status', sa.String(length=50), nullable=False),
+    sa.Column('metodo_pagamento', sa.String(length=50), nullable=False),
+    sa.Column('valor_total', sa.Numeric(precision=10, scale=2), nullable=False),
+    sa.Column('observacoes', sa.Text(), nullable=True),
+    sa.ForeignKeyConstraint(['cliente_id'], ['clientes.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_pedidos_id'), 'pedidos', ['id'], unique=False)
+    op.create_table('enderecos_pedidos',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('pedido_id', sa.Integer(), nullable=False),
+    sa.Column('cep', sa.String(length=8), nullable=False),
+    sa.Column('endereco', sa.String(length=200), nullable=False),
+    sa.Column('numero', sa.Integer(), nullable=False),
+    sa.Column('bairro', sa.String(length=100), nullable=False),
+    sa.Column('cidade', sa.String(length=100), nullable=False),
+    sa.Column('estado', sa.String(length=2), nullable=False),
+    sa.Column('complemento', sa.String(length=200), nullable=False),
+    sa.Column('referencia', sa.String(length=200), nullable=True),
+    sa.Column('taxa_entrega', sa.Numeric(precision=10, scale=2), nullable=False),
+    sa.ForeignKeyConstraint(['pedido_id'], ['pedidos.id'], ),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('pedido_id')
+    )
+    op.create_index(op.f('ix_enderecos_pedidos_id'), 'enderecos_pedidos', ['id'], unique=False)
+    op.create_table('itens_pedidos',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('pedido_id', sa.Integer(), nullable=False),
+    sa.Column('produto_id', sa.Integer(), nullable=False),
+    sa.Column('quantidade', sa.Integer(), nullable=False),
+    sa.Column('valor_unitario', sa.Numeric(precision=10, scale=2), nullable=False),
+    sa.ForeignKeyConstraint(['pedido_id'], ['pedidos.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_itens_pedidos_id'), 'itens_pedidos', ['id'], unique=False)
     op.create_table('categorias',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('nome', sa.String(length=30), nullable=False),
@@ -64,73 +125,14 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('cod_pdv')
     )
-    op.create_table('clientes',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('nome', sa.String(length=100), nullable=False),
-    sa.Column('email', sa.String(length=100), nullable=False),
-    sa.Column('telefone', sa.String(length=11), nullable=False),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_index(op.f('ix_clientes_id'), 'clientes', ['id'], unique=False)
-    op.create_table('pedidos',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('cliente_id', sa.Integer(), nullable=False),
-    sa.Column('data_criacao', sa.DateTime(timezone=True), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
-    sa.Column('data_atualizacao', sa.DateTime(timezone=True), nullable=True),
-    sa.Column('status', sa.String(length=50), nullable=False),
-    sa.Column('metodo_pagamento', sa.String(length=50), nullable=False),
-    sa.Column('valor_total', sa.Numeric(precision=10, scale=2), nullable=False),
-    sa.ForeignKeyConstraint(['cliente_id'], ['clientes.id'], ),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_index(op.f('ix_pedidos_id'), 'pedidos', ['id'], unique=False)
-    op.create_table('enderecos_pedidos',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('pedido_id', sa.Integer(), nullable=False),
-    sa.Column('cep', sa.String(length=8), nullable=False),
-    sa.Column('endereco', sa.String(length=200), nullable=False),
-    sa.Column('numero', sa.Integer(), nullable=False),
-    sa.Column('bairro', sa.String(length=100), nullable=False),
-    sa.Column('cidade', sa.String(length=100), nullable=False),
-    sa.Column('estado', sa.String(length=2), nullable=False),
-    sa.Column('complemento', sa.String(length=200), nullable=False),
-    sa.Column('referencia', sa.String(length=200), nullable=True),
-    sa.Column('taxa_entrega', sa.Numeric(precision=10, scale=2), nullable=False),
-    sa.ForeignKeyConstraint(['pedido_id'], ['pedidos.id'], ),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('pedido_id')
-    )
-    op.create_index(op.f('ix_enderecos_pedidos_id'), 'enderecos_pedidos', ['id'], unique=False)
-    op.create_table('itens_pedidos',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('pedido_id', sa.Integer(), nullable=False),
-    sa.Column('quantidade', sa.Integer(), nullable=False),
-    sa.Column('valor_unitario', sa.Numeric(precision=10, scale=2), nullable=False),
-    sa.Column('observacoes', sa.Text(), nullable=True),
-    sa.ForeignKeyConstraint(['pedido_id'], ['pedidos.id'], ),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_index(op.f('ix_itens_pedidos_id'), 'itens_pedidos', ['id'], unique=False)
-    op.create_table('users',
-    sa.Column('cliente', sa.String(length=100), nullable=False),
-    sa.Column('telefone', sa.String(length=11), nullable=False),
-    sa.Column('email', sa.String(length=100), nullable=False),
-    sa.Column('cep', sa.String(length=8), nullable=False),
-    sa.Column('endereco', sa.String(length=200), nullable=False),
-    sa.Column('bairro', sa.String(length=100), nullable=False),
-    sa.Column('cidade', sa.String(length=100), nullable=False),
-    sa.Column('complemento', sa.String(length=200), nullable=False),
-    sa.Column('referencia', sa.String(length=200), nullable=True),
-    sa.PrimaryKeyConstraint('telefone'),
-    sa.UniqueConstraint('email')
-    )
     # ### end Alembic commands ###
 
 
 def downgrade() -> None:
     """Downgrade schema."""
     # ### commands auto generated by Alembic - please adjust! ###
-    op.drop_table('users')
+    op.drop_table('produtos')
+    op.drop_table('categorias')
     op.drop_index(op.f('ix_itens_pedidos_id'), table_name='itens_pedidos')
     op.drop_table('itens_pedidos')
     op.drop_index(op.f('ix_enderecos_pedidos_id'), table_name='enderecos_pedidos')
@@ -139,7 +141,6 @@ def downgrade() -> None:
     op.drop_table('pedidos')
     op.drop_index(op.f('ix_clientes_id'), table_name='clientes')
     op.drop_table('clientes')
-    op.drop_table('produtos')
-    op.drop_table('categorias')
+    op.drop_table('users')
     op.drop_table('carrinhos')
     # ### end Alembic commands ###

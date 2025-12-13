@@ -5,9 +5,8 @@ import "../styles/HomePage.css"
 // importando componente carrinho
 import ModalShopping from "../components/Carrinho";
 // importando componente categorias
-import ContainerCategories from "../components/Home";
-// importando componente finalizacao
-import DataFinalizacao from "../components/Finalizacao";
+import ContainerCategories from "../components/Catalago";
+
 
 // importando icones da pagina https://react-icons.github.io/react-icons/
 // icone catalago

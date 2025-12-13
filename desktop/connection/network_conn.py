@@ -1,11 +1,10 @@
-
 from PySide6.QtNetwork import (QNetworkRequest, QNetworkReply)
 from PySide6.QtWidgets import (QMessageBox)
 import json
 
 def handle_network_reply(reply: QNetworkReply, parent=None):
     """Processa a resposta do servidor."""
-
+    
     # 1. Verifica se houve algum erro de rede (ex: falha de conexão)
     if reply.error() != QNetworkReply.NetworkError.NoError:
         QMessageBox.warning(parent,  "Erro", "Erro na rede!")
@@ -27,14 +26,17 @@ def handle_network_reply(reply: QNetworkReply, parent=None):
         # Tenta decodificar a resposta JSON
         try:
             response_json = json.loads(response_bytes.decode('utf-8'))# type: ignore
+           
+            if reply.url().toString() == "http://127.0.0.1:8000/produtos/dropdown/categories": # type: ignore
+                for item in response_json:
+                    parent.categoria_combo.addItem(item["nome"])
+
+            print(reply.url().toString())
             
-            # Exibe o resultado formatado
-            status_text = f"Requisição bem-sucedida!\n"
-            status_text += f"Status HTTP: {reply.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute)}\n"
-            status_text += "Dados Recebidos:\n"
-            status_text += json.dumps(response_json, indent=2)
-            
-            QMessageBox.information(parent, "Sucesso", f"{status_text}")
-            
+            if reply.url().toString() == f"http://127.0.0.1:8000/produtos/category/": # type: ignore
+                for item in response_json:
+                    parent.produtos_combo.addItem(item["nome"])
+
+                    
         except json.JSONDecodeError:
-            QMessageBox.warning(parent, "Erro", f"{status_text}")
+            QMessageBox.warning(parent, "Erro", f"Erro Inesperado")

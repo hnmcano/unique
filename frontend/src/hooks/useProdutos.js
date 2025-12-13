@@ -7,7 +7,7 @@ export const useProdutos = () => {
     const [base, setBase] = useState([]);
 
     useEffect(() => {      
-        axios.get("http://127.0.0.1:8000/products/react/produtos")
+        axios.get("http://127.0.0.1:8000/produtos/react/catalago")
             .then(response => {
                 setBase(response.data);
             })

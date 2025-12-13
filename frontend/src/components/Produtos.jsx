@@ -34,7 +34,7 @@ function ProdutosAcionados({categoria}) {
         console.log('Dados a enviar:',dadosEnviar);
 
         try {
-            const response = await axios.post(`http://127.0.0.1:8000/carrinho/postagem/${produtos.produto_id}`, dadosEnviar);
+            const response = await axios.post(`http://127.0.0.1:8000/carrinho/adicionar-produto/${produtos.produto_id}`, dadosEnviar);
             console.log('Resposta do servidor:', response.data);
         } catch (error) {
             console.error('Erro ao enviar os dados:', error);

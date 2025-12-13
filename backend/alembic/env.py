@@ -1,11 +1,7 @@
 from logging.config import fileConfig
+from bd.connection import Base as BaseDeclarative
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
-
-from models.carrinhos import Base as CarrinhoBase
-from models.product import Base as ProductBase
-from models.pedidos import Base as PedidoBase
-from models.users import Base as UserBase
 
 from alembic import context
 
@@ -22,7 +18,7 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-target_metadata = [CarrinhoBase.metadata, ProductBase.metadata, PedidoBase.metadata, UserBase.metadata]
+target_metadata = [BaseDeclarative.metadata]
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

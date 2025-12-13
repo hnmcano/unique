@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 
 # Modelo padrão para produtos
-class Product(BaseModel):
+class Produto(BaseModel):
     categoria_id: int
     cod_pdv: str | None = None
     nome: str = Field(..., min_length= 3, max_length=50)
@@ -16,6 +16,6 @@ class Product(BaseModel):
     imagem_url: str | None = None
 
 # Modelo para categorias
-class Category(BaseModel):
+class Categoria(BaseModel):
     nome: str = Field(..., min_length=3, max_length=30)
 

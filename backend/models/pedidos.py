@@ -1,8 +1,7 @@
 from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime, Numeric, ForeignKey, Text
-from sqlalchemy.orm import declarative_base, relationship
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-
-Base = declarative_base()
+from bd.connection import Base
 
 class Pedido(Base):
     __tablename__ = 'pedidos'
@@ -13,9 +12,10 @@ class Pedido(Base):
 
     data_criacao = Column(DateTime(timezone=True), server_default=func.now())
     data_atualizacao = Column(DateTime(timezone=True), onupdate=func.now())
-    status = Column(String(50), default="Pendente", nullable=False)
+    status = Column(String(50), default="PENDENTE", nullable=False)
     metodo_pagamento = Column(String(50), nullable=False)
     valor_total = Column(Numeric(10, 2), nullable=False)
+    observacoes = Column(Text, nullable=True)
 
     cliente = relationship("Cliente", back_populates="pedidos", uselist=False)
     endereco_entrega = relationship("EnderecoPedido", back_populates="pedido")
@@ -66,12 +66,27 @@ class ItemPedido(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     pedido_id = Column(Integer, ForeignKey('pedidos.id'), nullable=False)
-
+    produto_id = Column(Integer, nullable=False)
     quantidade = Column(Integer, nullable=False)
     valor_unitario = Column(Numeric(10, 2), nullable=False)
-    observacoes = Column(Text, nullable=True)
 
     pedido = relationship("Pedido", back_populates="itens")
 
     def __repr__(self):
         return f"ItemPedido(id={self.id}, pedido_id={self.pedido_id},quantidade={self.quantidade}, valor_unitario={self.valor_unitario})"
+
+class PedidoDesktopView(Base):
+
+    __tablename__ = 'pedidos_desktop'
+
+    pedidos_id = Column(Integer, primary_key=True, index=True)
+    data_criacao = Column(DateTime(timezone=True))
+    status = Column(String(50), nullable=False)
+    metodo_pagamento = Column(String(50), nullable=False)
+    valor_total = Column(Numeric(10, 2), nullable=False)
+    cep = Column(String(8), nullable=False)
+    endereco = Column(String(200), nullable=False)
+    numero = Column(Integer, nullable=False)
+    bairro = Column(String(100), nullable=False)
+    taxa_entrega = Column(Numeric(10, 2), nullable=False)
+    nome = Column(String(100), nullable=False)

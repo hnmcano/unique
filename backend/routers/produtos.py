@@ -3,11 +3,11 @@ import pandas as pd
 from sqlalchemy.orm import Session
 from bd.connection import get_db
 from typing import List, Dict
-from models.product import Produto as ProductModel
-from models.product import Produtos_com_categorias as ViewProductWithCategories
-from schemas.products import Product as ProductSchema
-from schemas.products import Category as CategorySchema
-from models.product import Category as CategoryModel
+from models.produtos import Produto as ProductModel
+from models.produtos import Produtos_com_categorias as ViewProductWithCategories
+from schemas.produtos import Produto as ProdutoSchema
+from schemas.produtos import Categoria as CategoriaSchema
+from models.produtos import Categoria as CategoryModel
 
 router = APIRouter()
 
@@ -15,7 +15,7 @@ router = APIRouter()
 
 # Rotas para inserir produtos ao banco de dados, com a validação do Pydantic, baseado no envio do desktop
 @router.post("/desktop/add")
-async def get_product(product: ProductSchema, db: Session = Depends(get_db)):
+async def get_product(product: ProdutoSchema, db: Session = Depends(get_db)):
     db_product = ProductModel(**product.dict())
     db.add(db_product)
     db.commit()
@@ -30,7 +30,7 @@ async def read_products(db: Session = Depends(get_db)):
     return db
 
 # Rota para listar todos os produtos com os nomes das categorias no front-end com react
-@router.get("/react/produtos")
+@router.get("/react/catalago")
 async def list_products(db: Session = Depends(get_db)):
     # executar a query
     base = db.query(ViewProductWithCategories).all()
@@ -57,7 +57,7 @@ async def list_products(db: Session = Depends(get_db)):
 
 # Rotas para inserir categorias ao banco de dados, com a validação do Pydantic, baseado no envio do desktop
 @router.post("/category")
-async def get_category(categoria: CategorySchema, db: Session = Depends(get_db)):
+async def get_category(categoria: CategoriaSchema, db: Session = Depends(get_db)):
     db_category = CategoryModel(**categoria.dict())
     db.add(db_category)
     db.commit()

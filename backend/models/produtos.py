@@ -1,11 +1,10 @@
 from sqlalchemy import Column, Integer, String, Float, ForeignKey
 from typing import List
-from sqlalchemy.orm import declarative_base, relationship, Mapped
-
-Base = declarative_base()
+from sqlalchemy.orm import relationship, Mapped
+from bd.connection import Base
 
 # Iserção da tabela de categorias no banco de dados
-class Category(Base):
+class Categoria(Base):
 
     __tablename__ = "categorias"
 
@@ -37,7 +36,7 @@ class Produto(Base):
     status_venda = Column(String(20), nullable=False)
     imagem_url = Column(String(300), nullable=True)
 
-    categoria_object = relationship("Category", back_populates="produtos")
+    categoria_object = relationship("Categoria", back_populates="produtos")
 
     def __repr__(self):
         return f"Product(id={self.id}, name={self.nome})"

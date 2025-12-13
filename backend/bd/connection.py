@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, declarative_base
 
 DATABASE_URL = "sqlite:///./uniquedatabase.db"
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
@@ -12,3 +12,6 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+Base = declarative_base()

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useProdutos } from "../hooks/useProdutos";
-import CategoriesLoop from "../components/Categories";
+import CategoriesLoop from "./Categories";
 
 function ContainerCategories() {
     const { base: setBaseProdutos } = useProdutos();

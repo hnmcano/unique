@@ -1,7 +1,7 @@
 from pydantic import  BaseModel, Field, EmailStr
 
 # Modelo padrão para usuários
-class User(BaseModel):
+class Clientes(BaseModel):
     cliente: str = Field(..., min_length= 3, max_length=50)
     telefone: str = Field(..., min_length=11, max_length=11)
     email: EmailStr
