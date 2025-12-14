@@ -16,9 +16,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QFrame, QHBoxLayout, QHeaderView,
-    QLabel, QLineEdit, QMainWindow, QSizePolicy,
-    QStatusBar, QTableWidget, QTableWidgetItem, QVBoxLayout,
-    QWidget)
+    QLabel, QLineEdit, QMainWindow, QPushButton,
+    QSizePolicy, QStatusBar, QTableWidget, QTableWidgetItem,
+    QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -82,10 +82,19 @@ class Ui_MainWindow(object):
 
         self.widget_5 = QWidget(self.widget)
         self.widget_5.setObjectName(u"widget_5")
-        self.widget_5.setMinimumSize(QSize(300, 0))
+        self.widget_5.setMinimumSize(QSize(200, 0))
         self.widget_5.setStyleSheet(u"")
         self.horizontalLayout_2 = QHBoxLayout(self.widget_5)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.pushButton = QPushButton(self.widget_5)
+        self.pushButton.setObjectName(u"pushButton")
+        self.pushButton.setMinimumSize(QSize(0, 55))
+        self.pushButton.setMaximumSize(QSize(120, 55))
+        icon = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ListAdd))
+        self.pushButton.setIcon(icon)
+
+        self.horizontalLayout_2.addWidget(self.pushButton)
+
 
         self.horizontalLayout.addWidget(self.widget_5)
 
@@ -117,5 +126,6 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Produtos", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"PEDIDO", None))
+        self.pushButton.setText(QCoreApplication.translate("MainWindow", u"NovoPedido", None))
     # retranslateUi
 

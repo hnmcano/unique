@@ -4,47 +4,39 @@ from datetime import datetime
 from decimal import Decimal
 
 class ItemPedidoInput(BaseModel):
-    produto_id: int = Field(..., description="ID do produto")
-    quantidade: int = Field(..., ge=1)
-    valor_unitario: Decimal = Field(..., ge=0, description="Valor unitário do produto no pedido")
+    produto_id: int
+    quantidade: int 
+    valor_unitario: float 
 
 class ClienteInput(BaseModel):
-    nome: str = Field(..., min_length=3, description="Nome do cliente")
-    email: Optional[EmailStr] = None
-    telefone: str = Field(..., description="Telefone do cliente")
+    nome: str
+    email: EmailStr | None
+    telefone: str 
 
 class EntregaInput(BaseModel):
-    cep: str = Field(..., description="CEP da entrega")
-    endereco: str = Field(..., description="Endereço da entrega")
-    numero: str = Field(..., description="Número da entrega")
-    bairro: str = Field(..., description="Bairro da entrega")
-    cidade: str = Field(..., description="Cidade da entrega")
-    estado: str = Field(..., description="Estado da entrega")
-    complemento: Optional[str] = None
-    referencia: Optional[str] = None
-    taxa_entrega: Decimal = Field(..., ge=0, description="Taxa de entrega")
+    cep: str 
+    endereco: str
+    numero: str 
+    bairro: str 
+    cidade: str
+    estado: str 
+    complemento: str | None
+    referencia: str | None
+    taxa_entrega: float
 
 class NovoPedidoSchema(BaseModel):
 
-    itens: List[ItemPedidoInput] = Field(..., description="Itens do pedido")
+    itens: List[ItemPedidoInput] 
 
-    metodo_pagamento: str = Field(..., description="Método de pagamento")
+    metodo_pagamento: str
 
-    valor_total: Decimal = Field(..., ge=0, description="Valor total do pedido")
+    valor_total: float
     
-    observacoes: Optional[str] = None
+    observacoes: str | None
 
     cliente: ClienteInput
 
     entrega: EntregaInput
-
-
-
-
-
-
-
-
 
 
 

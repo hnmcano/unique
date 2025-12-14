@@ -40,8 +40,6 @@ for idx, row in df.iterrows():
         data_json["preco_venda"] = data_json["preco_venda"]
 
       # Pequena pausa para evitar sobrecarga no servidor
-
-
     try:
         response = requests.post(url, json=data_json, timeout=10)
         if response.status_code == 200:

@@ -1,29 +1,34 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
+from sqlalchemy import join
 from decimal import Decimal
 from typing import Tuple
+import pandas as pd
 import requests
 
 # --- Importações (Assuma que estão nos seus respectivos arquivos) ---
 from schemas.pedidos import NovoPedidoSchema, PedidoResponse
-from models.pedidos import Pedido, Cliente, EnderecoPedido, ItemPedido, PedidoDesktopView
+from models.pedidos import Pedido, EnderecoPedido, ItemPedido
+from models.clientes import Clientes
+from models.caixa import Caixa as CaixaModel
 from bd.connection import get_db
+from datetime import datetime
 
 router = APIRouter()
 
 # --- Funções Auxiliares (Simplificadas para o Exemplo) ---
 
-def get_or_create_cliente(cliente_data, db: Session) -> Tuple[int, Cliente]:
+def get_or_create_cliente(cliente_data, db: Session) -> Tuple[int, Clientes]:
     """
     Simula a busca do cliente por e-mail/telefone ou a criação de um novo.
     Retorna o ID do cliente e o objeto Cliente.
     """
     # 1. Tenta encontrar o cliente pelo email (ou telefone)
-    cliente_db = db.query(Cliente).filter(Cliente.email == cliente_data.email).first()
+    cliente_db = db.query(Clientes).filter(Clientes.email == cliente_data.email).first()
     
     if not cliente_db:
         # 2. Se não existir, cria o novo cliente no DB
-        cliente_db = Cliente(
+        cliente_db = Clientes(
             nome=cliente_data.nome,
             email=cliente_data.email,
             telefone=cliente_data.telefone
@@ -33,14 +38,17 @@ def get_or_create_cliente(cliente_data, db: Session) -> Tuple[int, Cliente]:
 
     return cliente_db.id, cliente_db
 
-# --- ROTA PRINCIPAL ---
-
 #  Usa o schema de resposta completo para serializar o pedido final em response_model=PedidoResponse
 @router.post("/react", status_code=status.HTTP_201_CREATED, response_model=PedidoResponse)
 async def criar_novo_pedido(novo_pedido_data: NovoPedidoSchema,db: Session = Depends(get_db)):
-    """
-    Processa e salva um novo pedido, incluindo endereço histórico e itens.
-    """
+
+    caixa = db.query(CaixaModel).filter(CaixaModel.status == "ABERTO").first()
+
+    if not caixa:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, 
+            detail="Estamos Fechados no momento, volte mais tarde"
+        )
     
     try:
         # 1. OBTER/CRIAR O CLIENTE
@@ -69,6 +77,7 @@ async def criar_novo_pedido(novo_pedido_data: NovoPedidoSchema,db: Session = Dep
         
         db_pedido = Pedido(
             cliente_id=cliente_id,
+            caixa_id=caixa.id,
             metodo_pagamento=novo_pedido_data.metodo_pagamento,
             valor_total=novo_pedido_data.valor_total
             # status e data_pedido usam defaults do modelo
@@ -127,5 +136,29 @@ async def criar_novo_pedido(novo_pedido_data: NovoPedidoSchema,db: Session = Dep
 
 @router.get("/delivery/desktop")
 async def read_pedidos(db: Session = Depends(get_db)):
-    return db.query(PedidoDesktopView).all()
+    
+    pedidos = db.query(Pedido).all()
+    clientes_pedidos = db.query(Clientes).all()
 
+    if pedidos is not None:
+        p =  pd.DataFrame([p.__dict__ for p in pedidos])
+        c =  pd.DataFrame([c.__dict__ for c in clientes_pedidos])
+
+        p = p.drop(columns=["_sa_instance_state"], errors="ignore") 
+        c = c.drop(columns=["_sa_instance_state"], errors="ignore")
+        
+
+        p["data_pedido"] = p["data_criacao"].dt.strftime("%Y-%m-%d")
+        p["hora_pedido"] = p["data_criacao"].dt.strftime("%H:%M:%S")
+        p["valor_total"] = p["valor_total"].astype("float").round(2)  
+
+        p = p.drop(columns=["data_criacao"])
+
+        data = pd.merge(p, c, left_on="cliente_id", right_on="id", how="left")
+        data = data.drop(columns=["id_y"]).rename(columns={"id_x": "id"}).to_dict("records")
+
+        print(data)
+        raise HTTPException(status_code=status.HTTP_200_OK, detail=data)
+    else:
+        data = []
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Nenhum pedido encontrado")

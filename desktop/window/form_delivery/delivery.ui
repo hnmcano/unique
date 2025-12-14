@@ -163,14 +163,37 @@ border-right: 1px solid red;</string>
         <widget class="QWidget" name="widget_5" native="true">
          <property name="minimumSize">
           <size>
-           <width>300</width>
+           <width>200</width>
            <height>0</height>
           </size>
          </property>
          <property name="styleSheet">
           <string notr="true"/>
          </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_2"/>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QPushButton" name="pushButton">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>55</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>120</width>
+              <height>55</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>NovoPedido</string>
+            </property>
+            <property name="icon">
+             <iconset theme="QIcon::ThemeIcon::ListAdd"/>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
       </layout>

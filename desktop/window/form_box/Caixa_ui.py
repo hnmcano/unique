@@ -23,7 +23,9 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(634, 544)
+        MainWindow.resize(536, 498)
+        MainWindow.setMinimumSize(QSize(536, 498))
+        MainWindow.setMaximumSize(QSize(536, 498))
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
@@ -32,6 +34,7 @@ class Ui_MainWindow(object):
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.widget = QWidget(self.centralwidget)
         self.widget.setObjectName(u"widget")
+        self.widget.setStyleSheet(u"")
         self.horizontalLayout = QHBoxLayout(self.widget)
         self.horizontalLayout.setSpacing(0)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
@@ -39,7 +42,8 @@ class Ui_MainWindow(object):
         self.widget_2 = QWidget(self.widget)
         self.widget_2.setObjectName(u"widget_2")
         self.widget_2.setMaximumSize(QSize(220, 16777215))
-        self.widget_2.setStyleSheet(u"")
+        self.widget_2.setStyleSheet(u"background-color: rgb(54, 54, 54);\n"
+"")
         self.verticalLayout_3 = QVBoxLayout(self.widget_2)
         self.verticalLayout_3.setSpacing(0)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
@@ -55,11 +59,14 @@ class Ui_MainWindow(object):
         self.widget_8.setMinimumSize(QSize(90, 0))
         self.widget_8.setMaximumSize(QSize(90, 16777215))
         self.verticalLayout_5 = QVBoxLayout(self.widget_8)
+        self.verticalLayout_5.setSpacing(0)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
+        self.verticalLayout_5.setContentsMargins(0, 0, 0, 0)
         self.label = QLabel(self.widget_8)
         self.label.setObjectName(u"label")
         self.label.setMinimumSize(QSize(90, 0))
         self.label.setMaximumSize(QSize(90, 16777215))
+        self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.verticalLayout_5.addWidget(self.label)
 
@@ -72,10 +79,11 @@ class Ui_MainWindow(object):
         self.widget_9.setMaximumSize(QSize(100, 16777215))
         self.verticalLayout_4 = QVBoxLayout(self.widget_9)
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
-        self.lineEdit = QLineEdit(self.widget_9)
-        self.lineEdit.setObjectName(u"lineEdit")
+        self.ValorCaixa = QLineEdit(self.widget_9)
+        self.ValorCaixa.setObjectName(u"ValorCaixa")
+        self.ValorCaixa.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
-        self.verticalLayout_4.addWidget(self.lineEdit)
+        self.verticalLayout_4.addWidget(self.ValorCaixa)
 
 
         self.horizontalLayout_3.addWidget(self.widget_9)
@@ -85,31 +93,34 @@ class Ui_MainWindow(object):
 
         self.widget_6 = QWidget(self.widget_2)
         self.widget_6.setObjectName(u"widget_6")
-        self.widget_6.setMaximumSize(QSize(16777215, 120))
+        self.widget_6.setMaximumSize(QSize(16777215, 75))
         self.widget_6.setStyleSheet(u"QPushButton {\n"
-"    border: 2px solid #8f8f91;\n"
+"    background: qlineargradient(\n"
+"        spread:pad,\n"
+"        x1:0, y1:0,\n"
+"        x2:1, y2:0,\n"
+"        stop:0 #393939,\n"
+"        stop:1 #7d7d7d\n"
+"    );\n"
+"    color: white;\n"
+"    border: 2px solid #282828;\n"
 "    border-radius: 6px;\n"
-"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"                                      stop: 0 #f6f7fa, stop: 1 #dadbde);\n"
-"    min-width: 80px;\n"
-"	color: black;\n"
-"	height: 40px;\n"
+"    padding: 6px 12px;\n"
 "}\n"
 "\n"
-"QPushButton:pressed {\n"
-"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"                                      stop: 0 #dadbde, stop: 1 #f6f7fa);\n"
-"}\n"
-"\n"
-"QPushButton:flat {\n"
-"    border: none; /* no border for a flat push button */\n"
-"}\n"
-"\n"
-"QPushButton:default {\n"
-"    border-color: navy; /* make the default button prominent */\n"
+"QPushButton::hover{\n"
+"    background: qlineargradient(\n"
+"        spread:pad,\n"
+"        x1:0, y1:0,\n"
+"        x2:1, y2:0,\n"
+"        stop:0 #7d7d7d,\n"
+"        stop:1 #393939\n"
+"    );\n"
 "}")
         self.horizontalLayout_2 = QHBoxLayout(self.widget_6)
+        self.horizontalLayout_2.setSpacing(9)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.horizontalLayout_2.setContentsMargins(9, 9, 9, 9)
         self.open_caixa = QPushButton(self.widget_6)
         self.open_caixa.setObjectName(u"open_caixa")
         self.open_caixa.setStyleSheet(u"")
@@ -124,6 +135,23 @@ class Ui_MainWindow(object):
 
         self.widget_3 = QWidget(self.widget)
         self.widget_3.setObjectName(u"widget_3")
+        self.widget_3.setStyleSheet(u"QWidget{\n"
+"	background-color: rgb(255, 255, 255);\n"
+"}\n"
+"\n"
+"QPushButton {\n"
+"    background: qlineargradient(\n"
+"        spread:pad,\n"
+"        x1:0, y1:0,\n"
+"        x2:1, y2:0,\n"
+"        stop:0 #ff7e5f,\n"
+"        stop:1 #feb47b\n"
+"    );\n"
+"    color: white;\n"
+"    border: 2px solid #d35400;\n"
+"    border-radius: 6px;\n"
+"    padding: 6px 12px;\n"
+"}")
         self.verticalLayout_2 = QVBoxLayout(self.widget_3)
         self.verticalLayout_2.setSpacing(0)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
@@ -132,13 +160,66 @@ class Ui_MainWindow(object):
         self.widget_4.setObjectName(u"widget_4")
         self.widget_4.setMinimumSize(QSize(0, 400))
         self.widget_4.setMaximumSize(QSize(16777215, 720))
+        self.widget_4.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         self.widget_4.setStyleSheet(u"")
+        self.verticalLayout_6 = QVBoxLayout(self.widget_4)
+        self.verticalLayout_6.setSpacing(0)
+        self.verticalLayout_6.setObjectName(u"verticalLayout_6")
+        self.verticalLayout_6.setContentsMargins(0, 0, 0, 0)
+        self.StatusCaixa = QLabel(self.widget_4)
+        self.StatusCaixa.setObjectName(u"StatusCaixa")
+        self.StatusCaixa.setMaximumSize(QSize(16777215, 75))
+        self.StatusCaixa.setStyleSheet(u"")
+        self.StatusCaixa.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.verticalLayout_6.addWidget(self.StatusCaixa)
+
+        self.widget_10 = QWidget(self.widget_4)
+        self.widget_10.setObjectName(u"widget_10")
+        self.widget_10.setStyleSheet(u"")
+
+        self.verticalLayout_6.addWidget(self.widget_10)
+
 
         self.verticalLayout_2.addWidget(self.widget_4)
 
         self.widget_5 = QWidget(self.widget_3)
         self.widget_5.setObjectName(u"widget_5")
-        self.widget_5.setStyleSheet(u"")
+        self.widget_5.setStyleSheet(u"QPushButton {\n"
+"    background: qlineargradient(\n"
+"        spread:pad,\n"
+"        x1:0, y1:0,\n"
+"        x2:1, y2:0,\n"
+"        stop:0 #393939,\n"
+"        stop:1 #7d7d7d\n"
+"    );\n"
+"    color: white;\n"
+"    border: 2px solid #282828;\n"
+"    border-radius: 6px;\n"
+"    padding: 6px 12px;\n"
+"}\n"
+"\n"
+"QPushButton:hover{\n"
+"    background: qlineargradient(\n"
+"        spread:pad,\n"
+"        x1:0, y1:0,\n"
+"        x2:1, y2:0,\n"
+"        stop:0 #7d7d7d,\n"
+"        stop:1 #393939\n"
+"    );\n"
+"}")
+        self.horizontalLayout_4 = QHBoxLayout(self.widget_5)
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.pushButton_2 = QPushButton(self.widget_5)
+        self.pushButton_2.setObjectName(u"pushButton_2")
+
+        self.horizontalLayout_4.addWidget(self.pushButton_2)
+
+        self.CloseCaixa = QPushButton(self.widget_5)
+        self.CloseCaixa.setObjectName(u"CloseCaixa")
+
+        self.horizontalLayout_4.addWidget(self.CloseCaixa)
+
 
         self.verticalLayout_2.addWidget(self.widget_5)
 
@@ -162,5 +243,8 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"VALOR CAIXA", None))
         self.open_caixa.setText(QCoreApplication.translate("MainWindow", u"ABRIR CAIXA", None))
+        self.StatusCaixa.setText("")
+        self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"IMPRIMIR CAIXA", None))
+        self.CloseCaixa.setText(QCoreApplication.translate("MainWindow", u"FECHAR CAIXA", None))
     # retranslateUi
 

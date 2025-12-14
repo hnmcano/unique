@@ -1,8 +1,6 @@
-import api from "../api/api";    
 import axios from "axios";
 import { useState, useEffect } from "react";    
-import { GiReturnArrow } from "react-icons/gi";
-    
+
 export const useProdutos = () => {
     const [base, setBase] = useState([]);
 

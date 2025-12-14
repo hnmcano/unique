@@ -3,10 +3,14 @@ from routers import clientes, produtos, carrinhos, pedidos, caixa
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="My First FastAPI project", version="1.0.0")
+origins = [
+    "http://localhost:5173",  # seu frontend React
+    "http://127.0.0.1:5173",  # alternativa
+]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

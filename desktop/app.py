@@ -1,6 +1,5 @@
 from scripts.produtos import (salvar_dados_produtos, inserir_imagem, exibir_confirmacao_exclusao, adicionar_categoria, preencher_dropdown_categoria, excluir_categoria)
 from scripts.clientes import (salvar_dados_clientes)
-from connection.network_conn import (handle_network_reply)
 from scripts.api_externa import (buscar_cep)
 from PySide6.QtWidgets import (QApplication, QPushButton, QMainWindow, QMessageBox, QTableWidgetItem, QLabel, QVBoxLayout, QHBoxLayout, QWidget, QGridLayout, QHeaderView, QTableWidget, QAbstractItemView)
 from window.form_orders.pedido_mesa_ui import Ui_MainWindow as pedido_mesa
@@ -16,14 +15,101 @@ from PySide6.QtNetwork import ( QNetworkAccessManager, QNetworkRequest, QNetwork
 from PySide6.QtCore import Signal, Qt, QObject
 from PySide6.QtGui import QPixmap
 import requests
-import json
 import sys
+
 
 class Caixa(QMainWindow, caixa):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
+        self.ValorCaixa.setText("0,00")
 
+        self.validar_caixa()
+        self.open_caixa.clicked.connect(self.iniciar_caixa)
+        self.CloseCaixa.clicked.connect(self.fechar_caixa)
+
+    def iniciar_caixa(self):
+        valor_caixa = float(self.ValorCaixa.text().replace(",", "."))
+
+        data_json = {
+            "valor": valor_caixa
+        }
+
+        url = "http://127.0.0.1:8000/caixa/open_box"
+
+        response = requests.post(url, json=data_json)
+
+        if response.status_code == 200:
+            QMessageBox.information(self, "Sucesso", "Caixa aberto com sucesso")
+            self.CloseCaixa.setDisabled(False)
+            self.CloseCaixa.setStyleSheet("""QPushButton {
+                background: qlineargradient(
+                    spread:pad,
+                    x1:0, y1:0,
+                    x2:1, y2:0,
+                    stop:0 #393939,
+                    stop:1 #7d7d7d
+                );
+                color: white;
+                border: 2px solid #282828;
+                border-radius: 6px;
+                padding: 6px 12px;
+            }
+
+            QPushButton::hover{
+                background: qlineargradient(
+                    spread:pad,
+                    x1:0, y1:0,
+                    x2:1, y2:0,
+                    stop:0 #7d7d7d,
+                    stop:1 #393939
+                );
+            }""")
+            self.StatusCaixa.setText("Caixa Aberto")
+            self.StatusCaixa.setStyleSheet("background-color: green; color: white; font-weight: bold;")
+        else:
+            QMessageBox.critical(self, "Erro", f"{response.json().get('detail')}" )
+        
+        self.ValorCaixa.setText("0,00")
+
+    def fechar_caixa(self):
+        try:
+            questionamento = QMessageBox.question(self, "Confirmação", "Deseja realmente fechar o caixa?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            if questionamento == QMessageBox.No:
+                return
+            else:
+                try:
+                    url = "http://127.0.0.1:8000/caixa/close_box"
+                    response = requests.get(url)
+
+                    if response.status_code == 200:
+                        self.StatusCaixa.setText("Caixa Fechado")
+                        self.StatusCaixa.setStyleSheet("background-color: red; color: white; font-weight: bold;")
+                        self.CloseCaixa.setDisabled(True)
+                        self.CloseCaixa.setStyleSheet("background-color: rgb(91, 91, 91); color: black; font-weight: bold;")
+                    else:
+                        QMessageBox.critical(self, "Erro", f"{response.json().get('detail')}")
+                except Exception as e:
+                    QMessageBox.critical(self, "Erro", f"Erro ao fechar caixa: {str(e)}")
+
+        except Exception as e:
+            QMessageBox.critical(self, "Erro", f"Erro ao fechar caixa: {str(e)}")
+
+    def validar_caixa(self):
+
+        url = "http://127.0.0.1:8000/caixa/valid_box"
+        response = requests.get(url)
+
+        if response.status_code == 200:
+            self.CloseCaixa.setDisabled(False)
+            self.StatusCaixa.setText("Caixa Aberto")
+            self.StatusCaixa.setStyleSheet("background-color: green; color: white; font-weight: bold;")
+        else:
+            self.CloseCaixa.setDisabled(True)
+            self.CloseCaixa.setStyleSheet("background-color: rgb(91, 91, 91); color: black; font-weight: bold;")
+            self.StatusCaixa.setText("Caixa Fechado")
+            self.StatusCaixa.setStyleSheet("background-color: red; color: white; font-weight: bold;")
+            
 class WidgetProdutoDetalhe(QWidget):
     def __init__(self, id, nome, preco, estoque, descricao, parent=None):
         super().__init__(parent)
@@ -194,8 +280,6 @@ class Produtos(QMainWindow, produtos):
             response.raise_for_status()  # Levanta um erro para códigos de status HTTP ruins
             products = response.json()
 
-            print(products)
-
             self.tableWidget.setRowCount(len(products))
             linha_atual = 0
 
@@ -289,18 +373,70 @@ class Mesas(QMainWindow, mesas):
             print(f"Cor do botão {botao_a_restaurar.objectName()} restaurada para um estilo fixo.")
 
 class Delivery(QMainWindow, delivery):
-
     resposta_delivery = Signal(str)
 
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
 
-        self.FilterPedidos.placeholderText("Pesquisar pedidos realizados.....")
+        self.FilterPedidos.setPlaceholderText("Pesquisar pedidos realizados.....")
 
-        self.manager = QNetworkAccessManager()
+        columns = ["id_pedido", "nome_cliente", "telefone", "data_pedido", "hora_pedido", "status", "valor_total"]
 
-        self.manager.finished.connect(lambda: handle_network_reply(self))
+        quantidade_columns = len(columns)
+
+        self.tableWidget.setColumnCount(quantidade_columns)
+        self.tableWidget.setHorizontalHeaderLabels(columns)
+        header = self.tableWidget.horizontalHeader()
+        header.setSectionResizeMode(QHeaderView.Interactive)
+        self.tableWidget.setShortcutEnabled(True)
+        header.setSectionResizeMode(QHeaderView.Stretch)
+        self.tableWidget.verticalHeader().setVisible(False)
+        self.tableWidget.setSelectionBehavior(QTableWidget.SelectRows)
+        self.tableWidget.setSelectionMode(QTableWidget.SingleSelection)
+        self.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
+
+        try:
+            response = requests.get("http://127.0.0.1:8000/pedidos/delivery/desktop")
+            pedidos = response.json().get("detail")
+            
+            self.tableWidget.setRowCount(len(pedidos))
+            linha_atual = 0
+
+            for i in pedidos:
+                self.tableWidget.setRowHeight(linha_atual, 50)
+
+                print(i)
+
+                item_ordenavel_id = QTableWidgetItem(str(i["id"]))
+                self.tableWidget.setItem(linha_atual, 0, item_ordenavel_id)
+
+                item_ordenavel_nome = QTableWidgetItem(i["nome"])
+                self.tableWidget.setItem(linha_atual, 1, item_ordenavel_nome)
+
+                item_ordenavel_telefone = QTableWidgetItem(str(i["telefone"]))
+                self.tableWidget.setItem(linha_atual, 2, item_ordenavel_telefone)
+
+                item_ordenavel_data_pedido = QTableWidgetItem(i["data_pedido"])
+                self.tableWidget.setItem(linha_atual, 3, item_ordenavel_data_pedido)
+
+                item_ordenavel_hora_pedido = QTableWidgetItem(str(i["hora_pedido"]))
+                self.tableWidget.setItem(linha_atual, 4, item_ordenavel_hora_pedido)
+
+                item_ordenavel_status = QTableWidgetItem(i["status"])
+                self.tableWidget.setItem(linha_atual, 5, item_ordenavel_status)
+
+                item_ordenavel_valor_total = QTableWidgetItem(str(i["valor_total"]))
+                self.tableWidget.setItem(linha_atual, 6, item_ordenavel_valor_total)
+
+                linha_atual += 1
+            
+            self.tableWidget.sortItems(0, Qt.AscendingOrder)
+            
+            print(response.json())
+                    
+        except requests.RequestException as e:
+            QMessageBox.critical(self, "Erro", f"Erro ao buscar pedidos: {str(e)}")
         
 # classe principal da aplicação
 class Uniq(QMainWindow, uniq):
@@ -315,6 +451,7 @@ class Uniq(QMainWindow, uniq):
         self.mesas_window = None
         self.produtos_window = None
 
+        self.valid_caixa()
 
         # Ao clicar nos botões, abre as respectivas janelas
         # janela clientes
@@ -348,6 +485,16 @@ class Uniq(QMainWindow, uniq):
     def abrir_delivery(self):
         self.delivery_window = Delivery(parent=self)
         self.delivery_window.show()
+
+    def valid_caixa(self):
+
+        url = "http://127.0.0.1:8000/caixa/valid_box"
+
+        response = requests.get(url)
+
+        if response.status_code == 200:
+            QMessageBox.information(self, "Caixa Aberto", "Seu caixa esta aberto")
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

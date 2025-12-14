@@ -8,8 +8,10 @@ class Caixa(Base):
 
     id = Column(Integer, primary_key=True, nullable=False)
     data_abertura = Column(DateTime(timezone=True), server_default=func.now())
-    status = Column(String(50), default="ABERTO")
+    status = Column(String(50), default="ABERTO" )
     valor = Column(Float, nullable=False)
+
+    pedido = relationship("Pedido", back_populates="caixa")
 
     def __repr__(self):
         return f"Caixa(id={self.id}, data_abertura={self.data_abertura}, status={self.status}, valor={self.valor})"

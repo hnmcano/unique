@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends
 import pandas as pd
 from sqlalchemy.orm import Session
+from sqlalchemy import join
+from time import sleep
 from bd.connection import get_db
-from typing import List, Dict
 from models.produtos import Produto as ProductModel
-from models.produtos import Produtos_com_categorias as ViewProductWithCategories
 from schemas.produtos import Produto as ProdutoSchema
 from schemas.produtos import Categoria as CategoriaSchema
 from models.produtos import Categoria as CategoryModel
@@ -33,26 +33,38 @@ async def read_products(db: Session = Depends(get_db)):
 @router.get("/react/catalago")
 async def list_products(db: Session = Depends(get_db)):
     # executar a query
-    base = db.query(ViewProductWithCategories).all()
 
-    # transformar a query em um dicionario
-    base_dict = [p.__dict__ for p in base]
+    produtos = db.query(ProductModel).all()
+    categorias = db.query(CategoryModel).all()
 
-    # transformar o dicionario em um dataframe, e excluir a coluna "_sa_istance_state"
-    dataframe = pd.DataFrame(base_dict).drop(columns=["_sa_istance_state"], errors="ignore")
-    dataframe = dataframe[dataframe['status_venda'] == "Ativo"]
+    p = pd.DataFrame([p.__dict__ for p in produtos])
+    c = pd.DataFrame([c.__dict__ for c in categorias])
 
-    if 'nome_categoria' in dataframe.columns:
-        # agrupar os produtos por categoria, e transformar em um dicionario
-        agrupado_df = dataframe.groupby('nome_categoria').apply(lambda x: x.drop(columns="nome_categoria").to_dict(orient='records')).reset_index(name="produtos")
-        resultados_json = agrupado_df.to_dict(orient='records')
+    p = p.drop(columns=["_sa_instance_state"], errors="ignore")
+    c = c.drop(columns=["_sa_instance_state"], errors="ignore")
 
-        # retornar o dicionario, ao front-end com react
-        return resultados_json
+    c = c.rename(columns={"nome": "nome_categoria"})
+
+
+    data = pd.merge(p, c, left_on="categoria_id", right_on="id", how="left")
+    data = data.drop(columns=["id_y"]).rename(columns={"id_x": "id"})
+    data = data[data["status_venda"] == "Ativo"]
+
+    if "nome_categoria" in data.columns:
+        data = (
+            data.rename(columns={"id" : "produto_id"})
+            .groupby("nome_categoria")
+            .apply(lambda x: x.drop(columns=["categoria_id", "nome_categoria"]).to_dict("records"))
+            .reset_index(name="produtos")
+        )
+
+        data = data.to_dict("records")
+
+        return data
     else:
-        # retornar o dicionario, ao front-end com react, caso não haja a coluna nome_categoria
-        return dataframe.to_dict(orient='records')
+        return data.to_dict("records")
     
+
 ############################################# CATEGORIAS ################################################
 
 # Rotas para inserir categorias ao banco de dados, com a validação do Pydantic, baseado no envio do desktop

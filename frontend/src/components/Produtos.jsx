@@ -15,9 +15,9 @@ function ProdutosAcionados({categoria}) {
 
         const dadosEnviar = {
             produto_id: produtos.produto_id,
-            cod_pdv: produtos.codigo_pdv,
+            cod_pdv: produtos.cod_pdv,
+            nome: produtos.nome,
             categoria: categoria.nome_categoria,
-            nome: produtos.nome_produto,
             preco_custo: produtos.preco_custo,
             preco_venda: produtos.preco_venda,
             medida: produtos.medida,
