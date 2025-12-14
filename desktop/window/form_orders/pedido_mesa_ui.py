@@ -92,7 +92,7 @@ class Ui_MainWindow(object):
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Pedido", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"PEDIDOS EM MESA", None))
         self.label.setText("")
         self.btn_excluir.setText(QCoreApplication.translate("MainWindow", u"Excluir", None))
     # retranslateUi

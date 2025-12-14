@@ -293,7 +293,7 @@ class Ui_MainWindow(object):
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Cadastro de Produtos", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"CADASTRO DE PRODUTOS", None))
         self.label_14.setText(QCoreApplication.translate("MainWindow", u"Cadastro de Produtos", None))
         self.selecionar_imagem.setText(QCoreApplication.translate("MainWindow", u"Selecionar imagem", None))
         self.limp_img.setText(QCoreApplication.translate("MainWindow", u"Excluir Foto", None))

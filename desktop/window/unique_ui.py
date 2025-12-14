@@ -45,7 +45,20 @@ class Ui_Unique(object):
         sizePolicy.setHeightForWidth(self.widget.sizePolicy().hasHeightForWidth())
         self.widget.setSizePolicy(sizePolicy)
         self.widget.setMaximumSize(QSize(16777215, 100))
-        self.widget.setStyleSheet(u"")
+        self.widget.setStyleSheet(u"QPushButton {\n"
+"\n"
+"	background-color: transparent;\n"
+"	font-size: 18px;\n"
+"	font-weight: bold;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"	background-color: rgb(131, 131, 131);\n"
+"}\n"
+"\n"
+"QPushButton:clicked {\n"
+"	background-color: rgb(131, 131, 131);	\n"
+"}")
         self.horizontalLayout_2 = QHBoxLayout(self.widget)
         self.horizontalLayout_2.setSpacing(15)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
@@ -53,55 +66,72 @@ class Ui_Unique(object):
         self.btn_caixa = QPushButton(self.widget)
         self.btn_caixa.setObjectName(u"btn_caixa")
         self.btn_caixa.setStyleSheet(u"")
-        icon = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.GoHome))
+        icon = QIcon()
+        icon.addFile(u":/unique/caixa-registradora.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btn_caixa.setIcon(icon)
-        self.btn_caixa.setIconSize(QSize(35, 35))
+        self.btn_caixa.setIconSize(QSize(45, 45))
+        self.btn_caixa.setAutoDefault(True)
+        self.btn_caixa.setFlat(True)
 
         self.horizontalLayout_2.addWidget(self.btn_caixa)
 
         self.btn_clientes = QPushButton(self.widget)
         self.btn_clientes.setObjectName(u"btn_clientes")
         self.btn_clientes.setStyleSheet(u"")
-        icon1 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ContactNew))
+        icon1 = QIcon()
+        icon1.addFile(u":/unique/cliente.png", QSize(), QIcon.Mode.Selected, QIcon.State.On)
         self.btn_clientes.setIcon(icon1)
-        self.btn_clientes.setIconSize(QSize(35, 35))
+        self.btn_clientes.setIconSize(QSize(45, 45))
+        self.btn_clientes.setAutoDefault(True)
+        self.btn_clientes.setFlat(True)
 
         self.horizontalLayout_2.addWidget(self.btn_clientes)
 
         self.btn_delivery = QPushButton(self.widget)
         self.btn_delivery.setObjectName(u"btn_delivery")
         self.btn_delivery.setStyleSheet(u"")
-        icon2 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.CallStart))
+        icon2 = QIcon()
+        icon2.addFile(u":/unique/pedido-online.png", QSize(), QIcon.Mode.Selected, QIcon.State.On)
         self.btn_delivery.setIcon(icon2)
-        self.btn_delivery.setIconSize(QSize(35, 35))
+        self.btn_delivery.setIconSize(QSize(45, 45))
+        self.btn_delivery.setAutoDefault(True)
+        self.btn_delivery.setFlat(True)
 
         self.horizontalLayout_2.addWidget(self.btn_delivery)
 
         self.btn_mesas = QPushButton(self.widget)
         self.btn_mesas.setObjectName(u"btn_mesas")
         self.btn_mesas.setStyleSheet(u"")
-        icon3 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.FolderNew))
+        icon3 = QIcon()
+        icon3.addFile(u":/unique/pedir-comida.png", QSize(), QIcon.Mode.Selected, QIcon.State.On)
         self.btn_mesas.setIcon(icon3)
-        self.btn_mesas.setIconSize(QSize(35, 35))
+        self.btn_mesas.setIconSize(QSize(45, 45))
+        self.btn_mesas.setAutoDefault(True)
+        self.btn_mesas.setFlat(True)
 
         self.horizontalLayout_2.addWidget(self.btn_mesas)
 
         self.btn_produtos = QPushButton(self.widget)
         self.btn_produtos.setObjectName(u"btn_produtos")
         self.btn_produtos.setStyleSheet(u"")
-        icon4 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.Computer))
+        icon4 = QIcon()
+        icon4.addFile(u":/unique/inventario.png", QSize(), QIcon.Mode.Selected, QIcon.State.On)
         self.btn_produtos.setIcon(icon4)
-        self.btn_produtos.setIconSize(QSize(35, 35))
+        self.btn_produtos.setIconSize(QSize(45, 45))
+        self.btn_produtos.setAutoDefault(True)
+        self.btn_produtos.setFlat(True)
 
         self.horizontalLayout_2.addWidget(self.btn_produtos)
 
         self.btn_loggout = QPushButton(self.widget)
         self.btn_loggout.setObjectName(u"btn_loggout")
         self.btn_loggout.setStyleSheet(u"")
-        icon5 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ApplicationExit))
+        icon5 = QIcon()
+        icon5.addFile(u":/unique/sair.png", QSize(), QIcon.Mode.Selected, QIcon.State.On)
         self.btn_loggout.setIcon(icon5)
-        self.btn_loggout.setIconSize(QSize(35, 35))
-        self.btn_loggout.setFlat(False)
+        self.btn_loggout.setIconSize(QSize(45, 45))
+        self.btn_loggout.setAutoDefault(True)
+        self.btn_loggout.setFlat(True)
 
         self.horizontalLayout_2.addWidget(self.btn_loggout)
 
@@ -164,14 +194,22 @@ class Ui_Unique(object):
 
         self.retranslateUi(Unique)
 
+        self.btn_caixa.setDefault(True)
+        self.btn_clientes.setDefault(True)
+        self.btn_delivery.setDefault(True)
+        self.btn_mesas.setDefault(True)
+        self.btn_produtos.setDefault(True)
+        self.btn_loggout.setDefault(True)
+
+
         QMetaObject.connectSlotsByName(Unique)
     # setupUi
 
     def retranslateUi(self, Unique):
         Unique.setWindowTitle(QCoreApplication.translate("Unique", u"unique", None))
-        self.btn_caixa.setText(QCoreApplication.translate("Unique", u"Caixa", None))
-        self.btn_clientes.setText(QCoreApplication.translate("Unique", u"Cliente", None))
-        self.btn_delivery.setText(QCoreApplication.translate("Unique", u"Delivery", None))
+        self.btn_caixa.setText(QCoreApplication.translate("Unique", u"CAIXA", None))
+        self.btn_clientes.setText(QCoreApplication.translate("Unique", u"CLIENTES", None))
+        self.btn_delivery.setText(QCoreApplication.translate("Unique", u"DELIVERY", None))
         self.btn_mesas.setText(QCoreApplication.translate("Unique", u"Mesas", None))
         self.btn_produtos.setText(QCoreApplication.translate("Unique", u"Produtos", None))
         self.btn_loggout.setText(QCoreApplication.translate("Unique", u"Loggout", None))

@@ -1,5 +1,12 @@
+<!DOCTYPE RCC>
 <RCC>
   <qresource prefix="unique">
     <file>boas_vindas.png</file>
+    <file>caixa-registradora.png</file>
+    <file>cliente.png</file>
+    <file>pedir-comida.png</file>
+    <file>pedido-online.png</file>
+    <file>inventario.png</file>
+    <file>sair.png</file>
   </qresource>
 </RCC>

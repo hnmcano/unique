@@ -162,3 +162,16 @@ async def read_pedidos(db: Session = Depends(get_db)):
     else:
         data = []
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Nenhum pedido encontrado")
+
+@router.put("/desktop/atualizar/{pedido_id}", response_model=PedidoResponse)
+async def update_pedido(pedido_id: int, pedido: NovoPedidoSchema, db: Session = Depends(get_db)):
+
+    db_pedido = db.query(Pedido).filter(Pedido.id == pedido_id).first()
+    if db_pedido:
+        db_pedido.status = pedido.status
+        db.commit()
+        db.refresh(db_pedido)
+        return db_pedido
+    else:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Pedido nao encontrado")
+

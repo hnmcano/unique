@@ -239,7 +239,7 @@ class Ui_MainWindow(object):
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"CADASTRAR CLIENTES", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Cadastro de Clientes", None))
         self.label_nome.setText(QCoreApplication.translate("MainWindow", u"Cliente:", None))
         self.label_telefone.setText(QCoreApplication.translate("MainWindow", u"Telefone:", None))

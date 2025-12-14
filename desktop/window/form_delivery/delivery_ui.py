@@ -124,7 +124,7 @@ class Ui_MainWindow(object):
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Produtos", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"PEDIDOS DELIVERY", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"PEDIDO", None))
         self.pushButton.setText(QCoreApplication.translate("MainWindow", u"NovoPedido", None))
     # retranslateUi

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Pedido</string>
+   <string>PEDIDOS EM MESA</string>
   </property>
   <property name="styleSheet">
    <string notr="true"/>

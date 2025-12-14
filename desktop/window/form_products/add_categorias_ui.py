@@ -142,7 +142,7 @@ class Ui_Category(object):
     # setupUi
 
     def retranslateUi(self, Category):
-        Category.setWindowTitle(QCoreApplication.translate("Category", u"Categorias", None))
+        Category.setWindowTitle(QCoreApplication.translate("Category", u"ADICIONAR CATEGORIAS", None))
         self.adicionar_botao.setText(QCoreApplication.translate("Category", u"ADICIONAR", None))
         self.modificar_botao.setText(QCoreApplication.translate("Category", u"MODIFICAR", None))
         self.label.setText(QCoreApplication.translate("Category", u"CATEGORIA", None))

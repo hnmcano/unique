@@ -1,22 +1,31 @@
 from scripts.produtos import (salvar_dados_produtos, inserir_imagem, exibir_confirmacao_exclusao, adicionar_categoria, preencher_dropdown_categoria, excluir_categoria)
 from scripts.clientes import (salvar_dados_clientes)
 from scripts.api_externa import (buscar_cep)
-from PySide6.QtWidgets import (QApplication, QPushButton, QMainWindow, QMessageBox, QTableWidgetItem, QLabel, QVBoxLayout, QHBoxLayout, QWidget, QGridLayout, QHeaderView, QTableWidget, QAbstractItemView)
+from PySide6.QtWidgets import (QApplication, QPushButton, QMainWindow, QMessageBox, QTableWidgetItem, QWidget, QHeaderView, QTableWidget, QAbstractItemView)
 from window.form_orders.pedido_mesa_ui import Ui_MainWindow as pedido_mesa
+from window.form_orders.mesas_ui import Ui_MainWindow as mesas
+from window.form_delivery.delivery_ui import Ui_MainWindow as delivery
+from window.form_delivery.dados_pedidos_ui import Ui_MainWindow as dados_pedidos
 from window.form_products.add_categorias_ui import Ui_Category as addcategorias
 from window.form_products.add_produtos_ui import Ui_MainWindow as addprodutos
 from window.form_products.produtos_ui import Ui_MainWindow as produtos
 from window.form_clients.clientes_ui import Ui_MainWindow as clientes
-from window.form_orders.mesas_ui import Ui_MainWindow as mesas
-from window.form_box.Caixa_ui import Ui_MainWindow as caixa
-from window.form_delivery.delivery_ui import Ui_MainWindow as delivery
+from window.form_box.Caixa_ui import Ui_CAIXA as caixa
+
 from window.unique_ui import Ui_Unique as uniq
-from PySide6.QtNetwork import ( QNetworkAccessManager, QNetworkRequest, QNetworkReply)
-from PySide6.QtCore import Signal, Qt, QObject
+from PySide6.QtNetwork import ( QNetworkAccessManager)
+from PySide6.QtCore import Signal, Qt, QPoint
 from PySide6.QtGui import QPixmap
 import requests
 import sys
 
+
+class Dados_pedido(QMainWindow, dados_pedidos):
+    def __init__(self, row, column, parent=None):
+        super().__init__(parent=parent)
+        self.setupUi(self)
+        self.row = row
+        self.column = column
 
 class Caixa(QMainWindow, caixa):
     def __init__(self, parent=None):
@@ -396,6 +405,8 @@ class Delivery(QMainWindow, delivery):
         self.tableWidget.setSelectionMode(QTableWidget.SingleSelection)
         self.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
+        self.tableWidget.cellClicked.connect(self.abrir_dados)
+
         try:
             response = requests.get("http://127.0.0.1:8000/pedidos/delivery/desktop")
             pedidos = response.json().get("detail")
@@ -405,8 +416,6 @@ class Delivery(QMainWindow, delivery):
 
             for i in pedidos:
                 self.tableWidget.setRowHeight(linha_atual, 50)
-
-                print(i)
 
                 item_ordenavel_id = QTableWidgetItem(str(i["id"]))
                 self.tableWidget.setItem(linha_atual, 0, item_ordenavel_id)
@@ -432,11 +441,14 @@ class Delivery(QMainWindow, delivery):
                 linha_atual += 1
             
             self.tableWidget.sortItems(0, Qt.AscendingOrder)
-            
-            print(response.json())
-                    
+                                
         except requests.RequestException as e:
             QMessageBox.critical(self, "Erro", f"Erro ao buscar pedidos: {str(e)}")
+
+    def abrir_dados(self, row, column):
+        self.dados_pedidos = Dados_pedido(row=row, column=column, parent=self)
+        self.dados_pedidos.show()
+     
         
 # classe principal da aplicação
 class Uniq(QMainWindow, uniq):

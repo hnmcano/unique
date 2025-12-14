@@ -126,7 +126,7 @@ class Ui_MainWindow(object):
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Mesas", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MESAS", None))
         self.Mesa_01.setText(QCoreApplication.translate("MainWindow", u"Mesa 01", None))
         self.Mesa_02.setText(QCoreApplication.translate("MainWindow", u"Mesa 02", None))
         self.Mesa_03.setText(QCoreApplication.translate("MainWindow", u"Mesa 03", None))

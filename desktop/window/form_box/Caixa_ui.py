@@ -19,14 +19,15 @@ from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QLineEdit,
     QMainWindow, QPushButton, QSizePolicy, QStatusBar,
     QVBoxLayout, QWidget)
 
-class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
-        if not MainWindow.objectName():
-            MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(536, 498)
-        MainWindow.setMinimumSize(QSize(536, 498))
-        MainWindow.setMaximumSize(QSize(536, 498))
-        self.centralwidget = QWidget(MainWindow)
+class Ui_CAIXA(object):
+    def setupUi(self, CAIXA):
+        if not CAIXA.objectName():
+            CAIXA.setObjectName(u"CAIXA")
+        CAIXA.setWindowModality(Qt.WindowModality.ApplicationModal)
+        CAIXA.resize(536, 498)
+        CAIXA.setMinimumSize(QSize(536, 498))
+        CAIXA.setMaximumSize(QSize(536, 498))
+        self.centralwidget = QWidget(CAIXA)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
         self.verticalLayout.setSpacing(0)
@@ -229,22 +230,22 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.widget)
 
-        MainWindow.setCentralWidget(self.centralwidget)
-        self.statusbar = QStatusBar(MainWindow)
+        CAIXA.setCentralWidget(self.centralwidget)
+        self.statusbar = QStatusBar(CAIXA)
         self.statusbar.setObjectName(u"statusbar")
-        MainWindow.setStatusBar(self.statusbar)
+        CAIXA.setStatusBar(self.statusbar)
 
-        self.retranslateUi(MainWindow)
+        self.retranslateUi(CAIXA)
 
-        QMetaObject.connectSlotsByName(MainWindow)
+        QMetaObject.connectSlotsByName(CAIXA)
     # setupUi
 
-    def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.label.setText(QCoreApplication.translate("MainWindow", u"VALOR CAIXA", None))
-        self.open_caixa.setText(QCoreApplication.translate("MainWindow", u"ABRIR CAIXA", None))
+    def retranslateUi(self, CAIXA):
+        CAIXA.setWindowTitle(QCoreApplication.translate("CAIXA", u"CAIXA", None))
+        self.label.setText(QCoreApplication.translate("CAIXA", u"VALOR CAIXA", None))
+        self.open_caixa.setText(QCoreApplication.translate("CAIXA", u"ABRIR CAIXA", None))
         self.StatusCaixa.setText("")
-        self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"IMPRIMIR CAIXA", None))
-        self.CloseCaixa.setText(QCoreApplication.translate("MainWindow", u"FECHAR CAIXA", None))
+        self.pushButton_2.setText(QCoreApplication.translate("CAIXA", u"IMPRIMIR CAIXA", None))
+        self.CloseCaixa.setText(QCoreApplication.translate("CAIXA", u"FECHAR CAIXA", None))
     # retranslateUi
 
