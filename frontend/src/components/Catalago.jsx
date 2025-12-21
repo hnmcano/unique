@@ -37,8 +37,8 @@ function ContainerCategories() {
                         </div>
                     </div>
                 </div>
-                <div style={{width: "100%", "display": "flex", "alignItems": "right", "justifyContent": "right"}}>
-                    <button onClick={() => setSelectedCategories(null)} className="buttons-filters clear-filter">Limpar filtro</button>
+                <div className="filter-all">
+                    <button onClick={() => setSelectedCategories(null)} className="button-filter">Limpar filtro</button>
                 </div>
                 <div className="buttons-filters">
                     {setBaseProdutos && setBaseProdutos.map((categoria, index) => (
@@ -46,7 +46,8 @@ function ContainerCategories() {
                     ))}
                 </div>
             </div>
-            <div class="container_">
+
+            <div className="container_">
                 {CategoriesLoopList && <CategoriesLoop selectedCategories={selectedCategories} />}
             </div>
         </div>

@@ -13,7 +13,8 @@ class Produto(BaseModel):
     descricao: str | None = None
     ficha_tecnica: str | None = None
     status_venda: str = Field(..., min_length=3, max_length=20)
-    imagem_url: str | None = None
+    imagem_name: str | None = None
+    imagem: str | None = None
 
 # Modelo para categorias
 class Categoria(BaseModel):

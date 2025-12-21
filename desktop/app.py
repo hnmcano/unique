@@ -241,11 +241,7 @@ class AddProdutos(QMainWindow, addprodutos):
 
         # Gerenciador de rede para requisições HTTP
         self.network_manager = QNetworkAccessManager(self)
-        
-        # Limpa e preenche o dropdown de categorias
-        self.categoria_combo.clear()
-        self.categoria_combo.addItem("")
-
+    
         preencher_dropdown_categoria(self)
         # Ao clicar no botão selecionar imagem, Aciona a função de inserir imagem localizada em scripts/aux_func.py
         self.selecionar_imagem.clicked.connect(lambda: inserir_imagem(self))
@@ -266,10 +262,9 @@ class Produtos(QMainWindow, produtos):
         super().__init__(parent)
         self.setupUi(self)
 
-
         self.FilterProducts.setPlaceholderText("Digite para filtrar produtos...")
 
-        columns = ["ID", "Nome", "Preço de Custo", "Preço de venda","Estoqu min",  "Estoque"]
+        columns = ["ID","CODIGO PDV", "CATEGORIA", "NOME", "PREÇO DE CUSTO", "PREÇO DE VENDA","ESTOQUE MIN", "ESTOQUE", "MEDIDA", "STATUS"]
 
         quantidade_columns = len(columns)
         self.tableWidget.setColumnCount(quantidade_columns)
@@ -289,6 +284,8 @@ class Produtos(QMainWindow, produtos):
             response.raise_for_status()  # Levanta um erro para códigos de status HTTP ruins
             products = response.json()
 
+            print(products)
+
             self.tableWidget.setRowCount(len(products))
             linha_atual = 0
 
@@ -299,17 +296,32 @@ class Produtos(QMainWindow, produtos):
                 item_ordenavel_id = QTableWidgetItem(str(i["id"]))
                 self.tableWidget.setItem(linha_atual, 0, item_ordenavel_id)
 
+                item_ordenavel_cod_pdv = QTableWidgetItem(str(i["cod_pdv"]))
+                self.tableWidget.setItem(linha_atual, 1, item_ordenavel_cod_pdv)
+
+                item_ordenavel_categoria = QTableWidgetItem(str(i["nome_categoria"]))
+                self.tableWidget.setItem(linha_atual, 2, item_ordenavel_categoria)
+
                 item_ordenavel_nome = QTableWidgetItem(i["nome"])
-                self.tableWidget.setItem(linha_atual, 1, item_ordenavel_nome)
+                self.tableWidget.setItem(linha_atual, 3, item_ordenavel_nome)
+
+                item_ordenavel_preco_custo = QTableWidgetItem(str(i["preco_custo"]))
+                self.tableWidget.setItem(linha_atual, 4, item_ordenavel_preco_custo)
 
                 item_ordenavel_preco_venda = QTableWidgetItem(str(i["preco_venda"]))
-                self.tableWidget.setItem(linha_atual, 2, item_ordenavel_preco_venda)
+                self.tableWidget.setItem(linha_atual, 5, item_ordenavel_preco_venda)
 
-                item_ordenavel_estoque = QTableWidgetItem(str(i["estoque"]))
-                self.tableWidget.setItem(linha_atual, 3, item_ordenavel_estoque)
+                item_ordenavel_estoque = QTableWidgetItem(str(i["estoque_min"]))
+                self.tableWidget.setItem(linha_atual, 6, item_ordenavel_estoque)
 
-                item_ordenavel_descricao = QTableWidgetItem(i["descricao"])
-                self.tableWidget.setItem(linha_atual, 4, item_ordenavel_descricao)
+                item_ordenavel_estoque_min = QTableWidgetItem(str(i["estoque"]))
+                self.tableWidget.setItem(linha_atual, 7, item_ordenavel_estoque_min)
+
+                item_ordenavel_medida = QTableWidgetItem(str(i["medida"]))
+                self.tableWidget.setItem(linha_atual, 8, item_ordenavel_medida)
+
+                item_ordenavel_status_venda = QTableWidgetItem(str(i["status_venda"]))
+                self.tableWidget.setItem(linha_atual, 9, item_ordenavel_status_venda)
 
                 linha_atual += 1
                 
@@ -410,37 +422,40 @@ class Delivery(QMainWindow, delivery):
         try:
             response = requests.get("http://127.0.0.1:8000/pedidos/delivery/desktop")
             pedidos = response.json().get("detail")
-            
-            self.tableWidget.setRowCount(len(pedidos))
-            linha_atual = 0
 
-            for i in pedidos:
-                self.tableWidget.setRowHeight(linha_atual, 50)
+            if response.status_code == 200:               
+                self.tableWidget.setRowCount(len(pedidos))
+                linha_atual = 0
 
-                item_ordenavel_id = QTableWidgetItem(str(i["id"]))
-                self.tableWidget.setItem(linha_atual, 0, item_ordenavel_id)
+                for i in pedidos:
+                    self.tableWidget.setRowHeight(linha_atual, 50)
 
-                item_ordenavel_nome = QTableWidgetItem(i["nome"])
-                self.tableWidget.setItem(linha_atual, 1, item_ordenavel_nome)
+                    item_ordenavel_id = QTableWidgetItem(str(i["id"]))
+                    self.tableWidget.setItem(linha_atual, 0, item_ordenavel_id)
 
-                item_ordenavel_telefone = QTableWidgetItem(str(i["telefone"]))
-                self.tableWidget.setItem(linha_atual, 2, item_ordenavel_telefone)
+                    item_ordenavel_nome = QTableWidgetItem(i["nome"])
+                    self.tableWidget.setItem(linha_atual, 1, item_ordenavel_nome)
 
-                item_ordenavel_data_pedido = QTableWidgetItem(i["data_pedido"])
-                self.tableWidget.setItem(linha_atual, 3, item_ordenavel_data_pedido)
+                    item_ordenavel_telefone = QTableWidgetItem(str(i["telefone"]))
+                    self.tableWidget.setItem(linha_atual, 2, item_ordenavel_telefone)
 
-                item_ordenavel_hora_pedido = QTableWidgetItem(str(i["hora_pedido"]))
-                self.tableWidget.setItem(linha_atual, 4, item_ordenavel_hora_pedido)
+                    item_ordenavel_data_pedido = QTableWidgetItem(i["data_pedido"])
+                    self.tableWidget.setItem(linha_atual, 3, item_ordenavel_data_pedido)
 
-                item_ordenavel_status = QTableWidgetItem(i["status"])
-                self.tableWidget.setItem(linha_atual, 5, item_ordenavel_status)
+                    item_ordenavel_hora_pedido = QTableWidgetItem(str(i["hora_pedido"]))
+                    self.tableWidget.setItem(linha_atual, 4, item_ordenavel_hora_pedido)
 
-                item_ordenavel_valor_total = QTableWidgetItem(str(i["valor_total"]))
-                self.tableWidget.setItem(linha_atual, 6, item_ordenavel_valor_total)
+                    item_ordenavel_status = QTableWidgetItem(i["status"])
+                    self.tableWidget.setItem(linha_atual, 5, item_ordenavel_status)
 
-                linha_atual += 1
-            
-            self.tableWidget.sortItems(0, Qt.AscendingOrder)
+                    item_ordenavel_valor_total = QTableWidgetItem(str(i["valor_total"]))
+                    self.tableWidget.setItem(linha_atual, 6, item_ordenavel_valor_total)
+
+                    linha_atual += 1
+                
+                self.tableWidget.sortItems(0, Qt.AscendingOrder)
+            else:
+                self.tableWidget.setRowCount(0)
                                 
         except requests.RequestException as e:
             QMessageBox.critical(self, "Erro", f"Erro ao buscar pedidos: {str(e)}")
@@ -449,7 +464,6 @@ class Delivery(QMainWindow, delivery):
         self.dados_pedidos = Dados_pedido(row=row, column=column, parent=self)
         self.dados_pedidos.show()
      
-        
 # classe principal da aplicação
 class Uniq(QMainWindow, uniq):
     def __init__(self):

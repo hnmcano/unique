@@ -1,22 +1,32 @@
-from fastapi import APIRouter, Depends
-import pandas as pd
-from sqlalchemy.orm import Session
-from sqlalchemy import join
-from time import sleep
-from bd.connection import get_db
 from models.produtos import Produto as ProductModel
 from schemas.produtos import Produto as ProdutoSchema
 from schemas.produtos import Categoria as CategoriaSchema
 from models.produtos import Categoria as CategoryModel
+
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+from bd.connection import get_db
+from sqlalchemy import join
+from time import sleep
+import pandas as pd
+import base64
 
 router = APIRouter()
 
 ########################################### PRODUTOS ################################################
 
 # Rotas para inserir produtos ao banco de dados, com a validação do Pydantic, baseado no envio do desktop
-@router.post("/desktop/add")
+@router.post("/desktop/add/product")
 async def get_product(product: ProdutoSchema, db: Session = Depends(get_db)):
     db_product = ProductModel(**product.dict())
+
+    if db_product.imagem is None:
+        with open("backend/static/default_product.png", "rb") as image_file:
+            image_data = image_file.read()
+            encoded_image = base64.b64encode(image_data).decode("utf-8")
+            db_product.imagem_name = "default.png"
+            db_product.imagem = encoded_image
+
     db.add(db_product)
     db.commit()
     db.refresh(db_product)
@@ -25,9 +35,25 @@ async def get_product(product: ProdutoSchema, db: Session = Depends(get_db)):
 # Rota para popular tabela de produtos disponivel no desktop na aba produtos
 @router.get("/desktop/table")
 async def read_products(db: Session = Depends(get_db)):
-    db = db.query(ProductModel).all()
+    produtos = db.query(ProductModel).all()
+    categorias = db.query(CategoryModel).all()
 
-    return db
+    p = pd.DataFrame([p.__dict__ for p in produtos])
+    c = pd.DataFrame([c.__dict__ for c in categorias])
+
+    p = p.drop(columns=["_sa_instance_state"], errors="ignore")
+    c = c.drop(columns=["_sa_instance_state"], errors="ignore")
+
+    c = c.rename(columns={"nome": "nome_categoria"})
+
+    data = pd.merge(p, c, left_on="categoria_id", right_on="id", how="left")
+    data = data.drop(columns=["id_y"]).rename(columns={"id_x": "id"})
+    data = data.to_dict("records")
+
+    print(data)
+
+    return data
+
 
 # Rota para listar todos os produtos com os nomes das categorias no front-end com react
 @router.get("/react/catalago")
@@ -49,6 +75,8 @@ async def list_products(db: Session = Depends(get_db)):
     data = pd.merge(p, c, left_on="categoria_id", right_on="id", how="left")
     data = data.drop(columns=["id_y"]).rename(columns={"id_x": "id"})
     data = data[data["status_venda"] == "Ativo"]
+    
+    print(data)
 
     if "nome_categoria" in data.columns:
         data = (

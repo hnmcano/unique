@@ -2,14 +2,16 @@ from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
+
+
+from alembic import context
+
 from bd.connection import Base
 from models.clientes import Clientes
 from models.caixa import Caixa
 from models.pedidos import Pedido
 from models.produtos import Produto
 from models.carrinhos import Carrinho
-
-from alembic import context
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

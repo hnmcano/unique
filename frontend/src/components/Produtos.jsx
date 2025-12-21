@@ -5,6 +5,7 @@ function ProdutosAcionados({categoria}) {
     const [isVisible, setIsVisible] = useState(false);
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
+    const [imagem, setImagem] = useState("");
 
     const addProduct =  async (categoria, produtos) => {
 
@@ -50,17 +51,19 @@ function ProdutosAcionados({categoria}) {
         setIsVisible(!isVisible);
     };
 
+    const imagemUrl = (imagem) => `data:image/png;base64,${imagem}`;
     
     return (
         <div className="products-gouped">
             {categoria.produtos.map((produtos) => (
-            <div key={produtos.produto_id} className="produto_item">
+            <div key={produtos.produto_id} className="produtos-item">
                 <div className="data-itens-product">
                     <div className="itens-product-img">
+                        <img className="img-product" src={imagemUrl(produtos.imagem)} alt="imagem produto"/>
                     </div>
                     <div className="data-itens-unique">
                         <div className="data-itens-unique-name">
-                            {produtos.nome_produto}
+                            {produtos.nome}
                         </div>
                         <div className="data-itens-unique-description">
                             {produtos.descricao}

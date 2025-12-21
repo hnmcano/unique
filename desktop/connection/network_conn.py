@@ -23,20 +23,6 @@ def handle_network_reply(reply: QNetworkReply, parent=None):
             except json.JSONDecodeError:
                 QMessageBox.warning(parent, "Erro", f"Erro 422, mas a resposta de erro não é JSON:\n{response_bytes.decode('utf-8')}")# type: ignore
 
-        # Tenta decodificar a resposta JSON
-        try:
-            response_json = json.loads(response_bytes.decode('utf-8'))# type: ignore
-           
-            if reply.url().toString() == "http://127.0.0.1:8000/produtos/dropdown/categories": # type: ignore
-                for item in response_json:
-                    parent.categoria_combo.addItem(item["nome"])
-
-            print(reply.url().toString())
-            
-            if reply.url().toString() == f"http://127.0.0.1:8000/produtos/category/": # type: ignore
-                for item in response_json:
-                    parent.produtos_combo.addItem(item["nome"])
-
-                    
-        except json.JSONDecodeError:
-            QMessageBox.warning(parent, "Erro", f"Erro Inesperado")
+        elif http_status == 200:
+            # AQUI VOCÊ EXIBE A MENSAGEM DE SUCESSO DA API
+            QMessageBox.information(parent, "Sucesso", "Dados enviados com sucesso!")

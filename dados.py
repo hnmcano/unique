@@ -23,10 +23,12 @@ def sanitize_row(row):
 
 # Iterar sobre cada linha
 for idx, row in df.iterrows():
-    url = "http://127.0.0.1:8000/produtos/desktop/add"
+    url = "http://127.0.0.1:8000/produtos/desktop/add/product"
 
     # Transformar a linha em um dicionário JSON
     data_json = sanitize_row(row)
+
+    print(data_json)
 
     data_json["cod_pdv"] = str(int(data_json["cod_pdv"]))
     data_json["estoque"] = int(data_json["estoque"])

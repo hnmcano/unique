@@ -34,7 +34,8 @@ class Produto(Base):
     descricao = Column(String(300), nullable=True)
     ficha_tecnica = Column(String(300), nullable=True)
     status_venda = Column(String(20), nullable=False)
-    imagem_url = Column(String(300), nullable=True)
+    imagem_name = Column(String(300), nullable=True)
+    imagem = Column(String, nullable=True)
 
     categoria_object = relationship("Categoria", back_populates="produtos")
 

@@ -1,40 +1,29 @@
 // importando a função de estado do react 
-import React, { useState } from "react";
-// importando estilo de pagina ".css" da pagina principal
-import "../styles/HomePage.css"
-// importando componente carrinho
-import ModalShopping from "../components/Carrinho";
-// importando componente categorias
 import ContainerCategories from "../components/Catalago";
-
-
-// importando icones da pagina https://react-icons.github.io/react-icons/
-// icone catalago
-import { GiShoppingCart } from "react-icons/gi";
-// icone carrinho
+import CadastrarUser from "../components/User";
+import { GiHamburgerMenu } from "react-icons/gi";
+//import Options from "../components/Options";
+import React, { useState } from "react";
+import "../styles/HomePage.css"
 import { CiBoxList } from "react-icons/ci";
-// icone finalizar compra
-import { FaRegUserCircle} from "react-icons/fa";
+import { GiShoppingCart } from "react-icons/gi";
+import { FaRegUserCircle } from "react-icons/fa";
+import ModalShopping from "../components/Carrinho";
 
 // Função da pagina principal
 function HomePage(){
-    // Estabelecendo estado do modal carrinho como falso, ou seja fechado, para ser aberto quando o botão de carrinho for clicado.
-    const [modalShoppingOpen, setModalShoppingOpen] = useState(false);
-    // estabelecendo estado do componente categorias como true, ou seja evidenciado, para ser exibido assim que a página for carregada
     const [Categories, setCategories] = useState(true);
-    // estabelecendo estado do componente finalizacao como falso, ou seja fechado, 
-    // para ser exibido assim que o botão de finalizar compra for clicado no carrinho ou no menu opções
-    const [FinalizacaoOpen, setFinalizacaoOpen] = useState(false);
-    
-    // Funções para abrir e fechar o modal carrinho
+    const [optionsOpen, setOptionsOpen] = useState(false);
+    const [modalShoppingOpen, setModalShoppingOpen] = useState(false);
+    const [finalizacaoOpen, setFinalizacaoOpen] = useState(false);
+
     const openModal = () => setModalShoppingOpen(true);
     const closeModal = () => setModalShoppingOpen(false);
 
-    // Retorno da pagina principal
     return (
     <div className="home">
-        {/* Menu de opções pagina principal, como carrinho, catalogo e finalizar compra*/} 
         <div className="options">
+            {/* Menu de opções pagina principal, como carrinho, catalogo e finalizar compra*/} 
             <div className="icons-ajustes">
                 {/* Icone/Button para abrir catalago caminho componente: /components/Home*/}
                 <div className="icons-options">
@@ -53,14 +42,12 @@ function HomePage(){
                 </div>
             </div>
         </div>
-        {/* Container principal onde serão exibidos os componentes, 
-        sendo eles: /components/Home e /components/Finalizacao de acordo com o botão clicado*/}
         <div className="container">
             {/* Condicional para exibir o componente Home ou finalização de acordo com o botão clicado */}
             {/* Componente Home: /components/Home */}
             {Categories && <ContainerCategories/>}
             {/* Componente Finalizacao: /components/Finalizacao */}
-            {FinalizacaoOpen && <DataFinalizacao/>}
+            {!Categories && <CadastrarUser/>}
         </div>
     </div>
 );

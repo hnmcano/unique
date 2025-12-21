@@ -1,8 +1,8 @@
 """Big Bang
 
-Revision ID: cacf4792c229
+Revision ID: 2e5a7eb65f22
 Revises: 
-Create Date: 2025-12-13 17:01:55.525901
+Create Date: 2025-12-21 11:43:00.521780
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'cacf4792c229'
+revision: str = '2e5a7eb65f22'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -64,7 +64,7 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('cliente_id', sa.Integer(), nullable=False),
     sa.Column('caixa_id', sa.Integer(), nullable=False),
-    sa.Column('data_criacao', sa.DateTime(timezone=True), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
+    sa.Column('data_criacao', sa.DateTime(timezone=True), nullable=True),
     sa.Column('data_atualizacao', sa.DateTime(timezone=True), nullable=True),
     sa.Column('status', sa.String(length=50), nullable=False),
     sa.Column('metodo_pagamento', sa.String(length=50), nullable=False),
@@ -89,7 +89,8 @@ def upgrade() -> None:
     sa.Column('descricao', sa.String(length=300), nullable=True),
     sa.Column('ficha_tecnica', sa.String(length=300), nullable=True),
     sa.Column('status_venda', sa.String(length=20), nullable=False),
-    sa.Column('imagem_url', sa.String(length=300), nullable=True),
+    sa.Column('imagem_name', sa.String(length=300), nullable=True),
+    sa.Column('imagem', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['categoria_id'], ['categorias.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('cod_pdv')

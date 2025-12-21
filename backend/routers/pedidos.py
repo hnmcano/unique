@@ -135,18 +135,18 @@ async def criar_novo_pedido(novo_pedido_data: NovoPedidoSchema,db: Session = Dep
     
 
 @router.get("/delivery/desktop")
-async def read_pedidos(db: Session = Depends(get_db)):
-    
+async def read_pedidos(db: Session = Depends(get_db)):    
     pedidos = db.query(Pedido).all()
     clientes_pedidos = db.query(Clientes).all()
 
-    if pedidos is not None:
+    if len(pedidos) == 0:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Nenhum pedido encontrado")
+    else:
         p =  pd.DataFrame([p.__dict__ for p in pedidos])
         c =  pd.DataFrame([c.__dict__ for c in clientes_pedidos])
 
         p = p.drop(columns=["_sa_instance_state"], errors="ignore") 
         c = c.drop(columns=["_sa_instance_state"], errors="ignore")
-        
 
         p["data_pedido"] = p["data_criacao"].dt.strftime("%Y-%m-%d")
         p["hora_pedido"] = p["data_criacao"].dt.strftime("%H:%M:%S")
@@ -156,13 +156,9 @@ async def read_pedidos(db: Session = Depends(get_db)):
 
         data = pd.merge(p, c, left_on="cliente_id", right_on="id", how="left")
         data = data.drop(columns=["id_y"]).rename(columns={"id_x": "id"}).to_dict("records")
-
-        print(data)
+        
         raise HTTPException(status_code=status.HTTP_200_OK, detail=data)
-    else:
-        data = []
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Nenhum pedido encontrado")
-
+        
 @router.put("/desktop/atualizar/{pedido_id}", response_model=PedidoResponse)
 async def update_pedido(pedido_id: int, pedido: NovoPedidoSchema, db: Session = Depends(get_db)):
 

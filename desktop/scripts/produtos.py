@@ -1,7 +1,7 @@
 from connection.network_conn import handle_network_reply
 from PySide6.QtWidgets import (QMessageBox, QFileDialog)
 from PySide6.QtNetwork import (QNetworkRequest)
-from PySide6.QtCore import QUrl, QByteArray, Qt, Signal
+from PySide6.QtCore import QUrl, QByteArray, Qt, QBuffer, QIODevice
 from PySide6.QtGui import QPixmap
 import requests
 import json
@@ -18,11 +18,17 @@ def salvar_dados_produtos(parent=None):
         estoque = int(parent.Estoque_input.text())# type: ignore
         estoque_min = int(parent.estoque_min_input.text())# type: ignore
         descricao_ = parent.desc_input.text()# type: ignore
-        
-        try:
+        pixmap = QPixmap(parent.image_label.pixmap())
 
+        buffer = QBuffer()
+        buffer.open(QIODevice.OpenModeFlag.WriteOnly)
+        pixmap.save(buffer, "PNG")
+        image_data = buffer.data().toBase64().data()
+        imagem_data_string = image_data.decode("utf-8")
+
+        try:
             QMessageBox.information(parent, "Aguarde", "Enviando dados para o servidor!")
-            url= QUrl("http://127.0.0.1:8000/products/desktop/add")
+            url= QUrl("http://127.0.0.1:8000/produtos/desktop/add/product")
             data_json = {
                     "categoria_id": f"{categoria_id}",
                     "cod_pdv": f"{cod_pdv}",
@@ -35,10 +41,11 @@ def salvar_dados_produtos(parent=None):
                     "descricao": f"{descricao_}",
                     "ficha_tecnica": "Não",
                     "status_venda": "Ativo",
-                    "imagem_url": ""
+                    "imagem_name": f"{nome}.png",
+                    "imagem": f"{imagem_data_string}"
             }
 
-            print(data_json)
+            QMessageBox.information(parent, "Aguarde", "Enviando dados para o servidor! dados: {}".format(data_json))
             
             json_data=json.dumps(data_json).encode("utf-8")
             data_to_send=QByteArray(json_data)
@@ -48,7 +55,8 @@ def salvar_dados_produtos(parent=None):
             reply.finished.connect(lambda: handle_network_reply(reply, parent))
 
             QMessageBox.information(parent, "Sucesso", "Produto adicionado com sucesso!")
-            # Limpa os campos após salvar
+
+            #Limpa os campos após salvar
             parent.cod_pdv_input.clear()# type: ignore
             parent.categoria_combo.clear()# type: ignore
             parent.nome_input.clear()# type: ignore
@@ -73,9 +81,8 @@ def inserir_imagem(parent=None):
     file_path, _ = file_dialog.getOpenFileName(parent, "Selecionar Imagem", "", "Arquivos de Imagem (*.png *.jpg *.jpeg *.bmp *.gif)")
     if file_path:
         # Agora sim, imprima o caminho do arquivo para depuração
-        print(f"Caminho do arquivo selecionado: {file_path}")
         pixmap = QPixmap(file_path)
-        if not pixmap.isNull():
+        if not pixmap.isNull(): 
             parent.image_label.setPixmap(pixmap.scaled(parent.image_label.size(), aspectMode=Qt.KeepAspectRatio))# type: ignore
             parent.image_label.setText("")  # Remove o texto quando a imagem é carregada # type: ignore
         else:
@@ -118,12 +125,17 @@ def adicionar_categoria(parent=None):
         QMessageBox.critical(parent, "Erro", f"Erro ao adicionar categoria: {str(e)}")
 
 def preencher_dropdown_categoria(parent=None):
-
     try:
-        url = QUrl("http://127.0.0.1:8000/produtos/dropdown/categories")
-        request = QNetworkRequest(url)
-        reply = parent.network_manager.get(request)
-        response = reply.finished.connect(lambda: handle_network_reply(reply, parent))
+        response = requests.get("http://127.0.0.1:8000/produtos/dropdown/categories")
+        if response.status_code == 200:
+            categorias = response.json()
+            parent.categoria_combo.clear()
+            parent.categoria_combo.addItem("")
+
+            for categoria in categorias:
+                parent.categoria_combo.addItem(categoria["nome"], categoria["id"])
+        else:
+            QMessageBox.critical(parent, "Erro", "Falha ao buscar categorias.")
 
     except Exception as e:
         QMessageBox.critical(parent, "Erro", f"Erro ao buscar categorias: {str(e)}")
@@ -131,9 +143,11 @@ def preencher_dropdown_categoria(parent=None):
 def excluir_categoria(parent=None, categoria_selecionada=None):
 
     try:
-        url = QUrl(f"http://127.0.0.1:8000/produtos/category/{categoria_selecionada}")
-        request = QNetworkRequest(url)
-        reply = parent.network_manager.delete(request)
-        response = reply.finished.connect(lambda: handle_network_reply(reply, parent))
+        response = requests.delete(f"http://127.0.0.1:8000/produtos/category/{categoria_selecionada}")
+        if response.status_code == 200:
+            QMessageBox.information(parent, "Sucesso", "Categoria excluida com sucesso!")
+            parent.preencher_dropdown()  # Atualiza o dropdown
+        else:
+            QMessageBox.critical(parent, "Erro", "Falha ao excluir categoria.")
     except Exception as e:
         QMessageBox.critical(parent, "Erro", f"Erro ao excluir categoria: {str(e)}")
