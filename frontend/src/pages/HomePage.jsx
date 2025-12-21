@@ -1,7 +1,6 @@
 // importando a função de estado do react 
 import ContainerCategories from "../components/Catalago";
 import CadastrarUser from "../components/User";
-import { GiHamburgerMenu } from "react-icons/gi";
 //import Options from "../components/Options";
 import React, { useState } from "react";
 import "../styles/HomePage.css"
