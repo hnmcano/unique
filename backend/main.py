@@ -21,3 +21,9 @@ app.include_router(produtos.router, prefix="/produtos", tags=["produtos"])
 app.include_router(carrinhos.router, prefix="/carrinho", tags=["carrinho"])
 app.include_router(pedidos.router, prefix="/pedidos", tags=["pedidos"])
 app.include_router(caixa.router, prefix="/caixa", tags=["caixa"])
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(app, host="127.0.0.1", port=8000)
