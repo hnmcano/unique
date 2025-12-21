@@ -1,11 +1,11 @@
-import axios from "axios";
-import { useState, useEffect } from "react";    
+import { useState, useEffect } from "react";
+import { api } from "../api/api"; 
 
 export const useProdutos = () => {
     const [base, setBase] = useState([]);
 
     useEffect(() => {      
-        axios.get("http://127.0.0.1:8000/produtos/react/catalago")
+        api.get(`/produtos/react/catalago`)
             .then(response => {
                 setBase(response.data);
             })
