@@ -6,7 +6,7 @@ app = FastAPI(title="My First FastAPI project", version="1.0.0")
 origins = [
     "http://localhost:5173",
     "https://catalogo.uniqsystems.com.br",           # Seu domínio principal (React)
-    "https://backend-fastapi-8gr09ege2-hnmcanos-projects.vercel.app" # URL reserva da Vercel
+    "http://frontend-react-pi-beige.vercel.app" # URL reserva da Vercel
 ]
 app.add_middleware(
     CORSMiddleware,
@@ -26,4 +26,4 @@ app.include_router(caixa.router, prefix="/caixa", tags=["caixa"])
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    uvicorn.run(app, host="127.0.0.1", port=8000)   
