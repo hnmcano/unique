@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI(title="My First FastAPI project", version="1.0.0")
 origins = [
     "http://localhost:5173",
-    "https://catalogo.unqsystems.com.br",           # Seu domínio principal (React)
+    "https://catalogo.uniqsystems.com.br",           # Seu domínio principal (React)
     "https://backend-fastapi-8gr09ege2-hnmcanos-projects.vercel.app" # URL reserva da Vercel
 ]
 app.add_middleware(
