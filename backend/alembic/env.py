@@ -5,13 +5,13 @@ from sqlalchemy import pool
 
 
 from alembic import context
-
+import os
+from dotenv import load_dotenv
 from bd.connection import Base
-from models.clientes import Clientes
-from models.caixa import Caixa
-from models.pedidos import Pedido
-from models.produtos import Produto
-from models.carrinhos import Carrinho
+from models import *
+
+
+load_dotenv()  # Carrega as variáveis de ambiente do arquivo .env
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -21,6 +21,17 @@ config = context.config
 # This line sets up loggers basically.
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
+
+db_url = os.getenv("DATABASE_URL")
+
+if db_url:
+    # Se a URL começar com postgres:// (comum em alguns serviços), 
+    # ajusta para postgresql:// para o SQLAlchemy não reclamar
+    if db_url.startswith("postgres://"):
+        db_url = db_url.replace("postgres://", "postgresql://", 1)
+    
+    # Sobrescreve a URL que está no arquivo alembic.ini pela URL do Neon
+    config.set_main_option("sqlalchemy.url", db_url)
 
 # add your model's MetaData object here
 # for 'autogenerate' support
