@@ -9,7 +9,7 @@ function ContainerCategories() {
     const [CategoriesLoopList, setCategoriesLoopList] = useState(true);
     const [selectedCategories, setSelectedCategories] = useState(null);
 
-    console.log(setBaseEstabelecimento);
+        
 
     const handleFilterClick = (categoryName) => {
         setSelectedCategories(prevCategory => prevCategory === categoryName ? null : categoryName);
