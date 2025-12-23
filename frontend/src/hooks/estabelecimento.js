@@ -8,7 +8,7 @@ const useEstabelecimento = () => {
     useEffect(() => {
         api.get(`/estabelecimento/react/catalago`)
             .then(response => {
-                setBase(response.data);
+                setBaseEstabelecimento(response.data);
             })
             .catch(error => {
                 console.error('Erro ao receber os dados da tabela:', error);
