@@ -8,10 +8,10 @@ import json
 from time import sleep
 
 def enviar_dados_estabelecimento(parent=None):
-    nome = parent.NomeEstabelecimento_input.text()  # type: ignore
-    endereco = parent.EnderecoEstabelecimento_input.text()  # type: ignore
-    instagram = parent.InstagramEstabelecimento_input.text()  # type: ignore
-    telefone = parent.TelefoneEstabelecimento_input.text()  # type: ignore
+    nome = parent.NomeEstabelecimento.text()  # type: ignore
+    endereco = parent.EnderecoEstabelecimento.text()  # type: ignore
+    instagram = parent.EstabelecimentoInstagram.text()  # type: ignore
+    telefone = parent.TelefoneEstabelecimento.text()  # type: ignore
     pixmap = QPixmap(parent.estabelecimento_logo.pixmap())
 
     buffer = QBuffer()
@@ -22,7 +22,7 @@ def enviar_dados_estabelecimento(parent=None):
 
     try:
         QMessageBox.information(parent, "Aguarde", "Enviando dados para o servidor!")
-        url= QUrl("http://api.uniqsystems.com.br/estabelecimento/desktop/add/estabelecimento")
+        url= QUrl("https://api.uniqsystems.com.br/estabelecimento/desktop/add")
         data_json = {
                 "nome": f"{nome}",
                 "endereco": f"{endereco}",
@@ -34,8 +34,11 @@ def enviar_dados_estabelecimento(parent=None):
 
         json_data=json.dumps(data_json).encode("utf-8")
 
-        reply = requests.post(url, json_data, headers={"Content-Type": "application/json"})
-        handle_network_reply(reply, parent=parent)
+        data_to_send=QByteArray(json_data)
+        request= QNetworkRequest(url)
+        request.setHeader(QNetworkRequest.ContentTypeHeader, "application/json")# type: ignore
+        reply= parent.network_manager.post(request, data_to_send)# type: ignore
+        reply.finished.connect(lambda: handle_network_reply(reply, parent))
         
     except Exception as e:
         QMessageBox.critical(parent, "Erro", f"Erro ao enviar dados: {str(e)}")

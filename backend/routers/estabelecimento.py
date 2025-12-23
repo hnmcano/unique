@@ -7,7 +7,7 @@ from schemas.estabelecimento import EstabelecimentoBase as Estabelecimentoschema
 
 router = APIRouter()
 
-@router.post("/desktop/add/estabelecimento")
+@router.post("/desktop/add")
 def info_data_estabelecimento(dados_estabelecimento: Estabelecimentoschema, db: Session = Depends(get_db)):
     db_estabelecimento = EstabelecimentoModel(**dados_estabelecimento.dict())
 
