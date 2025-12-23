@@ -383,8 +383,32 @@ QPushButton:clicked {
      <height>33</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuOPERACIONAL">
+    <property name="title">
+     <string>options</string>
+    </property>
+    <addaction name="estabelecimento"/>
+    <addaction name="catalago"/>
+    <addaction name="configuracoes"/>
+   </widget>
+   <addaction name="menuOPERACIONAL"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="estabelecimento">
+   <property name="text">
+    <string>ESTABELECIMENTO</string>
+   </property>
+  </action>
+  <action name="configuracoes">
+   <property name="text">
+    <string>CONFIGURAÇÕES</string>
+   </property>
+  </action>
+  <action name="catalago">
+   <property name="text">
+    <string>CATALAGO</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="../pictures/imagens.qrc"/>

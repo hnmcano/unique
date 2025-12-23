@@ -23,7 +23,7 @@ def salvar_dados_clientes(parent=None):
 
     try:
         QMessageBox.information(parent, "Aguarde", "Enviando dados para o servidor!")
-        url= QUrl("http://127.0.0.1:8000/clientes/users")
+        url= QUrl("http://api.uniqsystems.com.br/clientes/users")
         data_json = {
                 "cliente": f"{cliente}",
                 "telefone": f"{telefone}",

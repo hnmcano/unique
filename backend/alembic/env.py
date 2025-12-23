@@ -8,8 +8,12 @@ from alembic import context
 import os
 from dotenv import load_dotenv
 from bd.connection import Base
-from models import *
-
+from models.clientes import Clientes  # noqa
+from models.produtos import Produto  # noqa
+from models.estabelecimento import Estabelecimento  # noqa      
+from models.carrinhos import Carrinho
+from models.pedidos import Pedido
+from models.caixa import Caixa  # noqa
 
 load_dotenv()  # Carrega as variáveis de ambiente do arquivo .env
 
