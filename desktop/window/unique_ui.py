@@ -11,13 +11,14 @@
 from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-    QFont, QFontDatabase, QGradient, QIcon,
-    QImage, QKeySequence, QLinearGradient, QPainter,
-    QPalette, QPixmap, QRadialGradient, QTransform)
+from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
+    QCursor, QFont, QFontDatabase, QGradient,
+    QIcon, QImage, QKeySequence, QLinearGradient,
+    QPainter, QPalette, QPixmap, QRadialGradient,
+    QTransform)
 from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMainWindow,
-    QMenuBar, QPushButton, QSizePolicy, QStatusBar,
-    QVBoxLayout, QWidget)
+    QMenu, QMenuBar, QPushButton, QSizePolicy,
+    QStatusBar, QVBoxLayout, QWidget)
 from pictures import imagens_rc
 
 class Ui_Unique(object):
@@ -30,6 +31,12 @@ class Ui_Unique(object):
         Unique.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         Unique.setStyleSheet(u"")
         Unique.setInputMethodHints(Qt.InputMethodHint.ImhNone)
+        self.estabelecimento = QAction(Unique)
+        self.estabelecimento.setObjectName(u"estabelecimento")
+        self.configuracoes = QAction(Unique)
+        self.configuracoes.setObjectName(u"configuracoes")
+        self.catalago = QAction(Unique)
+        self.catalago.setObjectName(u"catalago")
         self.centralwidget = QWidget(Unique)
         self.centralwidget.setObjectName(u"centralwidget")
         self.centralwidget.setStyleSheet(u"")
@@ -187,10 +194,17 @@ class Ui_Unique(object):
         self.menubar = QMenuBar(Unique)
         self.menubar.setObjectName(u"menubar")
         self.menubar.setGeometry(QRect(0, 0, 1086, 33))
+        self.menuOPERACIONAL = QMenu(self.menubar)
+        self.menuOPERACIONAL.setObjectName(u"menuOPERACIONAL")
         Unique.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(Unique)
         self.statusbar.setObjectName(u"statusbar")
         Unique.setStatusBar(self.statusbar)
+
+        self.menubar.addAction(self.menuOPERACIONAL.menuAction())
+        self.menuOPERACIONAL.addAction(self.estabelecimento)
+        self.menuOPERACIONAL.addAction(self.catalago)
+        self.menuOPERACIONAL.addAction(self.configuracoes)
 
         self.retranslateUi(Unique)
 
@@ -207,6 +221,9 @@ class Ui_Unique(object):
 
     def retranslateUi(self, Unique):
         Unique.setWindowTitle(QCoreApplication.translate("Unique", u"unique", None))
+        self.estabelecimento.setText(QCoreApplication.translate("Unique", u"ESTABELECIMENTO", None))
+        self.configuracoes.setText(QCoreApplication.translate("Unique", u"CONFIGURA\u00c7\u00d5ES", None))
+        self.catalago.setText(QCoreApplication.translate("Unique", u"CATALAGO", None))
         self.btn_caixa.setText(QCoreApplication.translate("Unique", u"CAIXA", None))
         self.btn_clientes.setText(QCoreApplication.translate("Unique", u"CLIENTES", None))
         self.btn_delivery.setText(QCoreApplication.translate("Unique", u"DELIVERY", None))
@@ -216,5 +233,6 @@ class Ui_Unique(object):
         self.label_3.setText("")
         self.label_2.setText(QCoreApplication.translate("Unique", u"TextLabel", None))
         self.label.setText(QCoreApplication.translate("Unique", u"Teste1", None))
+        self.menuOPERACIONAL.setTitle(QCoreApplication.translate("Unique", u"options", None))
     # retranslateUi
 

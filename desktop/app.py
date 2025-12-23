@@ -1,4 +1,5 @@
 from scripts.produtos import (salvar_dados_produtos, inserir_imagem, exibir_confirmacao_exclusao, adicionar_categoria, preencher_dropdown_categoria, excluir_categoria)
+from scripts.estabelecimento import (enviar_dados_estabelecimento)
 from scripts.clientes import (salvar_dados_clientes)
 from scripts.api_externa import (buscar_cep)
 from PySide6.QtWidgets import (QApplication, QPushButton, QMainWindow, QMessageBox, QTableWidgetItem, QWidget, QHeaderView, QTableWidget, QAbstractItemView)
@@ -11,14 +12,15 @@ from window.form_products.add_produtos_ui import Ui_MainWindow as addprodutos
 from window.form_products.produtos_ui import Ui_MainWindow as produtos
 from window.form_clients.clientes_ui import Ui_MainWindow as clientes
 from window.form_box.Caixa_ui import Ui_CAIXA as caixa
+from window.form_estabelecimento_ui import Ui_MainWindow as estabelecimento
 
 from window.unique_ui import Ui_Unique as uniq
 from PySide6.QtNetwork import ( QNetworkAccessManager)
 from PySide6.QtCore import Signal, Qt, QPoint
 from PySide6.QtGui import QPixmap
+from PySide6.QtWidgets import (QMessageBox, QFileDialog)
 import requests
 import sys
-
 
 class Dados_pedido(QMainWindow, dados_pedidos):
     def __init__(self, row, column, parent=None):
@@ -44,7 +46,7 @@ class Caixa(QMainWindow, caixa):
             "valor": valor_caixa
         }
 
-        url = "http://127.0.0.1:8000/caixa/open_box"
+        url = "http://api.uniqsystems.com.br/caixa/open_box"
 
         response = requests.post(url, json=data_json)
 
@@ -88,7 +90,7 @@ class Caixa(QMainWindow, caixa):
                 return
             else:
                 try:
-                    url = "http://127.0.0.1:8000/caixa/close_box"
+                    url = "http://api.uniqsystems.com.br/caixa/close_box"
                     response = requests.get(url)
 
                     if response.status_code == 200:
@@ -106,7 +108,7 @@ class Caixa(QMainWindow, caixa):
 
     def validar_caixa(self):
 
-        url = "http://127.0.0.1:8000/caixa/valid_box"
+        url = "http://api.uniqsystems.com.br/caixa/valid_box"
         response = requests.get(url)
 
         if response.status_code == 200:
@@ -164,7 +166,7 @@ class AddCategory(QMainWindow, addcategorias):
         self.drop_modificar.addItem("")  # espaço em branco
 
         try:
-            response = requests.get("http://127.0.0.1:8000/produtos/dropdown/categories")
+            response = requests.get("http://api.uniqsystems.com.br/produtos/dropdown/categories")
             if response.status_code == 200:
                 categories = response.json() 
 
@@ -185,7 +187,7 @@ class AddCategory(QMainWindow, addcategorias):
         excluir_categoria(self, categoria_selecionada)
 
         try:
-            response = requests.delete(f"http://127.0.0.1:8000/produtos/category/{categoria_selecionada}")
+            response = requests.delete(f"http://api.uniqsystems.com.br/produtos/category/{categoria_selecionada}")
             if response.status_code == 200:
                 QMessageBox.information(self, "Sucesso", "Categoria excluída com sucesso!")
                 self.preencher_dropdown()  # Atualiza o dropdown
@@ -280,7 +282,7 @@ class Produtos(QMainWindow, produtos):
         self.tableWidget.setEditTriggers(QTableWidget.NoEditTriggers)
         
         try:
-            response = requests.get("http://127.0.0.1:8000/produtos/desktop/table")
+            response = requests.get("http://api.uniqsystems.com.br/produtos/desktop/table")
             response.raise_for_status()  # Levanta um erro para códigos de status HTTP ruins
             products = response.json()
 
@@ -420,7 +422,7 @@ class Delivery(QMainWindow, delivery):
         self.tableWidget.cellClicked.connect(self.abrir_dados)
 
         try:
-            response = requests.get("http://127.0.0.1:8000/pedidos/delivery/desktop")
+            response = requests.get("http://api.uniqsystems.com.br/pedidos/delivery/desktop")
             pedidos = response.json().get("detail")
 
             if response.status_code == 200:               
@@ -463,7 +465,28 @@ class Delivery(QMainWindow, delivery):
     def abrir_dados(self, row, column):
         self.dados_pedidos = Dados_pedido(row=row, column=column, parent=self)
         self.dados_pedidos.show()
-     
+
+
+class EstabelecimentoConfig(QMainWindow, estabelecimento):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setupUi(self)
+
+        self.EnviaDados.cliecked.connect(lambda: enviar_dados_estabelecimento(self))
+
+    def mouseDoubleClickEvent(self, event):
+        if self.estabelecimento_logo.geometry().contains(event.pos()):
+            file_dialog = QFileDialog()
+            file_path, _ = file_dialog.getOpenFileName(self, "Selecionar Imagem", "", "Arquivos de Imagem (*.png *.jpg *.jpeg *.bmp *.gif)")
+            if file_path:
+                # Agora sim, imprima o caminho do arquivo para depuração
+                pixmap = QPixmap(file_path)
+                if not pixmap.isNull(): 
+                    self.estabelecimento_logo.setPixmap(pixmap.scaled(self.estabelecimento_logo.size(), aspectMode=Qt.KeepAspectRatio))# type: ignore
+                    self.estabelecimento_logo.setText("")  # Remove o texto quando a imagem é carregada # type: ignore
+                else:
+                    self.estabelecimento_logo.setText("Erro ao carregar a imagem.")# type: ignore
+                    
 # classe principal da aplicação
 class Uniq(QMainWindow, uniq):
     def __init__(self):
@@ -491,6 +514,8 @@ class Uniq(QMainWindow, uniq):
 
         self.btn_caixa.clicked.connect(self.abrir_caixa)
 
+        self.estabelecimento.triggered.connect(self.configuracoes_estabelecimento)
+
     # Funções para abrir a janela filhas de mesas, clientes e produtos
     def abrir_caixa(self):
         self.caixa_window = Caixa(parent=self)
@@ -514,13 +539,16 @@ class Uniq(QMainWindow, uniq):
 
     def valid_caixa(self):
 
-        url = "http://127.0.0.1:8000/caixa/valid_box"
+        url = "http://api.uniqsystems.com.br/caixa/valid_box"
 
         response = requests.get(url)
 
         if response.status_code == 200:
             QMessageBox.information(self, "Caixa Aberto", "Seu caixa esta aberto")
 
+    def configuracoes_estabelecimento(self):
+        self.estabelecimento_window = EstabelecimentoConfig(parent=self)
+        self.estabelecimento_window.show()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

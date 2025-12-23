@@ -4,6 +4,23 @@ import math
 from time import sleep
 import json
 
+# Adicionar categorias
+df_categoria = pd.read_csv(r"C:\Users\Pichau\Documents\categorias.csv", sep=';', encoding='latin1')
+
+for i in df_categoria["CATEGORIA"]:
+    url = "https://api.uniqsystems.com.br/produtos/category"
+    try:
+        response = requests.post(url, json={"nome": i}, timeout=10)
+        if response.status_code == 200:
+            print(f"Linha {i} enviada com sucesso!")
+        else:
+            print(f"Erro ao enviar linha {i}: {response.status_code} - {response.text}")
+    except requests.exceptions.RequestException as e:
+        print(f"Erro de conexão na linha {i}: {e}")
+
+print("Envio de categorias finalizado!")
+
+
 # Carregar CSV
 df = pd.read_csv(
     r"C:\Users\Pichau\Downloads\PRODUTOS.csv",
@@ -54,18 +71,5 @@ for idx, row in df.iterrows():
 print("Envio finalizado!")
 
 
-# Adicionar categorias
-df_categoria = pd.read_csv(r"C:\Users\Pichau\Documents\categorias.csv", sep=';', encoding='latin1')
-
-for i in df_categoria["CATEGORIA"]:
-    url = "https://api.uniqsystems.com.br/produtos/category"
-    try:
-        response = requests.post(url, json={"nome": i}, timeout=10)
-        if response.status_code == 200:
-            print(f"Linha {i} enviada com sucesso!")
-        else:
-            print(f"Erro ao enviar linha {i}: {response.status_code} - {response.text}")
-    except requests.exceptions.RequestException as e:
-        print(f"Erro de conexão na linha {i}: {e}")
 
 

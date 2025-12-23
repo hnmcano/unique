@@ -28,7 +28,7 @@ def salvar_dados_produtos(parent=None):
 
         try:
             QMessageBox.information(parent, "Aguarde", "Enviando dados para o servidor!")
-            url= QUrl("http://127.0.0.1:8000/produtos/desktop/add/product")
+            url= QUrl("http://api.uniqsystems.com.br/produtos/desktop/add/product")
             data_json = {
                     "categoria_id": f"{categoria_id}",
                     "cod_pdv": f"{cod_pdv}",
@@ -112,7 +112,7 @@ def adicionar_categoria(parent=None):
 
     try:
         response = requests.post(
-            "http://127.0.0.1:8000/produtos/category",
+            "http://api.uniqsystems.com.br/produtos/category",
             json={"nome": nova_categoria}
         )
         if response.status_code == 200:
@@ -126,7 +126,7 @@ def adicionar_categoria(parent=None):
 
 def preencher_dropdown_categoria(parent=None):
     try:
-        response = requests.get("http://127.0.0.1:8000/produtos/dropdown/categories")
+        response = requests.get("http://api.uniqsystems.com.br/produtos/dropdown/categories")
         if response.status_code == 200:
             categorias = response.json()
             parent.categoria_combo.clear()
@@ -143,7 +143,7 @@ def preencher_dropdown_categoria(parent=None):
 def excluir_categoria(parent=None, categoria_selecionada=None):
 
     try:
-        response = requests.delete(f"http://127.0.0.1:8000/produtos/category/{categoria_selecionada}")
+        response = requests.delete(f"http://api.uniqsystems.com.br/produtos/category/{categoria_selecionada}")
         if response.status_code == 200:
             QMessageBox.information(parent, "Sucesso", "Categoria excluida com sucesso!")
             parent.preencher_dropdown()  # Atualiza o dropdown
@@ -151,3 +151,4 @@ def excluir_categoria(parent=None, categoria_selecionada=None):
             QMessageBox.critical(parent, "Erro", "Falha ao excluir categoria.")
     except Exception as e:
         QMessageBox.critical(parent, "Erro", f"Erro ao excluir categoria: {str(e)}")
+
