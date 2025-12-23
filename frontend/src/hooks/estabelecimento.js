@@ -3,7 +3,7 @@ import api from "../api/api";
 
 
 const useEstabelecimento = () => {
-    const [base, setBase] = useState([]);
+    const [ BaseEstabelecimento, setBaseEstabelecimento] = useState([]);
 
     useEffect(() => {
         api.get(`/estabelecimento/react/catalago`)
@@ -15,7 +15,7 @@ const useEstabelecimento = () => {
             });
     }, []);
 
-    return {base, setBase};
+    return { BaseEstabelecimento, setBaseEstabelecimento };
 }
 
 export default useEstabelecimento;
