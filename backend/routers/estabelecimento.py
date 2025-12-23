@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from bd.connection import get_db
+import pandas as pd
 from sqlalchemy.orm import Session
 from models.estabelecimento import Estabelecimento as EstabelecimentoModel
 from schemas.estabelecimento import EstabelecimentoBase as Estabelecimentoschema
@@ -36,9 +37,11 @@ async def update_estabelecimento(estabelecimento_nome: str, dados_estabeleciment
 async def get_estabelecimento(db: Session = Depends(get_db)):
 
     db_estabelecimento = db.query(EstabelecimentoModel).first()
-    print(db_estabelecimento)
+    dados_estabelcimento = pd.DataFrame([db_estabelecimento.__dict__])
+    dados_estabelcimento = dados_estabelcimento.drop(columns=["_sa_instance_state"], errors="ignore")
+    dados_estabelcimento = dados_estabelcimento.to_dict("records")[0]
 
     if not db_estabelecimento:
         raise HTTPException(status_code=404, detail="Estabelecimento não encontrado")
     
-    return db_estabelecimento
+    return dados_estabelcimento

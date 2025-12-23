@@ -75,8 +75,6 @@ async def list_products(db: Session = Depends(get_db)):
     data = pd.merge(p, c, left_on="categoria_id", right_on="id", how="left")
     data = data.drop(columns=["id_y"]).rename(columns={"id_x": "id"})
     data = data[data["status_venda"] == "Ativo"]
-    
-    print(data)
 
     if "nome_categoria" in data.columns:
         data = (
