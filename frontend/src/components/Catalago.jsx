@@ -9,7 +9,7 @@ function ContainerCategories() {
     const [CategoriesLoopList, setCategoriesLoopList] = useState(true);
     const [selectedCategories, setSelectedCategories] = useState(null);
 
-        
+    console.log(setBaseEstabelecimento);
 
     const handleFilterClick = (categoryName) => {
         setSelectedCategories(prevCategory => prevCategory === categoryName ? null : categoryName);
@@ -23,12 +23,12 @@ function ContainerCategories() {
                 </div>
                 <div className="data">
                     <div className="status-container">
-                        <label className="status">ABERTO</label>
+                        <label className="status"></label>
                     </div>
                     <div className="infos">
                         <div className="infos-data">
                             <div className="endereço">
-                                <div>Endereço: Rua joão constante Carrara, 298</div>
+                                <div>Endereço: {setBaseEstabelecimento && setBaseEstabelecimento[0].endereco}</div>
                             </div>
                         </div>
                         <div className="infos-data">
