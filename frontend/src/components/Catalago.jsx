@@ -1,11 +1,15 @@
 import { useState } from "react";
 import { useProdutos } from "../hooks/useProdutos";
 import CategoriesLoop from "./Categories";
+import useEstabelecimento from "../hooks/estabelecimento";
 
 function ContainerCategories() {
     const { base: setBaseProdutos } = useProdutos();
+    const { baseEstabelecimento: setBaseEstabelecimento } = useEstabelecimento();
     const [CategoriesLoopList, setCategoriesLoopList] = useState(true);
     const [selectedCategories, setSelectedCategories] = useState(null);
+
+    console.log(setBaseEstabelecimento);
 
     const handleFilterClick = (categoryName) => {
         setSelectedCategories(prevCategory => prevCategory === categoryName ? null : categoryName);

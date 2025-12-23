@@ -33,7 +33,7 @@ def update_estabelecimento(estabelecimento_nome: str, dados_estabelecimento: Est
     db.refresh(db_estabelecimento)
     return db_estabelecimento
 
-@router.get("/react/get")
+@router.get("/react/catalago")
 def get_estabelecimento( db: Session = Depends(get_db)):
     db_estabelecimento = db.query(EstabelecimentoModel).all()
     if not db_estabelecimento:
