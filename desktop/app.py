@@ -466,7 +466,6 @@ class Delivery(QMainWindow, delivery):
         self.dados_pedidos = Dados_pedido(row=row, column=column, parent=self)
         self.dados_pedidos.show()
 
-
 class EstabelecimentoConfig(QMainWindow, estabelecimento):
     def __init__(self, parent=None):
         super().__init__(parent)

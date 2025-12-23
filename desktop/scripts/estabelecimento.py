@@ -28,12 +28,11 @@ def enviar_dados_estabelecimento(parent=None):
                 "endereco": f"{endereco}",
                 "instagram": f"{instagram}",
                 "telefone": f"{telefone}",
-                "imagem": f"{imagem_data_string}"
+                "logo_base64": f"{imagem_data_string}"
         }
-        print(data_json)
-
+        QMessageBox.information(parent, "Aguarde", "Enviando dados para o servidor!")
         json_data=json.dumps(data_json).encode("utf-8")
-
+        
         data_to_send=QByteArray(json_data)
         request= QNetworkRequest(url)
         request.setHeader(QNetworkRequest.ContentTypeHeader, "application/json")# type: ignore
