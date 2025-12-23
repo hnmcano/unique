@@ -472,7 +472,9 @@ class EstabelecimentoConfig(QMainWindow, estabelecimento):
         super().__init__(parent)
         self.setupUi(self)
 
-        self.EnviaDados.cliecked.connect(lambda: enviar_dados_estabelecimento(self))
+        self.network_manager = QNetworkAccessManager(self)
+
+        self.EnviaDados.clicked.connect(lambda: enviar_dados_estabelecimento(self))
 
     def mouseDoubleClickEvent(self, event):
         if self.estabelecimento_logo.geometry().contains(event.pos()):

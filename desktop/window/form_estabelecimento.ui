@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>644</width>
+    <width>505</width>
     <height>502</height>
    </rect>
   </property>
@@ -62,10 +62,16 @@
           </property>
           <item>
            <widget class="QLabel" name="estabelecimento_logo">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>120</height>
+             </size>
+            </property>
             <property name="maximumSize">
              <size>
               <width>16777215</width>
-              <height>300</height>
+              <height>120</height>
              </size>
             </property>
             <property name="styleSheet">

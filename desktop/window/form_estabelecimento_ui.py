@@ -23,7 +23,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(644, 502)
+        MainWindow.resize(505, 502)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
@@ -44,7 +44,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
         self.estabelecimento_logo = QLabel(self.widget_2)
         self.estabelecimento_logo.setObjectName(u"estabelecimento_logo")
-        self.estabelecimento_logo.setMaximumSize(QSize(16777215, 300))
+        self.estabelecimento_logo.setMinimumSize(QSize(0, 120))
+        self.estabelecimento_logo.setMaximumSize(QSize(16777215, 120))
         self.estabelecimento_logo.setStyleSheet(u"QLabel {\n"
 "		\n"
 "	background-color: rgb(98, 98, 98);\n"
