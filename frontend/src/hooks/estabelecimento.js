@@ -17,5 +17,3 @@ const useEstabelecimento = () => {
 
     return { BaseEstabelecimento, setBaseEstabelecimento };
 }
-
-export default useEstabelecimento;
