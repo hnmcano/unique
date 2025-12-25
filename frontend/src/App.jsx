@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import DataFinalizacao from './pages/Finalizacao';
 
-
 function App() {
   return (
       <main>
