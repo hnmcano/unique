@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useProdutos } from "../hooks/useProdutos";
-import ProdutosAcionados from "./Produtos";
+import ProdutosAcionados from "./Map_produtos";
 
 function CategoriesLoop({selectedCategories}) {
     const { base: setBaseProdutos } = useProdutos();

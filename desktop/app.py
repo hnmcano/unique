@@ -403,7 +403,6 @@ class Mesas(QMainWindow, mesas):
         if botao_a_restaurar is not None:
             botao_a_restaurar.setStyleSheet("""
             """)
-            print(f"Cor do botão {botao_a_restaurar.objectName()} restaurada para um estilo fixo.")
 
 class Delivery(QMainWindow, delivery):
     resposta_delivery = Signal(str)
