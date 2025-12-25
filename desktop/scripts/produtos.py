@@ -10,6 +10,9 @@ from time import sleep
 
 def salvar_dados_produtos(parent=None):
         categoria_id = parent.categoria_combo.currentData()
+
+        print("ESSA É A CATEGORIA >>>>>>>>>>>",  categoria_id)
+
         cod_pdv = parent.cod_pdv_input.text()# type: ignore
         nome = parent.nome_input.text()# type: ignore
         preco_custo = float(parent.preco_custo_input.text().replace(",", "."))# type: ignore
@@ -18,7 +21,7 @@ def salvar_dados_produtos(parent=None):
         estoque = int(parent.Estoque_input.text())# type: ignore
         estoque_min = int(parent.estoque_min_input.text())# type: ignore
         descricao_ = parent.desc_input.text()# type: ignore
-        pixmap = QPixmap(parent.image_label.pixmap())
+        pixmap = QPixmap(parent.pixmap_original)
 
         buffer = QBuffer()
         buffer.open(QIODevice.OpenModeFlag.WriteOnly)
@@ -45,8 +48,8 @@ def salvar_dados_produtos(parent=None):
                     "imagem": f"{imagem_data_string}"
             }
 
-            QMessageBox.information(parent, "Aguarde", "Enviando dados para o servidor! dados: {}".format(data_json))
-            
+            print(data_json)
+           
             json_data=json.dumps(data_json).encode("utf-8")
             data_to_send=QByteArray(json_data)
             request= QNetworkRequest(url)
@@ -81,10 +84,11 @@ def inserir_imagem(parent=None):
     file_path, _ = file_dialog.getOpenFileName(parent, "Selecionar Imagem", "", "Arquivos de Imagem (*.png *.jpg *.jpeg *.bmp *.gif)")
     if file_path:
         # Agora sim, imprima o caminho do arquivo para depuração
-        pixmap = QPixmap(file_path)
-        if not pixmap.isNull(): 
-            parent.image_label.setPixmap(pixmap.scaled(parent.image_label.size(), aspectMode=Qt.KeepAspectRatio))# type: ignore
-            parent.image_label.setText("")  # Remove o texto quando a imagem é carregada # type: ignore
+        parent.pixmap_original = QPixmap(file_path)
+        if not parent.pixmap_original.isNull():
+            preview_pixmap = parent.pixmap_original.scaled(parent.image_label.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
+            parent.image_label.setPixmap(preview_pixmap)
+            parent.image_label.setText("")
         else:
             parent.image_label.setText("Erro ao carregar a imagem.")# type: ignore
 

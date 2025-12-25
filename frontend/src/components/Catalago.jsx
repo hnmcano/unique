@@ -5,11 +5,9 @@ import { useEstabelecimento } from "../hooks/estabelecimento";
 
 function ContainerCategories() {
     const { base: setBaseProdutos } = useProdutos();
-    const { base: setBaseEstabelecimento } = useEstabelecimento();
+    const [estabelecimento, setEstabelecimento ] = useEstabelecimento();
     const [CategoriesLoopList, setCategoriesLoopList] = useState(true);
     const [selectedCategories, setSelectedCategories] = useState(null);
-
-    console.log(setBaseEstabelecimento);
 
     const handleFilterClick = (categoryName) => {
         setSelectedCategories(prevCategory => prevCategory === categoryName ? null : categoryName);
@@ -19,32 +17,47 @@ function ContainerCategories() {
         <div>
             <div className="header">
                 <div className="logotipo-hookah">
-                    <img src="/src/assets/logo_hookahshisha.png" alt="Logo" className="logo"/>
+                    <img className="logotipo" src={`data:image/png;base64,${estabelecimento?.logo_base64}`} alt="Logo"/>
                 </div>
                 <div className="data">
                     <div className="status-container">
-                        <label className="status"></label>
+                        <label className="status">ABERTO</label>
                     </div>
                     <div className="infos">
                         <div className="infos-data">
-                            <div className="endereço">
-                                <div>Endereço: {setBaseEstabelecimento && setBaseEstabelecimento[0].endereco}</div>
-                            </div>
+                            <div className="montserrat-data">Endereço: {estabelecimento?.endereco}</div>
                         </div>
                         <div className="infos-data">
-                            <div className="telefone">
-                                <label>Telefone: (11) 99999-9999 | Instagram: @hookahshisha</label>
-                            </div>
+                            <div className="montserrat-data">Telefone: {estabelecimento?.telefone} | Instagram: {estabelecimento?.instagram}</div>
                         </div>
                         <div className="infos-data">
-                            <label> Horário: 13:00 às 17:00</label>
+                            <div className="montserrat-data"> Horário: 13:00 às 17:00</div>
                         </div>
                     </div>
                 </div>
                 <div className="filter-all">
-                    <button onClick={() => setSelectedCategories(null)} className="button-filter">Limpar filtro</button>
+                    <button onClick={() => setSelectedCategories(null)} className="button-filter"> 
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            fill="currentColor"
+                            class="bi bi-arrow-repeat"
+                            viewBox="0 0 16 16"
+                        >
+                        <path 
+                        d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z">
+                        </path>
+                        <path
+                        fill-rule="evenodd"
+                        d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"
+                        >
+                        </path>
+                        </svg>
+                            Limpar Filtros
+                        </button>
                 </div>
-                <div className="buttons-filters">
+                <div className="div-buttons-filters">
                     {setBaseProdutos && setBaseProdutos.map((categoria, index) => (
                         <button onClick={() => handleFilterClick(categoria.nome_categoria)} className={`buttons-filters ${selectedCategories === categoria.nome_categoria ? 'active' : ''}`}>{categoria.nome_categoria}</button>
                     ))}
