@@ -1,5 +1,5 @@
 from connection.network_conn import handle_network_reply
-from PySide6.QtWidgets import (QMessageBox, QFileDialog)
+from PySide6.QtWidgets import (QMessageBox, QFileDialog, QRadioButton, QButtonGroup)
 from PySide6.QtNetwork import (QNetworkRequest)
 from PySide6.QtCore import QUrl, QByteArray, Qt, QBuffer, QIODevice
 from PySide6.QtGui import QPixmap
@@ -10,17 +10,15 @@ from time import sleep
 
 def salvar_dados_produtos(parent=None):
         categoria_id = parent.categoria_combo.currentData()
-
-        print("ESSA É A CATEGORIA >>>>>>>>>>>",  categoria_id)
-
         cod_pdv = parent.cod_pdv_input.text()# type: ignore
         nome = parent.nome_input.text()# type: ignore
+        botão_marcado = parent.buttonGroup.checkedButton()# type: ignore   
+        medida = botão_marcado.text()# type: ignore
         preco_custo = float(parent.preco_custo_input.text().replace(",", "."))# type: ignore
         preco_venda = float(parent.preco_venda_input.text().replace(",", "."))# type: ignore
-        medida = parent.Medida_input.text()# type: ignore
         estoque = int(parent.Estoque_input.text())# type: ignore
         estoque_min = int(parent.estoque_min_input.text())# type: ignore
-        descricao_ = parent.desc_input.text()# type: ignore
+        descricao_ = parent.desc_input.toPlainText()# type: ignore
         pixmap = QPixmap(parent.pixmap_original)
 
         buffer = QBuffer()
@@ -28,6 +26,10 @@ def salvar_dados_produtos(parent=None):
         pixmap.save(buffer, "PNG")
         image_data = buffer.data().toBase64().data()
         imagem_data_string = image_data.decode("utf-8")
+
+        if botão_marcado is None:
+            QMessageBox.warning(parent, "Erro", "Selecione uma unidade de medida.")
+            return
 
         try:
             QMessageBox.information(parent, "Aguarde", "Enviando dados para o servidor!")
@@ -65,7 +67,12 @@ def salvar_dados_produtos(parent=None):
             parent.nome_input.clear()# type: ignore
             parent.preco_custo_input.clear()# type: ignore
             parent.preco_venda_input.clear()# type: ignore
-            parent.Medida_input.clear()# type: ignore
+            
+            parent.buttonGroup.setExclusive(False) # type: ignore
+            for button in parent.buttonGroup.buttons(): # type: ignore
+                button.setChecked(False)
+            parent.buttonGroup.setExclusive(True) # type: ignore
+
             parent.Estoque_input.clear()# type: ignore
             parent.estoque_min_input.clear()# type: ignore
             parent.desc_input.clear()# type: ignore

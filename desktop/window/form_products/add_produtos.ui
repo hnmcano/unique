@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>659</width>
-    <height>763</height>
+    <width>646</width>
+    <height>546</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>620</width>
-    <height>698</height>
+    <width>0</width>
+    <height>0</height>
    </size>
   </property>
   <property name="maximumSize">
@@ -48,75 +48,7 @@
     <property name="spacing">
      <number>0</number>
     </property>
-    <item row="6" column="0" colspan="2">
-     <widget class="QWidget" name="widget_5" native="true">
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>30</height>
-       </size>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="0" colspan="2">
-     <widget class="QWidget" name="widget" native="true">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>90</height>
-       </size>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <property name="spacing">
-        <number>0</number>
-       </property>
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
-       <item>
-        <widget class="QLabel" name="label_14">
-         <property name="font">
-          <font>
-           <family>Monotype Corsiva</family>
-           <pointsize>45</pointsize>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true"/>
-         </property>
-         <property name="text">
-          <string>Cadastro de Produtos</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignmentFlag::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item row="4" column="1">
+    <item row="3" column="1">
      <widget class="QWidget" name="widget_4" native="true">
       <property name="minimumSize">
        <size>
@@ -264,7 +196,7 @@
       </layout>
      </widget>
     </item>
-    <item row="5" column="0" colspan="2">
+    <item row="4" column="0" colspan="2">
      <widget class="QWidget" name="widget_3" native="true">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -302,7 +234,7 @@
       </layout>
      </widget>
     </item>
-    <item row="4" column="0">
+    <item row="3" column="0">
      <widget class="QWidget" name="widget_2" native="true">
       <layout class="QGridLayout" name="gridLayout_2">
        <property name="leftMargin">
@@ -320,8 +252,8 @@
        <property name="spacing">
         <number>0</number>
        </property>
-       <item row="9" column="2">
-        <widget class="QLineEdit" name="preco_custo_input">
+       <item row="8" column="2">
+        <widget class="QLineEdit" name="nome_input">
          <property name="maximumSize">
           <size>
            <width>240</width>
@@ -330,15 +262,15 @@
          </property>
         </widget>
        </item>
-       <item row="7" column="0">
-        <widget class="QLabel" name="label_2">
+       <item row="8" column="0">
+        <widget class="QLabel" name="label_6">
          <property name="text">
-          <string>Categoria</string>
+          <string>Nome</string>
          </property>
         </widget>
        </item>
-       <item row="7" column="2">
-        <widget class="QComboBox" name="categoria_combo">
+       <item row="10" column="2">
+        <widget class="QLineEdit" name="preco_venda_input">
          <property name="maximumSize">
           <size>
            <width>240</width>
@@ -354,10 +286,13 @@
          </property>
         </widget>
        </item>
-       <item row="8" column="0">
-        <widget class="QLabel" name="label_6">
-         <property name="text">
-          <string>Nome</string>
+       <item row="13" column="2">
+        <widget class="QLineEdit" name="estoque_min_input">
+         <property name="maximumSize">
+          <size>
+           <width>240</width>
+           <height>16777215</height>
+          </size>
          </property>
         </widget>
        </item>
@@ -368,8 +303,25 @@
          </property>
         </widget>
        </item>
-       <item row="10" column="2">
-        <widget class="QLineEdit" name="preco_venda_input">
+       <item row="14" column="0">
+        <widget class="QLabel" name="label_13">
+         <property name="text">
+          <string>Descrição</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="0">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Categoria</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="2">
+        <widget class="QLineEdit" name="preco_custo_input">
          <property name="maximumSize">
           <size>
            <width>240</width>
@@ -378,8 +330,8 @@
          </property>
         </widget>
        </item>
-       <item row="13" column="2">
-        <widget class="QLineEdit" name="estoque_min_input">
+       <item row="7" column="2">
+        <widget class="QComboBox" name="categoria_combo">
          <property name="maximumSize">
           <size>
            <width>240</width>
@@ -401,71 +353,8 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="2">
-        <widget class="QLineEdit" name="cod_pdv_input">
-         <property name="maximumSize">
-          <size>
-           <width>240</width>
-           <height>16777215</height>
-          </size>
-         </property>
-        </widget>
-       </item>
        <item row="12" column="2">
         <widget class="QLineEdit" name="Estoque_input">
-         <property name="maximumSize">
-          <size>
-           <width>240</width>
-           <height>16777215</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item row="14" column="2">
-        <widget class="QLineEdit" name="desc_input">
-         <property name="minimumSize">
-          <size>
-           <width>240</width>
-           <height>130</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>240</width>
-           <height>16777215</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item row="11" column="0">
-        <widget class="QLabel" name="label_8">
-         <property name="text">
-          <string>Medida</string>
-         </property>
-        </widget>
-       </item>
-       <item row="14" column="0">
-        <widget class="QLabel" name="label_13">
-         <property name="text">
-          <string>Descrição</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="2">
-        <widget class="QLineEdit" name="nome_input">
-         <property name="maximumSize">
-          <size>
-           <width>240</width>
-           <height>16777215</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item row="11" column="2">
-        <widget class="QLineEdit" name="Medida_input">
          <property name="maximumSize">
           <size>
            <width>240</width>
@@ -481,11 +370,80 @@
          </property>
         </widget>
        </item>
+       <item row="11" column="0">
+        <widget class="QLabel" name="label_8">
+         <property name="text">
+          <string>Medida</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="2">
+        <widget class="QLineEdit" name="cod_pdv_input">
+         <property name="maximumSize">
+          <size>
+           <width>240</width>
+           <height>16777215</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item row="14" column="2">
+        <widget class="QPlainTextEdit" name="desc_input">
+         <property name="maximumSize">
+          <size>
+           <width>240</width>
+           <height>150</height>
+          </size>
+         </property>
+        </widget>
+       </item>
        <item row="10" column="0">
         <widget class="QLabel" name="label_12">
          <property name="text">
           <string>Preço Venda</string>
          </property>
+        </widget>
+       </item>
+       <item row="11" column="2">
+        <widget class="QWidget" name="radioWidget" native="true">
+         <property name="maximumSize">
+          <size>
+           <width>240</width>
+           <height>35</height>
+          </size>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <item>
+           <widget class="QRadioButton" name="radioButton">
+            <property name="text">
+             <string>UN</string>
+            </property>
+            <attribute name="buttonGroup">
+             <string notr="true">buttonGroup</string>
+            </attribute>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="radioButton_2">
+            <property name="text">
+             <string>KG</string>
+            </property>
+            <attribute name="buttonGroup">
+             <string notr="true">buttonGroup</string>
+            </attribute>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="radioButton_3">
+            <property name="text">
+             <string>GR</string>
+            </property>
+            <attribute name="buttonGroup">
+             <string notr="true">buttonGroup</string>
+            </attribute>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
       </layout>
@@ -499,10 +457,8 @@
   <tabstop>nome_input</tabstop>
   <tabstop>preco_custo_input</tabstop>
   <tabstop>preco_venda_input</tabstop>
-  <tabstop>Medida_input</tabstop>
   <tabstop>Estoque_input</tabstop>
   <tabstop>estoque_min_input</tabstop>
-  <tabstop>desc_input</tabstop>
   <tabstop>selecionar_imagem</tabstop>
   <tabstop>limp_img</tabstop>
   <tabstop>add_produto</tabstop>
@@ -510,4 +466,7 @@
  </tabstops>
  <resources/>
  <connections/>
+ <buttongroups>
+  <buttongroup name="buttonGroup"/>
+ </buttongroups>
 </ui>
