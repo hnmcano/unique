@@ -37,7 +37,8 @@ async def update_estabelecimento(estabelecimento_nome: str, dados_estabeleciment
 async def get_estabelecimento(db: Session = Depends(get_db)):
 
     db_estabelecimento = db.query(EstabelecimentoModel).all()
-    dados_estabelecimento = pd.DataFrame([db_estabelecimento.__dict__])
+
+    dados_estabelecimento = pd.DataFrame([db_estabelecimento.__dict__ for db_estabelecimento in db_estabelecimento])
     dados_estabelecimento = dados_estabelecimento.drop(columns=["_sa_instance_state"], errors="ignore")
     dados_estabelecimento = dados_estabelecimento.to_dict("records")
 
