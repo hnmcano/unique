@@ -62,11 +62,6 @@ async def criar_novo_pedido(novo_pedido_data: NovoPedidoSchema,db: Session = Dep
             + novo_pedido_data.entrega.taxa_entrega
         )
 
-        print(f"Valor total calculado: {valor_total_calculado}")
-        print(f"Valor total do pedido: {novo_pedido_data.valor_total}")
-
-        print(valor_total_calculado - novo_pedido_data.valor_total)
-
         if abs(valor_total_calculado - novo_pedido_data.valor_total) > Decimal('0.01'):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST, 
@@ -126,7 +121,6 @@ async def criar_novo_pedido(novo_pedido_data: NovoPedidoSchema,db: Session = Dep
     except Exception as e:
         # Se ocorrer qualquer outro erro (DB, lógica, etc.), faz rollback
         db.rollback() 
-        print(f"Erro inesperado ao criar pedido: {e}")
         # Retorna um erro genérico 500
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

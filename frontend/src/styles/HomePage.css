@@ -20,6 +20,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    height: auto;
     height: 100vh;
     width: 100vw;
     background-color: rgb(46, 44, 44);
@@ -99,7 +100,6 @@
 }
 
 .container {
-    background-color: rgb(46, 44, 44);
     color: white;
 }
 
@@ -182,16 +182,6 @@ button.buttons-filters:focus {
     background-color: rgba(110, 0, 161, 0.733);
 }
 
-.container_ {
-    margin-top: 20px;
-    width: 100vw;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    overflow-y: auto;
-    background-color: rgb(46, 44, 44);
-}
 
 .categories-details {
     width: 90vw;
@@ -241,13 +231,22 @@ button.buttons-filters:focus {
     }
 }
 
+.container_ {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    background-color: rgb(46, 44, 44);
+
+}
+
 .produtos-item:hover {
     transform: scale(1.02);
     transition: all 0.3s ease-in-out;
     cursor: pointer;
 }
-
-
 
 .data-itens-product {
     display: flex;
@@ -264,13 +263,12 @@ button.buttons-filters:focus {
 }
 
 .data-description {
-    flex-grow: 1;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
     margin-top: 20px;
     margin-bottom: 20px;
     margin-right: 5px;
@@ -288,29 +286,3 @@ button.buttons-filters:focus {
     height: 120px;
     object-fit: cover;
 }
-
-.cart-button {
-    cursor: pointer;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 0.25rem;
-
-    padding: 0.5rem;
-    width: 120px;
-    background-image: var(--bg-linear);
-
-    font-size: 0.75rem;
-    font-weight: 400;
-    color: var(--light);
-    text-wrap: nowrap;
-
-    border: 2px solid hsla(262, 83%, 58%, 0.5);
-    border-radius: 0.5rem;
-    box-shadow: inset 0 0 0.25rem 1px var(--light);
-}
-
- .cart-button .cart-icon {
-    width: 1rem;
-  }

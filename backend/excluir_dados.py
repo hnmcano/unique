@@ -11,4 +11,3 @@ tabela = Table('Carrinhos', metadata, autoload_with=engine)
 with engine.connect() as conn:
     conn.execute(tabela.delete())
     conn.commit()
-    print('Todos os dados da tabela foram deletados')

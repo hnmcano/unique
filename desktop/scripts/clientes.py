@@ -35,7 +35,6 @@ def salvar_dados_clientes(parent=None):
                 "complemento": f"{complemento}",
                 "referencia": f"{referencia}"
         }
-        print(data_json)
 
         json_data=json.dumps(data_json).encode("utf-8")
         data_to_send=QByteArray(json_data)

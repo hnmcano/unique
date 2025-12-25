@@ -42,8 +42,6 @@ async def get_estabelecimento(db: Session = Depends(get_db)):
     dados_estabelecimento = dados_estabelecimento.drop(columns=["_sa_instance_state"], errors="ignore")
     dados_estabelecimento = dados_estabelecimento.to_dict("records")
 
-    print(dados_estabelecimento)
-
     if not db_estabelecimento:
         raise HTTPException(status_code=404, detail="Estabelecimento não encontrado")
     

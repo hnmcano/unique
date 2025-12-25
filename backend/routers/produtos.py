@@ -49,9 +49,6 @@ async def read_products(db: Session = Depends(get_db)):
     data = pd.merge(p, c, left_on="categoria_id", right_on="id", how="left")
     data = data.drop(columns=["id_y"]).rename(columns={"id_x": "id"})
     data = data.to_dict("records")
-
-    print(data)
-
     return data
 
 
