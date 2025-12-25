@@ -7,7 +7,7 @@ export function useEstabelecimento() {
     useEffect(() => {
         api.get(`/estabelecimento/react/catalago`)
             .then(response => {
-                setBaseEstabelecimento(response.data);
+                setBaseEstabelecimento(response.data[0]);
                 console.log(response.data);
             })
             .catch(error => {
