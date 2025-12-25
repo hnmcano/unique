@@ -13,12 +13,21 @@ router = APIRouter()
 def valid_box(db: Session = Depends(get_db)):
     Caixa_aberto = db.query(CaixaModel).filter(CaixaModel.status == "ABERTO").first()
 
-    if Caixa_aberto is not None:
-        temporizador = Caixa_aberto.data_abertura
-        diferenca = (temporizador - datetime.now()).total_seconds()
-        raise HTTPException(status_code=200, detail=f"Ja existe um caixa aberto há {diferenca:.2f} segundos")
-    else:
-        raise HTTPException(status_code=400, detail="Nao existe um caixa aberto")
+    if not Caixa_aberto:
+        raise HTTPException(status_code=400, detail="Nenhum caixa aberto no momento")
+    
+    agora = datetime.now()
+    diferenca = agora - Caixa_aberto.data_abertura
+
+    horas, resto = divmod(int(diferenca.total_seconds()), 3600)
+    minutos, segundos = divmod(resto, 60)
+
+    tempo_aberto = f"{horas:02d}:{minutos:02d}:{segundos:02d}"
+
+    raise HTTPException(
+        status_code=409,
+        detail=f"{tempo_aberto}",
+    )
 
 
 @router.post("/open_box")
