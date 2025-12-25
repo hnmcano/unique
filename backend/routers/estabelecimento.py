@@ -36,12 +36,14 @@ async def update_estabelecimento(estabelecimento_nome: str, dados_estabeleciment
 @router.get("/react/catalago")
 async def get_estabelecimento(db: Session = Depends(get_db)):
 
-    db_estabelecimento = db.query(EstabelecimentoModel).first()
-    dados_estabelcimento = pd.DataFrame([db_estabelecimento.__dict__])
-    dados_estabelcimento = dados_estabelcimento.drop(columns=["_sa_instance_state"], errors="ignore")
-    dados_estabelcimento = dados_estabelcimento.to_dict("records")[0]
+    db_estabelecimento = db.query(EstabelecimentoModel).all()
+    dados_estabelecimento = pd.DataFrame([db_estabelecimento.__dict__])
+    dados_estabelecimento = dados_estabelecimento.drop(columns=["_sa_instance_state"], errors="ignore")
+    dados_estabelecimento = dados_estabelecimento.to_dict("records")
+
+    print(dados_estabelecimento)
 
     if not db_estabelecimento:
         raise HTTPException(status_code=404, detail="Estabelecimento não encontrado")
     
-    return dados_estabelcimento
+    return dados_estabelecimento

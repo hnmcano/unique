@@ -12,7 +12,7 @@ def enviar_dados_estabelecimento(parent=None):
     endereco = parent.EnderecoEstabelecimento.text()  # type: ignore
     instagram = parent.EstabelecimentoInstagram.text()  # type: ignore
     telefone = parent.TelefoneEstabelecimento.text()  # type: ignore
-    pixmap = QPixmap(parent.estabelecimento_logo.pixmap())
+    pixmap = QPixmap(parent.pixmap_original)
 
     buffer = QBuffer()
     buffer.open(QIODevice.OpenModeFlag.WriteOnly)

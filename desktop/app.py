@@ -16,7 +16,7 @@ from window.form_estabelecimento_ui import Ui_MainWindow as estabelecimento
 
 from window.unique_ui import Ui_Unique as uniq
 from PySide6.QtNetwork import ( QNetworkAccessManager)
-from PySide6.QtCore import Signal, Qt, QPoint
+from PySide6.QtCore import Signal, Qt
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import (QMessageBox, QFileDialog)
 import requests
@@ -286,8 +286,6 @@ class Produtos(QMainWindow, produtos):
             response.raise_for_status()  # Levanta um erro para códigos de status HTTP ruins
             products = response.json()
 
-            print(products)
-
             self.tableWidget.setRowCount(len(products))
             linha_atual = 0
 
@@ -479,15 +477,21 @@ class EstabelecimentoConfig(QMainWindow, estabelecimento):
         if self.estabelecimento_logo.geometry().contains(event.pos()):
             file_dialog = QFileDialog()
             file_path, _ = file_dialog.getOpenFileName(self, "Selecionar Imagem", "", "Arquivos de Imagem (*.png *.jpg *.jpeg *.bmp *.gif)")
-            if file_path:
-                # Agora sim, imprima o caminho do arquivo para depuração
-                pixmap = QPixmap(file_path)
-                if not pixmap.isNull(): 
-                    self.estabelecimento_logo.setPixmap(pixmap.scaled(self.estabelecimento_logo.size(), aspectMode=Qt.KeepAspectRatio))# type: ignore
-                    self.estabelecimento_logo.setText("")  # Remove o texto quando a imagem é carregada # type: ignore
-                else:
-                    self.estabelecimento_logo.setText("Erro ao carregar a imagem.")# type: ignore
-                    
+            
+            if not file_path:
+                return
+            
+            self.pixmap_original = QPixmap(file_path)
+
+            if self.pixmap_original is None:
+                QMessageBox.critical(self, "Erro", "Falha ao carregar a imagem.")
+                return
+
+            preview_pixmap = self.pixmap_original.scaled(self.estabelecimento_logo.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
+
+            self.estabelecimento_logo.setPixmap(preview_pixmap)
+            self.estabelecimento_logo.setText("")
+               
 # classe principal da aplicação
 class Uniq(QMainWindow, uniq):
     def __init__(self):
