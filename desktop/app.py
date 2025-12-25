@@ -17,10 +17,20 @@ from window.form_estabelecimento_ui import Ui_MainWindow as estabelecimento
 from window.unique_ui import Ui_Unique as uniq
 from PySide6.QtNetwork import ( QNetworkAccessManager)
 from PySide6.QtCore import Signal, Qt
-from PySide6.QtGui import QPixmap
+from PySide6.QtGui import QPixmap, QGuiApplication
 from PySide6.QtWidgets import (QMessageBox, QFileDialog)
 import requests
 import sys
+
+def center_window(self):
+
+    screen = QGuiApplication.primaryScreen()
+    screen_geometry = screen.availableGeometry()
+    window_geometry = self.frameGeometry()
+
+    window_geometry.moveCenter(screen_geometry.center())
+    self.move(window_geometry.topLeft())
+
 
 class Dados_pedido(QMainWindow, dados_pedidos):
     def __init__(self, row, column, parent=None):
@@ -111,7 +121,7 @@ class Caixa(QMainWindow, caixa):
         url = "http://api.uniqsystems.com.br/caixa/valid_box"
         response = requests.get(url)
 
-        if response.status_code == 200:
+        if response.status_code == 409:
             self.CloseCaixa.setDisabled(False)
             self.StatusCaixa.setText("Caixa Aberto")
             self.StatusCaixa.setStyleSheet("background-color: green; color: white; font-weight: bold;")
@@ -263,6 +273,7 @@ class Produtos(QMainWindow, produtos):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
+        center_window(self)
 
         self.FilterProducts.setPlaceholderText("Digite para filtrar produtos...")
 
@@ -499,6 +510,7 @@ class Uniq(QMainWindow, uniq):
         super().__init__()
         # instancia a interface do uniq
         self.setupUi(self)
+        center_window(self)
 
        # Inicializa as janelas como None
         self.clientes_window = None
@@ -548,8 +560,9 @@ class Uniq(QMainWindow, uniq):
 
         response = requests.get(url)
 
-        if response.status_code == 200:
-            QMessageBox.information(self, "Caixa Aberto", "Seu caixa esta aberto")
+        if response.status_code == 409:
+            tempo_aberto = response.json().get("detail")
+            QMessageBox.information(self, "Caixa Aberto", f"Seu caixa esta aberto há {tempo_aberto}")
 
     def configuracoes_estabelecimento(self):
         self.estabelecimento_window = EstabelecimentoConfig(parent=self)
