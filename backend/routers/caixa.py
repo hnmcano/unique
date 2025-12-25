@@ -5,9 +5,13 @@ from schemas.caixa import Caixa as CaixaSchema
 from models.caixa import Caixa as CaixaModel
 from models.pedidos import Pedido as PedidoModel
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 
 router = APIRouter()
+
+fuso_brasil = ZoneInfo("America/Sao_Paulo")
+
 
 @router.get("/valid_box")
 def valid_box(db: Session = Depends(get_db)):
@@ -16,8 +20,10 @@ def valid_box(db: Session = Depends(get_db)):
     if not Caixa_aberto:
         raise HTTPException(status_code=400, detail="Nenhum caixa aberto no momento")
     
-    agora = datetime.now()
-    diferenca = agora - Caixa_aberto.data_abertura
+
+    data_abertura_br = Caixa_aberto.data_abertura.astimezone(fuso_brasil)
+    agora_brasil = datetime.now(fuso_brasil)
+    diferenca = agora_brasil - data_abertura_br
 
     horas, resto = divmod(int(diferenca.total_seconds()), 3600)
     minutos, segundos = divmod(resto, 60)
