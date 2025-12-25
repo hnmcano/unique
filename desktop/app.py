@@ -31,7 +31,6 @@ def center_window(self):
     window_geometry.moveCenter(screen_geometry.center())
     self.move(window_geometry.topLeft())
 
-
 class Dados_pedido(QMainWindow, dados_pedidos):
     def __init__(self, row, column, parent=None):
         super().__init__(parent=parent)
@@ -248,6 +247,8 @@ class AddProdutos(QMainWindow, addprodutos):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
+        center_window(self)
+
         # Esconde o botão do windows de fechar(X) a janela
         self.setWindowFlag(Qt.WindowCloseButtonHint, False)# type: ignore
 
