@@ -38,6 +38,14 @@ class Dados_pedido(QMainWindow, dados_pedidos):
         self.row = row
         self.column = column
 
+class Dados_produto(QMainWindow):
+    def __init__(self, id, nome, preco, estoque, descricao, parent=None):
+        super().__init__(parent)
+        self.setupUi(self)
+
+
+
+
 class Caixa(QMainWindow, caixa):
     def __init__(self, parent=None):
         super().__init__(parent)

@@ -1,0 +1,107 @@
+"filename", "language", "pip requirements", "Python", "JSON", "Ini", "ui", "Qrc", "JavaScript", "JavaScript JSX", "PostCSS", "Markdown", "HTML", "XML", "comment", "blank", "total"
+"c:\Users\Pichau\Documents\Unique\.idea\Unique.iml", "XML", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 10
+"c:\Users\Pichau\Documents\Unique\.idea\inspectionProfiles\profiles_settings.xml", "XML", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 6
+"c:\Users\Pichau\Documents\Unique\.idea\misc.xml", "XML", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 7
+"c:\Users\Pichau\Documents\Unique\.idea\modules.xml", "XML", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 8
+"c:\Users\Pichau\Documents\Unique\.idea\vcs.xml", "XML", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 7
+"c:\Users\Pichau\Documents\Unique\.qtcreator\project.json", "JSON", 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 7
+"c:\Users\Pichau\Documents\Unique\alembic.ini", "Ini", 0, 0, 0, 95, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 120
+"c:\Users\Pichau\Documents\Unique\backend\alembic.ini", "Ini", 0, 0, 0, 95, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 120
+"c:\Users\Pichau\Documents\Unique\backend\alembic\env.py", "Python", 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 32, 21, 102
+"c:\Users\Pichau\Documents\Unique\backend\alembic\versions\9685bd82d0be_big_bang.py", "Python", 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 8, 33
+"c:\Users\Pichau\Documents\Unique\backend\alembic\versions\dd6b0fb4f78e_incluindo_tabelas.py", "Python", 0, 134, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 8, 156
+"c:\Users\Pichau\Documents\Unique\backend\bd\__init__.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"c:\Users\Pichau\Documents\Unique\backend\bd\connection.py", "Python", 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 32
+"c:\Users\Pichau\Documents\Unique\backend\excluir_dados.py", "Python", 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 13
+"c:\Users\Pichau\Documents\Unique\backend\main.py", "Python", 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 30
+"c:\Users\Pichau\Documents\Unique\backend\models\__init__.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"c:\Users\Pichau\Documents\Unique\backend\models\caixa.py", "Python", 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 17
+"c:\Users\Pichau\Documents\Unique\backend\models\carrinhos.py", "Python", 0, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 21
+"c:\Users\Pichau\Documents\Unique\backend\models\clientes.py", "Python", 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 19
+"c:\Users\Pichau\Documents\Unique\backend\models\estabelecimento.py", "Python", 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 15
+"c:\Users\Pichau\Documents\Unique\backend\models\pedidos.py", "Python", 0, 48, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 66
+"c:\Users\Pichau\Documents\Unique\backend\models\produtos.py", "Python", 0, 31, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 12, 45
+"c:\Users\Pichau\Documents\Unique\backend\requirements.txt", "pip requirements", 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25
+"c:\Users\Pichau\Documents\Unique\backend\routers\__init__.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"c:\Users\Pichau\Documents\Unique\backend\routers\caixa.py", "Python", 0, 53, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 75
+"c:\Users\Pichau\Documents\Unique\backend\routers\carrinhos.py", "Python", 0, 58, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 75
+"c:\Users\Pichau\Documents\Unique\backend\routers\clientes.py", "Python", 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 16
+"c:\Users\Pichau\Documents\Unique\backend\routers\estabelecimento.py", "Python", 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 48
+"c:\Users\Pichau\Documents\Unique\backend\routers\pedidos.py", "Python", 0, 105, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 37, 168
+"c:\Users\Pichau\Documents\Unique\backend\routers\produtos.py", "Python", 0, 82, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 30, 122
+"c:\Users\Pichau\Documents\Unique\backend\schemas\__init__.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"c:\Users\Pichau\Documents\Unique\backend\schemas\caixa.py", "Python", 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5
+"c:\Users\Pichau\Documents\Unique\backend\schemas\carrinhos.py", "Python", 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 22
+"c:\Users\Pichau\Documents\Unique\backend\schemas\clientes.py", "Python", 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 13
+"c:\Users\Pichau\Documents\Unique\backend\schemas\estabelecimento.py", "Python", 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 8
+"c:\Users\Pichau\Documents\Unique\backend\schemas\pedidos.py", "Python", 0, 67, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 24, 103
+"c:\Users\Pichau\Documents\Unique\backend\schemas\produtos.py", "Python", 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4, 23
+"c:\Users\Pichau\Documents\Unique\backend\vercel.json", "JSON", 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15
+"c:\Users\Pichau\Documents\Unique\dados.py", "Python", 0, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 20, 76
+"c:\Users\Pichau\Documents\Unique\desktop\app.py", "Python", 0, 401, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 42, 132, 575
+"c:\Users\Pichau\Documents\Unique\desktop\connection\network_conn.py", "Python", 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 5, 28
+"c:\Users\Pichau\Documents\Unique\desktop\pictures\imagens.qrc", "Qrc", 0, 0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 1, 13
+"c:\Users\Pichau\Documents\Unique\desktop\pictures\imagens_rc.py", "Python", 0, 14584, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 47, 8, 14639
+"c:\Users\Pichau\Documents\Unique\desktop\scripts\api_externa.py", "Python", 0, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 10, 38
+"c:\Users\Pichau\Documents\Unique\desktop\scripts\clientes.py", "Python", 0, 53, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 8, 65
+"c:\Users\Pichau\Documents\Unique\desktop\scripts\estabelecimento.py", "Python", 0, 38, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 43
+"c:\Users\Pichau\Documents\Unique\desktop\scripts\pedidos.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"c:\Users\Pichau\Documents\Unique\desktop\scripts\produtos.py", "Python", 0, 134, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 25, 165
+"c:\Users\Pichau\Documents\Unique\desktop\window\form.ui", "ui", 0, 0, 0, 0, 373, 0, 0, 0, 0, 0, 0, 0, 0, 1, 374
+"c:\Users\Pichau\Documents\Unique\desktop\window\form_box\Caixa.ui", "ui", 0, 0, 0, 0, 419, 0, 0, 0, 0, 0, 0, 0, 0, 4, 423
+"c:\Users\Pichau\Documents\Unique\desktop\window\form_box\Caixa_ui.py", "Python", 0, 202, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 40, 252
+"c:\Users\Pichau\Documents\Unique\desktop\window\form_clients\clientes.ui", "ui", 0, 0, 0, 0, 401, 0, 0, 0, 0, 0, 0, 0, 0, 1, 402
+"c:\Users\Pichau\Documents\Unique\desktop\window\form_clients\clientes_ui.py", "Python", 0, 190, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 60, 260
+"c:\Users\Pichau\Documents\Unique\desktop\window\form_delivery\dados_pedidos.ui", "ui", 0, 0, 0, 0, 31, 0, 0, 0, 0, 0, 0, 0, 0, 1, 32
+"c:\Users\Pichau\Documents\Unique\desktop\window\form_delivery\dados_pedidos_ui.py", "Python", 0, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 8, 46
+"c:\Users\Pichau\Documents\Unique\desktop\window\form_delivery\delivery.ui", "ui", 0, 0, 0, 0, 217, 0, 0, 0, 0, 0, 0, 0, 0, 1, 218
+"c:\Users\Pichau\Documents\Unique\desktop\window\form_delivery\delivery_ui.py", "Python", 0, 96, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 26, 132
+"c:\Users\Pichau\Documents\Unique\desktop\window\form_estabelecimento.ui", "ui", 0, 0, 0, 0, 212, 0, 0, 0, 0, 0, 0, 0, 0, 4, 216
+"c:\Users\Pichau\Documents\Unique\desktop\window\form_estabelecimento_ui.py", "Python", 0, 129, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 38, 177
+"c:\Users\Pichau\Documents\Unique\desktop\window\form_orders\mesas.ui", "ui", 0, 0, 0, 0, 252, 0, 0, 0, 0, 0, 0, 0, 0, 1, 253
+"c:\Users\Pichau\Documents\Unique\desktop\window\form_orders\mesas_ui.py", "Python", 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 30, 140
+"c:\Users\Pichau\Documents\Unique\desktop\window\form_orders\pedido_mesa.ui", "ui", 0, 0, 0, 0, 164, 0, 0, 0, 0, 0, 0, 0, 0, 1, 165
+"c:\Users\Pichau\Documents\Unique\desktop\window\form_orders\pedido_mesa_ui.py", "Python", 0, 70, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 20, 100
+"c:\Users\Pichau\Documents\Unique\desktop\window\form_orders\pedidos_delivery.ui", "ui", 0, 0, 0, 0, 37, 0, 0, 0, 0, 0, 0, 0, 0, 1, 38
+"c:\Users\Pichau\Documents\Unique\desktop\window\form_orders\ui_pedidos_delivery.py", "Python", 0, 33, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 53
+"c:\Users\Pichau\Documents\Unique\desktop\window\form_products\add_categorias.ui", "ui", 0, 0, 0, 0, 273, 0, 0, 0, 0, 0, 0, 0, 0, 3, 276
+"c:\Users\Pichau\Documents\Unique\desktop\window\form_products\add_categorias_ui.py", "Python", 0, 117, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 26, 153
+"c:\Users\Pichau\Documents\Unique\desktop\window\form_products\add_produtos.ui", "ui", 0, 0, 0, 0, 472, 0, 0, 0, 0, 0, 0, 0, 0, 1, 473
+"c:\Users\Pichau\Documents\Unique\desktop\window\form_products\add_produtos_ui.py", "Python", 0, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 74, 306
+"c:\Users\Pichau\Documents\Unique\desktop\window\form_products\produtos.ui", "ui", 0, 0, 0, 0, 233, 0, 0, 0, 0, 0, 0, 0, 0, 1, 234
+"c:\Users\Pichau\Documents\Unique\desktop\window\form_products\produtos_ui.py", "Python", 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 28, 138
+"c:\Users\Pichau\Documents\Unique\desktop\window\unique.ui", "ui", 0, 0, 0, 0, 414, 0, 0, 0, 0, 0, 0, 0, 0, 4, 418
+"c:\Users\Pichau\Documents\Unique\desktop\window\unique_ui.py", "Python", 0, 194, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 35, 239
+"c:\Users\Pichau\Documents\Unique\desktop\zcod_Utilitarios\components\server.py", "Python", 0, 152, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 31, 193
+"c:\Users\Pichau\Documents\Unique\desktop\zcod_Utilitarios\form.ui", "ui", 0, 0, 0, 0, 373, 0, 0, 0, 0, 0, 0, 0, 0, 1, 374
+"c:\Users\Pichau\Documents\Unique\desktop\zcod_Utilitarios\ui_form.py", "Python", 0, 238, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 104, 352
+"c:\Users\Pichau\Documents\Unique\frontend\README.md", "Markdown", 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 8, 17
+"c:\Users\Pichau\Documents\Unique\frontend\eslint.config.js", "JavaScript", 0, 0, 0, 0, 0, 0, 28, 0, 0, 0, 0, 0, 0, 2, 30
+"c:\Users\Pichau\Documents\Unique\frontend\index.html", "HTML", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 0, 0, 1, 18
+"c:\Users\Pichau\Documents\Unique\frontend\package-lock.json", "JSON", 0, 0, 3258, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3259
+"c:\Users\Pichau\Documents\Unique\frontend\package.json", "JSON", 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 33
+"c:\Users\Pichau\Documents\Unique\frontend\public\vite.svg", "XML", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1
+"c:\Users\Pichau\Documents\Unique\frontend\src\App.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 0, 0, 1, 2, 17
+"c:\Users\Pichau\Documents\Unique\frontend\src\api\api.js", "JavaScript", 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 4, 11
+"c:\Users\Pichau\Documents\Unique\frontend\src\components\Carrinho.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 0, 93, 0, 0, 0, 0, 68, 16, 177
+"c:\Users\Pichau\Documents\Unique\frontend\src\components\Catalago.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 0, 96, 0, 0, 0, 0, 0, 12, 108
+"c:\Users\Pichau\Documents\Unique\frontend\src\components\Categories.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 0, 28, 0, 0, 0, 0, 2, 8, 38
+"c:\Users\Pichau\Documents\Unique\frontend\src\components\Map_produtos.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 0, 47, 0, 0, 0, 0, 0, 7, 54
+"c:\Users\Pichau\Documents\Unique\frontend\src\components\Options.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 2, 6, 29
+"c:\Users\Pichau\Documents\Unique\frontend\src\components\ProdutoData.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 35, 14, 70
+"c:\Users\Pichau\Documents\Unique\frontend\src\components\User.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 3, 11
+"c:\Users\Pichau\Documents\Unique\frontend\src\context\script.js", "JavaScript", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"c:\Users\Pichau\Documents\Unique\frontend\src\hooks\estabelecimento.js", "JavaScript", 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 6, 22
+"c:\Users\Pichau\Documents\Unique\frontend\src\hooks\pedidos.js", "JavaScript", 0, 0, 0, 0, 0, 0, 27, 0, 0, 0, 0, 0, 0, 9, 36
+"c:\Users\Pichau\Documents\Unique\frontend\src\hooks\useCarrinho.js", "JavaScript", 0, 0, 0, 0, 0, 0, 66, 0, 0, 0, 0, 0, 8, 15, 89
+"c:\Users\Pichau\Documents\Unique\frontend\src\hooks\useProdutos.js", "JavaScript", 0, 0, 0, 0, 0, 0, 28, 0, 0, 0, 0, 0, 0, 4, 32
+"c:\Users\Pichau\Documents\Unique\frontend\src\main.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 0, 4, 25
+"c:\Users\Pichau\Documents\Unique\frontend\src\pages\Finalizacao.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 0, 246, 0, 0, 0, 0, 7, 34, 287
+"c:\Users\Pichau\Documents\Unique\frontend\src\pages\HomePage.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 0, 38, 0, 0, 0, 0, 14, 4, 56
+"c:\Users\Pichau\Documents\Unique\frontend\src\styles\Carrinho.css", "PostCSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"c:\Users\Pichau\Documents\Unique\frontend\src\styles\HomePage.css", "PostCSS", 0, 0, 0, 0, 0, 0, 0, 0, 352, 0, 0, 0, 2, 54, 408
+"c:\Users\Pichau\Documents\Unique\frontend\src\styles\Pedidos.css", "PostCSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"c:\Users\Pichau\Documents\Unique\frontend\src\styles\ProdutoData.css", "PostCSS", 0, 0, 0, 0, 0, 0, 0, 0, 199, 0, 0, 0, 3, 30, 232
+"c:\Users\Pichau\Documents\Unique\frontend\vite.config.js", "JavaScript", 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 1, 2, 8
+"c:\Users\Pichau\Documents\Unique\requirements.txt", "pip requirements", 325, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 325
+"Total", "-", 350, 18029, 3311, 190, 3871, 12, 176, 633, 551, 9, 17, 39, 513, 1331, 29032
