@@ -1,11 +1,10 @@
 * {
-
     caret-color: transparent;
-
 }
 
 /* Fundo Escuro que cobre toda a tela */
 .modal-overlay {
+    background-color: rgb(39, 39, 39);
     position: fixed; /* Fixa na tela, independente da rolagem */
     top: 0;
     left: 0;
@@ -17,216 +16,178 @@
     z-index: 1000; /* Garante que fique acima de outros elementos */
 }
 
-.modal-header-handle {
-    width: 100%;
-    height: 30px;
-    text-align: center;
-    cursor: pointer;
-    border-bottom: 1px solid #383434;
-    margin-bottom: 15px;
-    user-select: none;
-}
-
-/* O Conteúdo da Janela (o Form, etc.) */
 .modal-content {
-    background: rgba(20, 19, 19, 0.973);
+    background-color: rgb(0, 0, 0);
     margin: 0;
-    width: 550px;
-    height: 600px;
-    padding: 10px;
     border-radius: 12px;
-    box-shadow: 0 0px 0px rgba(0, 0, 0, 0.2);
+    background-color: rgb(0, 0, 0);
     position: relative;
     overflow: auto;
     display: flex;
     flex-direction: column;
     justify-items: center;
     align-items: center;
-}
-
-/* O botão de fechar (X) */
-.modal-close-btn {
-    position: absolute;
-    top: 5px;
-    right: 10px;
-    width: 30px;
-    height: 30px;
-    background: none;
-    border: none;
-    border-radius: 3px;
-    font-size: 24px;
-    cursor: pointer;
-    background-color: rgb(255, 0, 0);
-    color: white;
-}
-
-.modal-close-btn:hover {
-    background-color: rgb(197, 79, 79);
-}
-
-.shoppingcartproducts{
-    background-color: black;
-    width: 480px;
-    height: 35px;
-    min-height: 35px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    border-radius: 3px;
-    border: 1px solid rgb(255, 255, 255);
-    margin-top: 5px;
-    margin-left: 20px;
-    margin-right: 20px;
-}
-
-.shoppingcartproductsdivsuperior{
-    height: 50px;
     width: 100%;
 }
 
-.titleproductsshoppingcart {
 
-    font-size: 24px;
+.modal-header-handle {
+    height: 30px;
+    text-align: center;
+    cursor: pointer;
+    border-bottom: 1px solid #000000;
+    margin-bottom: 15px;
+    user-select: none;
+}
+
+/* O Conteúdo da Janela (o Form, etc.) */
+
+
+@media (min-width: 1024px) {
+
+}
+
+.imagem-product-data {
+    margin-top: 20px;
+    width: 100vw;
+    height: 35vh;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+
+.dados-produto-data {
+    margin-top: -50px;
+    z-index: 1000;
     color: white;
-    flex-grow: 1;
-    display: flex;
+    background-color: rgb(46, 44, 44);
+    display:flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    cursor: pointer;
-
+    width: 100vw;
+    height: 100vh;
 }
 
-
-.buttondeleteitem {
-    font-size: 1.2em;
-    background-color: rgb(255, 0, 0);
-    width: 35px;
-    color: white;
-    border: none;
-    cursor: pointer;
-    margin-left: 5px;
-    margin-right: 5px;
-    border-radius: 3px;
-}
-
-.shoppingcartproducts button:hover{
-    background-color: rgb(156, 57, 57);
-}
-
-.shoppingcartproducts button:active{
-    background-color: rgb(175, 112, 112);
-}
-
-.listproductsshoppingcart{
-    margin-top: 10px;
-    width: 550px;
-    height: 600px;
-    max-height: 600px;
+.modal-name-produto-data {
+    margin-top: 40px;
+    padding: 0 20px;
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 14px;
+    text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    overflow-x: auto;
-}
+    justify-content: center;
+} 
 
-.nameproductsshoppingcart{
-    flex-grow: 1;
-    background-color: transparent;
-    color: white;
-    margin-left: 10px;
-    width: 100%;
-}
-
-.valueproductsshoppingcart{
-    background-color: black;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: right;
-    margin-right: 2px;
-    width: 100px;
-}
-
-.modal-footer{
-    background-color: rgba(20, 19, 19, 0.973);
-    height: 75px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: right;
-    margin: 0px;
-}
-
-.modifyproductsshoppingcart {
-    flex-grow: 1;
-    display: flex;
-    align-items: center;
-    justify-content: right;
-}
-
-.buttonquantitymore {
-    width: 25px;
-    height: 25px;
-    background-color: rgb(21, 255, 0);
-    border: 1px solid rgb(0, 0, 0);
-    cursor: pointer;
-    border-radius: 3px;
-}
-
-.buttonquantityless {
-    width: 25px;
-    height: 25px;
-    background-color: rgb(255, 255, 255);
-    border: 1px solid rgb(0, 0, 0);
-    cursor: pointer;
-    border-radius: 3px;
-}
-
-.quantity-number{
-    width: 35px;
-    min-width: 35px;
-    height: 25px;
-    background-color: rgb(255, 255, 255);
-    display: inline-block;
+.modal-descricao-produto-data {
+    margin-top: 20px;
+    padding: 0 20px;
     text-align: center;
-    border: 1px solid rgb(0, 0, 0);
-    border-radius: 5px;
-    line-height: 25px;
-}
-
-.buttonfinishbuy {
-    background-color: rgb(21, 255, 0);
-    height: 45px;
-    border: 1px solid rgb(0, 0, 0);
-    cursor: pointer;
-    margin-right: 10px;
-    border-radius: 5px;
-}
-
-.buttonfinishbuy:hover {
-    background-color: rgb(172, 238, 172);
-}
-
-.buttonfinishcancel {
-    background-color: rgb(255, 8, 0);
-    height: 45px;
-    border: 1px solid rgb(0, 0, 0);
-    cursor: pointer;
-    margin-right: 10px;
-    color: white;
-    border-radius: 5px;
-}
-
-.buttonfinishcancel:hover {
-    background-color: rgb(238, 172, 172);
-}
-
-.totalvalueshoppingcart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     flex-grow: 1;
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 20px;
+
+}
+
+.modal-preco-produto-data {
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 25px;
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    margin-bottom: 10px;
+    width: 90vw;
+}
+
+
+.quantidade-product-cart {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 90vw;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    height: 20px;
+
+}
+
+.contagem-quantidade {
+    height: 30px;
+    background-color: white;
+    color:#000000;
+    border-radius: 5px;
+    flex-grow: 1;
+    text-align: center;
     display: flex;
     align-items: center;
-    justify-content: left;
-    margin-left: 10px;
-    color: white;
-
+    justify-content: center;
+    margin-left: 5px;
+    margin-right: 5px;
 }
+
+.adicionar-carrinho {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: rgb(51, 255, 0);
+    border-radius: 5px;
+}
+
+.remover-carrinho {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: rgb(255, 0, 0);
+    border-radius: 5px;
+}
+
+
+.modifique {
+
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 40px;
+}
+
+
+/* Estilização do botão bonito */
+.beautiful-button {
+    background-color: rgb(133, 0, 160);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 40px;
+    width: 90vw;
+}
+
+.beautiful-button:hover {
+    background-color: rgb(160, 0, 190);
+}
+
