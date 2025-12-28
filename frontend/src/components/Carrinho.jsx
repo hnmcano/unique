@@ -34,39 +34,39 @@ function ModalShopping({closeModal, openModal, children}){
     const handleQuantidade = async(id, delta) => {
         // Pega a os dados atuais dos produtos do carrinho e atualiza a quantidade
         setProdutos(prev => {
-        // define uma variavel que irá receber a nova quantidade sem alterar o estado original
-        // Realiza um mapeamento de todos os produtos do carrinho do estado original, e o p retorna o produto e todos os seu dados
-        const novaQuantidade = prev.map(p =>
-            // Verifica se o produto original tem o mesmo id do produto clicado
-            p.produto_id === id 
-            // Se sim, copia todas as propriedades do produto atual e atualiza a propriedade quantidade, 
-            // com a quantidade atual + delta (que poder ser tanto +1 quanto -1), Math.max(1) garante que a quantidade nunca seja igual a 0 ou negativa
-            ? {...p, quantidade: Math.max(1, p.quantidade + delta) } 
-            // Se não, retorna o produto original
-            : p
-        );
+            // define uma variavel que irá receber a nova quantidade sem alterar o estado original
+            // Realiza um mapeamento de todos os produtos do carrinho do estado original, e o p retorna o produto e todos os seu dados
+            const novaQuantidade = prev.map(p =>
+                // Verifica se o produto original tem o mesmo id do produto clicado
+                p.produto_id === id 
+                // Se sim, copia todas as propriedades do produto atual e atualiza a propriedade quantidade, 
+                // com a quantidade atual + delta (que poder ser tanto +1 quanto -1), Math.max(1) garante que a quantidade nunca seja igual a 0 ou negativa
+                ? {...p, quantidade: Math.max(1, p.quantidade + delta) } 
+                // Se não, retorna o produto original
+                : p
+            );
 
-        // a variavel 'produtoAtualizado' recebe uma copia do produto atualizado, realizando uma busca no array 'novaQuantidade'
-        // validando se o produto atualizado tem o mesmo id do produto clicado
-        const produtoAtualizado = novaQuantidade.find(p => p.produto_id === id);
+            // a variavel 'produtoAtualizado' recebe uma copia do produto atualizado, realizando uma busca no array 'novaQuantidade'
+            // validando se o produto atualizado tem o mesmo id do produto clicado
+            const produtoAtualizado = novaQuantidade.find(p => p.produto_id === id);
 
-        // Realiza uma requisição HTTP para atualizar a propriedade quantidade do produto no carrinho (tabela definida no SQLlite, requisição PUT rota FastApi)
-        // No cabeçalho da requisição, define o header 'Content-Type' como 'application/json'
-        // Dados enviados no corpo da requisição, o produto atualizado
-        axios.put(`http://127.0.0.1:8000/carrinho/atualizar/quantidade/${id}/${produtoAtualizado.quantidade}`, { produtoAtualizado })
-        // Se a requisição for bem-sucedida, imprime uma mensagem de sucesso no console
-        .then(response => {
-            console.log('Quantidade atualizada com sucesso:', response.data);
-        })
-        // Se a requisição falhar, imprime uma mensagem de erro no console
-        .catch(error => {
-            // Imprime a mensagem de erro no console, juntamente com os dados do produto atualizado
-            console.log('Resposta do servidor:', produtoAtualizado);
-            // Imprime o erro no console, juntamente com a mensagem de erro
-            console.error('Erro ao atualizar a quantidade:', error);
-        });
-        // Retorna a nova quantidade
-        return novaQuantidade;
+            // Realiza uma requisição HTTP para atualizar a propriedade quantidade do produto no carrinho (tabela definida no SQLlite, requisição PUT rota FastApi)
+            // No cabeçalho da requisição, define o header 'Content-Type' como 'application/json'
+            // Dados enviados no corpo da requisição, o produto atualizado
+            axios.put(`http://127.0.0.1:8000/carrinho/atualizar/quantidade/${id}/${produtoAtualizado.quantidade}`, { produtoAtualizado })
+            // Se a requisição for bem-sucedida, imprime uma mensagem de sucesso no console
+            .then(response => {
+                console.log('Quantidade atualizada com sucesso:', response.data);
+            })
+            // Se a requisição falhar, imprime uma mensagem de erro no console
+            .catch(error => {
+                // Imprime a mensagem de erro no console, juntamente com os dados do produto atualizado
+                console.log('Resposta do servidor:', produtoAtualizado);
+                // Imprime o erro no console, juntamente com a mensagem de erro
+                console.error('Erro ao atualizar a quantidade:', error);
+            });
+            // Retorna a nova quantidade
+            return novaQuantidade;
 
         });
     }
