@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useProdutos } from "../hooks/useProdutos";
 import CategoriesLoop from "./Categories";
-import { useEstabelecimento } from "../hooks/estabelecimento";
+import { useEstabelecimento, statusEstabelecimento } from "../hooks/estabelecimento";
 
 function ContainerCategories() {
     const { base: produtos, isLoading, isFetching, error, refetch } = useProdutos();
     const [estabelecimento, setEstabelecimento ] = useEstabelecimento();
+    const status = statusEstabelecimento();
     const [CategoriesLoopList, setCategoriesLoopList] = useState(true);
     const [selectedCategories, setSelectedCategories] = useState(null);
 
@@ -45,7 +46,7 @@ function ContainerCategories() {
                 </div>
                 <div className="data">
                     <div className="status-container">
-                        <label className="status">ABERTO</label>
+                        <label className="status">{status}</label>
                     </div>
                     <div className="infos">
                         <div className="infos-data">
