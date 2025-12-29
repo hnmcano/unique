@@ -31,7 +31,7 @@ def valid_box(db: Session = Depends(get_db)):
     tempo_aberto = f"{horas:02d}:{minutos:02d}:{segundos:02d}"
 
     raise HTTPException(
-        status_code=409,
+        status_code=200,
         detail=f"{tempo_aberto}",
     )
 

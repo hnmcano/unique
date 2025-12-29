@@ -19,3 +19,22 @@ export function useEstabelecimento() {
 }
 
 
+export function statusEstabelecimento() {
+    const [ status, setStatus ] = useState("");
+
+    useEffect(() => {
+        api.get(`/caixa/valid_box`)
+            .then(response => {
+                if (response.data.status === 200) {
+                    setStatus("ABERTO");
+                } else {
+                    setStatus("FECHADO");
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao receber os dados do status:', error);
+            });
+    }, []);
+    
+    return status;
+}
