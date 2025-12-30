@@ -89,12 +89,22 @@
     position: relative;
 }
 
-.status {
+.status_aberto {
     color: white;
     text-align: center;
     background-color: rgb(31, 216, 15);
     border-radius: 5px;
     padding: 5px 10px;
+}
+
+.status_fechado {
+
+    color: white;
+    text-align: center;
+    background-color: rgb(216, 15, 15);
+    border-radius: 5px;
+    padding: 5px 10px;
+
 }
 
 .container {

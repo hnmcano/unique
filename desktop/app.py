@@ -43,9 +43,6 @@ class Dados_produto(QMainWindow):
         super().__init__(parent)
         self.setupUi(self)
 
-
-
-
 class Caixa(QMainWindow, caixa):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -110,7 +107,7 @@ class Caixa(QMainWindow, caixa):
                     url = "http://api.uniqsystems.com.br/caixa/close_box"
                     response = requests.get(url)
 
-                    if response.status_code == 200:
+                    if response.status_code == 400:
                         self.StatusCaixa.setText("Caixa Fechado")
                         self.StatusCaixa.setStyleSheet("background-color: red; color: white; font-weight: bold;")
                         self.CloseCaixa.setDisabled(True)
@@ -128,7 +125,7 @@ class Caixa(QMainWindow, caixa):
         url = "http://api.uniqsystems.com.br/caixa/valid_box"
         response = requests.get(url)
 
-        if response.status_code == 409:
+        if response.status_code == 200:
             self.CloseCaixa.setDisabled(False)
             self.StatusCaixa.setText("Caixa Aberto")
             self.StatusCaixa.setStyleSheet("background-color: green; color: white; font-weight: bold;")

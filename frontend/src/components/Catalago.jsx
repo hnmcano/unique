@@ -9,6 +9,7 @@ function ContainerCategories() {
     const status = statusEstabelecimento();
     const [CategoriesLoopList, setCategoriesLoopList] = useState(true);
     const [selectedCategories, setSelectedCategories] = useState(null);
+    const [carrinho, setCarrinho] = useState([]);
 
     if (isLoading) {
         return (
@@ -33,6 +34,8 @@ function ContainerCategories() {
         );
     };
     
+    console.log("Status de atendimento:", status);
+
 
     const handleFilterClick = (categoryName) => {
         setSelectedCategories(prevCategory => prevCategory === categoryName ? null : categoryName);
@@ -46,7 +49,7 @@ function ContainerCategories() {
                 </div>
                 <div className="data">
                     <div className="status-container">
-                        <label className="status">{status}</label>
+                        <label className={status === "ABERTO" ? "status_aberto" : "status_fechado"}>{status}</label>
                     </div>
                     <div className="infos">
                         <div className="infos-data">
