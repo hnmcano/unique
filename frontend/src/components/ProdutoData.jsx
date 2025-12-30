@@ -34,7 +34,7 @@ function ProdutoData({ open, closeModalProduto, produto }) {
                             ></path>
                             </svg>
                         </span>
-                        <span class="button-elem">
+                        <span className="button-elem">
                             <svg
                             fill="black"
                             viewBox="0 0  24 24"

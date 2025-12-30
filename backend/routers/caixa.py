@@ -20,7 +20,6 @@ def valid_box(db: Session = Depends(get_db)):
     if not Caixa_aberto:
         raise HTTPException(status_code=400, detail="Nenhum caixa aberto no momento")
     
-
     data_abertura_br = Caixa_aberto.data_abertura.astimezone(fuso_brasil)
     agora_brasil = datetime.now(fuso_brasil)
     diferenca = agora_brasil - data_abertura_br
