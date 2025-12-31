@@ -1,20 +1,62 @@
 import React, { useState, useEffect } from "react";
 import "../styles/ProdutoData.css"
+import api from "../api/api";
+import { useProdutos } from "../hooks/useProdutos";
 
-function ProdutoData({ open, closeModalProduto, produto }) {
+function ProdutoData({ open, closeModalProduto, produto, categoria}) {
+    const { base: setBaseProdutos } = useProdutos();
     const [quantidade, setQuantidade] = useState(1);
-    const [novaQuantidade, setNovaQuantidade] = useState(1);
-
-    if (!open || !produto) return null;
-
-    const imagem_url = (imagem) => `data:image/png;base64,${imagem}`;
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     const handleQuantidade = (delta) => {
         setQuantidade(prevQuantidade => {
             const novaQuantidade = prevQuantidade + delta;
             return novaQuantidade < 1 ? 1 : novaQuantidade;
         });
-    }       
+    }   
+
+    const addProduct =  async (categoria, produtos) => {
+        
+        setLoading(true);
+        setError(null);
+
+        const dadosEnviar = {
+            produto_id: produtos.produto_id,
+            cod_pdv: produtos.cod_pdv,
+            nome: produtos.nome,
+            categoria: categoria.nome_categoria,
+            preco_custo: produtos.preco_custo,
+            preco_venda: produtos.preco_venda,
+            medida: produtos.medida,
+            estoque: produtos.estoque,
+            estoque_min: produtos.estoque_min,
+            sit_estoque: produtos.sit_estoque,
+            descricao: produtos.descricao,
+            ficha_tecnica: produtos.ficha_tecnica,
+            status_venda: produtos.status_venda,
+            imagem_url: produtos.imagem,
+            quantidade: quantidade
+        };
+
+        console.log('Dados a enviar:',dadosEnviar);
+
+        try {
+            const response = await api.post(`/carrinho/adicionar-produto/${produto.produto_id}`, dadosEnviar);
+            console.log('Resposta do servidor:', response.data);
+        } catch (error) {
+            console.error('Erro ao enviar os dados:', error);
+            setError(error.message);
+            console.error('Erro ao enviar os dados:', dadosEnviar);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+
+    const imagem_url = (imagem) => `data:image/png;base64,${imagem}`;
+
+    if (!open || !produto) return null;
 
     return (
         <div className="modal-overlay" onClick={closeModalProduto}>
@@ -73,7 +115,7 @@ function ProdutoData({ open, closeModalProduto, produto }) {
                         </div>
                     </div>
                     <div className="modal-footer-produto-data">
-                        <button className="beautiful-button">Adicionar</button>
+                        <button onClick={() => addProduct(categoria, produto)} className="beautiful-button">Adicionar</button>
                     </div>
                 </div>
             </div>

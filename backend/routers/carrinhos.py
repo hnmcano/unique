@@ -39,7 +39,7 @@ async def post_product(product_id: int, format: CarrinhoSchema, db: Session = De
         db.refresh(db_product)
         return db_product
 
-    db_product.quantidade = db_product.quantidade + 1
+    db_product.quantidade = db_product.quantidade + format.quantidade
     db.commit()
     db.refresh(db_product)
     return db_product

@@ -108,7 +108,10 @@
 }
 
 .container {
-    color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
 }
 
 .filter-all {
@@ -248,9 +251,14 @@ button.buttons-filters:focus {
     width: 100vw;
     display: flex;
     align-items: center;
+    justify-content: space-evenly;
     flex-direction: column;
     background-color: rgb(46, 44, 44);
 
+}
+
+.spacing-footer {
+    flex-grow: 1;
 }
 
 .produtos-item:hover {
