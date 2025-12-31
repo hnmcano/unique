@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useProdutos } from "../hooks/useProdutos";
 import CategoriesLoop from "./Categories";
 import { useEstabelecimento, statusEstabelecimento } from "../hooks/estabelecimento";
+import Footer from "./Footer";
 
 function ContainerCategories() {
     const { base: produtos, isLoading, isFetching, error, refetch } = useProdutos();

@@ -16,5 +16,5 @@ class Carrinho(Base):
     descricao = Column(String(300), nullable=False)
     ficha_tecnica = Column(String(300), nullable=True)
     status_venda = Column(String(20), nullable=False)
-    imagem_url = Column(String(300), nullable=True)
+    imagem_url = Column(String, nullable=True)
     quantidade = Column(Integer, default=1, nullable=False)

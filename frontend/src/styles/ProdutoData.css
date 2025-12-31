@@ -326,7 +326,7 @@
 }
 
 .styled-wrapper .button-elem {
-  display: block;
+  display: flex;
   width: 30px;
   height: 30px;
   margin: 10px 28px 0 10px;
