@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useProdutos } from "../hooks/useProdutos";
+import { useCarrinho } from "../hooks/useCarrinho";
 import CategoriesLoop from "./Categories";
 import { useEstabelecimento, statusEstabelecimento } from "../hooks/estabelecimento";
 import Footer from "./Footer";
 
 function ContainerCategories() {
     const { base: produtos, isLoading, isFetching, error, refetch } = useProdutos();
+    const { quantidadeItems, fetchCarrinho } = useCarrinho();
     const [estabelecimento, setEstabelecimento ] = useEstabelecimento();
     const status = statusEstabelecimento();
     const [CategoriesLoopList, setCategoriesLoopList] = useState(true);
@@ -37,14 +39,19 @@ function ContainerCategories() {
     
     console.log("Status de atendimento:", status);
 
-
     const handleFilterClick = (categoryName) => {
         setSelectedCategories(prevCategory => prevCategory === categoryName ? null : categoryName);
     };
 
     return (
-        <div>
+        <div className="main">
             <div className="header">
+                <label className="menuButton" htmlFor="check">
+                    <input type="checkbox" id="check"/>
+                    <span className="top"></span>
+                    <span className="mid"></span>
+                    <span className="bot"></span>
+                </label>
                 <div className="logotipo-hookah">
                     <img className="logotipo" src={`data:image/png;base64,${estabelecimento?.logo_base64}`} alt="Logo"/>
                 </div>
@@ -97,7 +104,6 @@ function ContainerCategories() {
                     ))}
                 </div>
             </div>
-
             <div className="container_">
                 {CategoriesLoopList && <CategoriesLoop selectedCategories={selectedCategories} />}
             </div>

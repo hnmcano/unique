@@ -1,9 +1,11 @@
 import ProdutoData from "./ProdutoData";
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect, use} from "react";
+import { useCarrinho } from "../hooks/useCarrinho";
 
 function ProdutosAcionados({categoria}) {
     const [modalOpenProduto, setModalOpenProduto] = useState(false);
     const [produtoSelecionado, setProdutoSelecionado] = useState(null);
+    const { quantidadeItems } = useCarrinho();
 
     const imagemUrl = (imagem) => `data:image/png;base64,${imagem}`;
 
@@ -16,7 +18,7 @@ function ProdutosAcionados({categoria}) {
         setModalOpenProduto(false);
         setProdutoSelecionado(null);
     };
-        
+
     return (    
         <div className="products-gouped">             
             <ProdutoData
