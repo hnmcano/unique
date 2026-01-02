@@ -16,6 +16,12 @@
     max-height: 25vh;
 }
 
+.main {
+  background-color: rgb(46, 44, 44);
+  display: flex;
+  flex-direction: column;
+}
+
 .home {
     display: flex;
     flex-direction: row;
@@ -423,4 +429,65 @@ button.buttons-filters:focus {
   100% {
     opacity: 0;
   }
+}
+/* Estilo botão menu hamburguer */
+.menuButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 13%;
+  color: #090909;
+  width: 2.0em;
+  height: 2.0em;
+  border-radius: 0.5em;
+  background: #171717;
+  border: 1px solid #171717;
+  transition: all .3s;
+  box-shadow: inset 4px 4px 12px #3a3a3a,
+             inset -4px -4px 12px #000000;
+  z-index: 1000;
+  position: absolute;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.menuButton:hover {
+  border: 1px solid black;
+}
+
+.menuButton:active {
+  color: #666;
+  box-shadow: 6px 6px 12px #3a3a3a,
+             -6px -6px 12px #000000;
+}
+
+input[type = "checkbox"] {
+  -webkit-appearance: none;
+  display: none;
+  visibility: hidden;
+}
+
+.menuButton span {
+  width: 20px;
+  height: 4px;
+  background: rgb(200,200,200);
+  border-radius: 100px;
+  transition: 0.3s ease;
+}
+
+input[type]:checked ~ span.top {
+  transform: translateY(320%)rotate(45deg);
+  width: 20px;
+}
+
+input[type]:checked ~ span.bot {
+  transform: translateY(-110%) rotate(-45deg);
+  width: 20px;
+  box-shadow: 0 0 10px #495057;
+}
+
+input[type]:checked ~ span.mid {
+  transform: translateX(-20px);
+  opacity: 0;
 }

@@ -2,13 +2,13 @@
 import ContainerCategories from "../components/Catalago";
 import CadastrarUser from "../components/User";
 //import Options from "../components/Options";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../styles/HomePage.css"
 import { CiBoxList } from "react-icons/ci";
 import { GiShoppingCart } from "react-icons/gi";
 import { FaRegUserCircle } from "react-icons/fa";
 import ModalShopping from "../components/Carrinho";
-import Footer from "../components/Footer";
+
 
 // Função da pagina principal
 function HomePage(){
@@ -19,6 +19,7 @@ function HomePage(){
 
     const openModal = () => setModalShoppingOpen(true);
     const closeModal = () => setModalShoppingOpen(false);
+
 
     return (
     <div className="home">

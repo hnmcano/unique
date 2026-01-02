@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import "../styles/ProdutoData.css"
 import api from "../api/api";
 import { useProdutos } from "../hooks/useProdutos";
+import { useCarrinho } from "../hooks/useCarrinho";
 
 function ProdutoData({ open, closeModalProduto, produto, categoria}) {
     const { base: setBaseProdutos } = useProdutos();
     const [quantidade, setQuantidade] = useState(1);
+    const { produtos, quantidadeItems, fetchCarrinho } = useCarrinho();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -53,8 +55,14 @@ function ProdutoData({ open, closeModalProduto, produto, categoria}) {
         }
     }
 
-
     const imagem_url = (imagem) => `data:image/png;base64,${imagem}`;
+
+    useEffect(() => {
+        if (closeModalProduto) {
+            fetchCarrinho();
+            console.log('Carrinho atualizado apos fechar modal.', quantidadeItems);
+        };  
+    }, [closeModalProduto, fetchCarrinho]);
 
     if (!open || !produto) return null;
 
