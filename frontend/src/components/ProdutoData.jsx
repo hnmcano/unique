@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/ProdutoData.css"
 import api from "../api/api";
 import { useProdutos } from "../hooks/useProdutos";
 import { useCarrinho } from "../hooks/useCarrinho";
+import Button_market from "../components/Button_market";
 
 function ProdutoData({ open, closeModalProduto, produto, categoria}) {
-    const { base: setBaseProdutos } = useProdutos();
     const [quantidade, setQuantidade] = useState(1);
-    const { produtos, quantidadeItems, fetchCarrinho } = useCarrinho();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -16,28 +15,28 @@ function ProdutoData({ open, closeModalProduto, produto, categoria}) {
             const novaQuantidade = prevQuantidade + delta;
             return novaQuantidade < 1 ? 1 : novaQuantidade;
         });
-    }   
+    }
 
-    const addProduct =  async (categoria, produtos) => {
+    const addProduct =  async (categoria, produto) => {
         
         setLoading(true);
         setError(null);
 
         const dadosEnviar = {
-            produto_id: produtos.produto_id,
-            cod_pdv: produtos.cod_pdv,
-            nome: produtos.nome,
+            produto_id: produto.produto_id,
+            cod_pdv: produto.cod_pdv,
+            nome: produto.nome,
             categoria: categoria.nome_categoria,
-            preco_custo: produtos.preco_custo,
-            preco_venda: produtos.preco_venda,
-            medida: produtos.medida,
-            estoque: produtos.estoque,
-            estoque_min: produtos.estoque_min,
-            sit_estoque: produtos.sit_estoque,
-            descricao: produtos.descricao,
-            ficha_tecnica: produtos.ficha_tecnica,
-            status_venda: produtos.status_venda,
-            imagem_url: produtos.imagem,
+            preco_custo: produto.preco_custo,
+            preco_venda: produto.preco_venda,
+            medida: produto.medida,
+            estoque: produto.estoque,
+            estoque_min: produto.estoque_min,
+            sit_estoque: produto.sit_estoque,   
+            descricao: produto.descricao,
+            ficha_tecnica: produto.ficha_tecnica,
+            status_venda: produto.status_venda,
+            imagem_url: produto.imagem,
             quantidade: quantidade
         };
 
@@ -45,7 +44,11 @@ function ProdutoData({ open, closeModalProduto, produto, categoria}) {
 
         try {
             const response = await api.post(`/carrinho/adicionar-produto/${produto.produto_id}`, dadosEnviar);
+            alert('Produto adicionado ao carrinho com sucesso!');
             console.log('Resposta do servidor:', response.data);
+            const {qtd} = await fetchCarrinho();
+            console.log('Quantidade atualizada de itens no carrinho:', qtd);
+
         } catch (error) {
             console.error('Erro ao enviar os dados:', error);
             setError(error.message);
@@ -53,16 +56,11 @@ function ProdutoData({ open, closeModalProduto, produto, categoria}) {
         } finally {
             setLoading(false);
         }
+
     }
 
     const imagem_url = (imagem) => `data:image/png;base64,${imagem}`;
 
-    useEffect(() => {
-        if (closeModalProduto) {
-            fetchCarrinho();
-            console.log('Carrinho atualizado apos fechar modal.', quantidadeItems);
-        };  
-    }, [closeModalProduto, fetchCarrinho]);
 
     if (!open || !produto) return null;
 
