@@ -6,6 +6,10 @@
     padding: 0;
 }
 
+body {
+    background-color: rgb(46, 44, 44);
+}
+
 .logo {
     width: 100%;
     height: 100%;
@@ -31,8 +35,9 @@
     background-color: rgb(46, 44, 44);
 }
 
-.options {
-    display: none;
+.menu {
+    z-index: 1000;
+    position: relative;
 }
 
 .icons-options {

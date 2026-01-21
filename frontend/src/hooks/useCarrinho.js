@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, use } from "react";
 import api from "../api/api";
 
 export const useCarrinho = () => {
     const [produtos, setProdutos] = useState([]);
-    const [quantidadeItems, setQuantidadeItems] = useState([]);
+    const [quantidadeItems, setQuantidadeItems] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -26,6 +26,7 @@ export const useCarrinho = () => {
             
             setProdutos(dados);
             setQuantidadeItems(qtd);
+
             return {dados,qtd}; // Retorna os dados para uso imediato, se necessário
         } catch (err) {
             console.error('Erro ao buscar dados do carrinho:', err);
@@ -40,7 +41,6 @@ export const useCarrinho = () => {
     useEffect(() => {
         fetchCarrinho();
     }, [fetchCarrinho]);
-
 
     // 2. FUNÇÃO DE AÇÃO: Deleta todos os itens do carrinho (usada no onClick)
     const delCartShopping = async () => {
