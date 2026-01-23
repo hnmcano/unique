@@ -27,12 +27,12 @@ function Options( { setCategories, MenuOpen, setMenuOpen }) {
                         <CiBoxList className="icons" onClick={() => { setCategories(true); setFinalizacaoOpen(false);}}/>
                         <span className="name-menu">Catalogo</span>                                     
                     </div>
-                </div>
+                </div>  
                 {/*Icone/Button para abrir carrinho, caminho componente: /components/Carrinho, componente será aberto como modal.*/}
                 <div className="icons-options"> 
-                    <div onClick={openModal} className="options-container-name-icons">
+                    <div className="options-container-name-icons">
                         {/* Ao clicar no botão carrinho é enviado o estado do modal para função openModal, dependendo do estado ele será aberto ou fechado  */}
-                        <GiShoppingCart className="icons"/> <ModalShopping openModal={modalShoppingOpen} closeModal={closeModal}></ModalShopping>
+                        <GiShoppingCart onClick={openModal} className="icons"/> <ModalShopping openModal={modalShoppingOpen} closeModal={closeModal}></ModalShopping>
                         <span className="name-menu">Carrinho</span>                                           
                     </div>
                 </div>
@@ -42,9 +42,10 @@ function Options( { setCategories, MenuOpen, setMenuOpen }) {
                         {/* Ao clicar no botão finalizar compra é enviado o estado do componente para funcao setFinalizacaoOpen, dependendo do estado ele será aberto ou fechado  */}
                         <FaRegUserCircle className="icons"/>
                         <span className="name-menu">Usuario</span>
-                        
                     </div>
                 </div>
+                <div style={{"flexGrow": "1"}}></div>
+                <button></button>
             </div>
         </aside>
         </>

@@ -1,7 +1,7 @@
 // importando as funções de estado, referencia e efeitos do React
 import React, { useRef, useState, useEffect} from "react";
 // importando axios, função de requisições HTTP
-import axios from "axios";
+import api from "../api/api";
 // importando estilo do modal carrinho em ".css"
 import "../styles/Carrinho.css"
 // importando função de Draggable para referenciar no DOM e permitir arrastar o modal
@@ -53,9 +53,9 @@ function ModalShopping({closeModal, openModal, children}){
             // Realiza uma requisição HTTP para atualizar a propriedade quantidade do produto no carrinho (tabela definida no SQLlite, requisição PUT rota FastApi)
             // No cabeçalho da requisição, define o header 'Content-Type' como 'application/json'
             // Dados enviados no corpo da requisição, o produto atualizado
-            axios.put(`http://127.0.0.1:8000/carrinho/atualizar/quantidade/${id}/${produtoAtualizado.quantidade}`, { produtoAtualizado })
+            api.put(`/carrinho/atualizar/quantidade/${id}/${produtoAtualizado.quantidade}`, { produtoAtualizado })
             // Se a requisição for bem-sucedida, imprime uma mensagem de sucesso no console
-            .then(response => {
+            .then(response => { 
                 console.log('Quantidade atualizada com sucesso:', response.data);
             })
             // Se a requisição falhar, imprime uma mensagem de erro no console
@@ -116,56 +116,67 @@ function ModalShopping({closeModal, openModal, children}){
                 <div className="modal-header-handle">
                     {/* O cabeçalho do modal contém o título e o botão de fechar */}
                     <label className="titleproductsshoppingcart">Carrinho de Compras</label>
-                    {/* O botão de fechar */}
-                    <button className="modal-close-btn" onClick={closeModal}>&times;</button> 
                 </div>
                 
                 {/* O conteúdo que for passado (ex: seu formulário) */}
                 {children}
 
                 {/* Lista de produtos no carrinho */}
-                <div className="listproductsshoppingcart">
+                <div className="list-products-shopping-cart">
                     {/* Mapeia os produtos no carrinho, e mostra o nome, preco e quantidade */}
                     {produtos.map((p) => (
                         // Cria uma div para cada produto, com o nome, preco e quantidade, como chave o ID do produto
-                        <div className="shoppingcartproducts" key={p.produto_id}>
+                        <div className="shopping-cart-products" key={p.produto_id}>
                             {/* O nome, preco e quantidade */}
-                            <div className="nameproductsshoppingcart">{p.nome}</div>
-                            <div className=""></div>
-                            <div className="valueproductsshoppingcart">
-                            {/* O preco e quantidade vezes a quantidade, fixado em duas casas decimais */}
-                            <label>R${(p.preco_venda * p.quantidade).toFixed(2)}</label>
-                            </div>
-                            {/* O botão para aumentar a quantidade, diminuir a quantidade e remover o produto */}
-                            <div className="modifyproductsshoppingcart">
-                            {/* botão para aumentar a quantidade */}                                 
-                            <button onClick={() => handleQuantidade(p.produto_id, 1)} className="buttonquantitymore">+</button>
-                            {/* label para mostrar a quantidade atualizada */}
-                            <label className="quantity-number">{p.quantidade}</label>
-                            {/* botão para diminuir a quantidade */}
-                            <button onClick={() => handleQuantidade(p.produto_id, -1)} className="buttonquantityless">-</button>
-                            {/* botão para remover o produto */}    
-                            <button onClick={() => handleRemover(p.produto_id)} className="buttondeleteitem">-</button>
+                            <div className="name-products-shopping-cart">{p.nome}</div>
+                            <div className="value-and-quantity">
+                                {/* O botão para aumentar a quantidade, diminuir a quantidade e remover o produto */}
+                                <div className="modify-products-shopping-cart">
+                                    {/* botão para aumentar a quantidade */}                                 
+                                    <button onClick={() => handleQuantidade(p.produto_id, 1)} className="button-quantity-more">+</button>
+                                    {/* label para mostrar a quantidade atualizada */}
+                                    <label className="quantity-number">{p.quantidade}</label>
+                                    {/* botão para diminuir a quantidade */}
+                                    <button onClick={() => handleQuantidade(p.produto_id, -1)} className="button-quantity-less">-</button>
+                                    {/* botão para remover o produto */}    
+                                    <button onClick={() => handleRemover(p.produto_id)} className="button-delete-item">&times;</button>
+                                </div>
+                                <div className="value-products-shopping-cart">
+                                    {/* O preco e quantidade vezes a quantidade, fixado em duas casas decimais */}
+                                    <label>R${(p.preco_venda * p.quantidade).toFixed(2)}</label>
+                                </div>
                             </div>
                         </div>
                     ))}
-                    <div style={{"flex-grow": "1"}}></div>
+                    <div style={{flexGrow: 1}}></div>
                 </div>
+                
                 {/* Rodapé do modal */}
                 <div className="modal-footer">
                     {/* O total por valores e quantidade de produtos unicos */}
-                    <div className="totalvalueshoppingcart">
+                    <div className="total-values-shopping-cart">
                         {/* label para o total por valor */}
-                        <label className="totalvalueshoppingcart">Total: R$ {total.toFixed(2)}</label>
+                        <div>
+                            <label className="total-value-shopping-cart-total">Total: R$ {total.toFixed(2)}</label>
+                        </div>
                         {/* label para a quantidade de produtos no carrinho (unicos) */}
-                        <label className="totalvalueshoppingcart">Qtd: {quantidadeItems}</label>
+                        <div>
+                            <label className="total-values-shopping-cart-qtd">Qtd: {quantidadeItems}</label>
+                        </div>
                     </div>
                     {/* Botão para finalizar compra */}
-                    <Link to="/conclusao">
-                        <button onClick={() => closeModal()} className="buttonfinishbuy">Finalizar Compra</button>
-                    </Link>
-                    {/* Botão para excluir carrinho */}
-                    <button onClick={() => delCartShopping()} className="buttonfinishcancel" disabled={isLoading}>Excluir Carrinho</button>
+                    <div className="finish-conclusion">
+                        <Link to="/conclusao">
+                            <button onClick={() => closeModal()}  class="pushable">
+                                <span class="shadow"></span>
+                                <span class="edge"></span>
+                                <span class="front"> Finalizar Pedido </span>
+                            </button>
+
+                        </Link>
+                        {/* Botão para excluir carrinho */}
+                        {/*<button onClick={() => delCartShopping()} className="button-finish-cancel" disabled={isLoading}>Excluir Carrinho</button>*/}
+                    </div>
                 </div>
             </div>
         </Draggable>

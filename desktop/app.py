@@ -1,4 +1,4 @@
-from scripts.produtos import (salvar_dados_produtos, inserir_imagem, exibir_confirmacao_exclusao, adicionar_categoria, preencher_dropdown_categoria, excluir_categoria)
+from scripts.produtos import (salvar_dados_produtos, inserir_imagem, exibir_confirmacao_exclusao, adicionar_categoria, preencher_dropdown_categoria, excluir_categoria, excluir_produto_base_dados)
 from scripts.estabelecimento import (enviar_dados_estabelecimento)
 from scripts.clientes import (salvar_dados_clientes)
 from scripts.api_externa import (buscar_cep)
@@ -9,6 +9,7 @@ from window.form_delivery.delivery_ui import Ui_MainWindow as delivery
 from window.form_delivery.dados_pedidos_ui import Ui_MainWindow as dados_pedidos
 from window.form_products.add_categorias_ui import Ui_Category as addcategorias
 from window.form_products.add_produtos_ui import Ui_MainWindow as addprodutos
+from window.form_products.data_produto_ui import Ui_MainWindow as dataproduto
 from window.form_products.produtos_ui import Ui_MainWindow as produtos
 from window.form_clients.clientes_ui import Ui_MainWindow as clientes
 from window.form_box.Caixa_ui import Ui_CAIXA as caixa
@@ -21,6 +22,7 @@ from PySide6.QtGui import QPixmap, QGuiApplication
 from PySide6.QtWidgets import (QMessageBox, QFileDialog)
 import requests
 import sys
+import base64
 
 def center_window(self):
 
@@ -38,10 +40,53 @@ class Dados_pedido(QMainWindow, dados_pedidos):
         self.row = row
         self.column = column
 
-class Dados_produto(QMainWindow):
-    def __init__(self, id, nome, preco, estoque, descricao, parent=None):
+class Dados_produto(QMainWindow, dataproduto):
+    def __init__(self, produto: dict, parent=None):
         super().__init__(parent)
         self.setupUi(self)
+        
+        self.produto = produto
+
+        self.nome_input.setText(produto["nome"])
+        self.cod_pdv_input.setText(produto["cod_pdv"])
+        self.preco_custo_input.setText(str(produto["preco_custo"]))
+        self.preco_venda_input.setText(str(produto["preco_venda"]))
+        self.estoque_min_input.setText(str(produto["estoque_min"]))
+        self.Estoque_input.setText(str(produto["estoque"]))
+        grupoMedidaTexto = produto["medida"]
+        grupoStatusTexto = produto["status_venda"]
+
+        for i in self.GroupMedida.buttons():
+            if i.text() == grupoMedidaTexto:
+                i.setChecked(True)
+                break
+
+        for i in self.GroupStatus.buttons():
+            if i.text() == grupoStatusTexto:
+                i.setChecked(True)
+                break
+
+        self.desc_input.setPlainText(produto["descricao"])
+        
+        data = base64.b64decode(produto["imagem"])
+        pixmap = QPixmap()
+        pixmap.loadFromData(data)
+        self.image_label.setPixmap(pixmap)
+
+        self.selecionar_imagem.clicked.connect(lambda: inserir_imagem(self))
+        self.limp_img.clicked.connect(self.limpar_imagem)
+
+        self.produto_id = produto["id"]
+
+        self.excluir_produtos.clicked.connect(self.excluir_produto_atual)
+
+
+    def limpar_imagem(self):
+        self.image_label.clear()
+
+    def excluir_produto_atual(self):
+        excluir_produto_base_dados(self.produto_id, self)
+        self.close()
 
 class Caixa(QMainWindow, caixa):
     def __init__(self, parent=None):
@@ -297,6 +342,7 @@ class Produtos(QMainWindow, produtos):
         self.tableWidget.setSelectionMode(QTableWidget.SingleSelection)
 
         self.tableWidget.setEditTriggers(QTableWidget.NoEditTriggers)
+        self.tableWidget.cellClicked.connect(self.abrir_dados_produto)
         
         try:
             response = requests.get("http://api.uniqsystems.com.br/produtos/desktop/table")
@@ -306,11 +352,14 @@ class Produtos(QMainWindow, produtos):
             self.tableWidget.setRowCount(len(products))
             linha_atual = 0
 
+            print(products)
+
             for i in products:
 
                 self.tableWidget.setRowHeight(linha_atual, 50)
 
                 item_ordenavel_id = QTableWidgetItem(str(i["id"]))
+                item_ordenavel_id.setData(Qt.UserRole, i)
                 self.tableWidget.setItem(linha_atual, 0, item_ordenavel_id)
 
                 item_ordenavel_cod_pdv = QTableWidgetItem(str(i["cod_pdv"]))
@@ -353,6 +402,12 @@ class Produtos(QMainWindow, produtos):
     def abrir_add_produto(self):
         self.add_produto_window = AddProdutos(parent=self)# type: ignore
         self.add_produto_window.show()# type: ignore
+
+    def abrir_dados_produto(self, row, column):
+        item = self.tableWidget.item(row, 0)
+        produto = item.data(Qt.UserRole)
+        self.dados_produto_window = Dados_produto(produto=produto, parent=self)
+        self.dados_produto_window.show()
 
 # classe para gerenciar mesas
 class Mesas(QMainWindow, mesas):

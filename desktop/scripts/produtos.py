@@ -162,3 +162,35 @@ def excluir_categoria(parent=None, categoria_selecionada=None):
     except Exception as e:
         QMessageBox.critical(parent, "Erro", f"Erro ao excluir categoria: {str(e)}")
 
+def excluir_produto_base_dados(id, parent=None):
+
+    confirmacao_exclusao = QMessageBox(parent)
+    confirmacao_exclusao.setIcon(QMessageBox.Question)
+    confirmacao_exclusao.setWindowTitle("Confirmar Exclusão")
+    confirmacao_exclusao.setText("Tem certeza de que deseja excluir este produto?")
+    confirmacao_exclusao.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+
+    resposta = confirmacao_exclusao.exec()
+
+    if resposta == QMessageBox.No:
+        return
+
+    try:
+        response = requests.delete(
+            f"http://api.uniqsystems.com.br/produtos/desktop/delete-product-data-base/{id}"
+        )
+
+        if response.status_code == 200:
+            QMessageBox.information(
+                parent, "Sucesso", "Produto excluído com sucesso!"
+            )
+        else:
+            QMessageBox.critical(
+                parent, "Erro",
+                f"Falha ao excluir produto (status {response.status_code})"
+            )
+
+    except requests.RequestException as e:
+        QMessageBox.critical(
+            parent, "Erro", f"Erro ao excluir produto: {str(e)}"
+        )

@@ -8,5 +8,8 @@
     <file>pedido-online.png</file>
     <file>inventario.png</file>
     <file>sair.png</file>
+    <file>excluir.png</file>
+    <file>salvar-dados.png</file>
+    <file>atualizar.png</file>
   </qresource>
 </RCC>

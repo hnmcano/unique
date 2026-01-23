@@ -3,7 +3,7 @@ from schemas.produtos import Produto as ProdutoSchema
 from schemas.produtos import Categoria as CategoriaSchema
 from models.produtos import Categoria as CategoryModel
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from bd.connection import get_db
 from sqlalchemy import join
@@ -87,6 +87,15 @@ async def list_products(db: Session = Depends(get_db)):
     else:
         return data.to_dict("records")
     
+
+@router.delete("/desktop/delete-product-data-base/{product_id}")
+async def delete_product(product_id: str, db: Session = Depends(get_db)):
+    db_product = db.query(ProductModel).filter(ProductModel.id == product_id).first()
+    if db_product:
+        db.delete(db_product)
+        db.commit()
+        raise HTTPException(status_code=200, detail="Produto excluido com sucesso")
+    raise HTTPException(status_code=404, detail="Produto nao encontrado")
 
 ############################################# CATEGORIAS ################################################
 
