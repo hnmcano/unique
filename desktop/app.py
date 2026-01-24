@@ -1,4 +1,4 @@
-from scripts.produtos import (salvar_dados_produtos, inserir_imagem, exibir_confirmacao_exclusao, adicionar_categoria, preencher_dropdown_categoria, excluir_categoria, excluir_produto_base_dados)
+from scripts.produtos import (atualizar_dados_produtos, salvar_dados_produtos, inserir_imagem, exibir_confirmacao_exclusao, adicionar_categoria, preencher_dropdown_categoria, excluir_categoria, excluir_produto_base_dados)
 from scripts.estabelecimento import (enviar_dados_estabelecimento)
 from scripts.clientes import (salvar_dados_clientes)
 from scripts.api_externa import (buscar_cep)
@@ -24,6 +24,7 @@ import requests
 import sys
 import base64
 
+#funcao para centralizar a janelas
 def center_window(self):
 
     screen = QGuiApplication.primaryScreen()
@@ -33,6 +34,7 @@ def center_window(self):
     window_geometry.moveCenter(screen_geometry.center())
     self.move(window_geometry.topLeft())
 
+# class para visualizar dados de pedidos
 class Dados_pedido(QMainWindow, dados_pedidos):
     def __init__(self, row, column, parent=None):
         super().__init__(parent=parent)
@@ -40,6 +42,7 @@ class Dados_pedido(QMainWindow, dados_pedidos):
         self.row = row
         self.column = column
 
+# class para visualizar dados de produtos
 class Dados_produto(QMainWindow, dataproduto):
     def __init__(self, produto: dict, parent=None):
         super().__init__(parent)
@@ -47,12 +50,17 @@ class Dados_produto(QMainWindow, dataproduto):
         
         self.produto = produto
 
+        preencher_dropdown_categoria(self)
+
         self.nome_input.setText(produto["nome"])
         self.cod_pdv_input.setText(produto["cod_pdv"])
         self.preco_custo_input.setText(str(produto["preco_custo"]))
         self.preco_venda_input.setText(str(produto["preco_venda"]))
         self.estoque_min_input.setText(str(produto["estoque_min"]))
         self.Estoque_input.setText(str(produto["estoque"]))
+
+        self.categoria_combo.setCurrentText(produto["nome_categoria"])
+        
         grupoMedidaTexto = produto["medida"]
         grupoStatusTexto = produto["status_venda"]
 
@@ -75,10 +83,8 @@ class Dados_produto(QMainWindow, dataproduto):
 
         self.selecionar_imagem.clicked.connect(lambda: inserir_imagem(self))
         self.limp_img.clicked.connect(self.limpar_imagem)
-
-        self.produto_id = produto["id"]
-
         self.excluir_produtos.clicked.connect(self.excluir_produto_atual)
+        self.atualizar_dados.clicked.connect(lambda: atualizar_dados_produtos(self))
 
 
     def limpar_imagem(self):
@@ -88,6 +94,7 @@ class Dados_produto(QMainWindow, dataproduto):
         excluir_produto_base_dados(self.produto_id, self)
         self.close()
 
+# class para gerenciar caixa
 class Caixa(QMainWindow, caixa):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -152,11 +159,35 @@ class Caixa(QMainWindow, caixa):
                     url = "http://api.uniqsystems.com.br/caixa/close_box"
                     response = requests.get(url)
 
-                    if response.status_code == 400:
+                    if response.status_code == 200:
                         self.StatusCaixa.setText("Caixa Fechado")
                         self.StatusCaixa.setStyleSheet("background-color: red; color: white; font-weight: bold;")
                         self.CloseCaixa.setDisabled(True)
                         self.CloseCaixa.setStyleSheet("background-color: rgb(91, 91, 91); color: black; font-weight: bold;")
+                        self.open_caixa.setDisabled(False)
+                        self.open_caixa.setStyleSheet("""QPushButton {
+                            background: qlineargradient(
+                                spread:pad,
+                                x1:0, y1:0,
+                                x2:1, y2:0,
+                                stop:0 #393939,
+                                stop:1 #7d7d7d
+                            );
+                            color: white;
+                            border: 2px solid #282828;
+                            border-radius: 6px;
+                            padding: 6px 12px;
+                        }
+
+                        QPushButton::hover{
+                            background: qlineargradient(
+                                spread:pad,
+                                x1:0, y1:0,
+                                x2:1, y2:0,
+                                stop:0 #7d7d7d,
+                                stop:1 #393939
+                            );
+                        }""")
                     else:
                         QMessageBox.critical(self, "Erro", f"{response.json().get('detail')}")
                 except Exception as e:
@@ -174,14 +205,39 @@ class Caixa(QMainWindow, caixa):
             self.CloseCaixa.setDisabled(False)
             self.StatusCaixa.setText("Caixa Aberto")
             self.StatusCaixa.setStyleSheet("background-color: green; color: white; font-weight: bold;")
+            self.open_caixa.setDisabled(True)
+            self.open_caixa.setStyleSheet("background-color: rgb(91, 91, 91); color: black; font-weight: bold;")
         else:
             self.CloseCaixa.setDisabled(True)
             self.CloseCaixa.setStyleSheet("background-color: rgb(91, 91, 91); color: black; font-weight: bold;")
             self.StatusCaixa.setText("Caixa Fechado")
             self.StatusCaixa.setStyleSheet("background-color: red; color: white; font-weight: bold;")
-            
-class WidgetProdutoDetalhe(QWidget):
-    def __init__(self, id, nome, preco, estoque, descricao, parent=None):
+            self.open_caixa.setDisabled(False)
+            self.open_caixa.setStyleSheet("""QPushButton {
+                background: qlineargradient(
+                    spread:pad,
+                    x1:0, y1:0,
+                    x2:1, y2:0,
+                    stop:0 #393939,
+                    stop:1 #7d7d7d
+                );
+                color: white;
+                border: 2px solid #282828;
+                border-radius: 6px;
+                padding: 6px 12px;
+            }
+
+            QPushButton::hover{
+                background: qlineargradient(
+                    spread:pad,
+                    x1:0, y1:0,
+                    x2:1, y2:0,
+                    stop:0 #7d7d7d,
+                    stop:1 #393939
+                );
+            }""")
+
+
         super().__init__(parent)
 
 # Classe para adicionar categorias
@@ -330,6 +386,8 @@ class Produtos(QMainWindow, produtos):
 
         columns = ["ID","CODIGO PDV", "CATEGORIA", "NOME", "PREÇO DE CUSTO", "PREÇO DE VENDA","ESTOQUE MIN", "ESTOQUE", "MEDIDA", "STATUS"]
 
+        self.FilterProducts.textChanged.connect(self.filtrar_produtos)
+
         quantidade_columns = len(columns)
         self.tableWidget.setColumnCount(quantidade_columns)
         self.tableWidget.setHorizontalHeaderLabels(columns)
@@ -398,6 +456,7 @@ class Produtos(QMainWindow, produtos):
 
         # Ao clicar no botão adicionar produto, abre a janela de adicionar produtos
         self.add_products.clicked.connect(self.abrir_add_produto)
+        self.add_categoria.clicked.connect(self.abrir_categoria)
 
     def abrir_add_produto(self):
         self.add_produto_window = AddProdutos(parent=self)# type: ignore
@@ -408,6 +467,18 @@ class Produtos(QMainWindow, produtos):
         produto = item.data(Qt.UserRole)
         self.dados_produto_window = Dados_produto(produto=produto, parent=self)
         self.dados_produto_window.show()
+
+    def abrir_categoria(self):
+        self.categoria_window = AddCategory(parent=self)
+        self.categoria_window.show()
+
+    def filtrar_produtos(self, text):
+        for row in range(self.tableWidget.rowCount()):
+            item = self.tableWidget.item(row, 3)
+            if text.lower() in item.text().lower():
+                self.tableWidget.showRow(row)
+            else:
+                self.tableWidget.hideRow(row)
 
 # classe para gerenciar mesas
 class Mesas(QMainWindow, mesas):
@@ -464,6 +535,7 @@ class Mesas(QMainWindow, mesas):
             botao_a_restaurar.setStyleSheet("""
             """)
 
+# classe para gerenciar delivery
 class Delivery(QMainWindow, delivery):
     resposta_delivery = Signal(str)
 
@@ -535,6 +607,7 @@ class Delivery(QMainWindow, delivery):
         self.dados_pedidos = Dados_pedido(row=row, column=column, parent=self)
         self.dados_pedidos.show()
 
+# classe para gerenciar estabelecimento
 class EstabelecimentoConfig(QMainWindow, estabelecimento):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -620,7 +693,7 @@ class Uniq(QMainWindow, uniq):
 
         response = requests.get(url)
 
-        if response.status_code == 409:
+        if response.status_code == 200:
             tempo_aberto = response.json().get("detail")
             QMessageBox.information(self, "Caixa Aberto", f"Seu caixa esta aberto há {tempo_aberto}")
 
@@ -628,6 +701,7 @@ class Uniq(QMainWindow, uniq):
         self.estabelecimento_window = EstabelecimentoConfig(parent=self)
         self.estabelecimento_window.show()
 
+# funcao principal da aplicação
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = Uniq()

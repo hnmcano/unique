@@ -20,6 +20,7 @@ def salvar_dados_produtos(parent=None):
         estoque_min = int(parent.estoque_min_input.text())# type: ignore
         descricao_ = parent.desc_input.toPlainText()# type: ignore
         pixmap = QPixmap(parent.pixmap_original)
+        
 
         buffer = QBuffer()
         buffer.open(QIODevice.OpenModeFlag.WriteOnly)
@@ -194,3 +195,66 @@ def excluir_produto_base_dados(id, parent=None):
         QMessageBox.critical(
             parent, "Erro", f"Erro ao excluir produto: {str(e)}"
         )
+
+def atualizar_dados_produtos(parent=None):
+        
+        produto_id = parent.produto["id"]
+
+        categoria_id = parent.categoria_combo.currentData()
+        cod_pdv = parent.cod_pdv_input.text()# type: ignore
+        nome = parent.nome_input.text()# type: ignore
+        medida = parent.GroupMedida.checkedButton().text()# type: ignore  
+        status = parent.GroupStatus.checkedButton().text()# type: ignore 
+        preco_custo = float(parent.preco_custo_input.text().replace(",", "."))# type: ignore
+        preco_venda = float(parent.preco_venda_input.text().replace(",", "."))# type: ignore
+        estoque = int(parent.Estoque_input.text())# type: ignore
+        estoque_min = int(parent.estoque_min_input.text())# type: ignore
+        descricao_ = parent.desc_input.toPlainText()# type: ignore
+        pixmap = QPixmap(parent.image_label.pixmap())
+        
+
+        buffer = QBuffer()
+        buffer.open(QIODevice.OpenModeFlag.WriteOnly)
+        pixmap.save(buffer, "PNG")
+        image_data = buffer.data().toBase64().data()
+        imagem_data_string = image_data.decode("utf-8")
+
+        if parent.GroupMedida.checkedButton() is None or parent.GroupStatus.checkedButton() is None:
+            QMessageBox.warning(parent, "Erro", "Selecione uma unidade de medida e um status.")
+            return
+
+        try:
+            QMessageBox.information(parent, "Aguarde", "Enviando dados para o servidor!")
+            url= QUrl(f"http://api.uniqsystems.com.br/produtos/desktop/alter-product-data-base/{produto_id}")
+            data_json = {
+                    "categoria_id": f"{categoria_id}",
+                    "cod_pdv": f"{cod_pdv}",
+                    "nome": f"{nome}",
+                    "preco_custo": preco_custo,
+                    "preco_venda": preco_venda,
+                    "medida": f"{medida}",
+                    "estoque": estoque,
+                    "estoque_min": estoque_min,
+                    "descricao": f"{descricao_}",
+                    "ficha_tecnica": "Não",
+                    "status_venda": f"{status}",
+                    "imagem_name": f"{nome}.png",
+                    "imagem": f"{imagem_data_string}"
+            }
+
+           
+            json_data=json.dumps(data_json).encode("utf-8")
+            data_to_send=QByteArray(json_data)
+            request= QNetworkRequest(url)
+            request.setHeader(QNetworkRequest.ContentTypeHeader, "application/json")# type: ignore
+            reply= parent.network_manager.post(request, data_to_send)# type: ignore
+            reply.finished.connect(lambda: handle_network_reply(reply, parent))
+
+            QMessageBox.information(parent, "Sucesso", "Produto atualizado com sucesso!")
+            
+        except ValueError:
+            QMessageBox.warning(parent, "Erro", "A informação está incorreta.")
+        except Exception as e:
+            QMessageBox.critical(parent, "Erro de BD", f"Ocorreu um erro: {e}")
+            # Limpa o objeto de resposta para evitar vazamento de memória (melhor prática)
+            reply.deleteLater()
