@@ -242,12 +242,13 @@ def atualizar_dados_produtos(parent=None):
                     "imagem": f"{imagem_data_string}"
             }
 
+            print(data_json)
            
             json_data=json.dumps(data_json).encode("utf-8")
             data_to_send=QByteArray(json_data)
             request= QNetworkRequest(url)
             request.setHeader(QNetworkRequest.ContentTypeHeader, "application/json")# type: ignore
-            reply= parent.network_manager.post(request, data_to_send)# type: ignore
+            reply= parent.network_manager.put(request, data_to_send)# type: ignore
             reply.finished.connect(lambda: handle_network_reply(reply, parent))
 
             QMessageBox.information(parent, "Sucesso", "Produto atualizado com sucesso!")

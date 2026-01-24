@@ -48,6 +48,8 @@ class Dados_produto(QMainWindow, dataproduto):
         super().__init__(parent)
         self.setupUi(self)
         
+        self.network_manager = QNetworkAccessManager(self)
+
         self.produto = produto
 
         preencher_dropdown_categoria(self)
@@ -409,8 +411,6 @@ class Produtos(QMainWindow, produtos):
 
             self.tableWidget.setRowCount(len(products))
             linha_atual = 0
-
-            print(products)
 
             for i in products:
 

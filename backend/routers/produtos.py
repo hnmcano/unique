@@ -101,10 +101,12 @@ async def delete_product(product_id: str, db: Session = Depends(get_db)):
 
 @router.put("/desktop/alter-product-data-base/{product_id}")
 async def update_product(product_id: str, product: ProdutoSchema, db: Session = Depends(get_db)):
-    db_product = db.query(ProductModel).filter(ProductModel.id == product_id).first()    
+    db_product = db.query(ProductModel).filter(ProductModel.id == product_id).first()
+
     if db_product:
         db_product = ProductModel(**product.dict())
         db.commit()
+        db.refresh(db_product)
         return {"message": "Produto atualizado com sucesso"}
     return {"message": "Produto nao encontrado"}
 
