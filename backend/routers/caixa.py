@@ -56,7 +56,7 @@ def close_box(db: Session = Depends(get_db)):
     if caixa_aberto and not produtos_pendentes:
         caixa_aberto.status = "FECHADO"
         db.commit()
-        return {"message": "Caixa fechado com sucesso"}
+        raise HTTPException(status_code=200, detail="Caixa fechado com sucesso")
     else:
         raise HTTPException(status_code=400, detail="Existem pedidos pendentes no caixa, finalize-os antes de fechar o caixa")
     

@@ -27,10 +27,11 @@ async def get_product(product: ProdutoSchema, db: Session = Depends(get_db)):
             db_product.imagem_name = "default.png"
             db_product.imagem = encoded_image
 
-    db.add(db_product)
-    db.commit()
-    db.refresh(db_product)
-    return db_product
+    if db_product is None:
+        db.add(db_product)
+        db.commit()
+        db.refresh(db_product)
+        return db_product
 
 # Rota para popular tabela de produtos disponivel no desktop na aba produtos
 @router.get("/desktop/table")
@@ -96,6 +97,16 @@ async def delete_product(product_id: str, db: Session = Depends(get_db)):
         db.commit()
         raise HTTPException(status_code=200, detail="Produto excluido com sucesso")
     raise HTTPException(status_code=404, detail="Produto nao encontrado")
+
+
+@router.put("/desktop/alter-product-data-base/{product_id}")
+async def update_product(product_id: str, product: ProdutoSchema, db: Session = Depends(get_db)):
+    db_product = db.query(ProductModel).filter(ProductModel.id == product_id).first()    
+    if db_product:
+        db_product = ProductModel(**product.dict())
+        db.commit()
+        return {"message": "Produto atualizado com sucesso"}
+    return {"message": "Produto nao encontrado"}
 
 ############################################# CATEGORIAS ################################################
 
