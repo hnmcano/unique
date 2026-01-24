@@ -103,12 +103,16 @@ async def delete_product(product_id: str, db: Session = Depends(get_db)):
 async def update_product(product_id: str, product: ProdutoSchema, db: Session = Depends(get_db)):
     db_product = db.query(ProductModel).filter(ProductModel.id == product_id).first()
 
-    if db_product:
-        db_product = ProductModel(**product.dict())
-        db.commit()
-        db.refresh(db_product)
-        return {"message": "Produto atualizado com sucesso"}
-    return {"message": "Produto nao encontrado"}
+    if not db_product:
+        raise HTTPException(status_code=404, detail="Produto nao encontrado")
+
+    for key, value in product.dict(exclude_unset=True).items():
+        setattr(db_product, key, value)
+
+    db.commit()
+    db.refresh(db_product)
+    return {"message": "Produto atualizado com sucesso"}
+
 
 ############################################# CATEGORIAS ################################################
 
