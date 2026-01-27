@@ -1,0 +1,55 @@
+.Formulario-Pedidos {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    margin-bottom: 30px;
+    border-radius: 20px;
+    padding: 25px;
+    border: 2px solid black;
+}
+
+.Grupo-Formulario {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    width: 100%;
+    padding: auto;
+}
+
+.Entrada-Formulario {
+    border-radius: 10px;
+    border: 1px solid black;
+    padding: 5px;
+    width: 100%;
+    font-size: 16px;
+    background-color: black;
+    box-shadow: 0px 10px 20px rgba(0,0,0,0.17);
+    color: white;
+    font-family: 'montserrat', sans-serif;
+}
+
+
+.Names-Formulario {
+    font-size: 16px;
+    color: white;
+    font-family: 'montserrat', sans-serif;
+    margin-bottom: 5px;
+}
+
+.Botoes-Checkout {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 10px;
+    position: relative;
+}
+
+.continuar-Checkout {
+
+    background-color: aquamarine;
+}
