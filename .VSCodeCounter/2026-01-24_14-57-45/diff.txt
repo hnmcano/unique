@@ -1,0 +1,77 @@
+Date : 2026-01-24 14:57:45
+Directory : c:\Users\Pichau\Documents\Unique
+Total : 29 files,  6003 codes, 8 comments, 264 blanks, all 6275 lines
+
+Languages
++----------------+------------+------------+------------+------------+------------+
+| language       | files      | code       | comment    | blank      | total      |
++----------------+------------+------------+------------+------------+------------+
+| Python         |          8 |      4,464 |         41 |        145 |      4,650 |
+| PostCSS        |          6 |        695 |          4 |        107 |        806 |
+| ui             |          2 |        679 |          0 |          1 |        680 |
+| JavaScript JSX |          9 |        148 |        -37 |         10 |        121 |
+| JavaScript     |          2 |         13 |          0 |          1 |         14 |
+| Qrc            |          1 |          3 |          0 |          0 |          3 |
+| Dotenv         |          1 |          1 |          0 |          0 |          1 |
++----------------+------------+------------+------------+------------+------------+
+
+Directories
++-----------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                            | files      | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                               |         29 |      6,003 |          8 |        264 |      6,275 |
+| backend                                                                                                         |          4 |         31 |         14 |         14 |         59 |
+| backend (Files)                                                                                                 |          1 |          1 |          0 |          0 |          1 |
+| backend\alembic                                                                                                 |          1 |         11 |         14 |          8 |         33 |
+| backend\alembic\versions                                                                                        |          1 |         11 |         14 |          8 |         33 |
+| backend\routers                                                                                                 |          2 |         19 |          0 |          6 |         25 |
+| desktop                                                                                                         |          8 |      5,116 |         27 |        132 |      5,275 |
+| desktop (Files)                                                                                                 |          1 |        107 |          7 |         20 |        134 |
+| desktop\pictures                                                                                                |          2 |      3,972 |          9 |          0 |      3,981 |
+| desktop\scripts                                                                                                 |          1 |         78 |          1 |         17 |         96 |
+| desktop\window                                                                                                  |          4 |        959 |         10 |         95 |      1,064 |
+| desktop\window\form_products                                                                                    |          4 |        959 |         10 |         95 |      1,064 |
+| frontend                                                                                                        |         17 |        856 |        -33 |        118 |        941 |
+| frontend\src                                                                                                    |         17 |        856 |        -33 |        118 |        941 |
+| frontend\src\components                                                                                         |          7 |        156 |        -30 |         10 |        136 |
+| frontend\src\context                                                                                            |          2 |          0 |          0 |          0 |          0 |
+| frontend\src\hooks                                                                                              |          1 |         13 |          0 |          2 |         15 |
+| frontend\src\pages                                                                                              |          1 |         -8 |         -7 |         -1 |        -16 |
+| frontend\src\styles                                                                                             |          6 |        695 |          4 |        107 |        806 |
++-----------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-----------------------------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| filename                                                                                                        | language       | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| c:\Users\Pichau\Documents\Unique\backend\.env                                                                   | Dotenv         |          1 |          0 |          0 |          1 |
+| c:\Users\Pichau\Documents\Unique\backend\alembic\versions\f3dccc36758d_correção_quantidade_de_characters_da_.py | Python         |         11 |         14 |          8 |         33 |
+| c:\Users\Pichau\Documents\Unique\backend\routers\caixa.py                                                       | Python         |          0 |          0 |         -1 |         -1 |
+| c:\Users\Pichau\Documents\Unique\backend\routers\produtos.py                                                    | Python         |         19 |          0 |          7 |         26 |
+| c:\Users\Pichau\Documents\Unique\desktop\app.py                                                                 | Python         |        107 |          7 |         20 |        134 |
+| c:\Users\Pichau\Documents\Unique\desktop\pictures\imagens.qrc                                                   | Qrc            |          3 |          0 |          0 |          3 |
+| c:\Users\Pichau\Documents\Unique\desktop\pictures\imagens_rc.py                                                 | Python         |      3,969 |          9 |          0 |      3,978 |
+| c:\Users\Pichau\Documents\Unique\desktop\scripts\produtos.py                                                    | Python         |         78 |          1 |         17 |         96 |
+| c:\Users\Pichau\Documents\Unique\desktop\window\form_products\data_produto.ui                                   | ui             |        666 |          0 |          1 |        667 |
+| c:\Users\Pichau\Documents\Unique\desktop\window\form_products\data_produto_ui.py                                | Python         |        275 |         10 |         92 |        377 |
+| c:\Users\Pichau\Documents\Unique\desktop\window\form_products\produtos.ui                                       | ui             |         13 |          0 |          0 |         13 |
+| c:\Users\Pichau\Documents\Unique\desktop\window\form_products\produtos_ui.py                                    | Python         |          5 |          0 |          2 |          7 |
+| c:\Users\Pichau\Documents\Unique\frontend\src\components\Button_market.jsx                                      | JavaScript JSX |          9 |          0 |          5 |         14 |
+| c:\Users\Pichau\Documents\Unique\frontend\src\components\Carrinho.jsx                                           | JavaScript JSX |          9 |          0 |          2 |         11 |
+| c:\Users\Pichau\Documents\Unique\frontend\src\components\Catalago.jsx                                           | JavaScript JSX |          1 |          0 |         -1 |          0 |
+| c:\Users\Pichau\Documents\Unique\frontend\src\components\Footer.jsx                                             | JavaScript JSX |          9 |          0 |          2 |         11 |
+| c:\Users\Pichau\Documents\Unique\frontend\src\components\Map_produtos.jsx                                       | JavaScript JSX |         -4 |          0 |         -1 |         -5 |
+| c:\Users\Pichau\Documents\Unique\frontend\src\components\Options.jsx                                            | JavaScript JSX |         22 |          5 |          0 |         27 |
+| c:\Users\Pichau\Documents\Unique\frontend\src\components\ProdutoData.jsx                                        | JavaScript JSX |        110 |        -35 |          3 |         78 |
+| c:\Users\Pichau\Documents\Unique\frontend\src\context\CarinhoContext.jsx                                        | JavaScript JSX |          0 |          0 |          1 |          1 |
+| c:\Users\Pichau\Documents\Unique\frontend\src\context\script.js                                                 | JavaScript     |          0 |          0 |         -1 |         -1 |
+| c:\Users\Pichau\Documents\Unique\frontend\src\hooks\estabelecimento.js                                          | JavaScript     |         13 |          0 |          2 |         15 |
+| c:\Users\Pichau\Documents\Unique\frontend\src\pages\HomePage.jsx                                                | JavaScript JSX |         -8 |         -7 |         -1 |        -16 |
+| c:\Users\Pichau\Documents\Unique\frontend\src\styles\Button_market.css                                          | PostCSS        |          0 |          0 |          1 |          1 |
+| c:\Users\Pichau\Documents\Unique\frontend\src\styles\Carrinho.css                                               | PostCSS        |        223 |          1 |         39 |        263 |
+| c:\Users\Pichau\Documents\Unique\frontend\src\styles\Footer.css                                                 | PostCSS        |         12 |          0 |          0 |         12 |
+| c:\Users\Pichau\Documents\Unique\frontend\src\styles\HomePage.css                                               | PostCSS        |         77 |          1 |         13 |         91 |
+| c:\Users\Pichau\Documents\Unique\frontend\src\styles\Options.css                                                | PostCSS        |         58 |          1 |          8 |         67 |
+| c:\Users\Pichau\Documents\Unique\frontend\src\styles\ProdutoData.css                                            | PostCSS        |        325 |          1 |         46 |        372 |
+| Total                                                                                                           |                |      6,003 |          8 |        264 |      6,275 |
++-----------------------------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
