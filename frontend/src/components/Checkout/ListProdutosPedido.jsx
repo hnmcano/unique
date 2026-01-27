@@ -1,5 +1,10 @@
-function ListProdutosPedido({produtos, totalQuantidade, totalValor}){
+import { useState } from "react";
+import { useCheckout } from "../../contexts/CheckoutContext";
+import { Link } from "react-router-dom";
 
+function ListProdutosPedido({}){
+    const { produtos, totalQuantidade, totalValor } = useCheckout();
+    
     return (
         <>
             <div className="data-carrinho">
@@ -22,12 +27,20 @@ function ListProdutosPedido({produtos, totalQuantidade, totalValor}){
                             </tr>
                     ))}
                         <tr className="line-foot">
-                            <td style={{"text-align": "left"}} colSpan="2">Total</td>
+                            <td style={{"textAlign": "left"}} colSpan="2">Total</td>
                             <td style={{"margin": "5px",}}>{totalQuantidade}</td>
                             <td style={{"margin": "5px",}} className="value-produto"><label>R$</label>{totalValor.toFixed(2)}</td>
                         </tr>
                     </tbody>
                 </table>
+                <div className="Botoes-Checkout">
+                    <Link to="/Checkout/Etapa1">
+                        <button className="voltar" type="button">Voltar</button>
+                    </Link>
+                    <Link to="/Checkout/Etapa3">
+                        <button className="continuar-Checkout" >Continuar</button>
+                    </Link>
+                </div>
             </div>
         </>
     )

@@ -5,7 +5,7 @@ function BotaoFinalizacao({closeModal}) {
         <>
         {/* Botão para finalizar compra */}
         <div className="finish-conclusion">
-            <Link to="/conclusao">
+            <Link to="/Checkout/Etapa1">
                 <button onClick={closeModal}  className="pushable">
                     <span className="shadow"></span>
                     <span className="edge"></span>
