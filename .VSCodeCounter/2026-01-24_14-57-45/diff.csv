@@ -1,0 +1,31 @@
+"filename", "language", "Python", "JavaScript JSX", "PostCSS", "JavaScript", "ui", "Qrc", "Dotenv", "comment", "blank", "total"
+"c:\Users\Pichau\Documents\Unique\backend\.env", "Dotenv", 0, 0, 0, 0, 0, 0, 1, 0, 0, 1
+"c:\Users\Pichau\Documents\Unique\backend\alembic\versions\f3dccc36758d_correção_quantidade_de_characters_da_.py", "Python", 11, 0, 0, 0, 0, 0, 0, 14, 8, 33
+"c:\Users\Pichau\Documents\Unique\backend\routers\caixa.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, -1, -1
+"c:\Users\Pichau\Documents\Unique\backend\routers\produtos.py", "Python", 19, 0, 0, 0, 0, 0, 0, 0, 7, 26
+"c:\Users\Pichau\Documents\Unique\desktop\app.py", "Python", 107, 0, 0, 0, 0, 0, 0, 7, 20, 134
+"c:\Users\Pichau\Documents\Unique\desktop\pictures\imagens.qrc", "Qrc", 0, 0, 0, 0, 0, 3, 0, 0, 0, 3
+"c:\Users\Pichau\Documents\Unique\desktop\pictures\imagens_rc.py", "Python", 3969, 0, 0, 0, 0, 0, 0, 9, 0, 3978
+"c:\Users\Pichau\Documents\Unique\desktop\scripts\produtos.py", "Python", 78, 0, 0, 0, 0, 0, 0, 1, 17, 96
+"c:\Users\Pichau\Documents\Unique\desktop\window\form_products\data_produto.ui", "ui", 0, 0, 0, 0, 666, 0, 0, 0, 1, 667
+"c:\Users\Pichau\Documents\Unique\desktop\window\form_products\data_produto_ui.py", "Python", 275, 0, 0, 0, 0, 0, 0, 10, 92, 377
+"c:\Users\Pichau\Documents\Unique\desktop\window\form_products\produtos.ui", "ui", 0, 0, 0, 0, 13, 0, 0, 0, 0, 13
+"c:\Users\Pichau\Documents\Unique\desktop\window\form_products\produtos_ui.py", "Python", 5, 0, 0, 0, 0, 0, 0, 0, 2, 7
+"c:\Users\Pichau\Documents\Unique\frontend\src\components\Button_market.jsx", "JavaScript JSX", 0, 9, 0, 0, 0, 0, 0, 0, 5, 14
+"c:\Users\Pichau\Documents\Unique\frontend\src\components\Carrinho.jsx", "JavaScript JSX", 0, 9, 0, 0, 0, 0, 0, 0, 2, 11
+"c:\Users\Pichau\Documents\Unique\frontend\src\components\Catalago.jsx", "JavaScript JSX", 0, 1, 0, 0, 0, 0, 0, 0, -1, 0
+"c:\Users\Pichau\Documents\Unique\frontend\src\components\Footer.jsx", "JavaScript JSX", 0, 9, 0, 0, 0, 0, 0, 0, 2, 11
+"c:\Users\Pichau\Documents\Unique\frontend\src\components\Map_produtos.jsx", "JavaScript JSX", 0, -4, 0, 0, 0, 0, 0, 0, -1, -5
+"c:\Users\Pichau\Documents\Unique\frontend\src\components\Options.jsx", "JavaScript JSX", 0, 22, 0, 0, 0, 0, 0, 5, 0, 27
+"c:\Users\Pichau\Documents\Unique\frontend\src\components\ProdutoData.jsx", "JavaScript JSX", 0, 110, 0, 0, 0, 0, 0, -35, 3, 78
+"c:\Users\Pichau\Documents\Unique\frontend\src\context\CarinhoContext.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"c:\Users\Pichau\Documents\Unique\frontend\src\context\script.js", "JavaScript", 0, 0, 0, 0, 0, 0, 0, 0, -1, -1
+"c:\Users\Pichau\Documents\Unique\frontend\src\hooks\estabelecimento.js", "JavaScript", 0, 0, 0, 13, 0, 0, 0, 0, 2, 15
+"c:\Users\Pichau\Documents\Unique\frontend\src\pages\HomePage.jsx", "JavaScript JSX", 0, -8, 0, 0, 0, 0, 0, -7, -1, -16
+"c:\Users\Pichau\Documents\Unique\frontend\src\styles\Button_market.css", "PostCSS", 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"c:\Users\Pichau\Documents\Unique\frontend\src\styles\Carrinho.css", "PostCSS", 0, 0, 223, 0, 0, 0, 0, 1, 39, 263
+"c:\Users\Pichau\Documents\Unique\frontend\src\styles\Footer.css", "PostCSS", 0, 0, 12, 0, 0, 0, 0, 0, 0, 12
+"c:\Users\Pichau\Documents\Unique\frontend\src\styles\HomePage.css", "PostCSS", 0, 0, 77, 0, 0, 0, 0, 1, 13, 91
+"c:\Users\Pichau\Documents\Unique\frontend\src\styles\Options.css", "PostCSS", 0, 0, 58, 0, 0, 0, 0, 1, 8, 67
+"c:\Users\Pichau\Documents\Unique\frontend\src\styles\ProdutoData.css", "PostCSS", 0, 0, 325, 0, 0, 0, 0, 1, 46, 372
+"Total", "-", 4464, 148, 695, 13, 679, 3, 1, 8, 264, 6275

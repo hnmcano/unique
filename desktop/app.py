@@ -239,9 +239,6 @@ class Caixa(QMainWindow, caixa):
                 );
             }""")
 
-
-        super().__init__(parent)
-
 # Classe para adicionar categorias
 class AddCategory(QMainWindow, addcategorias):
     def __init__(self, parent=None):

@@ -241,8 +241,6 @@ def atualizar_dados_produtos(parent=None):
                     "imagem_name": f"{nome}.png",
                     "imagem": f"{imagem_data_string}"
             }
-
-            print(data_json)
            
             json_data=json.dumps(data_json).encode("utf-8")
             data_to_send=QByteArray(json_data)
