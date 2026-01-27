@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../../styles/ProdutoData.css"
+import "../../styles/DadosProduto.css"
 import api from "../../api/api";
 
 
