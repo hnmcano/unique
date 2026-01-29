@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { useCarrinho } from "../hooks/useCarrinho";
-
+import { useCarrinho } from "./CarrinhoContext";
 
 const CheckoutContext = createContext();
 
@@ -39,10 +38,14 @@ export function CheckoutProvider({ children }) {
     }
     });
 
-    const totalValor = produtos.reduce((acc, p) => acc + p.valor_total, 0);
-    const totalQuantidade = produtos.reduce((acc, p) => acc + p.quantidade, 0);
+    const totalValor = produtos.reduce(
+        (acc, p) => acc + p.valor_total, 0
+    );
+    const totalQuantidade = produtos.reduce(
+        (acc, p) => acc + p.quantidade, 0
+    );
 
-        useEffect(() => {
+    useEffect(() => {
         setData(prevState => ({
             ...prevState,
             itens: produtos.map(p => ({
@@ -57,11 +60,9 @@ export function CheckoutProvider({ children }) {
     }, [produtos, totalValor, totalQuantidade]);
 
     return (
-
         <CheckoutContext.Provider value={{ data, setData, produtos, totalQuantidade, totalValor }} >
             {children}
         </CheckoutContext.Provider>
-
     )
 }
 
