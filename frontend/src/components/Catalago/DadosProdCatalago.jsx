@@ -3,7 +3,12 @@ import "../../styles/DadosProduto.css"
 import api from "../../api/api";
 
 
+import { useCarrinho } from "../../contexts/CarrinhoContext";
+
+
 function ProdutoData({ open, closeModalProduto, produto, categoria}) {
+    const { produtos, setProdutos, adicionarProduto } = useCarrinho();
+
     const [quantidade, setQuantidade] = useState(1);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -37,20 +42,7 @@ function ProdutoData({ open, closeModalProduto, produto, categoria}) {
             imagem_url: produto.imagem,
             quantidade: quantidade
         };
-
-        try {
-            const response = await api.post(`/carrinho/adicionar-produto/${produto.produto_id}`, dadosEnviar);
-            alert('Produto adicionado ao carrinho com sucesso!');
-            console.log('Resposta do servidor:', response.data);
-
-        } catch (error) {
-            console.error('Erro ao enviar os dados:', error);
-            setError(error.message);
-            console.error('Erro ao enviar os dados:', dadosEnviar);
-        } finally {
-            setLoading(false);
-        }
-
+        adicionarProduto(dadosEnviar);
     }
 
     const imagem_url = (imagem) => `data:image/png;base64,${imagem}`;
