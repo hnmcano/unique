@@ -5,6 +5,7 @@ const CheckoutContext = createContext();
 
 export function CheckoutProvider({ children }) {
     const { produtos } = useCarrinho();
+    const [ opcoesDisponiveis, setOpcoesDisponiveis ] = useState({});
     const [ data, setData] = useState({
 
         "itens": [
@@ -45,6 +46,10 @@ export function CheckoutProvider({ children }) {
         (acc, p) => acc + p.quantidade, 0
     );
 
+    const entregaTaxa = 7.0;
+
+    const valorTotal = totalValor + 7.0;
+
     useEffect(() => {
         setData(prevState => ({
             ...prevState,
@@ -59,8 +64,20 @@ export function CheckoutProvider({ children }) {
         }));
     }, [produtos, totalValor, totalQuantidade]);
 
+    const ToogleVisibility = (metodo) => {
+
+        const indexString = String(metodo);
+
+        console.log(indexString);
+
+        setOpcoesDisponiveis((prevState) => ({
+            ...prevState,
+            [indexString]: !prevState[indexString],
+        }));
+    }
+
     return (
-        <CheckoutContext.Provider value={{ data, setData, produtos, totalQuantidade, totalValor }} >
+        <CheckoutContext.Provider value={{ data, setData, produtos, totalQuantidade, totalValor, entregaTaxa, valorTotal, ToogleVisibility, opcoesDisponiveis }} >
             {children}
         </CheckoutContext.Provider>
     )

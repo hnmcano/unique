@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { useCheckout } from "../../contexts/CheckoutContext";
 
@@ -8,6 +8,7 @@ import "../../styles/Checkout.css";
 
 function FormularioPedido({}) {
         const { data, setData} = useCheckout();
+        const navigate = useNavigate();
 
         const handleChangeClient = (event) => {
         const { name, value } = event.target;
@@ -53,6 +54,19 @@ function FormularioPedido({}) {
             } catch (error) {
                 console.log(error);
             }
+        }
+    }
+
+    const handledSubmit = (Event) => {
+        Event.preventDefault();
+        if (data.cliente.nome && data.cliente.email && data.cliente.telefone && data.entrega.cep &&
+            data.entrega.endereco && data.entrega.numero && data.entrega.bairro &&
+            data.entrega.cidade && data.entrega.estado) {
+            
+            navigate("/Checkout/Etapa2");
+
+        } else {
+            alert("Por favor, preencha todos os campos obrigatórios.");
         }
     }
 
@@ -129,15 +143,14 @@ function FormularioPedido({}) {
                         <label className="Names-Formulario" htmlFor="estado">Estado:</label>
                         <input className="Entrada-Formulario" type="text" id="estado" name="estado" value={data.entrega.estado} onChange={handledChangeEntrega} disabled style={{ color: "white" }} />
                     </div>
-
-                    {/* Botões */}
-                    <div className="Botoes-Checkout">
-                        <button className="voltar" type="button">Cancelar</button>
-                        <Link to="/Checkout/Etapa2">
-                            <button className="continuar-Checkout">Continuar</button>
-                        </Link>
-                    </div>
                 </form>
+                {/* Botões */}
+                <div className="Botoes-Checkout">
+                    <Link to="/">
+                        <button className="voltar" type="button">CANCELAR</button>
+                    </Link>
+                    <button onClick={handledSubmit} className="continuar-Checkout">CONTINUAR</button>
+                </div>
             </div>
         </>
     )
