@@ -146,6 +146,7 @@
     display: flex;
     justify-content: space-between;
 }
+
 /* From Uiverse.io by Shoh2008 */ 
 .checkbox-wrapper-33 {
   --s-xsmall: 0.625em;
@@ -282,60 +283,170 @@
   }
 }
 
-
 .metodos-pagamento-container {
 
+  margin: 10px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  height: 90vh;
+
+}
+
+.formas-pagamentos {
   display: flex;
   flex-direction: column;
-  margin: 5px;
-  padding: 10px;
-  align-items: center;
-  height: 90vh;
   justify-content: space-between;
-  flex-wrap: nowrap;
 }
+
+.opcao-pagamento {
+  padding: 5px;
+}
+
 
 .checkbox-pagamentos {
   display: flex;
   flex-direction: row;
-  align-items: center;
   justify-content: space-between;
-  margin-top: 5px;
-  padding: 10px;
-  width: 100%;
   border: 1px solid black;
   border-radius: 10px;
-  text-align: center;
+  padding: 5px 15px 5px 15px;
   box-shadow: 0px 10px 20px rgba(0,0,0,0.17);
+  color: white;
+  font-family: 'montserrat', sans-serif;
+  align-items: center;
+  background-color: rgb(41, 41, 41);
+  width: 100%;
 }
 
 .checkbox-pagamentos:hover {
-  box-shadow: 0px 10px 20px rgba(0,0,0,0.17);
-  cursor: pointer;
+  background-color: hsl(290, 76%, 51%);
 }
 
 .checkbox-pagamentos:active {
-  box-shadow: inset 0px 5px 10px rgba(0,0,0,0.2);
-  background-color: #5f11e8;
+  background-color: hsl(290, 76%, 51%);
+  transform: translate(2px);
 }
 
-.checkbox-pagamentos:focus {
-  box-shadow: 0 0 0 0.25em hsl(290, 76%, 41%, 0.2);
-  background-color: #5f11e8;
-}
 
 .label-checkbox-pagamentos {
-  font-family: 'montserrat', sans-serif;
-  color: white;
-  font-size: clamp(14px, 2.5vw, 18px);
-  width: 100%;
+
+    text-align: center;
+    font-family: 'montserrat', sans-serif;
+    font-size: clamp(14px, 2.5vw, 18px);
+    color: white;
+    width: 100%;
 }
 
-.formas-pagamentos {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
+.bandeira-metodo-pix {
+    border: 1px solid black;
+    border-radius: 10px;
+    background-color: rgb(41, 41, 41);
+    box-shadow: 0px 10px 20px rgba(0,0,0,0.17);
+    margin: 10px;
+}
 
+.metodo-pagamento-pix {
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: rgb(41, 41, 41);
+    box-shadow: 0px 10px 20px rgba(0,0,0,0.17);
+    margin: 10px;
+    color: white;
+}
+
+.descricao-pix {
+
+    margin-bottom: 20px;
+    font-family: 'montserrat', sans-serif;
+    font-size: clamp(14px, 2.5vw, 18px);
+    text-align: center;
+} 
+
+.chave-pix {
+
+    font-family: 'montserrat', sans-serif;
+    font-size: clamp(14px, 2.5vw, 18px);
+    word-break: break-all;
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+}
+
+.chave-pix input {
+
+    background-color: rgb(255, 255, 255);
+    border: none;
+    color: black;
+    font-family: 'montserrat', sans-serif;
+    font-size: clamp(14px, 2.5vw, 18px);
+    text-align: center;
+    border-radius: 20px;
+    padding: 5px;
+}
+
+.chave-pix-copy {
+    height: 28px;
+    width: 30px;
+    cursor: pointer;
+}
+
+.chave-pix-copy:hover {
+    filter: brightness(0.8);
+}
+
+.bandeira-metodo-cartoes {
+
+    border: 1px solid black;
+    border-radius: 10px;
+    background-color: rgb(41, 41, 41);
+    box-shadow: 0px 10px 20px rgba(0,0,0,0.32);
+    margin: 10px;
+}
+
+.metodo-pagamento-cartoes {
+    padding: 10px;
+    border-radius: 10px;
+    margin: 10px;
+}
+
+.bandeira-metodo-cartoes::after {
+    background-color: hsl(290, 76%, 51%);
+    transform: translate(2px);
+}
+
+.bandeiras-cartoes {
+    font-family: 'montserrat', sans-serif;
+    font-size: clamp(14px, 2.5vw, 18px);
+    color: black;
+    box-shadow: 0px 10px 20px rgba(0,0,0,0.32);
+    margin: 0px 5px 0px 5px;
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 5px;
+    color: white;
+}
+
+.bandeiras-cartoes:hover {
+    background-color: hsl(290, 76%, 41%);
+}
+
+.bandeiras-cartoes:active {
+    background-color: hsl(290, 76%, 51%);
+    transform: translate(2px);
+}
+
+.bandeiras-cartoes:focus {
+    background-color: hsl(290, 76%, 41%);
 }
 

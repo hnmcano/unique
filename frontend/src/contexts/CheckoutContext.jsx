@@ -5,19 +5,23 @@ const CheckoutContext = createContext();
 
 export function CheckoutProvider({ children }) {
     const { produtos } = useCarrinho();
-    const [ opcoesDisponiveis, setOpcoesDisponiveis ] = useState({});
+    const [ formaPagamento, setFormaPagamento ] = useState(null);
+    const [ bandeiraCartao, setBandeiraCartao ] = useState(null);
+    const [ opcoesDisponiveis, setOpcoesDisponiveis ] = useState(null)
+
     const [ data, setData] = useState({
 
         "itens": [
             {
-                produto_id: 0,
+                produtoId: 0,
                 quantidade: 0,
-                valor_unitario: 0,
+                valorUnitario: 0,
             }
         ],
 
-        metodo_pagamento: "",
-        valor_total: 0,
+        metodoPagamento: "",
+        // bandeiraCartao: "",
+        valorTotal: 0,
         observacoes: "",
 
         "cliente": {
@@ -35,7 +39,7 @@ export function CheckoutProvider({ children }) {
         estado: "",
         complemento: "",
         referencia: "",
-        taxa_entrega: 7.0,
+        taxaEntrega: 7.0,
     }
     });
 
@@ -54,30 +58,41 @@ export function CheckoutProvider({ children }) {
         setData(prevState => ({
             ...prevState,
             itens: produtos.map(p => ({
-                produto_id: p.produto_id,
+                produtoId: p.produto_id,
                 quantidade: p.quantidade,
-                valor_unitario: p.preco_venda
+                valorUnitario: p.preco_venda
 
             })),
-            valor_total: totalValor + 7.0,
+            valorTotal: totalValor + 7.0,
             
         }));
     }, [produtos, totalValor, totalQuantidade]);
 
     const ToogleVisibility = (metodo) => {
+        setOpcoesDisponiveis(prev =>
+            prev === metodo ? null : metodo
+        );
 
-        const indexString = String(metodo);
-
-        console.log(indexString);
-
-        setOpcoesDisponiveis((prevState) => ({
+        setData(prevState => ({
             ...prevState,
-            [indexString]: !prevState[indexString],
+            metodoPagamento: metodo,
         }));
+    };
+
+    const handleSelect = (tipo) => {
+        setFormaPagamento(tipo);
+        console.log("forma de pagamento: " + tipo);
+
+        setData(prevState => ({
+            ...prevState,
+            metodoPagamento: tipo,
+        }));
+
+        console.log(data);
     }
 
     return (
-        <CheckoutContext.Provider value={{ data, setData, produtos, totalQuantidade, totalValor, entregaTaxa, valorTotal, ToogleVisibility, opcoesDisponiveis }} >
+        <CheckoutContext.Provider value={{ data, setData, produtos, totalQuantidade, totalValor, entregaTaxa, valorTotal, ToogleVisibility, opcoesDisponiveis, formaPagamento, handleSelect }} >
             {children}
         </CheckoutContext.Provider>
     )
