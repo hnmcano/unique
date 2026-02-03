@@ -20,9 +20,9 @@ class Pedido(Base):
     observacoes = Column(Text, nullable=True)
 
     cliente = relationship("Clientes", back_populates="pedidos", uselist=False)
-    endereco_entrega = relationship("EnderecoPedido", back_populates="pedido")
-    itens = relationship("ItemPedido", back_populates="pedido")
-    caixa = relationship("Caixa", back_populates="pedido")
+    endereco_entrega = relationship("EnderecoPedido", back_populates="pedido", cascade="all, delete-orphan")
+    itens = relationship("ItemPedido", back_populates="pedido", cascade="all, delete-orphan")
+    caixa = relationship("Caixa", back_populates="pedido", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"Pedido(id={self.id}, cliente_id={self.cliente_id}, data_criacao={self.data_criacao}, data_atualizacao={self.data_atualizacao})"
