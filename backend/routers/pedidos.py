@@ -40,7 +40,10 @@ def get_or_create_cliente(cliente_data, db: Session) -> Tuple[int, Clientes]:
 
 @router.delete("/react/deletar-dados-pedidos", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_pedido( db: Session = Depends(get_db)):
-    db.query(Pedido, Clientes, EnderecoPedido, ItemPedido).delete()
+    db.query(Pedido).delete()
+    db.query(Clientes).delete()
+    db.query(ItemPedido).delete()
+    db.query(EnderecoPedido).delete()
 
     if not Pedido: 
         raise HTTPException(status_code=404, detail="Pedido não encontrado")
