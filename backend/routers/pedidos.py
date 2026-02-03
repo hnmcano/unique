@@ -38,6 +38,12 @@ def get_or_create_cliente(cliente_data, db: Session) -> Tuple[int, Clientes]:
 
     return cliente_db.id, cliente_db
 
+@router.delete("/{pedido_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_pedido(pedido_id: int, db: Session = Depends(get_db)):
+    db.query(Pedido).filter(Pedido.id == pedido_id).delete()
+    db.commit()
+    return
+
 #  Usa o schema de resposta completo para serializar o pedido final em response_model=PedidoResponse
 @router.post("/react", status_code=status.HTTP_201_CREATED, response_model=PedidoResponse)
 async def criar_novo_pedido(novo_pedido_data: NovoPedidoSchema,db: Session = Depends(get_db)):
