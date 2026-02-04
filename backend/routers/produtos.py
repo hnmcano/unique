@@ -1,6 +1,5 @@
 from models.produtos import Produto as ProductModel
 from schemas.produtos import Produto as ProdutoSchema
-from schemas.produtos import Categoria as CategoriaSchema
 from models.produtos import Categoria as CategoryModel
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -27,11 +26,12 @@ async def get_product(product: ProdutoSchema, db: Session = Depends(get_db)):
             db_product.imagem_name = "default.png"
             db_product.imagem = encoded_image
 
-    if db_product is None:
-        db.add(db_product)
-        db.commit()
-        db.refresh(db_product)
-        return db_product
+
+    db.add(db_product)
+    db.commit()
+    db.refresh(db_product)
+    return db_product
+
 
 # Rota para popular tabela de produtos disponivel no desktop na aba produtos
 @router.get("/desktop/table")
@@ -39,54 +39,95 @@ async def read_products(db: Session = Depends(get_db)):
     produtos = db.query(ProductModel).all()
     categorias = db.query(CategoryModel).all()
 
-    p = pd.DataFrame([p.__dict__ for p in produtos])
-    c = pd.DataFrame([c.__dict__ for c in categorias])
 
-    p = p.drop(columns=["_sa_instance_state"], errors="ignore")
-    c = c.drop(columns=["_sa_instance_state"], errors="ignore")
+    if not produtos:
+        return []
 
-    c = c.rename(columns={"nome": "nome_categoria"})
+    categorias_map = {
+        c.id: c.nome for c in categorias
+    }
 
-    data = pd.merge(p, c, left_on="categoria_id", right_on="id", how="left")
-    data = data.drop(columns=["id_y"]).rename(columns={"id_x": "id"})
-    data = data.to_dict("records")
+    data = []
+
+    for p in produtos:
+
+        nome_categoria = categorias_map.get(p.categoria_id, "Sem categoria")
+
+        produto = {
+            "id": p.id,
+            "categoria_id": p.categoria_id,
+            "cod_pdv": p.cod_pdv,
+            "nome": p.nome,
+            "preco_custo": p.preco_custo,
+            "preco_venda": p.preco_venda,
+            "medida": p.medida,
+            "estoque": p.estoque,
+            "estoque_min": p.estoque_min,
+            "descricao": p.descricao,
+            "ficha_tecnica": p.ficha_tecnica,
+            "status_venda": p.status_venda,
+            "imagem_name": p.imagem_name,
+            "imagem": p.imagem
+        }
+
+        produto["nome_categoria"] = nome_categoria
+        data.append(produto)
+
     return data
 
 
 # Rota para listar todos os produtos com os nomes das categorias no front-end com react
 @router.get("/react/catalago")
 async def list_products(db: Session = Depends(get_db)):
-    # executar a query
 
     produtos = db.query(ProductModel).all()
     categorias = db.query(CategoryModel).all()
 
-    p = pd.DataFrame([p.__dict__ for p in produtos])
-    c = pd.DataFrame([c.__dict__ for c in categorias])
+    if not produtos:
+        return []
+    
+    categorias_map = {
+        c.id: c.nome for c in categorias
+    }
 
-    p = p.drop(columns=["_sa_instance_state"], errors="ignore")
-    c = c.drop(columns=["_sa_instance_state"], errors="ignore")
+    resultado = {}
 
-    c = c.rename(columns={"nome": "nome_categoria"})
+    for p in produtos:
+        if p.status_venda != "Ativo":
+            continue
 
+        nome_categoria = categorias_map.get(p.categoria_id, "Sem categoria")
 
-    data = pd.merge(p, c, left_on="categoria_id", right_on="id", how="left")
-    data = data.drop(columns=["id_y"]).rename(columns={"id_x": "id"})
-    data = data[data["status_venda"] == "Ativo"]
+        produto_dict = {
+            "id": p.id,
+            "cod_pdv": p.cod_pdv,
+            "nome": p.nome,
+            "preco_custo": p.preco_custo,
+            "preco_venda": p.preco_venda,
+            "medida": p.medida,
+            "estoque": p.estoque,
+            "estoque_min": p.estoque_min,
+            "descricao": p.descricao,
+            "ficha_tecnica": p.ficha_tecnica,
+            "imagem_name": p.imagem_name,
+            "imagem": p.imagem
+        }
 
-    if "nome_categoria" in data.columns:
-        data = (
-            data.rename(columns={"id" : "produto_id"})
-            .groupby("nome_categoria")
-            .apply(lambda x: x.drop(columns=["categoria_id", "nome_categoria"]).to_dict("records"))
-            .reset_index(name="produtos")
-        )
+        if nome_categoria not in resultado:
+            resultado[nome_categoria] = []
 
-        data = data.to_dict("records")
+        resultado[nome_categoria].append(produto_dict)
 
-        return data
-    else:
-        return data.to_dict("records")
+    return [
+
+        {
+            "nome_categoria": categorias,
+            "produtos": produtos
+        }
+
+        for categorias, produtos in resultado.items()
+    ]
+
     
 
 @router.delete("/desktop/delete-product-data-base/{product_id}")
@@ -115,33 +156,3 @@ async def update_product(product_id: str, product: ProdutoSchema, db: Session = 
 
 
 ############################################# CATEGORIAS ################################################
-
-# Rotas para inserir categorias ao banco de dados, com a validação do Pydantic, baseado no envio do desktop
-@router.post("/category")
-async def get_category(categoria: CategoriaSchema, db: Session = Depends(get_db)):
-    db_category = CategoryModel(**categoria.dict())
-    db.add(db_category)
-    db.commit()
-    db.refresh(db_category)
-    return db_category
-
-# Rota para listar todas as categorias no dropdown estabelecido no desktop na aba produtos
-@router.get("/dropdown/categories")
-async def read_categories(db: Session = Depends(get_db)):
-    return db.query(CategoryModel).all()
-
-# Rota para excluir categoria pelo id com base no dropdown estabelecido no desktop
-@router.delete("/category/{category_id}")
-async def delete_category(category_id: str, db: Session = Depends(get_db)):
-    db_category = db.query(CategoryModel).filter(CategoryModel.nome == category_id).first()
-    if db_category:
-        db.delete(db_category)
-        db.commit()
-        return {"message": "Categoria excluída com sucesso"}
-    return {"message": "Categoria não encontrada"}
-
-# Rota para filtrar categoria pelo id e retornar ao front-end com react
-@router.get("/category/filter/{category_id}")
-async def filter_category(category_id: str, db: Session = Depends(get_db)):
-    return db.query(ProductModel).filter(ProductModel.categoria == category_id).all()
-

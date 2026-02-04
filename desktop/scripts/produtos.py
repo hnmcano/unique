@@ -6,7 +6,9 @@ from PySide6.QtGui import QPixmap
 import requests
 import json
 from time import sleep
+import os
 
+APIURLDESENV = "http://localhost:8000"
 
 def salvar_dados_produtos(parent=None):
         categoria_id = parent.categoria_combo.currentData()
@@ -34,7 +36,7 @@ def salvar_dados_produtos(parent=None):
 
         try:
             QMessageBox.information(parent, "Aguarde", "Enviando dados para o servidor!")
-            url= QUrl("http://api.uniqsystems.com.br/produtos/desktop/add/product")
+            url= QUrl(f"{APIURLDESENV}/produtos/desktop/add/product")
             data_json = {
                     "categoria_id": f"{categoria_id}",
                     "cod_pdv": f"{cod_pdv}",
@@ -123,7 +125,7 @@ def adicionar_categoria(parent=None):
 
     try:
         response = requests.post(
-            "http://api.uniqsystems.com.br/produtos/category",
+            f"{APIURLDESENV}/categorias/category",
             json={"nome": nova_categoria}
         )
         if response.status_code == 200:
@@ -137,7 +139,7 @@ def adicionar_categoria(parent=None):
 
 def preencher_dropdown_categoria(parent=None):
     try:
-        response = requests.get("http://api.uniqsystems.com.br/produtos/dropdown/categories")
+        response = requests.get(f"{APIURLDESENV}/categorias/dropdown/categories")
         if response.status_code == 200:
             categorias = response.json()
             parent.categoria_combo.clear()
@@ -154,7 +156,7 @@ def preencher_dropdown_categoria(parent=None):
 def excluir_categoria(parent=None, categoria_selecionada=None):
 
     try:
-        response = requests.delete(f"http://api.uniqsystems.com.br/produtos/category/{categoria_selecionada}")
+        response = requests.delete(f"{APIURLDESENV}/categorias/category/{categoria_selecionada}")
         if response.status_code == 200:
             QMessageBox.information(parent, "Sucesso", "Categoria excluida com sucesso!")
             parent.preencher_dropdown()  # Atualiza o dropdown
@@ -178,7 +180,7 @@ def excluir_produto_base_dados(id, parent=None):
 
     try:
         response = requests.delete(
-            f"http://api.uniqsystems.com.br/produtos/desktop/delete-product-data-base/{id}"
+            f"{APIURLDESENV}/produtos/desktop/delete-product-data-base/{id}"
         )
 
         if response.status_code == 200:
@@ -225,7 +227,7 @@ def atualizar_dados_produtos(parent=None):
 
         try:
             QMessageBox.information(parent, "Aguarde", "Enviando dados para o servidor!")
-            url= QUrl(f"http://api.uniqsystems.com.br/produtos/desktop/alter-product-data-base/{produto_id}")
+            url= QUrl(f"{APIURLDESENV}/produtos/desktop/alter-product-data-base/{produto_id}")
             data_json = {
                     "categoria_id": f"{categoria_id}",
                     "cod_pdv": f"{cod_pdv}",

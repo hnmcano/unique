@@ -1,13 +1,15 @@
 from fastapi import FastAPI
-from routers import clientes, produtos, carrinhos, pedidos, caixa, estabelecimento
+from routers import clientes, produtos, carrinhos, pedidos, caixa, estabelecimento, categorias
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="My First FastAPI project", version="1.0.0")
 origins = [
     "http://localhost:5173",
-    "https://catalogo.uniqsystems.com.br",           # Seu domínio principal (React)
-    "http://frontend-react-pi-beige.vercel.app" # URL reserva da Vercel
+    "http://localhost:8000",
+    "http://127.0.0.1:5173",
+    "http://127.0.0.1:8000",
 ]
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -22,9 +24,4 @@ app.include_router(carrinhos.router, prefix="/carrinho", tags=["carrinho"])
 app.include_router(pedidos.router, prefix="/pedidos", tags=["pedidos"])
 app.include_router(caixa.router, prefix="/caixa", tags=["caixa"])
 app.include_router(estabelecimento.router, prefix="/estabelecimento", tags=["estabelecimento"])
-
-
-if __name__ == "__main__":
-    import uvicorn
-
-    uvicorn.run(app, host="127.0.0.1", port=8000)   
+app.include_router(categorias.router, prefix="/categorias", tags=["categorias"])

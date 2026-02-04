@@ -6,6 +6,9 @@ from PySide6.QtGui import QPixmap
 import requests
 import json
 from time import sleep
+import os
+
+APIURLDESENV = "http://localhost:8000"
 
 def enviar_dados_estabelecimento(parent=None):
     nome = parent.NomeEstabelecimento.text()  # type: ignore
@@ -22,7 +25,7 @@ def enviar_dados_estabelecimento(parent=None):
 
     try:
         QMessageBox.information(parent, "Aguarde", "Enviando dados para o servidor!")
-        url= QUrl("https://api.uniqsystems.com.br/estabelecimento/desktop/add")
+        url= QUrl(f"{APIURLDESENV}/estabelecimento/desktop/add")
         data_json = {
                 "nome": f"{nome}",
                 "endereco": f"{endereco}",

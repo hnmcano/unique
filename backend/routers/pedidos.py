@@ -38,14 +38,14 @@ def get_or_create_cliente(cliente_data, db: Session) -> Tuple[int, Clientes]:
 
     return cliente_db.id, cliente_db
 
-@router.delete("/react/deletar-dados-pedidos", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_pedido( db: Session = Depends(get_db)):
-    
-    db.query(EnderecoPedido).delete()
-    db.query(ItemPedido).delete()
-    db.query(Clientes).delete()
-    db.query(Pedido).delete()
-        
+@router.delete("/react/deletar-dados-pedidos/{pedido_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_pedido(pedido_id: int, db: Session = Depends(get_db)):
+    pedido = db.query(Pedido).filter(Pedido.id == pedido_id).first()
+
+    if not pedido:
+        raise HTTPException(status_code=404, detail="Pedido não encontrado")
+
+    db.delete(pedido)
     db.commit()
 
 #  Usa o schema de resposta completo para serializar o pedido final em response_model=PedidoResponse
