@@ -33,6 +33,15 @@ async def update_estabelecimento(estabelecimento_nome: str, dados_estabeleciment
     db.refresh(db_estabelecimento)
     return db_estabelecimento
 
+@router.delete("/desktop/delete/{estabelecimento_nome}")
+async def delete_estabelecimento(estabelecimento_nome: str, db: Session = Depends(get_db)):
+    db_estabelecimento = db.query(EstabelecimentoModel).filter(EstabelecimentoModel.nome == estabelecimento_nome).first()
+    if db_estabelecimento:
+        db.delete(db_estabelecimento)
+        db.commit()
+        return {"message": "Estabelecimento excluido com sucesso"}
+    return {"message": "Estabelecimento nao encontrado"}
+
 @router.get("/react/catalago")
 async def get_estabelecimento(db: Session = Depends(get_db)):
 

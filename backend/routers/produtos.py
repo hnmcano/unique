@@ -109,6 +109,8 @@ async def list_products(db: Session = Depends(get_db)):
             "estoque_min": p.estoque_min,
             "descricao": p.descricao,
             "ficha_tecnica": p.ficha_tecnica,
+            "status_venda": p.status_venda,
+            "sit_estoque": p.sit_estoque,
             "imagem_name": p.imagem_name,
             "imagem": p.imagem
         }
