@@ -23,6 +23,9 @@ from PySide6.QtWidgets import (QMessageBox, QFileDialog)
 import requests
 import sys
 import base64
+import os
+
+APIURLDESENV = "http://localhost:8000"
 
 #funcao para centralizar a janelas
 def center_window(self):
@@ -51,6 +54,8 @@ class Dados_produto(QMainWindow, dataproduto):
         self.network_manager = QNetworkAccessManager(self)
 
         self.produto = produto
+        
+        self.id = produto["id"]
 
         preencher_dropdown_categoria(self)
 
@@ -93,7 +98,7 @@ class Dados_produto(QMainWindow, dataproduto):
         self.image_label.clear()
 
     def excluir_produto_atual(self):
-        excluir_produto_base_dados(self.produto_id, self)
+        excluir_produto_base_dados(self.id, self)
         self.close()
 
 # class para gerenciar caixa
@@ -114,7 +119,7 @@ class Caixa(QMainWindow, caixa):
             "valor": valor_caixa
         }
 
-        url = "http://api.uniqsystems.com.br/caixa/open_box"
+        url = f"{APIURLDESENV}/caixa/open_box"
 
         response = requests.post(url, json=data_json)
 
@@ -158,7 +163,7 @@ class Caixa(QMainWindow, caixa):
                 return
             else:
                 try:
-                    url = "http://api.uniqsystems.com.br/caixa/close_box"
+                    url = f"{APIURLDESENV}/caixa/close_box"
                     response = requests.get(url)
 
                     if response.status_code == 200:
@@ -200,7 +205,7 @@ class Caixa(QMainWindow, caixa):
 
     def validar_caixa(self):
 
-        url = "http://api.uniqsystems.com.br/caixa/valid_box"
+        url = f"{APIURLDESENV}/caixa/valid_box"
         response = requests.get(url)
 
         if response.status_code == 200:
@@ -280,7 +285,7 @@ class AddCategory(QMainWindow, addcategorias):
         self.drop_modificar.addItem("")  # espaço em branco
 
         try:
-            response = requests.get("http://api.uniqsystems.com.br/produtos/dropdown/categories")
+            response = requests.get(f"{APIURLDESENV}/categorias/dropdown/categories")
             if response.status_code == 200:
                 categories = response.json() 
 
@@ -301,7 +306,7 @@ class AddCategory(QMainWindow, addcategorias):
         excluir_categoria(self, categoria_selecionada)
 
         try:
-            response = requests.delete(f"http://api.uniqsystems.com.br/produtos/category/{categoria_selecionada}")
+            response = requests.delete(f"{APIURLDESENV}/categorias/category/{categoria_selecionada}")
             if response.status_code == 200:
                 QMessageBox.information(self, "Sucesso", "Categoria excluída com sucesso!")
                 self.preencher_dropdown()  # Atualiza o dropdown
@@ -402,7 +407,7 @@ class Produtos(QMainWindow, produtos):
         self.tableWidget.cellClicked.connect(self.abrir_dados_produto)
         
         try:
-            response = requests.get("http://api.uniqsystems.com.br/produtos/desktop/table")
+            response = requests.get(f"{APIURLDESENV}/produtos/desktop/table")
             response.raise_for_status()  # Levanta um erro para códigos de status HTTP ruins
             products = response.json()
 
@@ -560,7 +565,7 @@ class Delivery(QMainWindow, delivery):
         self.tableWidget.cellClicked.connect(self.abrir_dados)
 
         try:
-            response = requests.get("http://api.uniqsystems.com.br/pedidos/delivery/desktop")
+            response = requests.get(f"{APIURLDESENV}/pedidos/delivery/desktop")
             pedidos = response.json().get("detail")
 
             if response.status_code == 200:               
@@ -686,7 +691,7 @@ class Uniq(QMainWindow, uniq):
 
     def valid_caixa(self):
 
-        url = "http://api.uniqsystems.com.br/caixa/valid_box"
+        url = f"{APIURLDESENV}/caixa/valid_box"
 
         response = requests.get(url)
 

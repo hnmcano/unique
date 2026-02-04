@@ -38,11 +38,18 @@ async def get_estabelecimento(db: Session = Depends(get_db)):
 
     db_estabelecimento = db.query(EstabelecimentoModel).all()
 
-    dados_estabelecimento = pd.DataFrame([db_estabelecimento.__dict__ for db_estabelecimento in db_estabelecimento])
-    dados_estabelecimento = dados_estabelecimento.drop(columns=["_sa_instance_state"], errors="ignore")
-    dados_estabelecimento = dados_estabelecimento.to_dict("records")
-
     if not db_estabelecimento:
-        raise HTTPException(status_code=404, detail="Estabelecimento não encontrado")
-    
-    return dados_estabelecimento
+        return []
+
+    return [
+
+        {
+            "id": e.id,
+            "nome": e.nome,
+            "endereco": e.endereco,
+            "instagram": e.instagram,
+            "telefone":e.telefone,
+            "logo_base64": e.logo_base64,
+        }
+        for e in db_estabelecimento
+    ]

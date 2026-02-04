@@ -3,6 +3,7 @@ import api from "../api/api";
 
 const fetchProdutos = async () => {
     const { data } = await api.get("/produtos/react/catalago");
+    console.log(data);
     return data;
 };
 

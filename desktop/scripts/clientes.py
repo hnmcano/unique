@@ -6,6 +6,9 @@ from PySide6.QtGui import QPixmap
 import requests
 import json
 from time import sleep
+import os
+
+APIURLDESENV = "http://localhost:8000"
 
 
 def salvar_dados_clientes(parent=None):
@@ -23,7 +26,7 @@ def salvar_dados_clientes(parent=None):
 
     try:
         QMessageBox.information(parent, "Aguarde", "Enviando dados para o servidor!")
-        url= QUrl("http://api.uniqsystems.com.br/clientes/users")
+        url= QUrl(f"{APIURLDESENV}/clientes/users")
         data_json = {
                 "cliente": f"{cliente}",
                 "telefone": f"{telefone}",
