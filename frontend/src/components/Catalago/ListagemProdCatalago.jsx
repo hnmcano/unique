@@ -10,6 +10,7 @@ function ListagemProdCatalago({categoria}) {
     const handleProdutoClick = (produto) => {
         setProdutoSelecionado(produto);
         setModalOpenProduto(true);
+        console.log(produto);
     };
 
     const closeModalProduto = () => {

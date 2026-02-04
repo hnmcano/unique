@@ -26,7 +26,7 @@ function ProdutoData({ open, closeModalProduto, produto, categoria}) {
         setError(null);
 
         const dadosEnviar = {
-            produto_id: produto.produto_id,
+            produto_id: produto.id,
             cod_pdv: produto.cod_pdv,
             nome: produto.nome,
             categoria: categoria.nome_categoria,
