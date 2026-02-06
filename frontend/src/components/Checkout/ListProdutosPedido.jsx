@@ -3,7 +3,7 @@ import { useCheckout } from "../../contexts/CheckoutContext";
 import { Link, useNavigate } from "react-router-dom";
 
 function ListProdutosPedido({}){
-    const { produtos, totalQuantidade, totalValor, valorTotal, entregaTaxa } = useCheckout();
+    const { produtos, totalQuantidade, totalValor, valor_total, entregaTaxa } = useCheckout();
     const [checked, setChecked] = useState(false);    
     const navigate = useNavigate();
 
@@ -64,7 +64,7 @@ function ListProdutosPedido({}){
                 <div>
                     <div className="container-total-geral">
                         <h3 style={{"color": "white"}}>TOTAL GERAL</h3>
-                        <h3 className="value-total-geral"><label>R$</label>{valorTotal.toFixed(2)}</h3>
+                        <h3 className="value-total-geral"><label>R$</label>{valor_total.toFixed(2)}</h3>
                     </div>
                     <div className="checkbox-wrapper-33">
                         <label className="checkbox">

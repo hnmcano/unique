@@ -119,9 +119,23 @@ async def criar_novo_pedido(novo_pedido_data: NovoPedidoSchema,db: Session = Dep
         
         # 8. REFRESH e RETORNO (Obtém o Pedido final com todas as relações carregadas)
         db.refresh(db_pedido) 
-        
-        # Retorna o objeto SQLAlchemy, que é serializado pelo PedidoResponse
-        return db_pedido 
+
+        data = {
+            "id": db_pedido.id,
+            "cliente_id": db_pedido.cliente_id,
+            "data_pedido": db_pedido.data_criacao,
+            "status": db_pedido.status,
+            "metodo_pagamento": db_pedido.metodo_pagamento,
+            "valor_total": db_pedido.valor_total,
+            "cliente": cliente_objeto,
+            "endereco_entrega": db_endereco,
+            "itens": db_pedido.itens
+        }
+
+        print(data)
+
+        return data
+    
 
     except HTTPException:
         # Repassa exceções HTTPException (como o erro de valor total)
@@ -133,11 +147,10 @@ async def criar_novo_pedido(novo_pedido_data: NovoPedidoSchema,db: Session = Dep
         db.rollback() 
         # Retorna um erro genérico 500
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Erro interno do servidor. Não foi possível finalizar o pedido."
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
+            detail=str(e)
         )
     
-
 @router.get("/delivery/desktop")
 async def read_pedidos(db: Session = Depends(get_db)):    
     pedidos = db.query(Pedido).all()

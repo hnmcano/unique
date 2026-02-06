@@ -310,11 +310,11 @@ button.buttons-filters:focus {
     justify-content: flex-end;
     position: relative;
 }
-
+  
 .img-product {
     width: 120px;
     height: 120px;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 /* Estilo de carregamento de pagina */

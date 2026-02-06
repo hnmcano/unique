@@ -8,7 +8,7 @@ import { useState } from "react";
 function FormasPagPedido() {
     const { data, 
             setData, 
-            valorTotal, 
+            valor_total, 
             ToogleVisibility, 
             opcoesDisponiveis,
             formaPagamento,
@@ -93,7 +93,7 @@ function FormasPagPedido() {
             <div style={{"width":"100%"}}>
                 <div className="container-total-geral" style={{marginBottom: "20px"}}>
                     <h3 style={{"color": "white"}}>TOTAL GERAL</h3>
-                    <h3 className="value-total-geral"><label>R$</label>{valorTotal.toFixed(2)}</h3>
+                    <h3 className="value-total-geral"><label>R$</label>{valor_total.toFixed(2)}</h3>
                 </div>
                 <div className="Botoes-Checkout">
                     <Link to="/Checkout/Etapa2">

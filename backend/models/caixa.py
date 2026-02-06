@@ -12,6 +12,7 @@ class Caixa(Base):
     valor = Column(Float, nullable=False)
 
     pedido = relationship("Pedido", back_populates="caixa")
+    mesa = relationship("Mesas", back_populates="caixa")
 
     def __repr__(self):
         return f"Caixa(id={self.id}, data_abertura={self.data_abertura}, status={self.status}, valor={self.valor})"

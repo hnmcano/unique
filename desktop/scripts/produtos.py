@@ -1,5 +1,5 @@
 from connection.network_conn import handle_network_reply
-from PySide6.QtWidgets import (QMessageBox, QFileDialog, QRadioButton, QButtonGroup)
+from PySide6.QtWidgets import (QApplication, QPushButton, QMainWindow, QMessageBox, QTableWidgetItem, QWidget, QHeaderView, QTableWidget, QAbstractItemView, QFileDialog)
 from PySide6.QtNetwork import (QNetworkRequest)
 from PySide6.QtCore import QUrl, QByteArray, Qt, QBuffer, QIODevice
 from PySide6.QtGui import QPixmap
@@ -21,14 +21,16 @@ def salvar_dados_produtos(parent=None):
         estoque = int(parent.Estoque_input.text())# type: ignore
         estoque_min = int(parent.estoque_min_input.text())# type: ignore
         descricao_ = parent.desc_input.toPlainText()# type: ignore
-        pixmap = QPixmap(parent.pixmap_original)
         
-
-        buffer = QBuffer()
-        buffer.open(QIODevice.OpenModeFlag.WriteOnly)
-        pixmap.save(buffer, "PNG")
-        image_data = buffer.data().toBase64().data()
-        imagem_data_string = image_data.decode("utf-8")
+        if parent.image_label is None:
+            imagem_data_string = None
+        else:
+            pixmap = QPixmap(parent.image_label.pixmap())
+            buffer = QBuffer()
+            buffer.open(QIODevice.OpenModeFlag.WriteOnly)
+            pixmap.save(buffer, "PNG")
+            image_data = buffer.data().toBase64().data()
+            imagem_data_string = image_data.decode("utf-8")
 
         if botão_marcado is None:
             QMessageBox.warning(parent, "Erro", "Selecione uma unidade de medida.")
@@ -259,3 +261,96 @@ def atualizar_dados_produtos(parent=None):
             QMessageBox.critical(parent, "Erro de BD", f"Ocorreu um erro: {e}")
             # Limpa o objeto de resposta para evitar vazamento de memória (melhor prática)
             reply.deleteLater()
+
+
+def buscar_produtos(parent, columns=None):
+        
+        tela = (str(parent).split('.')[1]).split('(')[0]
+
+        parent.FilterProducts.setPlaceholderText("Digite para filtrar produtos...")
+
+        parent.FilterProducts.textChanged.connect(parent.filtrar_produtos)
+
+        quantidade_columns = len(columns)
+        parent.tableWidget.setColumnCount(quantidade_columns)
+        parent.tableWidget.setHorizontalHeaderLabels(columns)
+        header = parent.tableWidget.horizontalHeader()
+        header.setSectionResizeMode(QHeaderView.Interactive)
+        parent.tableWidget.setSortingEnabled(True)
+        header.setSectionResizeMode(QHeaderView.Stretch)
+        parent.tableWidget.verticalHeader().setVisible(False)
+        parent.tableWidget.setSelectionBehavior(QTableWidget.SelectRows)
+        parent.tableWidget.setSelectionMode(QTableWidget.SingleSelection)
+
+        parent.tableWidget.setEditTriggers(QTableWidget.NoEditTriggers)    
+
+
+        try:
+            response = requests.get(f"{APIURLDESENV}/produtos/desktop/table")
+            response.raise_for_status()  # Levanta um erro para códigos de status HTTP ruins
+            products = response.json()
+
+            parent.tableWidget.setRowCount(len(products))
+            linha_atual = 0
+
+            if tela == "Produtos":
+                for i in products:
+
+                    parent.tableWidget.setRowHeight(linha_atual, 50)
+
+                    item_ordenavel_id = QTableWidgetItem(str(i["id"]))
+                    item_ordenavel_id.setData(Qt.UserRole, i)
+                    parent.tableWidget.setItem(linha_atual, 0, item_ordenavel_id)
+
+                    item_ordenavel_cod_pdv = QTableWidgetItem(str(i["cod_pdv"]))
+                    parent.tableWidget.setItem(linha_atual, 1, item_ordenavel_cod_pdv)
+
+                    item_ordenavel_categoria = QTableWidgetItem(str(i["nome_categoria"]))
+                    parent.tableWidget.setItem(linha_atual, 2, item_ordenavel_categoria)
+
+                    item_ordenavel_nome = QTableWidgetItem(i["nome"])
+                    parent.tableWidget.setItem(linha_atual, 3, item_ordenavel_nome)
+
+                    item_ordenavel_preco_custo = QTableWidgetItem(str(i["preco_custo"]))
+                    parent.tableWidget.setItem(linha_atual, 4, item_ordenavel_preco_custo)
+
+                    item_ordenavel_preco_venda = QTableWidgetItem(str(i["preco_venda"]))
+                    parent.tableWidget.setItem(linha_atual, 5, item_ordenavel_preco_venda)
+
+                    item_ordenavel_estoque = QTableWidgetItem(str(i["estoque_min"]))
+                    parent.tableWidget.setItem(linha_atual, 6, item_ordenavel_estoque)
+
+                    item_ordenavel_estoque_min = QTableWidgetItem(str(i["estoque"]))
+                    parent.tableWidget.setItem(linha_atual, 7, item_ordenavel_estoque_min)
+
+                    item_ordenavel_medida = QTableWidgetItem(str(i["medida"]))
+                    parent.tableWidget.setItem(linha_atual, 8, item_ordenavel_medida)
+
+                    item_ordenavel_status_venda = QTableWidgetItem(str(i["status_venda"]))
+                    parent.tableWidget.setItem(linha_atual, 9, item_ordenavel_status_venda)
+
+                    linha_atual += 1
+
+                parent.tableWidget.sortItems(0, Qt.AscendingOrder)
+                    
+            elif tela == "AdicionarProdutoMesa":
+                
+                for i in products:
+                    parent.tableWidget.setRowHeight(linha_atual, 50)
+
+                    item_ordenavel_id = QTableWidgetItem(str(i["id"]))
+                    item_ordenavel_id.setData(Qt.UserRole, i)
+                    parent.tableWidget.setItem(linha_atual, 0, item_ordenavel_id)
+
+                    item_ordenavel_nome = QTableWidgetItem(i["nome"])
+                    parent.tableWidget.setItem(linha_atual, 1, item_ordenavel_nome)
+
+                    item_ordenavel_preco_venda = QTableWidgetItem(str(i["preco_venda"]))
+                    parent.tableWidget.setItem(linha_atual, 2, item_ordenavel_preco_venda)
+
+                    linha_atual += 1
+        
+                parent.tableWidget.sortItems(0, Qt.AscendingOrder)
+                
+        except requests.RequestException as e:
+            QMessageBox.critical(parent, "Erro", f"Erro ao buscar produtos: {str(e)}")
