@@ -1,25 +1,16 @@
-from scripts.produtos import (atualizar_dados_produtos, salvar_dados_produtos, 
-                              inserir_imagem, exibir_confirmacao_exclusao, 
-                              adicionar_categoria, preencher_dropdown_categoria, 
-                              excluir_categoria, excluir_produto_base_dados, buscar_produtos)
-from scripts.estabelecimento import (enviar_dados_estabelecimento)
-from scripts.clientes import (salvar_dados_clientes)
-from scripts.api_externa import (buscar_cep)
-from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox, QTableWidgetItem, QWidget, QHeaderView, QTableWidget, QAbstractItemView
-
-from PySide6.QtGui import QPixmap, QGuiApplication
+from PySide6.QtWidgets import *
+from PySide6.QtGui import *
+from PySide6.QtCore import *
 
 from objetos.estabelecimento.Estabelecimento import Estabelecimento
 from objetos.produtos.Produtos import Produtos
 from objetos.clientes.Clientes import Clientes
 from objetos.pedidos.Pedidos import Pedidos
+from objetos.caixa.Caixa import Caixa
+from objetos.mesas.Mesas import Mesas
 
 from telas.unique_ui import Ui_Unique as uniq
 
-from datetime import datetime, timezone
-from objetos.caixa.Caixa import Caixa
-from objetos.mesas.Mesas import Mesas
-from PySide6.QtCore import Signal, Qt
 import requests
 import sys
 import base64
