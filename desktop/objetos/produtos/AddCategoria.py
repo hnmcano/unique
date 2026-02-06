@@ -1,10 +1,43 @@
-from scripts.produtos import adicionar_categoria, excluir_categoria
 from PySide6.QtWidgets import QMainWindow, QMessageBox
 from telas.form_products.add_categorias_ui import Ui_Category as addcategorias
 
 import requests
 
 APIURLDESENV = "http://localhost:8000"
+
+def excluir_categoria(parent=None, categoria_selecionada=None):
+
+    try:
+        response = requests.delete(f"{APIURLDESENV}/categorias/category/{categoria_selecionada}")
+        if response.status_code == 200:
+            QMessageBox.information(parent, "Sucesso", "Categoria excluida com sucesso!")
+            parent.preencher_dropdown()  # Atualiza o dropdown
+        else:
+            QMessageBox.critical(parent, "Erro", "Falha ao excluir categoria.")
+    except Exception as e:
+        QMessageBox.critical(parent, "Erro", f"Erro ao excluir categoria: {str(e)}")
+
+def adicionar_categoria(parent=None):
+    nova_categoria = parent.adicionar_cat_input.text().strip()
+    if not nova_categoria:
+        QMessageBox.warning(parent, "Erro", "O campo de categoria não pode estar vazio.")
+        return
+
+    try:
+        response = requests.post(
+            f"{APIURLDESENV}/categorias/category",
+            json={"nome": nova_categoria}
+        )
+        if response.status_code == 200:
+            QMessageBox.information(parent, "Sucesso", "Categoria adicionada com sucesso!")
+            parent.adicionar_cat_input.clear()
+            parent.preencher_dropdown()  # Atualiza o dropdown
+        else:
+            QMessageBox.critical(parent, "Erro", "Falha ao adicionar categoria.")
+    except Exception as e:
+        QMessageBox.critical(parent, "Erro", f"Erro ao adicionar categoria: {str(e)}")
+
+
 
 class AddCategoria(QMainWindow, addcategorias):
     def __init__(self, parent=None):
