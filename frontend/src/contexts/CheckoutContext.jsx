@@ -13,15 +13,15 @@ export function CheckoutProvider({ children }) {
 
         "itens": [
             {
-                produtoId: 0,
+                produto_id: 0,
                 quantidade: 0,
-                valorUnitario: 0,
+                valor_unitario: 0,
             }
         ],
 
-        metodoPagamento: "",
+        metodo_pagamento: "",
         // bandeiraCartao: "",
-        valorTotal: 0,
+        valor_total: 0,
         observacoes: "",
 
         "cliente": {
@@ -39,7 +39,7 @@ export function CheckoutProvider({ children }) {
         estado: "",
         complemento: "",
         referencia: "",
-        taxaEntrega: 7.0,
+        taxa_entrega: 0,
     }
     });
 
@@ -52,18 +52,17 @@ export function CheckoutProvider({ children }) {
 
     const entregaTaxa = 7.0;
 
-    const valorTotal = totalValor + 7.0;
+    const valor_total = totalValor + entregaTaxa;
 
     useEffect(() => {
         setData(prevState => ({
             ...prevState,
             itens: produtos.map(p => ({
-                produtoId: p.produto_id,
+                produto_id: p.produto_id,
                 quantidade: p.quantidade,
-                valorUnitario: p.preco_venda
-
+                valor_unitario: p.preco_venda
             })),
-            valorTotal: totalValor + 7.0,
+            valor_total: totalValor + entregaTaxa,
             
         }));
     }, [produtos, totalValor, totalQuantidade]);
@@ -75,7 +74,7 @@ export function CheckoutProvider({ children }) {
 
         setData(prevState => ({
             ...prevState,
-            metodoPagamento: metodo,
+            metodo_pagamento: metodo,
         }));
     };
 
@@ -85,14 +84,14 @@ export function CheckoutProvider({ children }) {
 
         setData(prevState => ({
             ...prevState,
-            metodoPagamento: tipo,
+            metodo_pagamento: tipo,
         }));
 
         console.log(data);
     }
 
     return (
-        <CheckoutContext.Provider value={{ data, setData, produtos, totalQuantidade, totalValor, entregaTaxa, valorTotal, ToogleVisibility, opcoesDisponiveis, formaPagamento, handleSelect }} >
+        <CheckoutContext.Provider value={{ data, setData, produtos, totalQuantidade, totalValor, entregaTaxa, valor_total, ToogleVisibility, opcoesDisponiveis, formaPagamento, handleSelect }} >
             {children}
         </CheckoutContext.Provider>
     )

@@ -42,13 +42,15 @@ class NovoPedidoSchema(BaseModel):
 
 
 
+
+
 # 1. Detalhes de Item em um Pedido
 class ItemPedidoResponse(BaseModel):
     id: int
     produto_id: int
     quantidade: int
     # O preço histórico é crucial e deve ser retornado com precisão
-    preco_unitario_historico: Decimal = Field(..., decimal_places=2) 
+    valor_unitario: Decimal = Field(..., decimal_places=2) 
     observacoes: Optional[str] = None
     
     class Config:
@@ -58,7 +60,7 @@ class ItemPedidoResponse(BaseModel):
 class EnderecoPedidoResponse(BaseModel):
     id: int
     endereco: str
-    numero: Optional[str]
+    numero: int
     complemento: Optional[str]
     bairro: str
     cep: str

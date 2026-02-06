@@ -39,15 +39,17 @@ function FormularioPedido({}) {
             try {
                 const res = await api.get(`https://viacep.com.br/ws/${cep}/json/`);
                 const endereco = await res.data;
+                const cepAtualizado = endereco.cep.replace(/[^0-8]/g, '');
                 setData(prevState => ({
                     ...prevState,
                     entrega: {
                         ...prevState.entrega,
-                        cep: endereco.cep,
+                        cep: cepAtualizado,
                         endereco: endereco.logradouro,
                         bairro: endereco.bairro,
                         cidade: endereco.localidade,
                         estado: endereco.uf,
+                        taxa_entrega: 7
                     }
                 }));
 

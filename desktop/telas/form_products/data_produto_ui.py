@@ -61,6 +61,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.setContentsMargins(2, 2, 2, 2)
         self.image_label = QLabel(self.frame_2)
         self.image_label.setObjectName(u"image_label")
+        self.image_label.setMinimumSize(QSize(274, 378))
         self.image_label.setMaximumSize(QSize(310, 378))
         self.image_label.setStyleSheet(u"")
         self.image_label.setAlignment(Qt.AlignmentFlag.AlignCenter)

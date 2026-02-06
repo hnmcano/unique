@@ -27,7 +27,6 @@ class Pedido(Base):
     def __repr__(self):
         return f"Pedido(id={self.id}, cliente_id={self.cliente_id}, data_criacao={self.data_criacao}, data_atualizacao={self.data_atualizacao})"
     
-
 class EnderecoPedido(Base):
     __tablename__ = 'enderecos_pedidos'
 

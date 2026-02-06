@@ -15,6 +15,8 @@ from models.estabelecimento import Estabelecimento  # noqa
 from models.carrinhos import Carrinho
 from models.pedidos import Pedido
 from models.caixa import Caixa  # noqa
+from models.mesas import Mesas
+
 
 load_dotenv()  # Carrega as variáveis de ambiente do arquivo .env
 
