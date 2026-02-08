@@ -6,19 +6,19 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>540</width>
+    <width>734</width>
     <height>590</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>540</width>
-    <height>590</height>
+    <width>0</width>
+    <height>0</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>540</width>
+    <width>920</width>
     <height>590</height>
    </size>
   </property>
@@ -37,7 +37,7 @@
    </property>
    <property name="maximumSize">
     <size>
-     <width>540</width>
+     <width>16777215</width>
      <height>590</height>
     </size>
    </property>
@@ -76,7 +76,7 @@
       </property>
       <property name="maximumSize">
        <size>
-        <width>540</width>
+        <width>16777215</width>
         <height>90</height>
        </size>
       </property>
@@ -126,6 +126,12 @@
        </item>
        <item>
         <widget class="QWidget" name="widget_8" native="true">
+         <property name="maximumSize">
+          <size>
+           <width>170</width>
+           <height>16777215</height>
+          </size>
+         </property>
          <property name="styleSheet">
           <string notr="true"/>
          </property>
@@ -270,7 +276,7 @@
         <widget class="QWidget" name="widget_4" native="true">
          <property name="maximumSize">
           <size>
-           <width>370</width>
+           <width>16777215</width>
            <height>501</height>
           </size>
          </property>

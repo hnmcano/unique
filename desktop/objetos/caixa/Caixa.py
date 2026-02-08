@@ -3,7 +3,7 @@ from telas.form_box.Caixa_ui import Ui_CAIXA as caixa
 
 import requests
 
-APIURLDESENV = "http://localhost:5000"
+APIURLDESENV = "http://localhost:8000"
 
 class Caixa(QMainWindow, caixa):
     def __init__(self, parent=None):

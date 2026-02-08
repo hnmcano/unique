@@ -29,16 +29,18 @@ class PedidosMesa(Base):
     
     mesa = relationship("Mesas", back_populates="pedido")
     itens = relationship("PedidoItens", back_populates="pedido", cascade="all, delete-orphan")
+    
 
 class PedidoItens(Base):
     __tablename__ = 'pedido_itens'
 
     id: int = Column(Integer, primary_key=True, index=True)
     pedido_id: int = Column(Integer, ForeignKey('pedidos_mesa.id'), nullable=False)
-    produto_id: int = Column(Integer, nullable=False)
+    produto_id: int = Column(Integer, ForeignKey('produtos.id'), nullable=False)
     quantidade: int = Column(Integer, nullable=False)
     valor_unitario: float = Column(Float, nullable=False)
 
     pedido = relationship("PedidosMesa", back_populates="itens")
+    produto = relationship("Produto", back_populates="itens_mesa", uselist=False)
 
 

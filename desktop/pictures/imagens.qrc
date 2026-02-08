@@ -11,5 +11,6 @@
     <file>excluir.png</file>
     <file>salvar-dados.png</file>
     <file>atualizar.png</file>
+    <file>configuracoes.png</file>
   </qresource>
 </RCC>
