@@ -63,8 +63,11 @@ class AdicionarProdutoMesa(QMainWindow, addProdutosMesa):
 
         columns = ["id", "nome", "preco"]
 
-
         buscar_produtos(self, columns)
+
+        
+
+
 
     def filtrar_produtos(self, text):
         for row in range(self.tableWidget.rowCount()):

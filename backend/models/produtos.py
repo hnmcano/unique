@@ -38,6 +38,7 @@ class Produto(Base):
     imagem = Column(String, nullable=True)
 
     categoria_object = relationship("Categoria", back_populates="produtos")
+    itens_mesa = relationship("PedidoItens", back_populates="produto")
 
     def __repr__(self):
         return f"Product(id={self.id}, name={self.nome})"

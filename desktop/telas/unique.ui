@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1086</width>
+    <width>1121</width>
     <height>720</height>
    </rect>
   </property>
@@ -157,6 +157,36 @@ QPushButton:clicked {
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="btn_mesas">
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+         <property name="text">
+          <string>MESAS</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <selectedon>:/unique/pedir-comida.png</selectedon>
+          </iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>45</width>
+           <height>45</height>
+          </size>
+         </property>
+         <property name="autoDefault">
+          <bool>true</bool>
+         </property>
+         <property name="default">
+          <bool>true</bool>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="btn_delivery">
          <property name="styleSheet">
           <string notr="true"/>
@@ -187,42 +217,12 @@ QPushButton:clicked {
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="btn_mesas">
-         <property name="styleSheet">
-          <string notr="true"/>
-         </property>
-         <property name="text">
-          <string>Mesas</string>
-         </property>
-         <property name="icon">
-          <iconset>
-           <selectedon>:/unique/pedir-comida.png</selectedon>
-          </iconset>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>45</width>
-           <height>45</height>
-          </size>
-         </property>
-         <property name="autoDefault">
-          <bool>true</bool>
-         </property>
-         <property name="default">
-          <bool>true</bool>
-         </property>
-         <property name="flat">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QPushButton" name="btn_produtos">
          <property name="styleSheet">
           <string notr="true"/>
          </property>
          <property name="text">
-          <string>Produtos</string>
+          <string>PRODUTOS</string>
          </property>
          <property name="icon">
           <iconset>
@@ -252,11 +252,11 @@ QPushButton:clicked {
           <string notr="true"/>
          </property>
          <property name="text">
-          <string>Loggout</string>
+          <string>CONFIG</string>
          </property>
          <property name="icon">
           <iconset>
-           <selectedon>:/unique/sair.png</selectedon>
+           <selectedon>:/unique/configuracoes.png</selectedon>
           </iconset>
          </property>
          <property name="iconSize">
@@ -379,19 +379,10 @@ QPushButton:clicked {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1086</width>
+     <width>1121</width>
      <height>33</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuOPERACIONAL">
-    <property name="title">
-     <string>options</string>
-    </property>
-    <addaction name="estabelecimento"/>
-    <addaction name="catalago"/>
-    <addaction name="configuracoes"/>
-   </widget>
-   <addaction name="menuOPERACIONAL"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="estabelecimento">

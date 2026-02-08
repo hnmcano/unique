@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import *
-from desktop.telas.form_establishment.form_estabelecimento_ui import Ui_MainWindow as estabelecimento
+from telas.form_establishment.form_estabelecimento_ui import Ui_MainWindow as estabelecimento
 
 from connection.network_conn import handle_network_reply
 

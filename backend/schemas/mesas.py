@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
 from datetime import datetime
+from .produtos import Produto
 
 
 class ItensPedidosMesa(BaseModel):
@@ -15,11 +16,14 @@ class CriacaoPedidoMesa(BaseModel):
 class AberturaMesa(BaseModel):
     numero: int = Field(..., gt=0)
     pedido: CriacaoPedidoMesa
-    
+
+
 class ItensPedidosMesaResponse(BaseModel):
     produto_id: int = Field(..., ge=0)
     quantidade: int = Field(..., ge=0)
     valor_unitario: float
+    produto: Produto
+
 
 class CriacaoPedidosResponse(BaseModel):
     id: int
@@ -35,8 +39,6 @@ class MesasResponse(BaseModel):
     numero: int = Field(..., gt=0)
     pedido: CriacaoPedidosResponse
 
-
-class AtualizarItensMesa(BaseModel):
-    id: int = Field(..., gt=0)
-    numero: int = Field(..., gt=0)
-    pedido: CriacaoPedidoMesa
+class AdicionarItensMesa(BaseModel):
+    mesa_id: int
+    Itens: List[ItensPedidosMesa]
