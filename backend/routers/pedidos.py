@@ -132,8 +132,6 @@ async def criar_novo_pedido(novo_pedido_data: NovoPedidoSchema,db: Session = Dep
             "itens": db_pedido.itens
         }
 
-        print(data)
-
         return data
     
 

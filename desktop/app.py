@@ -8,8 +8,9 @@ from objetos.clientes.Clientes import Clientes
 from objetos.pedidos.Pedidos import Pedidos
 from objetos.caixa.Caixa import Caixa
 from objetos.mesas.Mesas import Mesas
-
 from telas.unique_ui import Ui_Unique as uniq
+
+from services.websocket import WebSocketService 
 
 import requests
 import sys
@@ -43,6 +44,10 @@ class Uniq(QMainWindow, uniq):
         self.produtos_window = None
 
         self.valid_caixa()
+
+        self.ws = WebSocketService()
+        self.ws.mensagem_recebida.connect(self.on_evento_recebido)
+        self.ws.start()
 
         # Ao clicar nos botões, abre as respectivas janelas
 
@@ -87,6 +92,10 @@ class Uniq(QMainWindow, uniq):
         if response.status_code == 200:
             tempo_aberto = response.json().get("detail")
             QMessageBox.information(self, "Caixa Aberto", f"Seu caixa esta aberto há {tempo_aberto}")
+
+    def on_evento_recebido(self, evento):
+        print(evento)
+            
 
 # funcao principal da aplicação
 if __name__ == "__main__":

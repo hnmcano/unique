@@ -3,6 +3,8 @@ from schemas.produtos import Produto as ProdutoSchema
 from models.produtos import Categoria as CategoryModel
 
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.encoders import jsonable_encoder
+from service.websocketservice import notificar_todos
 from sqlalchemy.orm import Session
 from bd.connection import get_db
 from sqlalchemy import join
@@ -16,7 +18,7 @@ router = APIRouter()
 
 # Rotas para inserir produtos ao banco de dados, com a validação do Pydantic, baseado no envio do desktop
 @router.post("/desktop/add/product")
-async def get_product(product: ProdutoSchema, db: Session = Depends(get_db)):
+async def adicionar_produto(product: ProdutoSchema, db: Session = Depends(get_db)):
     db_product = ProductModel(**product.dict())
 
     if db_product.imagem is None:
@@ -30,8 +32,13 @@ async def get_product(product: ProdutoSchema, db: Session = Depends(get_db)):
     db.add(db_product)
     db.commit()
     db.refresh(db_product)
-    return db_product
 
+    await notificar_todos({
+                            "tipo": "Atualizar_produtos",
+                            "dados": jsonable_encoder(db_product)
+                            })
+
+    return db_product
 
 # Rota para popular tabela de produtos disponivel no desktop na aba produtos
 @router.get("/desktop/table")
@@ -74,7 +81,6 @@ async def read_products(db: Session = Depends(get_db)):
         data.append(produto)
 
     return data
-
 
 # Rota para listar todos os produtos com os nomes das categorias no front-end com react
 @router.get("/react/catalago")
@@ -130,8 +136,6 @@ async def list_products(db: Session = Depends(get_db)):
         for categorias, produtos in resultado.items()
     ]
 
-    
-
 @router.delete("/desktop/delete-product-data-base/{product_id}")
 async def delete_product(product_id: str, db: Session = Depends(get_db)):
     db_product = db.query(ProductModel).filter(ProductModel.id == product_id).first()
@@ -140,7 +144,6 @@ async def delete_product(product_id: str, db: Session = Depends(get_db)):
         db.commit()
         raise HTTPException(status_code=200, detail="Produto excluido com sucesso")
     raise HTTPException(status_code=404, detail="Produto nao encontrado")
-
 
 @router.put("/desktop/alter-product-data-base/{product_id}")
 async def update_product(product_id: str, product: ProdutoSchema, db: Session = Depends(get_db)):

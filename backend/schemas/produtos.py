@@ -16,6 +16,10 @@ class Produto(BaseModel):
     imagem_name: str | None = None
     imagem: str | None = None
 
+    model_config = {
+        "from_attributes": True
+    }
+
 
 # Modelo para categorias
 class Categoria(BaseModel):

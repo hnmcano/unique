@@ -1,5 +1,5 @@
 # backend/Dockerfile
-FROM python:3.13
+FROM python:3.12-slim
 
 # Diretório de trabalho no container
 WORKDIR /backend
@@ -19,4 +19,4 @@ COPY . .
 EXPOSE 8000
 
 # Comando para rodar o FastAPI
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

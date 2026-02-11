@@ -7,6 +7,8 @@ from PySide6.QtCore import Signal, Qt
 from datetime import datetime
 import requests
 
+from services.websocket import WebSocketService
+
 APIURLDESENV = "http://localhost:8000"
 
 def exibir_confirmacao_exclusao(parent= None, data=None):
@@ -21,9 +23,7 @@ def exibir_confirmacao_exclusao(parent= None, data=None):
 
     if resposta == QMessageBox.Yes: # type: ignore
         # Se o usuário confirmar, emita o sinal e feche a janela
-
         response = requests.delete(f"{APIURLDESENV}/mesas/excluir-mesa/{data["id"]}")
-
 
         if response.status_code == 200:
             QMessageBox.information(parent, "Sucesso", "Mesa excluida com sucesso!")
@@ -36,16 +36,24 @@ def exibir_confirmacao_exclusao(parent= None, data=None):
 
     # Se a resposta for QMessageBox.No, o diálogo simplesmente fecha e nada acontece
 
+def abrir_produto(self, data=None):
+    self.produtos = AdicionarProdutoMesa(parent=self, data=data)
+    self.produtos.show()    
 
 class DadosMesa(QMainWindow, pedido_mesa):
     mesa_excluida = Signal(dict)
-    print("mesa excluida", mesa_excluida)
-    
+    mensagem_recebida = Signal(dict)
+
     def __init__(self, mesa, data, parent=None):
         super().__init__(parent)
         self.setupUi(self)
 
+        self.ws = WebSocketService()
+        self.ws.mensagem_recebida.connect(self.on_evento_recebido)
+        self.ws.start()
+
         self.mesa.setText(f"{str.replace(mesa, '_', ' ')} ")
+        self.id_mesa = data["id"]
 
         data_str = data["pedido"]["data_criacao"]
         dt_utc = datetime.fromisoformat(data_str.replace("Z", "+00:00"))
@@ -57,6 +65,14 @@ class DadosMesa(QMainWindow, pedido_mesa):
 
         self.network_manager = QNetworkAccessManager(self)
 
+        self.setup_table()
+        self.atualizar_tabela(data["pedido"]["itens"])
+
+        # Ao clicar no botão cancelar, Aciona a função de confirmação de exclusão localizada em scripts/aux_func.py
+        self.btn_excluir.clicked.connect(lambda: exibir_confirmacao_exclusao(self, data))
+        self.adicionar_produto.clicked.connect(lambda: abrir_produto(self, data))
+
+    def setup_table(self):
         columns = ["NOME", "QUANTIDADE", "VALOR"]
 
         quantidade_columns = len(columns)
@@ -72,28 +88,21 @@ class DadosMesa(QMainWindow, pedido_mesa):
         self.tableWidget.setSelectionMode(QTableWidget.SingleSelection)
         self.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
-        # Ao clicar no botão cancelar, Aciona a função de confirmação de exclusão localizada em scripts/aux_func.py
-        self.btn_excluir.clicked.connect(lambda: exibir_confirmacao_exclusao(self, data))
-        self.adicionar_produto.clicked.connect(self.abrir_produtos)
+    def atualizar_tabela(self, itens):
 
-        try:
+            self.tableWidget.setRowCount(len(itens))  
 
-            self.tableWidget.setRowCount(len(data["pedido"]["itens"]))  
-
-            for i in range(len(data["pedido"]["itens"])):
-                self.tableWidget.setItem(i, 0, QTableWidgetItem(str(data["pedido"]["itens"][i]["produto"]["nome"])))
-                self.tableWidget.setItem(i, 1, QTableWidgetItem(str(data["pedido"]["itens"][i]["quantidade"])))
-                self.tableWidget.setItem(i, 2, QTableWidgetItem(str(data["pedido"]["itens"][i]["valor_unitario"])))
-
-        except Exception as e:
-            print("erro apresentado", e)
-
-
+            for i, item in enumerate(itens):
+                self.tableWidget.setItem(i, 0, QTableWidgetItem(str(item["produto"]["nome"])))
+                self.tableWidget.setItem(i, 1, QTableWidgetItem(str(item["quantidade"])))
+                self.tableWidget.setItem(i, 2, QTableWidgetItem(str(item["valor_unitario"])))
 
     # Override do método closeEvent para emitir o sinal quando a janela for fechada
     def closeEvent(self, event):
         event.accept()
 
-    def abrir_produtos(self):
-        self.produtos = AdicionarProdutoMesa(parent=self)
-        self.produtos.show()
+    def on_evento_recebido(self, evento: dict):
+        if evento["tipo"] == "produto_em_mesa":
+            if evento["dados"]["id"] == self.id_mesa:
+                self.atualizar_tabela(evento["dados"]["pedido"]["itens"])
+            

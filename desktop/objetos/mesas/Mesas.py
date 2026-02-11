@@ -5,6 +5,19 @@ from ..mesas.PedidosMesas import DadosMesa
 from PySide6.QtNetwork import *
 import requests
 
+def atualizar_dados(numero_mesa):
+        response = requests.post("http://127.0.0.1:8000/mesas/abrir-mesa", json={
+            "numero": numero_mesa,
+            "pedido": {
+                "status": "ABERTO",
+                "itens": []
+                }
+            }
+        )
+
+        data = response.json()
+        return response, data
+
 class Mesas(QMainWindow, mesas):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -16,7 +29,6 @@ class Mesas(QMainWindow, mesas):
 
         response = requests.get("http://localhost:8000/mesas/em-atendimento")
         mesa = response.json()
-
 
         if response.status_code == 200: 
             for i in range(len(mesa)):
@@ -48,7 +60,6 @@ class Mesas(QMainWindow, mesas):
         # A variável 'name_button' é apenas para fins de depuração ou identificação,
         # mas não deve ser usada para aplicar o estilo.
         name_button = botao_clicado.objectName()
-        print(name_button)
         numero_mesa = int(name_button.split("_")[1])
 
         # Mude a cor do botão clicado chamando o método diretamente no objeto.
@@ -65,17 +76,7 @@ class Mesas(QMainWindow, mesas):
                 font-size: 14px;
             }""")
 
-        response = requests.post("http://127.0.0.1:8000/mesas/abrir-mesa", json={
-            "numero": numero_mesa,
-            "pedido": {
-                "status": "ABERTO",
-                "itens": []
-                }
-            }
-        )
-
-        data = response.json()
-        print(data)
+        response, data = atualizar_dados(numero_mesa)
 
         if response.status_code == 201:
             self.window_table = DadosMesa(mesa=name_button, data=data, parent=self)

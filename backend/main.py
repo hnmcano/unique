@@ -1,8 +1,9 @@
 from fastapi import FastAPI
+from service import websocketservice
 from routers import clientes, produtos, carrinhos, pedidos, caixa, estabelecimento, categorias, mesas
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI(title="My First FastAPI project", version="1.0.0")
+app = FastAPI(title="UniqueSystems - PDV", version="1.0.0")
 origins = [
     "http://localhost:5173",
     "http://localhost:8000",
@@ -28,3 +29,4 @@ app.include_router(caixa.router, prefix="/caixa", tags=["caixa"])
 app.include_router(estabelecimento.router, prefix="/estabelecimento", tags=["estabelecimento"])
 app.include_router(categorias.router, prefix="/categorias", tags=["categorias"])
 app.include_router(mesas.router, prefix="/mesas", tags=["mesas"])
+app.include_router(websocketservice.router, prefix="/ws", tags=["websocket"])

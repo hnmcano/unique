@@ -2,11 +2,14 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from bd.connection import get_db
 from models.caixa import Caixa as CaixaModel
-from schemas.mesas import MesasResponse, AberturaMesa, MesasResponse, AdicionarItensMesa
+from fastapi.encoders import jsonable_encoder
+from schemas.mesas import MesasResponse, AberturaMesa, AdicionarItensMesa
 from models.mesas import Mesas as MesaModel, PedidosMesa as PedidosMesaModel, PedidoItens as PedidoItensModel
 from models.produtos import Produto as ProdutoModel
+from service.websocketservice import clientes_conectados, notificar_todos
 from models.caixa import Caixa
 import time
+import json
 
 router = APIRouter()
 
@@ -35,14 +38,6 @@ def abrir_mesa(mesa: AberturaMesa, db: Session = Depends(get_db)):
         ).first()
 
         if pedido_aberto:
-
-            print( {
-                "id": mesa_existente.id,
-                "numero": mesa_existente.numero,
-                "caixa_id": mesa_existente.caixa_id,
-                "pedido": pedido_aberto 
-                })
-
             return {
                 "id": mesa_existente.id,
                 "numero": mesa_existente.numero,
@@ -103,6 +98,31 @@ async def adicionar_produto(
     if not pedido_aberto:
         raise HTTPException(status_code=404, detail="Pedido nao encontrado")
 
+    item_existente = db.query(PedidoItensModel).filter(PedidoItensModel.produto_id == mesa.Itens[0].produto_id).first()
+
+    if item_existente:
+        item_existente.quantidade += mesa.Itens[0].quantidade
+        db.commit()
+        db.refresh(item_existente)
+
+        mesa_response = MesasResponse.model_validate( {
+            "id": mesa_existente.id,    
+            "numero": mesa_existente.numero,
+            "pedido": pedido_aberto
+        })
+
+        await notificar_todos({
+            "tipo": "produto_em_mesa",
+            "dados": jsonable_encoder(mesa_response)
+        })
+
+        return {
+            "id": mesa_existente.id,
+            "numero": mesa_existente.numero,
+            "caixa_id": mesa_existente.caixa_id,
+            "pedido": pedido_aberto
+        }
+
     # pega o item enviado no request
     item_request = mesa.Itens[0]
 
@@ -111,7 +131,7 @@ async def adicionar_produto(
         quantidade=item_request.quantidade,
         valor_unitario=item_request.valor_unitario,
     )
-
+    
     pedido_aberto.itens.append(item)
 
     # atualiza totais
@@ -120,6 +140,18 @@ async def adicionar_produto(
 
     db.commit()
     db.refresh(pedido_aberto)
+
+
+    mesa_response = MesasResponse.model_validate( {  
+        "id": mesa_existente.id,    
+        "numero": mesa_existente.numero,
+        "pedido": pedido_aberto
+    })
+
+    await notificar_todos({
+        "tipo": "produto_em_mesa",
+        "dados": jsonable_encoder(mesa_response)
+    })
 
     return {
         "id": mesa_existente.id,
@@ -188,7 +220,6 @@ async def excluir_mesa(mesa_id: int, db: Session = Depends(get_db)):
     db.commit()
 
     raise HTTPException(status_code=200, detail="Mesa excluida com sucesso")
-
 
 @router.get("/em-atendimento", status_code=status.HTTP_200_OK)
 async def mesas_em_atendimento(db: Session = Depends(get_db)):

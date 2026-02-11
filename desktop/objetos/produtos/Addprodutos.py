@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import *
 from telas.form_products.add_produtos_ui import Ui_MainWindow as addprodutos
 from .AddCategoria import AddCategoria
-from connection.network_conn import handle_network_reply
+from services.network_conn import handle_network_reply
 
 from PySide6.QtCore import *
 from PySide6.QtGui import *
@@ -82,7 +82,6 @@ def salvar_dados_produtos(parent=None):
                     "imagem": f"{imagem_data_string}"
             }
 
-           
             json_data=json.dumps(data_json).encode("utf-8")
             data_to_send=QByteArray(json_data)
             request= QNetworkRequest(url)
@@ -92,24 +91,13 @@ def salvar_dados_produtos(parent=None):
 
             QMessageBox.information(parent, "Sucesso", "Produto adicionado com sucesso!")
 
-            #Limpa os campos após salvar
-            parent.cod_pdv_input.clear()# type: ignore
-            parent.categoria_combo.clear()# type: ignore
-            parent.nome_input.clear()# type: ignore
-            parent.preco_custo_input.clear()# type: ignore
-            parent.preco_venda_input.clear()# type: ignore
+            parent.findChild(QLineEdit).clear()
             
             parent.buttonGroup.setExclusive(False) # type: ignore
             for button in parent.buttonGroup.buttons(): # type: ignore
                 button.setChecked(False)
             parent.buttonGroup.setExclusive(True) # type: ignore
 
-            parent.Estoque_input.clear()# type: ignore
-            parent.estoque_min_input.clear()# type: ignore
-            parent.desc_input.clear()# type: ignore
-            parent.image_label.clear()# type: ignore
-            parent.image_label.setText("Nenhuma imagem selecionada")# type: ignore
-            
         except ValueError:
             QMessageBox.warning(parent, "Erro", "A informação está incorreta.")
         except Exception as e:
@@ -149,6 +137,7 @@ def inserir_imagem(parent=None):
 
 class AddProdutos(QMainWindow, addprodutos):
     janela_fechada = Signal()
+    atualizar_tabela = Signal(dict)
 
     def __init__(self, parent=None):
         super().__init__(parent)

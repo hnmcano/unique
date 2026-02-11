@@ -7,7 +7,8 @@ import requests
 
 APIURLDESENV = "http://localhost:8000"
 
-def buscar_produtos(parent, columns=None):
+
+def buscar_produtos(parent, data, columns=None):
     
     parent.FilterProducts.setPlaceholderText("Digite para filtrar produtos...")
 
@@ -26,7 +27,6 @@ def buscar_produtos(parent, columns=None):
 
     parent.tableWidget.setEditTriggers(QTableWidget.NoEditTriggers)    
 
-
     try:
         response = requests.get(f"{APIURLDESENV}/produtos/desktop/table")
         response.raise_for_status()  # Levanta um erro para códigos de status HTTP ruins
@@ -35,7 +35,6 @@ def buscar_produtos(parent, columns=None):
         parent.tableWidget.setRowCount(len(products))
         linha_atual = 0
 
-            
         for i in products:
             parent.tableWidget.setRowHeight(linha_atual, 50)
 
@@ -49,26 +48,47 @@ def buscar_produtos(parent, columns=None):
             item_ordenavel_preco_venda = QTableWidgetItem(str(i["preco_venda"]))
             parent.tableWidget.setItem(linha_atual, 2, item_ordenavel_preco_venda)
 
+            btn_adicionar = QPushButton("+")
+            parent.tableWidget.setCellWidget(linha_atual, 3, btn_adicionar)
+            btn_adicionar.setStyleSheet("""
+            QPushButton {
+                color: white; 
+                font-weight: bold; 
+                font-size: 20px; 
+                max-height: 45px; 
+                max-width: 50px; 
+                text-align: center;
+                padding: 5px;
+            }
+            QPushButton:hover {
+                background-color: blue;
+            }
+            QPushButton:pressed {
+                background-color: darkblue;
+            }
+            QPushButton:disabled {
+                background-color: gray;
+            }
+            """)
+
+            btn_adicionar.clicked.connect(lambda _, row=linha_atual: parent.adicionar_produto(row, data))
+
             linha_atual += 1
     
             parent.tableWidget.sortItems(0, Qt.AscendingOrder)
             
     except requests.RequestException as e:
         QMessageBox.critical(parent, "Erro", f"Erro ao buscar produtos: {str(e)}")
-
+        
 class AdicionarProdutoMesa(QMainWindow, addProdutosMesa):
-    def __init__(self, parent=None):
+    def __init__(self, data, parent=None):
         super().__init__(parent)
         self.setupUi(self)
 
-        columns = ["id", "nome", "preco"]
+        columns = ["id", "nome", "preco", ""]
 
-        buscar_produtos(self, columns)
-
-        
-
-
-
+        buscar_produtos(self, data, columns)
+    
     def filtrar_produtos(self, text):
         for row in range(self.tableWidget.rowCount()):
             item = self.tableWidget.item(row, 1)
@@ -76,4 +96,25 @@ class AdicionarProdutoMesa(QMainWindow, addProdutosMesa):
                 self.tableWidget.showRow(row)
             else:
                 self.tableWidget.hideRow(row)
+
+    def adicionar_produto(self, row, data):
+        produto = self.tableWidget.item(row, 0).data(Qt.UserRole)
+        mesa_id = data["id"]
+        response = requests.put(f"{APIURLDESENV}/mesas/adicionar-produto", 
+                                 json={
+                                     "mesa_id": f"{mesa_id}",
+                                     "Itens": [
+                                            {
+                                            "produto_id": f"{produto["id"]}",
+                                            "quantidade": 1,
+                                            "valor_unitario": f"{produto['preco_venda']}"
+                                            }
+                                        ]
+                                })
+
+        if response.status_code == 201:
+            QMessageBox.information(self, "Sucesso", "Produto adicionado com sucesso!")
+        else:
+            QMessageBox.critical(self, "Erro", f"Erro ao adicionar produto: {response.text}")
+
 
