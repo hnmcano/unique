@@ -28,7 +28,7 @@ class PedidosMesa(Base):
     quantidade_itens: int = Column(Integer, nullable=False)
     
     mesa = relationship("Mesas", back_populates="pedido")
-    itens = relationship("PedidoItens", back_populates="pedido", cascade="all, delete-orphan")
+    itens = relationship("PedidoItens", back_populates="pedido", cascade="all, delete-orphan", order_by="PedidoItens.ordem_criacao")
     
 
 class PedidoItens(Base):
@@ -39,6 +39,8 @@ class PedidoItens(Base):
     produto_id: int = Column(Integer, ForeignKey('produtos.id'), nullable=False)
     quantidade: int = Column(Integer, nullable=False)
     valor_unitario: float = Column(Float, nullable=False)
+    valor_total: float = Column(Float, nullable=False)
+    ordem_criacao: datetime = Column(DateTime(timezone=True), default=datetime.utcnow)
 
     pedido = relationship("PedidosMesa", back_populates="itens")
     produto = relationship("Produto", back_populates="itens_mesa", uselist=False)

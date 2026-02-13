@@ -21,6 +21,7 @@ class WebSocketService(QThread):
     def on_message(self, ws, message: str):
         try:
             evento = json.loads(message)
+            print("Evento recebido:", evento)
             self.mensagem_recebida.emit(evento)
         except Exception as e:
             print("Erro ao processar WS:", e)

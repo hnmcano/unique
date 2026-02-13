@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from bd.connection import get_db
 from models.caixa import Caixa as CaixaModel
 from fastapi.encoders import jsonable_encoder
@@ -18,7 +18,10 @@ router = APIRouter()
     status_code=status.HTTP_201_CREATED,
     response_model=MesasResponse
 )
-def abrir_mesa(mesa: AberturaMesa, db: Session = Depends(get_db)):
+def abrir_mesa(
+        mesa: AberturaMesa, 
+        db: Session = Depends(get_db)
+    ):
 
     caixa = db.query(CaixaModel).filter(CaixaModel.status == "ABERTO").first()
     if not caixa:
@@ -93,23 +96,31 @@ async def adicionar_produto(
     pedido_aberto = db.query(PedidosMesaModel).filter(
         PedidosMesaModel.mesa_id == mesa_existente.id,
         PedidosMesaModel.status == "ABERTO"
-    ).first()
+    ).with_for_update().first()
 
     if not pedido_aberto:
         raise HTTPException(status_code=404, detail="Pedido nao encontrado")
 
-    item_existente = db.query(PedidoItensModel).filter(PedidoItensModel.produto_id == mesa.Itens[0].produto_id).first()
+    item_existente = db.query(PedidoItensModel).filter(PedidoItensModel.pedido_id == pedido_aberto.id, PedidoItensModel.produto_id == mesa.produto_id).with_for_update().first()
+    produto_existente = db.query(ProdutoModel).filter(ProdutoModel.id == mesa.produto_id).with_for_update().first()
+
+    if produto_existente.estoque <= 0:
+        raise HTTPException(status_code=400, detail="Estoque insuficiente")
 
     if item_existente:
-        item_existente.quantidade += mesa.Itens[0].quantidade
-        db.commit()
-        db.refresh(item_existente)
+        item_existente.quantidade += mesa.quantidade
+        item_existente.valor_total = item_existente.quantidade * mesa.valor_unitario
+        pedido_aberto.quantidade_itens = pedido_aberto.quantidade_itens
+        pedido_aberto.valor_total += mesa.quantidade * item_existente.valor_unitario
+        produto_existente.estoque -= 1
 
         mesa_response = MesasResponse.model_validate( {
             "id": mesa_existente.id,    
             "numero": mesa_existente.numero,
             "pedido": pedido_aberto
         })
+
+        db.commit()
 
         await notificar_todos({
             "tipo": "produto_em_mesa",
@@ -123,24 +134,24 @@ async def adicionar_produto(
             "pedido": pedido_aberto
         }
 
-    # pega o item enviado no request
-    item_request = mesa.Itens[0]
 
+    # pega o item enviado no request
     item = PedidoItensModel(
-        produto_id=item_request.produto_id,
-        quantidade=item_request.quantidade,
-        valor_unitario=item_request.valor_unitario,
+        produto_id=mesa.produto_id,
+        quantidade=mesa.quantidade,
+        valor_unitario=mesa.valor_unitario,
+        valor_total=mesa.quantidade * mesa.valor_unitario
     )
     
     pedido_aberto.itens.append(item)
 
     # atualiza totais
-    pedido_aberto.quantidade_itens += item.quantidade
-    pedido_aberto.valor_total += item.quantidade * item.valor_unitario
+    pedido_aberto.quantidade_itens += 1
+    pedido_aberto.valor_total += item.valor_total
+    produto_existente.estoque -= item.quantidade
 
     db.commit()
     db.refresh(pedido_aberto)
-
 
     mesa_response = MesasResponse.model_validate( {  
         "id": mesa_existente.id,    
@@ -164,7 +175,10 @@ async def adicionar_produto(
     "/finalizar-pedido-mesa/{mesa_id}",
     status_code=status.HTTP_204_NO_CONTENT
 )
-async def fechar_mesa(mesa_id: int, db: Session = Depends(get_db)):
+async def fechar_mesa(
+    mesa_id: int, 
+    db: Session = Depends(get_db)
+):
 
     mesa_existente = db.query(MesaModel).filter(
         MesaModel.id == mesa_id
@@ -184,8 +198,14 @@ async def fechar_mesa(mesa_id: int, db: Session = Depends(get_db)):
     pedido_aberto.status = "FECHADO"
     db.commit()
 
-@router.delete("/excluir-pedido-mesa/{mesa_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def excluir_pedido_mesa(mesa_id: int, db: Session = Depends(get_db)):
+@router.delete(
+        "/excluir-pedido-mesa/{mesa_id}", 
+        status_code=status.HTTP_204_NO_CONTENT
+    )
+async def excluir_pedido_mesa(
+    mesa_id: int, 
+    db: Session = Depends(get_db)
+):
 
     mesa_existente = db.query(MesaModel).filter(
         MesaModel.id == mesa_id
@@ -205,8 +225,14 @@ async def excluir_pedido_mesa(mesa_id: int, db: Session = Depends(get_db)):
     db.delete(pedido_aberto)
     db.commit()
 
-@router.delete("/excluir-mesa/{mesa_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def excluir_mesa(mesa_id: int, db: Session = Depends(get_db)):
+@router.delete(
+        "/excluir-mesa/{mesa_id}", 
+        status_code=status.HTTP_204_NO_CONTENT
+    )
+async def excluir_mesa(
+    mesa_id: int, 
+    db: Session = Depends(get_db)
+):
 
     mesa_existente = db.query(MesaModel).filter(
         MesaModel.id == mesa_id
@@ -215,14 +241,43 @@ async def excluir_mesa(mesa_id: int, db: Session = Depends(get_db)):
     if not mesa_existente:
         raise HTTPException(status_code=404, detail="Mesa nao encontrada")
     
+    pedido_aberto = (
+        db.query(PedidosMesaModel)
+        .options(joinedload(PedidosMesaModel.itens))
+        .filter(
+            PedidosMesaModel.mesa_id == mesa_id,
+            PedidosMesaModel.status == "ABERTO"
+        )
+        .first()
+    )
 
+    if not pedido_aberto:
+        raise HTTPException(status_code=404, detail="Pedido não encontrado")
+
+    # Devolve estoque
+    for item in pedido_aberto.itens:
+        produto = db.get(ProdutoModel, item.produto_id)
+        produto.estoque += item.quantidade
+
+        if produto.estoque > 0:
+            produto.status_venda = "Ativo"
+
+    # Agora deleta pedido e mesa
+    db.delete(pedido_aberto)
     db.delete(mesa_existente)
+
+    # UM ÚNICO COMMIT
     db.commit()
 
     raise HTTPException(status_code=200, detail="Mesa excluida com sucesso")
 
-@router.get("/em-atendimento", status_code=status.HTTP_200_OK)
-async def mesas_em_atendimento(db: Session = Depends(get_db)):
+@router.get(
+        "/em-atendimento", 
+        status_code=status.HTTP_200_OK
+    )
+async def mesas_em_atendimento(
+    db: Session = Depends(get_db)
+):
     pedidos_abertos = db.query(PedidosMesaModel).filter(PedidosMesaModel.status == "ABERTO").all()
 
     if not pedidos_abertos:
@@ -235,3 +290,167 @@ async def mesas_em_atendimento(db: Session = Depends(get_db)):
         mesas_em_atendimento.append(mesa.numero)
 
     return mesas_em_atendimento
+
+@router.delete(
+        "/excluir-item/{mesa_id}/{pedido_id}/{item_id}", 
+        status_code=status.HTTP_200_OK
+)
+async def excluir_item_pedido_mesa(
+    mesa_id: int, 
+    pedido_id: int, 
+    item_id: int, 
+    db: Session = Depends(get_db)
+):  
+    mesa = db.query(MesaModel).filter(MesaModel.id == mesa_id).first()
+    pedido = db.query(PedidosMesaModel).filter(PedidosMesaModel.mesa_id == mesa_id, PedidosMesaModel.id == pedido_id).with_for_update().first()
+
+    if mesa and pedido:
+        item_existente = db.query(PedidoItensModel).filter(PedidoItensModel.pedido_id == pedido_id, PedidoItensModel.produto_id == item_id).with_for_update().first()
+
+        if not item_existente:
+            raise HTTPException(status_code=404, detail="Item nao encontrado")
+
+        pedido.quantidade_itens -= 1
+        pedido.valor_total -= item_existente.quantidade * item_existente.valor_unitario
+
+        pedido_aberto = (
+            db.query(PedidosMesaModel)
+            .options(
+                joinedload(PedidosMesaModel.itens)
+            )
+            .filter(
+                PedidosMesaModel.mesa_id == mesa_id,
+                PedidosMesaModel.status == "ABERTO"
+            )
+            .first()
+        )
+
+        if not pedido_aberto:
+            raise HTTPException(status_code=404, detail="Pedido nao encontrado")
+
+        produto = db.query(ProdutoModel).filter(ProdutoModel.id == item_existente.produto_id).with_for_update().first()
+        produto.estoque += item_existente.quantidade
+
+        db.delete(item_existente)
+        db.commit()
+
+        if produto.estoque > 0:
+            produto.status_venda = "Ativo"
+        
+        db.commit()
+
+        mesa_response = MesasResponse.model_validate( {  
+            "id": mesa.id,    
+            "numero": mesa.numero,
+            "pedido": pedido
+        })
+
+        await notificar_todos({
+            "tipo": "produto_em_mesa",
+            "dados": jsonable_encoder(mesa_response)
+        })
+
+    else:
+        raise HTTPException(status_code=404, detail="Mesa ou pedido não encontrados.")
+    
+@router.put("/aumentar-item/{mesa_id}/{pedido_id}/{item_id}", status_code=status.HTTP_200_OK, response_model=MesasResponse)
+async def adicionar_quantidade(mesa_id: int, pedido_id: int, item_id: int, bd: Session = Depends(get_db)):
+    mesa_existente = bd.query(MesaModel).filter(MesaModel.id == mesa_id).first()
+    pedido_existente = bd.query(
+        PedidosMesaModel
+        ).filter(
+            PedidosMesaModel.id == pedido_id, 
+            PedidosMesaModel.mesa_id == mesa_existente.id, 
+            PedidosMesaModel.status == "ABERTO"
+        ).first()
+
+    item_existente = bd.query(PedidoItensModel).filter(PedidoItensModel.pedido_id == pedido_existente.id, PedidoItensModel.produto_id == item_id).first()
+    if not item_existente:
+        raise HTTPException(status_code=404, detail="Item nao encontrado")
+    
+    produto_existente = bd.query(ProdutoModel).filter(ProdutoModel.id == item_existente.produto_id).with_for_update().first()
+    if not produto_existente:
+        raise HTTPException(status_code=404, detail="Produto nao encontrado")
+    
+    if produto_existente.estoque <= 0:
+        raise HTTPException(status_code=400, detail="Estoque insuficiente")
+ 
+    item_existente.quantidade += 1
+    item_existente.valor_total += item_existente.valor_unitario
+    pedido_existente.valor_total += item_existente.valor_unitario
+    produto_existente.estoque += -1
+
+    if produto_existente.estoque == 0:
+        produto_existente.status_venda = "Pausado"
+
+    bd.commit()
+
+    mesa_response = MesasResponse.model_validate( {  
+        "id": mesa_existente.id,    
+        "numero": mesa_existente.numero,
+        "pedido": pedido_existente
+    })
+
+    await notificar_todos({
+        "tipo": "produto_em_mesa",
+        "dados": jsonable_encoder(mesa_response)
+    })
+
+    return mesa_response
+
+@router.put("/diminuir-item/{mesa_id}/{pedido_id}/{item_id}", status_code=status.HTTP_200_OK, response_model=MesasResponse)
+async def remover_quantidade(mesa_id: int, pedido_id: int, item_id: int, bd: Session = Depends(get_db)):
+    mesa_existente = bd.query(MesaModel).filter(MesaModel.id == mesa_id).first()
+    pedido_existente = bd.query(
+        PedidosMesaModel
+        ).filter(
+            PedidosMesaModel.id == pedido_id, 
+            PedidosMesaModel.mesa_id == mesa_existente.id, 
+            PedidosMesaModel.status == "ABERTO"
+        ).first()
+
+    item_existente = bd.query(PedidoItensModel).filter(PedidoItensModel.pedido_id == pedido_existente.id, PedidoItensModel.produto_id == item_id).first()
+    if not item_existente:
+        raise HTTPException(status_code=404, detail="Item nao encontrado")
+    
+    produto_existente = bd.query(ProdutoModel).filter(ProdutoModel.id == item_existente.produto_id).with_for_update().first()
+
+    if not produto_existente:
+        raise HTTPException(status_code=404, detail="Produto nao encontrado")
+
+    if item_existente.quantidade == 1:
+        mesa_response = MesasResponse.model_validate( {  
+            "id": mesa_existente.id,    
+            "numero": mesa_existente.numero,
+            "pedido": pedido_existente
+        })
+
+        await notificar_todos({
+            "tipo": "produto_em_mesa",
+            "dados": jsonable_encoder(mesa_response)
+        })
+
+        return mesa_response
+
+    item_existente.quantidade += -1
+    item_existente.valor_total += -item_existente.valor_unitario
+    pedido_existente.valor_total += -item_existente.valor_unitario
+    produto_existente.estoque += 1
+
+    if produto_existente.estoque > 0:
+        produto_existente.status_venda = "Ativo"
+
+    bd.commit()
+
+    mesa_response = MesasResponse.model_validate( {  
+        "id": mesa_existente.id,    
+        "numero": mesa_existente.numero,
+        "pedido": pedido_existente
+    })
+
+    await notificar_todos({
+        "tipo": "produto_em_mesa",
+        "dados": jsonable_encoder(mesa_response)
+    })
+
+    return mesa_response

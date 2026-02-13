@@ -49,7 +49,7 @@ class Produtos(QMainWindow, produtos):
         self.atualizar_tabela(data)
 
         # Ao clicar no botão adicionar produto, abre a janela de adicionar produtos
-        self.tableWidget.cellClicked.connect(self.abrir_dados_produto)
+        
         self.add_products.clicked.connect(self.abrir_add_produto)
         self.add_categoria.clicked.connect(self.abrir_categoria)
 
@@ -66,12 +66,12 @@ class Produtos(QMainWindow, produtos):
         parent.tableWidget.setHorizontalHeaderLabels(columns)
         header = parent.tableWidget.horizontalHeader()
         header.setSectionResizeMode(QHeaderView.Interactive)
-        parent.tableWidget.setSortingEnabled(True)
+        parent.tableWidget.setShortcutEnabled(True)
         header.setSectionResizeMode(QHeaderView.Stretch)
         parent.tableWidget.verticalHeader().setVisible(False)
         parent.tableWidget.setSelectionBehavior(QTableWidget.SelectRows)
         parent.tableWidget.setSelectionMode(QTableWidget.SingleSelection)
-        parent.tableWidget.setEditTriggers(QTableWidget.NoEditTriggers)    
+        parent.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
     def atualizar_tabela(parent, data):
 
@@ -79,26 +79,60 @@ class Produtos(QMainWindow, produtos):
             data = json.loads(data)
 
         parent.tableWidget.setRowCount(len(data))
+        parent.tableWidget.cellClicked.connect(parent.abrir_dados_produto)
 
         for i, prod in enumerate(data):
-            parent.tableWidget.setItem(i, 0, QTableWidgetItem(str(prod["id"])))
-            parent.tableWidget.setItem(i, 1, QTableWidgetItem(prod["cod_pdv"]))          
-            parent.tableWidget.setItem(i, 2, QTableWidgetItem(prod["nome_categoria"]))
-            parent.tableWidget.setItem(i, 3, QTableWidgetItem(prod["nome"]))
-            parent.tableWidget.setItem(i, 4, QTableWidgetItem(str(prod["preco_custo"])))
-            parent.tableWidget.setItem(i, 5, QTableWidgetItem(str(prod["preco_venda"])))
-            parent.tableWidget.setItem(i, 6, QTableWidgetItem(str(prod["estoque_min"])))
-            parent.tableWidget.setItem(i, 7, QTableWidgetItem(str(prod["estoque"])))
-            parent.tableWidget.setItem(i, 8, QTableWidgetItem(prod["medida"]))
-            parent.tableWidget.setItem(i, 9, QTableWidgetItem(prod["status_venda"]))
+
+            item_id = QTableWidgetItem(str(prod["id"]))
+            item_id.setData(Qt.UserRole, prod)
+            item_id.setTextAlignment(Qt.AlignCenter)
+            parent.tableWidget.setItem(i, 0, item_id)
+            
+            item_cod_pdv = QTableWidgetItem(prod["cod_pdv"])
+            item_cod_pdv.setTextAlignment(Qt.AlignCenter)
+            parent.tableWidget.setItem(i, 1, item_cod_pdv)
+
+            item_nome_categoria = QTableWidgetItem(prod["nome_categoria"])
+            item_nome_categoria.setTextAlignment(Qt.AlignCenter)
+            parent.tableWidget.setItem(i, 2, item_nome_categoria)
+
+            item_nome = QTableWidgetItem(prod["nome"])
+            item_nome.setTextAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+            parent.tableWidget.setItem(i, 3, item_nome)
+
+            item_preco_custo = QTableWidgetItem(str(prod["preco_custo"]))
+            item_preco_custo.setTextAlignment(Qt.AlignCenter)
+            parent.tableWidget.setItem(i, 4, item_preco_custo)
+
+            item_preco_venda = QTableWidgetItem(str(prod["preco_venda"]))
+            item_preco_venda.setTextAlignment(Qt.AlignCenter)
+            parent.tableWidget.setItem(i, 5, item_preco_venda)
+
+            item_estoque_min = QTableWidgetItem(str(prod["estoque_min"]))
+            item_estoque_min.setTextAlignment(Qt.AlignCenter)
+            parent.tableWidget.setItem(i, 6, item_estoque_min)
+
+            item_estoque = QTableWidgetItem(str(prod["estoque"]))
+            item_estoque.setTextAlignment(Qt.AlignCenter)
+            parent.tableWidget.setItem(i, 7, item_estoque)
+
+            item_medida = QTableWidgetItem(prod["medida"])
+            item_medida.setTextAlignment(Qt.AlignCenter)
+            parent.tableWidget.setItem(i, 8, item_medida)
+
+            item_status = QTableWidgetItem(prod["status_venda"])
+            item_status.setTextAlignment(Qt.AlignCenter)
+            parent.tableWidget.setItem(i, 9, item_status)
+
 
     def abrir_add_produto(self):
         self.add_produto_window = AddProdutos(parent=self)# type: ignore
         self.add_produto_window.show()# type: ignore
 
-    def abrir_dados_produto(self, row, column):
+    def abrir_dados_produto(self, row):
         item = self.tableWidget.item(row, 0)
         produto = item.data(Qt.UserRole)
+        print(produto)
         self.dados_produto_window = DadosProduto(produto=produto, parent=self)
         self.dados_produto_window.show()
 

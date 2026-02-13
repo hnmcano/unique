@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 from sqlalchemy import join
 from decimal import Decimal
@@ -11,6 +12,7 @@ from schemas.pedidos import NovoPedidoSchema, PedidoResponse
 from models.pedidos import Pedido, EnderecoPedido, ItemPedido
 from models.clientes import Clientes
 from models.caixa import Caixa as CaixaModel
+from service.websocketservice import notificar_todos
 from bd.connection import get_db
 from datetime import datetime
 
@@ -131,6 +133,11 @@ async def criar_novo_pedido(novo_pedido_data: NovoPedidoSchema,db: Session = Dep
             "endereco_entrega": db_endereco,
             "itens": db_pedido.itens
         }
+
+        await notificar_todos(jsonable_encoder({
+            "tipo": "delivery_acionado",
+            "dados": data
+        }))
 
         return data
     

@@ -118,6 +118,16 @@ class Ui_MainWindow(object):
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
         self.tableWidget = QTableWidget(self.products)
         self.tableWidget.setObjectName(u"tableWidget")
+        self.tableWidget.horizontalHeader().setVisible(True)
+        self.tableWidget.horizontalHeader().setCascadingSectionResizes(False)
+        self.tableWidget.horizontalHeader().setHighlightSections(True)
+        self.tableWidget.horizontalHeader().setProperty(u"showSortIndicator", False)
+        self.tableWidget.horizontalHeader().setStretchLastSection(False)
+        self.tableWidget.verticalHeader().setVisible(True)
+        self.tableWidget.verticalHeader().setCascadingSectionResizes(False)
+        self.tableWidget.verticalHeader().setHighlightSections(True)
+        self.tableWidget.verticalHeader().setProperty(u"showSortIndicator", False)
+        self.tableWidget.verticalHeader().setStretchLastSection(False)
 
         self.verticalLayout_5.addWidget(self.tableWidget)
 

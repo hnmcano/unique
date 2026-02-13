@@ -1,5 +1,5 @@
 
-from PySide6.QtWidgets import (QApplication, QPushButton, QMainWindow, QMessageBox, QTableWidgetItem, QWidget, QHeaderView, QTableWidget, QAbstractItemView, QFileDialog)
+from PySide6.QtWidgets import (QHBoxLayout,QApplication, QPushButton, QMainWindow, QMessageBox, QTableWidgetItem, QWidget, QHeaderView, QTableWidget, QAbstractItemView, QFileDialog, QStyle)
 from telas.form_orders.pedido_mesa_ui import Ui_MainWindow as pedido_mesa
 from .AddProdutoMesas import AdicionarProdutoMesa
 from PySide6.QtNetwork import ( QNetworkAccessManager)
@@ -52,6 +52,7 @@ class DadosMesa(QMainWindow, pedido_mesa):
         self.ws.mensagem_recebida.connect(self.on_evento_recebido)
         self.ws.start()
 
+        print(data)
         self.mesa.setText(f"{str.replace(mesa, '_', ' ')} ")
         self.id_mesa = data["id"]
 
@@ -66,14 +67,14 @@ class DadosMesa(QMainWindow, pedido_mesa):
         self.network_manager = QNetworkAccessManager(self)
 
         self.setup_table()
-        self.atualizar_tabela(data["pedido"]["itens"])
+        self.atualizar_tabela(data["pedido"]["itens"], data)
 
         # Ao clicar no botão cancelar, Aciona a função de confirmação de exclusão localizada em scripts/aux_func.py
         self.btn_excluir.clicked.connect(lambda: exibir_confirmacao_exclusao(self, data))
         self.adicionar_produto.clicked.connect(lambda: abrir_produto(self, data))
 
     def setup_table(self):
-        columns = ["NOME", "QUANTIDADE", "VALOR"]
+        columns = ["NOME", "QUANTIDADE", "VALOR", "EDITAR", "EXCLUIR"]
 
         quantidade_columns = len(columns)
         self.tableWidget.setColumnCount(quantidade_columns)
@@ -88,14 +89,98 @@ class DadosMesa(QMainWindow, pedido_mesa):
         self.tableWidget.setSelectionMode(QTableWidget.SingleSelection)
         self.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
-    def atualizar_tabela(self, itens):
+    def atualizar_tabela(self, itens, mesa):
+
+            valor_total_formatado = f"R$ {mesa['pedido']['valor_total']:.2f}"
+            self.valor_total_mesa.setText(valor_total_formatado)
+            self.quantidade_itens_mesa.setText(str(mesa["pedido"]["quantidade_itens"]))
 
             self.tableWidget.setRowCount(len(itens))  
 
             for i, item in enumerate(itens):
-                self.tableWidget.setItem(i, 0, QTableWidgetItem(str(item["produto"]["nome"])))
-                self.tableWidget.setItem(i, 1, QTableWidgetItem(str(item["quantidade"])))
-                self.tableWidget.setItem(i, 2, QTableWidgetItem(str(item["valor_unitario"])))
+                item_nome = QTableWidgetItem(str(item["produto"]["nome"]))
+                self.tableWidget.setItem(i, 0, item_nome)
+
+                item_quantidade = QTableWidgetItem(str(item["quantidade"]))
+                item_quantidade.setTextAlignment(Qt.AlignCenter)
+                self.tableWidget.setItem(i, 1, item_quantidade)
+
+                item_valor_formatado = f"R$ {item['valor_total']:.2f}"
+                item_valor = QTableWidgetItem(item_valor_formatado)
+                item_valor.setTextAlignment(Qt.AlignCenter)
+                self.tableWidget.setItem(i, 2, item_valor)
+
+                container = QWidget()
+
+                # Cria layout horizontal
+                layout = QHBoxLayout(container)
+                layout.setContentsMargins(0, 0, 0, 0)
+                layout.setSpacing(5)
+
+                # Botão editar
+                btn_adicionar = QPushButton("+")
+                btn_adicionar.setStyleSheet("""
+                QPushButton {
+                    max-width: 40px;
+                    height: 20px;
+                    background-color: green;
+                    font-size: 16px;
+                }
+                QPushButton:hover {
+                    background-color: rgb(131, 131, 131);
+                }
+
+                QPushButton:clicked {
+                    background-color: rgb(131, 131, 131);
+                }
+                """)
+                btn_adicionar.clicked.connect(lambda _, row=i: self.aumentar_quantidade(row, data=mesa))
+
+                # Botão excluir
+                btn_diminuir = QPushButton("-")
+                btn_diminuir.setStyleSheet("""QPushButton {
+                    max-width: 40px;
+                    height: 20px;
+                    background-color: red;
+                    font-size: 26px;
+                }
+                QPushButton:hover {
+                    background-color: rgb(131, 131, 131);
+                }
+
+                QPushButton:clicked {
+                    background-color: rgb(131, 131, 131);
+                }
+
+                """)
+                btn_diminuir.clicked.connect(lambda _, row=i: self.diminuir_quantidade(row, data=mesa))
+
+                # Adiciona os botões ao layout
+                layout.addWidget(btn_adicionar)
+                layout.addWidget(btn_diminuir)
+                # Define o container como widget da célula
+                self.tableWidget.setCellWidget(i, 3, container)
+
+                btn_excluir = QPushButton()
+                btn_excluir.setIcon(
+                    QApplication.style().standardIcon(QStyle.SP_TrashIcon)
+                )
+                btn_excluir.setStyleSheet(
+                    """QPushButton {
+                            background-color: transparent; 
+                            border: none;
+                        }
+                        QPushButton:hover {
+                            background-color: 
+                            rgb(131, 131, 131);
+                        }
+                        QPushButton:clicked {
+                            background-color: rgb(131, 131, 131);
+                        }
+                    """
+                )
+                btn_excluir.clicked.connect(lambda _, row=i: self.excluir_item(row, data=mesa))
+                self.tableWidget.setCellWidget(i, 4, btn_excluir)
 
     # Override do método closeEvent para emitir o sinal quando a janela for fechada
     def closeEvent(self, event):
@@ -104,5 +189,22 @@ class DadosMesa(QMainWindow, pedido_mesa):
     def on_evento_recebido(self, evento: dict):
         if evento["tipo"] == "produto_em_mesa":
             if evento["dados"]["id"] == self.id_mesa:
-                self.atualizar_tabela(evento["dados"]["pedido"]["itens"])
-            
+                self.atualizar_tabela(evento["dados"]["pedido"]["itens"], evento["dados"])
+
+    def aumentar_quantidade(self, row, data):
+        response = requests.put(f"{APIURLDESENV}/mesas/aumentar-item/{data["id"]}/{data["pedido"]["id"]}/{data["pedido"]["itens"][row]['produto_id']}")
+
+        if response.status_code == 400:
+            QMessageBox.critical(self, "Erro", f"{response.json()['detail']}")
+
+    def diminuir_quantidade(self,row, data):
+        response = requests.put(f"{APIURLDESENV}/mesas/diminuir-item/{data["id"]}/{data["pedido"]["id"]}/{data["pedido"]["itens"][row]['produto_id']}")
+
+        if response.status_code == 400:
+            QMessageBox.critical(self, "Erro", f"{response.json()['detail']}")
+
+    def excluir_item(self, row, data):  
+        response = requests.delete(f"{APIURLDESENV}/mesas/excluir-item/{data["id"]}/{data["pedido"]["id"]}/{data["pedido"]["itens"][row]['produto_id']}")
+
+        if response.status_code == 400:
+            QMessageBox.critical(self, "Erro", f"{response.json()['detail']}")

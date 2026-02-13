@@ -43,11 +43,11 @@ class Uniq(QMainWindow, uniq):
         self.mesas_window = None
         self.produtos_window = None
 
-        self.valid_caixa()
-
         self.ws = WebSocketService()
         self.ws.mensagem_recebida.connect(self.on_evento_recebido)
         self.ws.start()
+        
+        self.valid_caixa()
 
         # Ao clicar nos botões, abre as respectivas janelas
 

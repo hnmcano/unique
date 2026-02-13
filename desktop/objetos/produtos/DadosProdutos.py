@@ -144,6 +144,8 @@ class DadosProduto(QMainWindow, DataProduto):
         self.network_manager = QNetworkAccessManager(self)
 
         self.produto = produto
+
+        print(produto)
         
         self.id = produto["id"]
 

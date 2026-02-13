@@ -26,10 +26,44 @@ class AberturaMesa(BaseModel):
     class Config:
         from_atributes = True
 
+
+
+
+class AdicionarItensMesa(BaseModel):
+    mesa_id: int
+    produto_id: int
+    quantidade: int
+    valor_unitario: float
+
+    class Config:
+        from_atributes = True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class ItensPedidosMesaResponse(BaseModel):
     produto_id: int = Field(..., ge=0)
     quantidade: int = Field(..., ge=0)
     valor_unitario: float
+    valor_total: float
     produto: Produto
 
     model_config = {
@@ -52,13 +86,6 @@ class MesasResponse(BaseModel):
     id: int = Field(..., gt=0)
     numero: int = Field(..., gt=0)
     pedido: CriacaoPedidosResponse
-
-    model_config = {
-        "from_attributes": True
-    }
-class AdicionarItensMesa(BaseModel):
-    mesa_id: int
-    Itens: List[ItensPedidosMesa]
 
     model_config = {
         "from_attributes": True

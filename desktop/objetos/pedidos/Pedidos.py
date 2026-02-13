@@ -3,6 +3,9 @@ from PySide6.QtCore import *
 from PySide6.QtGui import *
 from telas.form_delivery.delivery_ui import Ui_MainWindow as delivery
 from .DadosPedido import DadosPedido
+from services.websocket import WebSocketService
+from PySide6.QtNetwork import *
+from PySide6.QtMultimedia import *
 
 import requests
 from datetime import datetime
@@ -11,7 +14,7 @@ APIURLDESENV = "http://localhost:8000"
 
 
 class Pedidos(QMainWindow, delivery):
-    resposta_delivery = Signal(str)
+    mensagem_recebida = Signal(dict)
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -36,46 +39,11 @@ class Pedidos(QMainWindow, delivery):
 
         self.tableWidget.cellClicked.connect(self.abrir_dados)
 
-        try:
-            response = requests.get(f"{APIURLDESENV}/pedidos/delivery/desktop")
-            pedidos = response.json().get("detail")
 
-            if response.status_code == 200:               
-                self.tableWidget.setRowCount(len(pedidos))
-                linha_atual = 0
+    def atualizar_tabela(self, pedidos):
+        print(pedidos)
 
-                for i in pedidos:
-                    self.tableWidget.setRowHeight(linha_atual, 50)
 
-                    item_ordenavel_id = QTableWidgetItem(str(i["id"]))
-                    self.tableWidget.setItem(linha_atual, 0, item_ordenavel_id)
-
-                    item_ordenavel_nome = QTableWidgetItem(i["nome"])
-                    self.tableWidget.setItem(linha_atual, 1, item_ordenavel_nome)
-
-                    item_ordenavel_telefone = QTableWidgetItem(str(i["telefone"]))
-                    self.tableWidget.setItem(linha_atual, 2, item_ordenavel_telefone)
-
-                    item_ordenavel_data_pedido = QTableWidgetItem(i["data_pedido"])
-                    self.tableWidget.setItem(linha_atual, 3, item_ordenavel_data_pedido)
-
-                    item_ordenavel_hora_pedido = QTableWidgetItem(str(i["hora_pedido"]))
-                    self.tableWidget.setItem(linha_atual, 4, item_ordenavel_hora_pedido)
-
-                    item_ordenavel_status = QTableWidgetItem(i["status"])
-                    self.tableWidget.setItem(linha_atual, 5, item_ordenavel_status)
-
-                    item_ordenavel_valor_total = QTableWidgetItem(str(i["valor_total"]))
-                    self.tableWidget.setItem(linha_atual, 6, item_ordenavel_valor_total)
-
-                    linha_atual += 1
-                
-                self.tableWidget.sortItems(0, Qt.AscendingOrder)
-            else:
-                self.tableWidget.setRowCount(0)
-                                
-        except requests.RequestException as e:
-            QMessageBox.critical(self, "Erro", f"Erro ao buscar pedidos: {str(e)}")
 
     def abrir_dados(self, row, column):
         self.dados_pedidos = DadosPedido(row=row, column=column, parent=self)

@@ -115,11 +115,82 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_6.addWidget(self.data_criacao)
 
-        self.label_2 = QLabel(self.widget_6)
+        self.widget_11 = QWidget(self.widget_6)
+        self.widget_11.setObjectName(u"widget_11")
+
+        self.verticalLayout_6.addWidget(self.widget_11)
+
+        self.widget_10 = QWidget(self.widget_6)
+        self.widget_10.setObjectName(u"widget_10")
+        self.widget_10.setStyleSheet(u"")
+        self.verticalLayout_8 = QVBoxLayout(self.widget_10)
+        self.verticalLayout_8.setSpacing(0)
+        self.verticalLayout_8.setObjectName(u"verticalLayout_8")
+        self.verticalLayout_8.setContentsMargins(0, 0, 0, 0)
+        self.widget_12 = QWidget(self.widget_10)
+        self.widget_12.setObjectName(u"widget_12")
+        self.verticalLayout_9 = QVBoxLayout(self.widget_12)
+        self.verticalLayout_9.setSpacing(0)
+        self.verticalLayout_9.setObjectName(u"verticalLayout_9")
+        self.verticalLayout_9.setContentsMargins(0, 0, 0, 0)
+        self.label = QLabel(self.widget_12)
+        self.label.setObjectName(u"label")
+        self.label.setMaximumSize(QSize(16777215, 25))
+        self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.verticalLayout_9.addWidget(self.label)
+
+        self.widget_14 = QWidget(self.widget_12)
+        self.widget_14.setObjectName(u"widget_14")
+        self.verticalLayout_11 = QVBoxLayout(self.widget_14)
+        self.verticalLayout_11.setSpacing(0)
+        self.verticalLayout_11.setObjectName(u"verticalLayout_11")
+        self.verticalLayout_11.setContentsMargins(0, 0, 0, 0)
+        self.quantidade_itens_mesa = QLabel(self.widget_14)
+        self.quantidade_itens_mesa.setObjectName(u"quantidade_itens_mesa")
+        self.quantidade_itens_mesa.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.verticalLayout_11.addWidget(self.quantidade_itens_mesa)
+
+
+        self.verticalLayout_9.addWidget(self.widget_14)
+
+
+        self.verticalLayout_8.addWidget(self.widget_12)
+
+        self.widget_13 = QWidget(self.widget_10)
+        self.widget_13.setObjectName(u"widget_13")
+        self.verticalLayout_10 = QVBoxLayout(self.widget_13)
+        self.verticalLayout_10.setSpacing(0)
+        self.verticalLayout_10.setObjectName(u"verticalLayout_10")
+        self.verticalLayout_10.setContentsMargins(0, 0, 0, 0)
+        self.label_2 = QLabel(self.widget_13)
         self.label_2.setObjectName(u"label_2")
+        self.label_2.setMaximumSize(QSize(16777215, 25))
         self.label_2.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.verticalLayout_6.addWidget(self.label_2)
+        self.verticalLayout_10.addWidget(self.label_2)
+
+        self.widget_15 = QWidget(self.widget_13)
+        self.widget_15.setObjectName(u"widget_15")
+        self.verticalLayout_12 = QVBoxLayout(self.widget_15)
+        self.verticalLayout_12.setSpacing(0)
+        self.verticalLayout_12.setObjectName(u"verticalLayout_12")
+        self.verticalLayout_12.setContentsMargins(0, 0, 0, 0)
+        self.valor_total_mesa = QLabel(self.widget_15)
+        self.valor_total_mesa.setObjectName(u"valor_total_mesa")
+        self.valor_total_mesa.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.verticalLayout_12.addWidget(self.valor_total_mesa)
+
+
+        self.verticalLayout_10.addWidget(self.widget_15)
+
+
+        self.verticalLayout_8.addWidget(self.widget_13)
+
+
+        self.verticalLayout_6.addWidget(self.widget_10)
 
 
         self.verticalLayout_2.addWidget(self.widget_6)
@@ -193,7 +264,10 @@ class Ui_MainWindow(object):
         self.mesa.setText("")
         self.adicionar_produto.setText(QCoreApplication.translate("MainWindow", u"ADD PRODUTO", None))
         self.status.setText("")
-        self.label_2.setText("")
+        self.label.setText(QCoreApplication.translate("MainWindow", u"QUANTIDADE ITENS", None))
+        self.quantidade_itens_mesa.setText("")
+        self.label_2.setText(QCoreApplication.translate("MainWindow", u"TOTAL MESA", None))
+        self.valor_total_mesa.setText("")
         self.btn_excluir.setText(QCoreApplication.translate("MainWindow", u"EXCLUIR", None))
         self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"FINALIZAR", None))
         self.pushButton_3.setText(QCoreApplication.translate("MainWindow", u"IMPRIMIR", None))

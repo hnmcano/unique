@@ -33,12 +33,46 @@ async def adicionar_produto(product: ProdutoSchema, db: Session = Depends(get_db
     db.commit()
     db.refresh(db_product)
 
+    produtos = db.query(ProductModel).all()
+    categorias = db.query(CategoryModel).all()
+
+    categorias_map = {
+        c.id: c.nome for c in categorias
+    }
+
+    data = []
+
+    for p in produtos:
+
+        nome_categoria = categorias_map.get(p.categoria_id, "Sem categoria")
+
+        produto = {
+            "id": p.id,
+            "categoria_id": p.categoria_id,
+            "cod_pdv": p.cod_pdv,
+            "nome": p.nome,
+            "preco_custo": p.preco_custo,
+            "preco_venda": p.preco_venda,
+            "medida": p.medida,
+            "estoque": p.estoque,
+            "estoque_min": p.estoque_min,
+            "descricao": p.descricao,
+            "ficha_tecnica": p.ficha_tecnica,
+            "status_venda": p.status_venda,
+            "imagem_name": p.imagem_name,
+            "imagem": p.imagem
+        }
+
+        produto["nome_categoria"] = nome_categoria
+        data.append(produto)
+
+
     await notificar_todos({
                             "tipo": "Atualizar_produtos",
-                            "dados": jsonable_encoder(db_product)
+                            "dados": jsonable_encoder(data)
                             })
 
-    return db_product
+    return data
 
 # Rota para popular tabela de produtos disponivel no desktop na aba produtos
 @router.get("/desktop/table")
@@ -57,6 +91,48 @@ async def read_products(db: Session = Depends(get_db)):
     data = []
 
     for p in produtos:
+
+        nome_categoria = categorias_map.get(p.categoria_id, "Sem categoria")
+
+        produto = {
+            "id": p.id,
+            "categoria_id": p.categoria_id,
+            "cod_pdv": p.cod_pdv,
+            "nome": p.nome,
+            "preco_custo": p.preco_custo,
+            "preco_venda": p.preco_venda,
+            "medida": p.medida,
+            "estoque": p.estoque,
+            "estoque_min": p.estoque_min,
+            "descricao": p.descricao,
+            "ficha_tecnica": p.ficha_tecnica,
+            "status_venda": p.status_venda,
+            "imagem_name": p.imagem_name,
+            "imagem": p.imagem
+        }
+
+        produto["nome_categoria"] = nome_categoria
+        data.append(produto)
+
+    return data
+
+@router.get("/mesa-add-product")
+async def read_products(db: Session = Depends(get_db)):
+    produtos = db.query(ProductModel).all()
+    categorias = db.query(CategoryModel).all()
+
+    if not produtos:
+        return []
+
+    categorias_map = {
+        c.id: c.nome for c in categorias
+    }
+
+    data = []
+
+    for p in produtos:
+        if p.status_venda != "Ativo": 
+            continue
 
         nome_categoria = categorias_map.get(p.categoria_id, "Sem categoria")
 
