@@ -15,6 +15,14 @@ import json
 
 APIURLDESENV = "http://localhost:8000"
 
+class NumericQtTableWidget(QTableWidgetItem):
+    def __lt__(self, other):
+        return int(self.data(Qt.UserRole)) < int(other.data(Qt.UserRole))
+    
+class FloatQtTableWidget(QTableWidgetItem):
+    def __lt__(self, other):
+        return float(self.data(Qt.UserRole)) < float(other.data(Qt.UserRole))
+
 def center_window(self):
 
     screen = QGuiApplication.primaryScreen()
@@ -45,6 +53,8 @@ class Produtos(QMainWindow, produtos):
 
 
         self.layout_tabela()
+        self.tableWidget.cellDoubleClicked.connect(self.abrir_dados_produto)
+
         data = carregar_produto()
         self.atualizar_tabela(data)
 
@@ -65,9 +75,9 @@ class Produtos(QMainWindow, produtos):
         parent.tableWidget.setColumnCount(quantidade_columns)
         parent.tableWidget.setHorizontalHeaderLabels(columns)
         header = parent.tableWidget.horizontalHeader()
-        header.setSectionResizeMode(QHeaderView.Interactive)
-        parent.tableWidget.setShortcutEnabled(True)
         header.setSectionResizeMode(QHeaderView.Stretch)
+        header.setSectionResizeMode(3, QHeaderView.ResizeToContents)
+        parent.tableWidget.setSortingEnabled(True)
         parent.tableWidget.verticalHeader().setVisible(False)
         parent.tableWidget.setSelectionBehavior(QTableWidget.SelectRows)
         parent.tableWidget.setSelectionMode(QTableWidget.SingleSelection)
@@ -79,12 +89,11 @@ class Produtos(QMainWindow, produtos):
             data = json.loads(data)
 
         parent.tableWidget.setRowCount(len(data))
-        parent.tableWidget.cellClicked.connect(parent.abrir_dados_produto)
 
         for i, prod in enumerate(data):
 
-            item_id = QTableWidgetItem(str(prod["id"]))
-            item_id.setData(Qt.UserRole, prod)
+            item_id = NumericQtTableWidget(str(prod["id"]))
+            item_id.setData(Qt.UserRole, int(prod["id"]))
             item_id.setTextAlignment(Qt.AlignCenter)
             parent.tableWidget.setItem(i, 0, item_id)
             
@@ -100,19 +109,23 @@ class Produtos(QMainWindow, produtos):
             item_nome.setTextAlignment(Qt.AlignLeft | Qt.AlignVCenter)
             parent.tableWidget.setItem(i, 3, item_nome)
 
-            item_preco_custo = QTableWidgetItem(str(prod["preco_custo"]))
+            item_preco_custo = FloatQtTableWidget(str(prod["preco_custo"]))
+            item_preco_custo.setData(Qt.UserRole, float(prod["preco_custo"]))
             item_preco_custo.setTextAlignment(Qt.AlignCenter)
             parent.tableWidget.setItem(i, 4, item_preco_custo)
 
-            item_preco_venda = QTableWidgetItem(str(prod["preco_venda"]))
+            item_preco_venda = FloatQtTableWidget(str(prod["preco_venda"]))
+            item_preco_venda.setData(Qt.UserRole, float(prod["preco_venda"]))
             item_preco_venda.setTextAlignment(Qt.AlignCenter)
             parent.tableWidget.setItem(i, 5, item_preco_venda)
 
-            item_estoque_min = QTableWidgetItem(str(prod["estoque_min"]))
+            item_estoque_min = NumericQtTableWidget(str(prod["estoque_min"]))
+            item_estoque_min.setData(Qt.UserRole, int(prod["estoque_min"]))
             item_estoque_min.setTextAlignment(Qt.AlignCenter)
             parent.tableWidget.setItem(i, 6, item_estoque_min)
 
-            item_estoque = QTableWidgetItem(str(prod["estoque"]))
+            item_estoque = NumericQtTableWidget(str(prod["estoque"]))
+            item_estoque.setData(Qt.UserRole, int(prod["estoque"]))
             item_estoque.setTextAlignment(Qt.AlignCenter)
             parent.tableWidget.setItem(i, 7, item_estoque)
 
@@ -132,7 +145,7 @@ class Produtos(QMainWindow, produtos):
     def abrir_dados_produto(self, row):
         item = self.tableWidget.item(row, 0)
         produto = item.data(Qt.UserRole)
-        print(produto)
+        print("Abrindo produto")
         self.dados_produto_window = DadosProduto(produto=produto, parent=self)
         self.dados_produto_window.show()
 

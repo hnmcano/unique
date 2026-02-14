@@ -52,7 +52,6 @@ class DadosMesa(QMainWindow, pedido_mesa):
         self.ws.mensagem_recebida.connect(self.on_evento_recebido)
         self.ws.start()
 
-        print(data)
         self.mesa.setText(f"{str.replace(mesa, '_', ' ')} ")
         self.id_mesa = data["id"]
 

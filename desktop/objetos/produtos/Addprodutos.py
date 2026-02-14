@@ -91,7 +91,8 @@ def salvar_dados_produtos(parent=None):
 
             QMessageBox.information(parent, "Sucesso", "Produto adicionado com sucesso!")
 
-            parent.findChild(QLineEdit).clear()
+            for line_edit in parent.findChildren(QLineEdit):
+                line_edit.clear()
             
             parent.buttonGroup.setExclusive(False) # type: ignore
             for button in parent.buttonGroup.buttons(): # type: ignore

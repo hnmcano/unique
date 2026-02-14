@@ -2,8 +2,6 @@ from PySide6.QtCore import *
 import websocket
 import json
 
-
-
 class WebSocketService(QThread):
     mensagem_recebida = Signal(dict)
 
@@ -34,3 +32,16 @@ class WebSocketService(QThread):
 
     def _on_close(self, ws, *args):
         print("WS FECHADO")
+
+class PedidoStore:
+    def __init__(self):
+        self.pedidos = []
+
+    def listar(self):
+        return self.pedidos
+
+    def adicionar(self, pedido):
+        self.pedidos.append(pedido)
+
+    def remover(self, pedido):
+        self.pedidos.remove(pedido)

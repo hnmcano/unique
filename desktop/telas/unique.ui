@@ -247,7 +247,7 @@ QPushButton:clicked {
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="btn_loggout">
+        <widget class="QPushButton" name="btn_config">
          <property name="styleSheet">
           <string notr="true"/>
          </property>

@@ -121,32 +121,26 @@ def excluir_produto_base_dados(id, parent=None):
         )
 
 def preencher_dropdown_categoria(parent=None):
-    try:
-        response = requests.get(f"{APIURLDESENV}/categorias/dropdown/categories")
-        if response.status_code == 200:
-            categorias = response.json()
-            parent.categoria_combo.clear()
-            parent.categoria_combo.addItem("")
+    parent.categoria_combo.clear()
+    parent.categoria_combo.addItem("")
+    response = requests.get(f"{APIURLDESENV}/categorias/dropdown/categories")
+    if response.status_code == 200:
+        categorias = response.json()
 
-            for categoria in categorias:
-                parent.categoria_combo.addItem(categoria["nome"], categoria["id"])
-        else:
-            QMessageBox.critical(parent, "Erro", "Falha ao buscar categorias.")
+        for categoria in categorias:
+            parent.categoria_combo.addItem(categoria["nome"], categoria["id"])
 
-    except Exception as e:
-        QMessageBox.critical(parent, "Erro", f"Erro ao buscar categorias: {str(e)}")
 
 class DadosProduto(QMainWindow, DataProduto):
     def __init__(self, produto: dict, parent=None):
+
+        print("dados produto criada")
         super().__init__(parent)
         self.setupUi(self)
         
         self.network_manager = QNetworkAccessManager(self)
 
-        self.produto = produto
-
-        print(produto)
-        
+        self.produto = produto        
         self.id = produto["id"]
 
         preencher_dropdown_categoria(self)
@@ -175,8 +169,6 @@ class DadosProduto(QMainWindow, DataProduto):
 
         self.desc_input.setPlainText(produto["descricao"])
         
-        print(self.image_label.size())
-
         data = base64.b64decode(produto["imagem"])
         self.pixmap = QPixmap()
         self.pixmap.loadFromData(data)

@@ -88,7 +88,7 @@ class PedidoResponse(BaseModel):
     """
     id: int # ID auto-gerado
     cliente_id: int
-    data_pedido: datetime # Retorna o timestamp gerado pelo DB
+    data_criacao: datetime  # Retorna o timestamp gerado pelo DB
     status: str
     metodo_pagamento: str
     valor_total: Decimal = Field(..., decimal_places=2)

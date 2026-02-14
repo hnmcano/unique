@@ -3,6 +3,7 @@ from PySide6.QtGui import *
 from PySide6.QtCore import *
 
 from objetos.estabelecimento.Estabelecimento import Estabelecimento
+from objetos.configuracao.PainelConfig import PainelConfig
 from objetos.produtos.Produtos import Produtos
 from objetos.clientes.Clientes import Clientes
 from objetos.pedidos.Pedidos import Pedidos
@@ -11,6 +12,7 @@ from objetos.mesas.Mesas import Mesas
 from telas.unique_ui import Ui_Unique as uniq
 
 from services.websocket import WebSocketService 
+from services.websocket import PedidoStore
 
 import requests
 import sys
@@ -30,13 +32,17 @@ def center_window(self):
     self.move(window_geometry.topLeft())
 
 # classe principal da aplicação
-class Uniq(QMainWindow, uniq):  
+class Uniq(QMainWindow, uniq):
+    mensagem_recebida = Signal(dict)
     def __init__(self):
         # inicializa a classe pai
         super().__init__()
         # instancia a interface do uniq
         self.setupUi(self)
         center_window(self)
+
+        self.pedido_store = PedidoStore()
+
 
        # Inicializa as janelas como None
         self.clientes_window = None
@@ -56,7 +62,7 @@ class Uniq(QMainWindow, uniq):
         self.btn_produtos.clicked.connect(self.abrir_produtos)
         self.btn_delivery.clicked.connect(self.abrir_delivery)
         self.btn_caixa.clicked.connect(self.abrir_caixa)
-        self.estabelecimento.triggered.connect(self.configuracoes_estabelecimento)
+        self.btn_config.clicked.connect(self.painel_config)
 
     # Funções para abrir a janela filhas de mesas, clientes e produtos
     def abrir_caixa(self):
@@ -76,12 +82,13 @@ class Uniq(QMainWindow, uniq):
         self.produtos_window.show()
 
     def abrir_delivery(self):
-        self.delivery_window = Pedidos(parent=self)
+
+        self.delivery_window = Pedidos(pedido_store=self.pedido_store, parent=self)
         self.delivery_window.show()
 
-    def configuracoes_estabelecimento(self):
-        self.estabelecimento_window = Estabelecimento(parent=self)
-        self.estabelecimento_window.show()
+    def painel_config(self):
+        self.painel_config_window = PainelConfig( parent=self)
+        self.painel_config_window.show()
 
     def valid_caixa(self):
 
@@ -94,7 +101,10 @@ class Uniq(QMainWindow, uniq):
             QMessageBox.information(self, "Caixa Aberto", f"Seu caixa esta aberto há {tempo_aberto}")
 
     def on_evento_recebido(self, evento):
-        print(evento)
+        if evento["tipo"] == "delivery_acionado":
+            print("Delivery acionado")
+            pedido = evento["dados"]
+            self.pedido_store.adicionar(pedido)
             
 
 # funcao principal da aplicação

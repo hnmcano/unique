@@ -130,17 +130,17 @@ class Ui_Unique(object):
 
         self.horizontalLayout_2.addWidget(self.btn_produtos)
 
-        self.btn_loggout = QPushButton(self.widget)
-        self.btn_loggout.setObjectName(u"btn_loggout")
-        self.btn_loggout.setStyleSheet(u"")
+        self.btn_config = QPushButton(self.widget)
+        self.btn_config.setObjectName(u"btn_config")
+        self.btn_config.setStyleSheet(u"")
         icon5 = QIcon()
         icon5.addFile(u":/unique/configuracoes.png", QSize(), QIcon.Mode.Selected, QIcon.State.On)
-        self.btn_loggout.setIcon(icon5)
-        self.btn_loggout.setIconSize(QSize(45, 45))
-        self.btn_loggout.setAutoDefault(True)
-        self.btn_loggout.setFlat(True)
+        self.btn_config.setIcon(icon5)
+        self.btn_config.setIconSize(QSize(45, 45))
+        self.btn_config.setAutoDefault(True)
+        self.btn_config.setFlat(True)
 
-        self.horizontalLayout_2.addWidget(self.btn_loggout)
+        self.horizontalLayout_2.addWidget(self.btn_config)
 
 
         self.verticalLayout.addWidget(self.widget)
@@ -206,7 +206,7 @@ class Ui_Unique(object):
         self.btn_mesas.setDefault(True)
         self.btn_delivery.setDefault(True)
         self.btn_produtos.setDefault(True)
-        self.btn_loggout.setDefault(True)
+        self.btn_config.setDefault(True)
 
 
         QMetaObject.connectSlotsByName(Unique)
@@ -222,7 +222,7 @@ class Ui_Unique(object):
         self.btn_mesas.setText(QCoreApplication.translate("Unique", u"MESAS", None))
         self.btn_delivery.setText(QCoreApplication.translate("Unique", u"DELIVERY", None))
         self.btn_produtos.setText(QCoreApplication.translate("Unique", u"PRODUTOS", None))
-        self.btn_loggout.setText(QCoreApplication.translate("Unique", u"CONFIG", None))
+        self.btn_config.setText(QCoreApplication.translate("Unique", u"CONFIG", None))
         self.label_3.setText("")
         self.label_2.setText(QCoreApplication.translate("Unique", u"TextLabel", None))
         self.label.setText(QCoreApplication.translate("Unique", u"Teste1", None))

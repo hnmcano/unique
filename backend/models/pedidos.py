@@ -20,7 +20,7 @@ class Pedido(Base):
     observacoes = Column(Text, nullable=True)
 
     cliente = relationship("Clientes", back_populates="pedidos", uselist=False)
-    endereco_entrega = relationship("EnderecoPedido", back_populates="pedido", cascade="all, delete-orphan")
+    endereco_entrega = relationship("EnderecoPedido", back_populates="pedido", cascade="all, delete-orphan", uselist=False)
     itens = relationship("ItemPedido", back_populates="pedido", cascade="all, delete-orphan")
     caixa = relationship("Caixa", back_populates="pedido")
 

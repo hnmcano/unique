@@ -81,7 +81,7 @@ async def criar_novo_pedido(novo_pedido_data: NovoPedidoSchema,db: Session = Dep
             )
 
         # 3. CRIAÇÃO DO OBJETO PEDIDO PRINCIPAL
-        
+
         db_pedido = Pedido(
             cliente_id=cliente_id,
             caixa_id=caixa.id,
@@ -120,26 +120,16 @@ async def criar_novo_pedido(novo_pedido_data: NovoPedidoSchema,db: Session = Dep
         db.commit()
         
         # 8. REFRESH e RETORNO (Obtém o Pedido final com todas as relações carregadas)
-        db.refresh(db_pedido) 
+        db.refresh(db_pedido)
 
-        data = {
-            "id": db_pedido.id,
-            "cliente_id": db_pedido.cliente_id,
-            "data_pedido": db_pedido.data_criacao,
-            "status": db_pedido.status,
-            "metodo_pagamento": db_pedido.metodo_pagamento,
-            "valor_total": db_pedido.valor_total,
-            "cliente": cliente_objeto,
-            "endereco_entrega": db_endereco,
-            "itens": db_pedido.itens
-        }
+        pedido_serializado = PedidoResponse.model_validate(db_pedido)
 
         await notificar_todos(jsonable_encoder({
             "tipo": "delivery_acionado",
-            "dados": data
+            "dados": pedido_serializado.model_dump()
         }))
 
-        return data
+        return pedido_serializado
     
 
     except HTTPException:
@@ -156,40 +146,3 @@ async def criar_novo_pedido(novo_pedido_data: NovoPedidoSchema,db: Session = Dep
             detail=str(e)
         )
     
-@router.get("/delivery/desktop")
-async def read_pedidos(db: Session = Depends(get_db)):    
-    pedidos = db.query(Pedido).all()
-    clientes_pedidos = db.query(Clientes).all()
-
-    if len(pedidos) == 0:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Nenhum pedido encontrado")
-    else:
-        p =  pd.DataFrame([p.__dict__ for p in pedidos])
-        c =  pd.DataFrame([c.__dict__ for c in clientes_pedidos])
-
-        p = p.drop(columns=["_sa_instance_state"], errors="ignore") 
-        c = c.drop(columns=["_sa_instance_state"], errors="ignore")
-
-        p["data_pedido"] = p["data_criacao"].dt.strftime("%Y-%m-%d")
-        p["hora_pedido"] = p["data_criacao"].dt.strftime("%H:%M:%S")
-        p["valor_total"] = p["valor_total"].astype("float").round(2)  
-
-        p = p.drop(columns=["data_criacao"])
-
-        data = pd.merge(p, c, left_on="cliente_id", right_on="id", how="left")
-        data = data.drop(columns=["id_y"]).rename(columns={"id_x": "id"}).to_dict("records")
-        
-        raise HTTPException(status_code=status.HTTP_200_OK, detail=data)
-        
-@router.put("/desktop/atualizar/{pedido_id}", response_model=PedidoResponse)
-async def update_pedido(pedido_id: int, pedido: NovoPedidoSchema, db: Session = Depends(get_db)):
-
-    db_pedido = db.query(Pedido).filter(Pedido.id == pedido_id).first()
-    if db_pedido:
-        db_pedido.status = pedido.status
-        db.commit()
-        db.refresh(db_pedido)
-        return db_pedido
-    else:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Pedido nao encontrado")
-
