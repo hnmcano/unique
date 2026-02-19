@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field, EmailStr
 from typing import List, Optional
 from datetime import datetime
 from decimal import Decimal
+from .produtos import Produto
 
 class ItemPedidoInput(BaseModel):
     produto_id: int
@@ -39,11 +40,6 @@ class NovoPedidoSchema(BaseModel):
     entrega: EntregaInput
 
 
-
-
-
-
-
 # 1. Detalhes de Item em um Pedido
 class ItemPedidoResponse(BaseModel):
     id: int
@@ -52,6 +48,7 @@ class ItemPedidoResponse(BaseModel):
     # O preço histórico é crucial e deve ser retornado com precisão
     valor_unitario: Decimal = Field(..., decimal_places=2) 
     observacoes: Optional[str] = None
+    produtos: Produto
     
     class Config:
         from_attributes = True # Necessário para ler o objeto SQLAlchemy

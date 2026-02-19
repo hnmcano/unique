@@ -37,7 +37,7 @@ export function CarrinhoProvider({ children }) {
                     { 
                     ...novoProduto, 
                         quantidade: novoProduto.quantidade,
-                        valor_total: novoProduto.preco_venda
+                        valor_total: novoProduto.quantidade * novoProduto.preco_venda
                     }
                 ];
             }

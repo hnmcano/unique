@@ -134,7 +134,6 @@ def preencher_dropdown_categoria(parent=None):
 class DadosProduto(QMainWindow, DataProduto):
     def __init__(self, produto: dict, parent=None):
 
-        print("dados produto criada")
         super().__init__(parent)
         self.setupUi(self)
         
@@ -187,3 +186,5 @@ class DadosProduto(QMainWindow, DataProduto):
     def excluir_produto_atual(self):
         excluir_produto_base_dados(self.id, self)
         self.close()
+
+

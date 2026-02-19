@@ -39,6 +39,7 @@ class Produto(Base):
 
     categoria_object = relationship("Categoria", back_populates="produtos")
     itens_mesa = relationship("PedidoItens", back_populates="produto")
+    itens_pedidos = relationship("ItemPedido", back_populates="produtos")
 
     def __repr__(self):
         return f"Product(id={self.id}, name={self.nome})"

@@ -5,6 +5,8 @@ import React, { useState, useEffect } from "react";
 function FooterCarinho({closeModal, openModal}) {
     const { produtos, totalCarrinho } =  useCarrinho();
 
+    console.log(totalCarrinho);
+
     return (
         <>
             {/* Rodapé do modal */}
@@ -13,7 +15,7 @@ function FooterCarinho({closeModal, openModal}) {
                 <div className="total-values-shopping-cart">
                     {/* label para o total por valor */}
                     <div>
-                        <label className="total-value-shopping-cart-total">Total: R$ {totalCarrinho.toFixed(2)}</label>
+                        <label className="total-value-shopping-cart-total">Total: R$ {totalCarrinho}</label>
                     </div>
                     {/* label para a quantidade de produtos no carrinho (unicos) */}
                     <div>

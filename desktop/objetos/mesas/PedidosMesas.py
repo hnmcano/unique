@@ -77,7 +77,6 @@ class DadosMesa(QMainWindow, pedido_mesa):
 
         quantidade_columns = len(columns)
         self.tableWidget.setColumnCount(quantidade_columns)
-        self.tableWidget
         self.tableWidget.setHorizontalHeaderLabels(columns)
         header = self.tableWidget.horizontalHeader()
         header.setSectionResizeMode(QHeaderView.Interactive)

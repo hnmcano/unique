@@ -93,6 +93,7 @@ class Produtos(QMainWindow, produtos):
         for i, prod in enumerate(data):
 
             item_id = NumericQtTableWidget(str(prod["id"]))
+            item_id.setData(Qt.UserRole + 1, prod)
             item_id.setData(Qt.UserRole, int(prod["id"]))
             item_id.setTextAlignment(Qt.AlignCenter)
             parent.tableWidget.setItem(i, 0, item_id)
@@ -144,8 +145,7 @@ class Produtos(QMainWindow, produtos):
 
     def abrir_dados_produto(self, row):
         item = self.tableWidget.item(row, 0)
-        produto = item.data(Qt.UserRole)
-        print("Abrindo produto")
+        produto = item.data(Qt.UserRole + 1)
         self.dados_produto_window = DadosProduto(produto=produto, parent=self)
         self.dados_produto_window.show()
 

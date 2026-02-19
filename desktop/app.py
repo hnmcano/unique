@@ -1,6 +1,7 @@
 from PySide6.QtWidgets import *
 from PySide6.QtGui import *
 from PySide6.QtCore import *
+from PySide6.QtMultimedia import QSoundEffect
 
 from objetos.estabelecimento.Estabelecimento import Estabelecimento
 from objetos.configuracao.PainelConfig import PainelConfig
@@ -13,6 +14,7 @@ from telas.unique_ui import Ui_Unique as uniq
 
 from services.websocket import WebSocketService 
 from services.websocket import PedidoStore
+
 
 import requests
 import sys
@@ -31,6 +33,18 @@ def center_window(self):
     window_geometry.moveCenter(screen_geometry.center())
     self.move(window_geometry.topLeft())
 
+class SoundService:
+    def __init__(self):
+        self.notificacao = QSoundEffect()
+
+        caminho = os.path.abspath("desktop/Sound/notificacao.wav")
+
+        self.notificacao.setSource(QUrl.fromLocalFile(caminho))
+        self.notificacao.setVolume(0.8)
+
+    def play(self):
+        self.notificacao.play()
+
 # classe principal da aplicação
 class Uniq(QMainWindow, uniq):
     mensagem_recebida = Signal(dict)
@@ -41,6 +55,7 @@ class Uniq(QMainWindow, uniq):
         self.setupUi(self)
         center_window(self)
 
+        self.sound = SoundService()
         self.pedido_store = PedidoStore()
 
 
@@ -102,6 +117,7 @@ class Uniq(QMainWindow, uniq):
 
     def on_evento_recebido(self, evento):
         if evento["tipo"] == "delivery_acionado":
+            self.sound.play()
             print("Delivery acionado")
             pedido = evento["dados"]
             self.pedido_store.adicionar(pedido)

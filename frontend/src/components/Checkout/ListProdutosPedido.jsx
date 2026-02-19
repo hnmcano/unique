@@ -3,9 +3,12 @@ import { useCheckout } from "../../contexts/CheckoutContext";
 import { Link, useNavigate } from "react-router-dom";
 
 function ListProdutosPedido({}){
-    const { produtos, totalQuantidade, totalValor, valor_total, entregaTaxa } = useCheckout();
-    const [checked, setChecked] = useState(false);    
+    const { data, produtos, totalQuantidade, totalCarrinho, valor_total, entregaTaxa } = useCheckout();
+    const [checked, setChecked] = useState(false);
     const navigate = useNavigate();
+
+    console.log("lIstagem de produtos, data: ", data);
+    console.log("Total_carrinho: ", totalCarrinho);
 
     const handlesubmit = (e) => {
         e.preventDefault();
@@ -42,7 +45,7 @@ function ListProdutosPedido({}){
                                     <td style={{"textAlign": "left"}} colSpan="1">Total</td>
                                     <td style={{"margin": "5px",}}>{totalQuantidade}</td>
                                     
-                                    <td style={{"margin": "5px",}} className="value-produto"><label>R$</label>{totalValor.toFixed(2)}</td>
+                                    <td style={{"margin": "5px",}} className="value-produto"><label>R$</label>{totalCarrinho.toFixed(2)}</td>
                                 </tr>
                             </tbody>
                     </table>

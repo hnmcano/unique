@@ -19,7 +19,7 @@ class Pedido(Base):
     valor_total = Column(Numeric(10, 2), nullable=False)
     observacoes = Column(Text, nullable=True)
 
-    cliente = relationship("Clientes", back_populates="pedidos", uselist=False)
+    cliente = relationship("Clientes", back_populates="pedidos")
     endereco_entrega = relationship("EnderecoPedido", back_populates="pedido", cascade="all, delete-orphan", uselist=False)
     itens = relationship("ItemPedido", back_populates="pedido", cascade="all, delete-orphan")
     caixa = relationship("Caixa", back_populates="pedido")
@@ -54,11 +54,12 @@ class ItemPedido(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     pedido_id = Column(Integer, ForeignKey('pedidos.id'), nullable=False)
-    produto_id = Column(Integer, nullable=False)
+    produto_id = Column(Integer, ForeignKey('produtos.id'), nullable=False)
     quantidade = Column(Integer, nullable=False)
     valor_unitario = Column(Numeric(10, 2), nullable=False)
 
     pedido = relationship("Pedido", back_populates="itens")
+    produtos = relationship("Produto", back_populates="itens_pedidos", uselist=False)
 
     def __repr__(self):
         return f"ItemPedido(id={self.id}, pedido_id={self.pedido_id},quantidade={self.quantidade}, valor_unitario={self.valor_unitario})"

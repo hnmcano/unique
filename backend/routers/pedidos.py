@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.encoders import jsonable_encoder
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import join
 from decimal import Decimal
 from typing import Tuple
@@ -11,6 +11,7 @@ import requests
 from schemas.pedidos import NovoPedidoSchema, PedidoResponse
 from models.pedidos import Pedido, EnderecoPedido, ItemPedido
 from models.clientes import Clientes
+from models.produtos import Produto as ProdutoModel
 from models.caixa import Caixa as CaixaModel
 from service.websocketservice import notificar_todos
 from bd.connection import get_db
@@ -73,6 +74,8 @@ async def criar_novo_pedido(novo_pedido_data: NovoPedidoSchema,db: Session = Dep
             sum(item.quantidade * item.valor_unitario for item in novo_pedido_data.itens) 
             + novo_pedido_data.entrega.taxa_entrega
         )
+
+        print("valor_total_calculado", valor_total_calculado)
 
         if abs(valor_total_calculado - novo_pedido_data.valor_total) > Decimal('0.01'):
             raise HTTPException(
@@ -146,3 +149,57 @@ async def criar_novo_pedido(novo_pedido_data: NovoPedidoSchema,db: Session = Dep
             detail=str(e)
         )
     
+@router.get("/desktop/tabela", status_code=status.HTTP_200_OK, response_model=list[PedidoResponse])
+def listar_pedidos(db: Session = Depends(get_db)):
+    bd_pedido = (db.query(Pedido)
+                 .options(joinedload(Pedido.itens).joinedload(ItemPedido.produtos),
+                          joinedload(Pedido.endereco_entrega),
+                          joinedload(Pedido.cliente),
+                          joinedload(Pedido.caixa)
+                    ).all()
+            )
+
+    return bd_pedido
+
+@router.put("/aumentar-item/{pedido_id}/{item_id}", status_code=status.HTTP_200_OK, response_model=PedidoResponse)
+async def adicionar_quantidade(pedido_id: int, item_id: int, bd: Session = Depends(get_db)):
+    pedido_existente = bd.query(Pedido).filter(
+        Pedido.id == pedido_id,
+        Pedido.status != "CANCELADO",
+    ).with_for_update().first()
+
+    if not pedido_existente:
+        raise HTTPException(status_code=404, detail="Pedido nao encontrado")
+
+    item_existente = bd.query(ItemPedido).filter(ItemPedido.pedido_id == pedido_existente.id, ItemPedido.id == item_id).with_for_update().first()
+    if not item_existente:
+        raise HTTPException(status_code=404, detail="Item nao encontrado")
+    
+    produto_existente = bd.query(ProdutoModel).filter(ProdutoModel.id == item_existente.produto_id).with_for_update().first()
+    if not produto_existente:
+        raise HTTPException(status_code=404, detail="Produto nao encontrado")
+
+    if produto_existente.estoque <= 0:
+        raise HTTPException(status_code=400, detail="Estoque insuficiente")
+    
+    item_existente.quantidade += 1
+    pedido_existente.valor_total += item_existente.valor_unitario
+    produto_existente.estoque += -1
+
+    if produto_existente.estoque == 0:
+        produto_existente.status_venda = "Pausado"
+
+    bd.commit()
+
+    bd.refresh(pedido_existente)
+
+    pedido_response = PedidoResponse.model_validate(pedido_existente)
+
+    await notificar_todos({
+        "tipo": "pedido_em_delivery",
+        "dados": jsonable_encoder(pedido_response)
+    })
+
+    return PedidoResponse.model_validate(
+        pedido_existente
+    )
