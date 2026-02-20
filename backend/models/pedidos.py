@@ -1,16 +1,20 @@
-from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime, Numeric, ForeignKey, Text
+from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime, Numeric, ForeignKey, text, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from bd.connection import Base
 from datetime import datetime
+import uuid
+from sqlalchemy.dialects.postgresql import UUID
 
 class Pedido(Base):
     __tablename__ = 'pedidos'
 
-    id = Column(Integer, primary_key=True, index=True)
+    id_pedido = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4,server_default=text("gen_random_uuid()"), nullable=False, index=True)
 
-    cliente_id = Column(Integer, ForeignKey('clientes.id'), nullable=False)
-    caixa_id = Column(Integer, ForeignKey('caixa.id'), nullable=False)
+    estabelecimento_id = Column(UUID(as_uuid=True), ForeignKey('estabelecimentos.id'), nullable=False, index=True)
+
+    cliente_id = Column(UUID(as_uuid=True), ForeignKey('clientes.id'), nullable=False)
+    caixa_id = Column(UUID(as_uuid=True), ForeignKey('caixa.id'), nullable=False)
 
     data_criacao = Column(DateTime(timezone=True), default=datetime.now)
     data_atualizacao = Column(DateTime(timezone=True), onupdate=func.now())
@@ -30,8 +34,9 @@ class Pedido(Base):
 class EnderecoPedido(Base):
     __tablename__ = 'enderecos_pedidos'
 
-    id = Column(Integer, primary_key=True, index=True)
-    pedido_id = Column(Integer, ForeignKey('pedidos.id'), unique=True, nullable=False)
+    id_endereco_pedido = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, server_default=text("gen_random_uuid()"), nullable=False, index=True)
+    estabelecimento_id = Column(UUID(as_uuid=True), ForeignKey('estabelecimentos.id'), nullable=False, index=True)
+    pedido_id = Column(UUID(as_uuid=True), ForeignKey('pedidos.id_pedido'), unique=True, nullable=False)
 
     cep = Column(String(8), nullable=False)
     endereco = Column(String(200), nullable=False)
@@ -52,9 +57,10 @@ class EnderecoPedido(Base):
 class ItemPedido(Base):
     __tablename__ = 'itens_pedidos'
 
-    id = Column(Integer, primary_key=True, index=True)
-    pedido_id = Column(Integer, ForeignKey('pedidos.id'), nullable=False)
-    produto_id = Column(Integer, ForeignKey('produtos.id'), nullable=False)
+    id_itens_pedido = Column(UUID(as_uuid=True), primary_key=True,default=uuid.uuid4,server_default=text("gen_random_uuid()"), nullable=False, index=True)
+    estabelecimento_id = Column(UUID(as_uuid=True), ForeignKey('estabelecimentos.id'), nullable=False, index=True)
+    pedido_id = Column(UUID(as_uuid=True), ForeignKey('pedidos.id_pedido'), nullable=False, index=True)
+    produto_id = Column(UUID(as_uuid=True), ForeignKey('produtos.id_produto'), nullable=False, index=True)
     quantidade = Column(Integer, nullable=False)
     valor_unitario = Column(Numeric(10, 2), nullable=False)
 

@@ -1,15 +1,18 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, text
 from typing import List
 from sqlalchemy.orm import relationship, Mapped
 from bd.connection import Base
+import uuid
+from sqlalchemy.dialects.postgresql import UUID
 
 # Iserção da tabela de categorias no banco de dados
 class Categoria(Base):
 
     __tablename__ = "categorias"
 
-    id: int = Column(Integer, primary_key=True, nullable=False)
-    nome: str = Column(String(30), unique=True, nullable=False)
+    id_categoria = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4,server_default=text("gen_random_uuid()"), nullable=False)
+    estabelecimento_id = Column(UUID(as_uuid=True), ForeignKey("estabelecimentos.id"), nullable=False, index=True)
+    nome = Column(String(30), unique=True, nullable=False)
 
     produtos: Mapped[List["Produto"]] = relationship("Produto", back_populates="categoria_object")
 
@@ -21,8 +24,9 @@ class Categoria(Base):
 class Produto(Base):
     __tablename__ = "produtos"
     
-    id: int = Column(Integer, primary_key=True, nullable=False)
-    categoria_id = Column(Integer, ForeignKey("categorias.id"), nullable=False)
+    id_produto = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, server_default=text("gen_random_uuid()"), nullable=False)
+    estabelecimento_id = Column(UUID(as_uuid=True), ForeignKey("estabelecimentos.id"), nullable=False, index=True)
+    categoria_id = Column(UUID(as_uuid=True), ForeignKey("categorias.id_categoria"), nullable=False)
     cod_pdv = Column(String(20), unique=True, nullable=False)
     nome = Column(String(80), nullable=False)
     preco_custo = Column(Float, nullable=False)
