@@ -14,6 +14,7 @@ from models.clientes import Clientes
 from models.produtos import Produto as ProdutoModel
 from models.caixa import Caixa as CaixaModel
 from service.websocketservice import notificar_todos
+from service.depencias import get_current_user
 from database.connection import get_db
 from datetime import datetime
 
@@ -21,20 +22,21 @@ router = APIRouter()
 
 # --- Funções Auxiliares (Simplificadas para o Exemplo) ---
 
-def get_or_create_cliente(cliente_data, db: Session) -> Tuple[int, Clientes]:
+def get_or_create_cliente(cliente_data, db: Session, user_current: dict) -> Tuple[int, Clientes]:
     """
     Simula a busca do cliente por e-mail/telefone ou a criação de um novo.
     Retorna o ID do cliente e o objeto Cliente.
     """
     # 1. Tenta encontrar o cliente pelo email (ou telefone)
-    cliente_db = db.query(Clientes).filter(Clientes.email == cliente_data.email).first()
+    cliente_db = db.query(Clientes).filter(Clientes.email == cliente_data.email, Clientes.estabelecimento_id == user_current["estabelecimento_id"]).first()
     
     if not cliente_db:
         # 2. Se não existir, cria o novo cliente no DB
         cliente_db = Clientes(
             nome=cliente_data.nome,
             email=cliente_data.email,
-            telefone=cliente_data.telefone
+            telefone=cliente_data.telefone,
+            estabelecimento_id=user_current["estabelecimento_id"]
         )
         db.add(cliente_db)
         db.flush() # Garante que o cliente_id seja gerado antes de usar
@@ -42,8 +44,8 @@ def get_or_create_cliente(cliente_data, db: Session) -> Tuple[int, Clientes]:
     return cliente_db.id, cliente_db
 
 @router.delete("/react/deletar-dados-pedidos/{pedido_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_pedido(pedido_id: int, db: Session = Depends(get_db)):
-    pedido = db.query(Pedido).filter(Pedido.id == pedido_id).first()
+async def delete_pedido(pedido_id: int, db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
+    pedido = db.query(Pedido).filter(Pedido.id_pedido == pedido_id, Pedido.estabelecimento_id == user_current["estabelecimento_id"]).first()
 
     if not pedido:
         raise HTTPException(status_code=404, detail="Pedido não encontrado")
@@ -53,9 +55,9 @@ async def delete_pedido(pedido_id: int, db: Session = Depends(get_db)):
 
 #  Usa o schema de resposta completo para serializar o pedido final em response_model=PedidoResponse
 @router.post("/react", status_code=status.HTTP_201_CREATED, response_model=PedidoResponse)
-async def criar_novo_pedido(novo_pedido_data: NovoPedidoSchema,db: Session = Depends(get_db)):
+async def criar_novo_pedido(novo_pedido_data: NovoPedidoSchema,db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
 
-    caixa = db.query(CaixaModel).filter(CaixaModel.status == "ABERTO").first()
+    caixa = db.query(CaixaModel).filter(CaixaModel.status == "ABERTO", CaixaModel.estabelecimento_id == user_current["estabelecimento_id"]).first()
 
     if not caixa:
         raise HTTPException(
@@ -66,7 +68,7 @@ async def criar_novo_pedido(novo_pedido_data: NovoPedidoSchema,db: Session = Dep
     try:
         # 1. OBTER/CRIAR O CLIENTE
         # Esta função garante que tenhamos o ID do cliente logado ou recém-criado
-        cliente_id, cliente_objeto = get_or_create_cliente(novo_pedido_data.cliente, db)
+        cliente_id = get_or_create_cliente(novo_pedido_data.cliente, db, user_current)
         
         # 2. VALIDAÇÃO DE PRECISÃO (Opcional: Verifica a soma do frontend)
         # O Pydantic já garantiu que valor_total, preco_unitario e taxa_entrega são Decimais.
@@ -89,7 +91,8 @@ async def criar_novo_pedido(novo_pedido_data: NovoPedidoSchema,db: Session = Dep
             cliente_id=cliente_id,
             caixa_id=caixa.id,
             metodo_pagamento=novo_pedido_data.metodo_pagamento,
-            valor_total=novo_pedido_data.valor_total
+            valor_total=novo_pedido_data.valor_total,
+            estabelecimento_id=user_current["estabelecimento_id"],
             # status e data_pedido usam defaults do modelo
         )
 
@@ -103,8 +106,9 @@ async def criar_novo_pedido(novo_pedido_data: NovoPedidoSchema,db: Session = Dep
         
         # Converte o Pydantic 'EntregaInput' para o modelo SQLAlchemy 'EnderecoPedido'
         db_endereco = EnderecoPedido(
-            pedido_id=db_pedido.id,
-            **novo_pedido_data.entrega.model_dump(exclude_unset=True) # Mapeia todos os campos de entrega
+            pedido_id=db_pedido.id_pedido,
+            **novo_pedido_data.entrega.model_dump(exclude_unset=True),
+            estabelecimento_id=user_current["estabelecimento_id"] # Mapeia todos os campos de entrega
         )
         db.add(db_endereco)
 
@@ -112,10 +116,11 @@ async def criar_novo_pedido(novo_pedido_data: NovoPedidoSchema,db: Session = Dep
         
         for item_data in novo_pedido_data.itens:
             db_item = ItemPedido(
-                pedido_id=db_pedido.id,
+                pedido_id=db_pedido.id_pedido,
                 produto_id=item_data.produto_id,
                 quantidade=item_data.quantidade,
                 valor_unitario=item_data.valor_unitario,
+                estabelecimento_id=user_current["estabelecimento_id"]
             )
             db.add(db_item)
 
@@ -150,32 +155,34 @@ async def criar_novo_pedido(novo_pedido_data: NovoPedidoSchema,db: Session = Dep
         )
     
 @router.get("/desktop/tabela", status_code=status.HTTP_200_OK, response_model=list[PedidoResponse])
-def listar_pedidos(db: Session = Depends(get_db)):
+def listar_pedidos(db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
     bd_pedido = (db.query(Pedido)
                  .options(joinedload(Pedido.itens).joinedload(ItemPedido.produtos),
                           joinedload(Pedido.endereco_entrega),
                           joinedload(Pedido.cliente),
-                          joinedload(Pedido.caixa)
+                          joinedload(Pedido.caixa),
+                          joinedload(Pedido.estabelecimento_id),
                     ).all()
             )
 
     return bd_pedido
 
 @router.put("/aumentar-item/{pedido_id}/{item_id}", status_code=status.HTTP_200_OK, response_model=PedidoResponse)
-async def adicionar_quantidade(pedido_id: int, item_id: int, bd: Session = Depends(get_db)):
+async def adicionar_quantidade(pedido_id: int, item_id: int, bd: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
     pedido_existente = bd.query(Pedido).filter(
         Pedido.id == pedido_id,
         Pedido.status != "CANCELADO",
+        Pedido.estabelecimento_id == user_current["estabelecimento_id"]
     ).with_for_update().first()
 
     if not pedido_existente:
         raise HTTPException(status_code=404, detail="Pedido nao encontrado")
 
-    item_existente = bd.query(ItemPedido).filter(ItemPedido.pedido_id == pedido_existente.id, ItemPedido.id == item_id).with_for_update().first()
+    item_existente = bd.query(ItemPedido).filter(ItemPedido.pedido_id == pedido_existente.id_pedido, ItemPedido.id_itens_pedido == item_id, ItemPedido.estabelecimento_id == user_current["estabelecimento_id"]).with_for_update().first()
     if not item_existente:
         raise HTTPException(status_code=404, detail="Item nao encontrado")
     
-    produto_existente = bd.query(ProdutoModel).filter(ProdutoModel.id == item_existente.produto_id).with_for_update().first()
+    produto_existente = bd.query(ProdutoModel).filter(ProdutoModel.id_produto == item_existente.produto_id).with_for_update().first()
     if not produto_existente:
         raise HTTPException(status_code=404, detail="Produto nao encontrado")
 

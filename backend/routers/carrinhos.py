@@ -3,6 +3,7 @@ import pandas as pd
 from sqlalchemy.orm import Session
 from sqlalchemy import update, select
 from database.connection import get_db
+from service.depencias import get_current_user
 from typing import List, Dict
 from models.carrinhos import Carrinho as CarrinhoModel
 from schemas.carrinhos import Carrinho as CarrinhoSchema
@@ -11,10 +12,11 @@ from schemas.carrinhos import CarrinhoUpdate as CarrinhoUpdateSchema
 router = APIRouter()
 
 @router.get("/preencher-react")
-async def read_products(db: Session = Depends(get_db)):
-    db = db.query(CarrinhoModel).all()
+async def read_products(db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
+    db = db.query(CarrinhoModel).filter(CarrinhoModel.estabelecimento_id == user_current["estabelecimento_id"]).all()
     db = [p.__dict__ for p in db]
     dataframe = pd.DataFrame(db).drop(columns=["_sa_istance_state"], errors="ignore")
+
     if not dataframe.empty:
         dataframe["valor_total"] = dataframe["preco_venda"] * dataframe["quantidade"]
 
@@ -24,16 +26,17 @@ async def read_products(db: Session = Depends(get_db)):
     return {"dataframe": dataframe, "qtdprodutos": qtdprodutos}
 
 @router.delete("/excluir-all-produtos")
-async def delete_all(db: Session = Depends(get_db)):
-    db.query(CarrinhoModel).delete()
+async def delete_all(db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
+    db.query(CarrinhoModel).filter(CarrinhoModel.estabelecimento_id == user_current["estabelecimento_id"]).delete()
     db.commit()
     return {"message": "Carrinho excluido com sucesso"}
 
 @router.post("/adicionar-produto/{product_id}")
-async def post_product(product_id: int, format: CarrinhoSchema, db: Session = Depends(get_db)):
-    db_product = db.query(CarrinhoModel).filter(CarrinhoModel.produto_id == product_id).first()
+async def post_product(product_id: int, format: CarrinhoSchema, db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
+    db_product = db.query(CarrinhoModel).filter(CarrinhoModel.produto_id == product_id, CarrinhoModel.estabelecimento_id == user_current["estabelecimento_id"]).first()
     if not db_product:
         db_product = CarrinhoModel(**format.dict())
+        db_product.estabelecimento_id = user_current["estabelecimento_id"]
         db.add(db_product)
         db.commit()
         db.refresh(db_product)
@@ -45,8 +48,8 @@ async def post_product(product_id: int, format: CarrinhoSchema, db: Session = De
     return db_product
 
 @router.delete("/deletar-produto-selecionado/{produto_id}")
-async def delete_product(produto_id: str, db: Session = Depends(get_db)):
-    db_carrinho = db.query(CarrinhoModel).filter(CarrinhoModel.produto_id == produto_id).first()
+async def delete_product(produto_id: str, db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
+    db_carrinho = db.query(CarrinhoModel).filter(CarrinhoModel.produto_id == produto_id, CarrinhoModel.estabelecimento_id == user_current["estabelecimento_id"]).first()
     if db_carrinho:
         db.delete(db_carrinho)
         db.commit()
@@ -63,8 +66,8 @@ async def delete_product(produto_id: str, db: Session = Depends(get_db)):
 
 
 @router.put("/atualizar/quantidade/{product_id}/{quantidade}")
-async def update_product(product_id: int, quantidade: int, db: Session = Depends(get_db)):
-    db_product = db.query(CarrinhoModel).filter(CarrinhoModel.produto_id == product_id).first()
+async def update_product(product_id: int, quantidade: int, db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
+    db_product = db.query(CarrinhoModel).filter(CarrinhoModel.produto_id == product_id, CarrinhoModel.estabelecimento_id == user_current["estabelecimento_id"]).first()
     if db_product:
         db_product.quantidade = quantidade
         db.commit()

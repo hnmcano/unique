@@ -7,6 +7,7 @@ from schemas.mesas import MesasResponse, AberturaMesa, AdicionarItensMesa
 from models.mesas import Mesas as MesaModel, PedidosMesa as PedidosMesaModel, PedidoItens as PedidoItensModel
 from models.produtos import Produto as ProdutoModel
 from service.websocketservice import clientes_conectados, notificar_todos
+from service.depencias import get_current_user
 from models.caixa import Caixa
 import time
 import json
@@ -20,10 +21,11 @@ router = APIRouter()
 )
 def abrir_mesa(
         mesa: AberturaMesa, 
-        db: Session = Depends(get_db)
+        db: Session = Depends(get_db),
+        user_current: dict = Depends(get_current_user)
     ):
 
-    caixa = db.query(CaixaModel).filter(CaixaModel.status == "ABERTO").first()
+    caixa = db.query(CaixaModel).filter(CaixaModel.status == "ABERTO", CaixaModel.estabelecimento_id == user_current["estabelecimento_id"]).first()
     if not caixa:
         raise HTTPException(
             status_code=400,
@@ -31,18 +33,20 @@ def abrir_mesa(
         )
 
     mesa_existente = db.query(MesaModel).filter(
-        MesaModel.numero == mesa.numero
+        MesaModel.numero == mesa.numero,
+        MesaModel.estabelecimento_id == user_current["estabelecimento_id"]
     ).first()
 
     if mesa_existente:
         pedido_aberto = db.query(PedidosMesaModel).filter(
-            PedidosMesaModel.mesa_id == mesa_existente.id,
-            PedidosMesaModel.status == "ABERTO"
+            PedidosMesaModel.mesa_id == mesa_existente.id_mesa,
+            PedidosMesaModel.status == "ABERTO",
+            PedidosMesaModel.estabelecimento_id == user_current["estabelecimento_id"]
         ).first()
 
         if pedido_aberto:
             return {
-                "id": mesa_existente.id,
+                "id": mesa_existente.id_mesa,
                 "numero": mesa_existente.numero,
                 "caixa_id": mesa_existente.caixa_id,
                 "pedido": pedido_aberto
@@ -51,7 +55,8 @@ def abrir_mesa(
     # cria mesa
     db_mesa = MesaModel(
         numero=mesa.numero,
-        caixa_id=caixa.id
+        caixa_id=caixa.id,
+        estabelecimento_id=user_current["estabelecimento_id"]
     )
     db.add(db_mesa)
     db.commit()
@@ -59,10 +64,11 @@ def abrir_mesa(
 
     # cria pedido vazio
     db_pedido = PedidosMesaModel(
-        mesa_id=db_mesa.id,
+        mesa_id=db_mesa.id_mesa,
         status="ABERTO",
         valor_total=0,
-        quantidade_itens=0
+        quantidade_itens=0,
+        estabelecimento_id=user_current["estabelecimento_id"]
     )
 
     db.add(db_pedido)
@@ -70,7 +76,7 @@ def abrir_mesa(
     db.refresh(db_pedido)
 
     return {
-        "id": db_mesa.id,
+        "id": db_mesa.id_mesa,
         "numero": db_mesa.numero,
         "caixa_id": db_mesa.caixa_id,
         "pedido": db_pedido
@@ -83,26 +89,31 @@ def abrir_mesa(
 )
 async def adicionar_produto(
     mesa: AdicionarItensMesa,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    user_current: dict = Depends(get_current_user)
 ):
 
     mesa_existente = db.query(MesaModel).filter(
-        MesaModel.id == mesa.mesa_id
+        MesaModel.id_mesa == mesa.mesa_id,
+        MesaModel.estabelecimento_id == user_current["estabelecimento_id"]
     ).first()
 
     if not mesa_existente:
         raise HTTPException(status_code=404, detail="Mesa nao encontrada")
 
     pedido_aberto = db.query(PedidosMesaModel).filter(
-        PedidosMesaModel.mesa_id == mesa_existente.id,
-        PedidosMesaModel.status == "ABERTO"
+        PedidosMesaModel.mesa_id == mesa_existente.id_mesa,
+        PedidosMesaModel.status == "ABERTO",
+        PedidosMesaModel.estabelecimento_id == user_current["estabelecimento_id"]
     ).with_for_update().first()
 
     if not pedido_aberto:
         raise HTTPException(status_code=404, detail="Pedido nao encontrado")
 
-    item_existente = db.query(PedidoItensModel).filter(PedidoItensModel.pedido_id == pedido_aberto.id, PedidoItensModel.produto_id == mesa.produto_id).with_for_update().first()
-    produto_existente = db.query(ProdutoModel).filter(ProdutoModel.id == mesa.produto_id).with_for_update().first()
+    item_existente = db.query(PedidoItensModel).filter(PedidoItensModel.pedido_id == pedido_aberto.id_pedido_mesa, PedidoItensModel.produto_id == mesa.produto_id,
+        PedidoItensModel.estabelecimento_id == user_current["estabelecimento_id"]).with_for_update().first()
+    produto_existente = db.query(ProdutoModel).filter(ProdutoModel.id_produto == mesa.produto_id,
+        ProdutoModel.estabelecimento_id == user_current["estabelecimento_id"]).with_for_update().first()
 
     if produto_existente.estoque <= 0:
         raise HTTPException(status_code=400, detail="Estoque insuficiente")
@@ -115,7 +126,7 @@ async def adicionar_produto(
         produto_existente.estoque -= 1
 
         mesa_response = MesasResponse.model_validate( {
-            "id": mesa_existente.id,    
+            "id": mesa_existente.id_mesa,    
             "numero": mesa_existente.numero,
             "pedido": pedido_aberto
         })
@@ -128,7 +139,7 @@ async def adicionar_produto(
         })
 
         return {
-            "id": mesa_existente.id,
+            "id": mesa_existente.id_mesa,
             "numero": mesa_existente.numero,
             "caixa_id": mesa_existente.caixa_id,
             "pedido": pedido_aberto
@@ -140,7 +151,8 @@ async def adicionar_produto(
         produto_id=mesa.produto_id,
         quantidade=mesa.quantidade,
         valor_unitario=mesa.valor_unitario,
-        valor_total=mesa.quantidade * mesa.valor_unitario
+        valor_total=mesa.quantidade * mesa.valor_unitario,
+        estabelecimento_id=user_current["estabelecimento_id"]
     )
     
     pedido_aberto.itens.append(item)
@@ -154,7 +166,7 @@ async def adicionar_produto(
     db.refresh(pedido_aberto)
 
     mesa_response = MesasResponse.model_validate( {  
-        "id": mesa_existente.id,    
+        "id": mesa_existente.id_mesa,    
         "numero": mesa_existente.numero,
         "pedido": pedido_aberto
     })
@@ -165,7 +177,7 @@ async def adicionar_produto(
     })
 
     return {
-        "id": mesa_existente.id,
+        "id": mesa_existente.id_mesa,
         "numero": mesa_existente.numero,
         "caixa_id": mesa_existente.caixa_id,
         "pedido": pedido_aberto
@@ -177,19 +189,22 @@ async def adicionar_produto(
 )
 async def fechar_mesa(
     mesa_id: int, 
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    user_current: dict = Depends(get_current_user)
 ):
 
     mesa_existente = db.query(MesaModel).filter(
-        MesaModel.id == mesa_id
+        MesaModel.id_mesa == mesa_id,
+        MesaModel.estabelecimento_id == user_current["estabelecimento_id"]
     ).first()
 
     if not mesa_existente:
         raise HTTPException(status_code=404, detail="Mesa nao encontrada")
 
     pedido_aberto = db.query(PedidosMesaModel).filter(
-        PedidosMesaModel.mesa_id == mesa_existente.id,
-        PedidosMesaModel.status == "ABERTO"
+        PedidosMesaModel.mesa_id == mesa_existente.id_mesa,
+        PedidosMesaModel.status == "ABERTO",
+        PedidosMesaModel.estabelecimento_id == user_current["estabelecimento_id"]
     ).first()
 
     if not pedido_aberto:
@@ -204,19 +219,22 @@ async def fechar_mesa(
     )
 async def excluir_pedido_mesa(
     mesa_id: int, 
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    user_current: dict = Depends(get_current_user)
 ):
 
     mesa_existente = db.query(MesaModel).filter(
-        MesaModel.id == mesa_id
+        MesaModel.id_mesa == mesa_id,
+        MesaModel.estabelecimento_id == user_current["estabelecimento_id"]
     ).first()
 
     if not mesa_existente:
         raise HTTPException(status_code=404, detail="Mesa nao encontrada")
 
     pedido_aberto = db.query(PedidosMesaModel).filter(
-        PedidosMesaModel.mesa_id == mesa_existente.id,
-        PedidosMesaModel.status == "ABERTO"
+        PedidosMesaModel.mesa_id == mesa_existente.id_mesa,
+        PedidosMesaModel.status == "ABERTO",
+        PedidosMesaModel.estabelecimento_id == user_current["estabelecimento_id"]
     ).first()
 
     if not pedido_aberto:
@@ -231,11 +249,13 @@ async def excluir_pedido_mesa(
     )
 async def excluir_mesa(
     mesa_id: int, 
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    user_current: dict = Depends(get_current_user)
 ):
 
     mesa_existente = db.query(MesaModel).filter(
-        MesaModel.id == mesa_id
+        MesaModel.id_mesa == mesa_id,
+        MesaModel.estabelecimento_id == user_current["estabelecimento_id"]
     ).first()
 
     if not mesa_existente:
@@ -246,7 +266,8 @@ async def excluir_mesa(
         .options(joinedload(PedidosMesaModel.itens))
         .filter(
             PedidosMesaModel.mesa_id == mesa_id,
-            PedidosMesaModel.status == "ABERTO"
+            PedidosMesaModel.status == "ABERTO",
+            PedidosMesaModel.estabelecimento_id == user_current["estabelecimento_id"]
         )
         .first()
     )
@@ -276,9 +297,11 @@ async def excluir_mesa(
         status_code=status.HTTP_200_OK
     )
 async def mesas_em_atendimento(
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    user_current: dict = Depends(get_current_user)
 ):
-    pedidos_abertos = db.query(PedidosMesaModel).filter(PedidosMesaModel.status == "ABERTO").all()
+    pedidos_abertos = db.query(PedidosMesaModel).filter(PedidosMesaModel.status == "ABERTO",
+        PedidosMesaModel.estabelecimento_id == user_current["estabelecimento_id"]).all()
 
     if not pedidos_abertos:
         raise HTTPException(status_code=404, detail="Nenhum pedido em atendimento")
@@ -286,7 +309,7 @@ async def mesas_em_atendimento(
     mesas_em_atendimento = []
 
     for pedido in pedidos_abertos:
-        mesa = db.query(MesaModel).filter(MesaModel.id == pedido.mesa_id).first()
+        mesa = db.query(MesaModel).filter(MesaModel.id_mesa == pedido.mesa_id, MesaModel.estabelecimento_id == user_current["estabelecimento_id"]).first()
         mesas_em_atendimento.append(mesa.numero)
 
     return mesas_em_atendimento
@@ -299,13 +322,21 @@ async def excluir_item_pedido_mesa(
     mesa_id: int, 
     pedido_id: int, 
     item_id: int, 
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    user_current: dict = Depends(get_current_user)
 ):  
-    mesa = db.query(MesaModel).filter(MesaModel.id == mesa_id).first()
-    pedido = db.query(PedidosMesaModel).filter(PedidosMesaModel.mesa_id == mesa_id, PedidosMesaModel.id == pedido_id).with_for_update().first()
+    mesa = db.query(MesaModel).filter(MesaModel.id_mesa == mesa_id, MesaModel.estabelecimento_id == user_current["estabelecimento_id"]).first()
+    pedido = db.query(
+        PedidosMesaModel
+    ).filter(PedidosMesaModel.mesa_id == mesa_id, 
+                PedidosMesaModel.id_pedido_mesa == pedido_id, 
+                PedidosMesaModel.estabelecimento_id == user_current["estabelecimento_id"]
+            ).with_for_update().first()
 
     if mesa and pedido:
-        item_existente = db.query(PedidoItensModel).filter(PedidoItensModel.pedido_id == pedido_id, PedidoItensModel.produto_id == item_id).with_for_update().first()
+        item_existente = db.query(PedidoItensModel).filter
+        (PedidoItensModel.pedido_id == pedido_id, PedidoItensModel.produto_id == item_id, 
+         PedidoItensModel.estabelecimento_id == user_current["estabelecimento_id"]).with_for_update().first()
 
         if not item_existente:
             raise HTTPException(status_code=404, detail="Item nao encontrado")
@@ -320,7 +351,8 @@ async def excluir_item_pedido_mesa(
             )
             .filter(
                 PedidosMesaModel.mesa_id == mesa_id,
-                PedidosMesaModel.status == "ABERTO"
+                PedidosMesaModel.status == "ABERTO",
+                PedidosMesaModel.estabelecimento_id == user_current["estabelecimento_id"]
             )
             .first()
         )
@@ -328,7 +360,7 @@ async def excluir_item_pedido_mesa(
         if not pedido_aberto:
             raise HTTPException(status_code=404, detail="Pedido nao encontrado")
 
-        produto = db.query(ProdutoModel).filter(ProdutoModel.id == item_existente.produto_id).with_for_update().first()
+        produto = db.query(ProdutoModel).filter(ProdutoModel.id_produto == item_existente.produto_id, ProdutoModel.estabelecimento_id == user_current["estabelecimento_id"]).with_for_update().first()
         produto.estoque += item_existente.quantidade
 
         db.delete(item_existente)
@@ -340,7 +372,7 @@ async def excluir_item_pedido_mesa(
         db.commit()
 
         mesa_response = MesasResponse.model_validate( {  
-            "id": mesa.id,    
+            "id": mesa.id_mesa,    
             "numero": mesa.numero,
             "pedido": pedido
         })
@@ -354,21 +386,22 @@ async def excluir_item_pedido_mesa(
         raise HTTPException(status_code=404, detail="Mesa ou pedido não encontrados.")
     
 @router.put("/aumentar-item/{mesa_id}/{pedido_id}/{item_id}", status_code=status.HTTP_200_OK, response_model=MesasResponse)
-async def adicionar_quantidade(mesa_id: int, pedido_id: int, item_id: int, bd: Session = Depends(get_db)):
-    mesa_existente = bd.query(MesaModel).filter(MesaModel.id == mesa_id).first()
+async def adicionar_quantidade(mesa_id: int, pedido_id: int, item_id: int, bd: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
+    mesa_existente = bd.query(MesaModel).filter(MesaModel.id_mesa == mesa_id, MesaModel.estabelecimento_id == user_current["estabelecimento_id"]).first()
     pedido_existente = bd.query(
         PedidosMesaModel
         ).filter(
-            PedidosMesaModel.id == pedido_id, 
-            PedidosMesaModel.mesa_id == mesa_existente.id, 
-            PedidosMesaModel.status == "ABERTO"
+            PedidosMesaModel.id_pedido_mesa == pedido_id, 
+            PedidosMesaModel.mesa_id == mesa_existente.id_mesa, 
+            PedidosMesaModel.status == "ABERTO",
+            PedidosMesaModel.estabelecimento_id == user_current["estabelecimento_id"]
         ).first()
 
-    item_existente = bd.query(PedidoItensModel).filter(PedidoItensModel.pedido_id == pedido_existente.id, PedidoItensModel.produto_id == item_id).first()
+    item_existente = bd.query(PedidoItensModel).filter(PedidoItensModel.pedido_id == pedido_existente.id_pedido_mesa, PedidoItensModel.produto_id == item_id, PedidoItensModel.estabelecimento_id == user_current["estabelecimento_id"]).first()
     if not item_existente:
         raise HTTPException(status_code=404, detail="Item nao encontrado")
     
-    produto_existente = bd.query(ProdutoModel).filter(ProdutoModel.id == item_existente.produto_id).with_for_update().first()
+    produto_existente = bd.query(ProdutoModel).filter(ProdutoModel.id_produto == item_existente.produto_id, ProdutoModel.estabelecimento_id == user_current["estabelecimento_id"]).with_for_update().first()
     if not produto_existente:
         raise HTTPException(status_code=404, detail="Produto nao encontrado")
     
@@ -386,7 +419,7 @@ async def adicionar_quantidade(mesa_id: int, pedido_id: int, item_id: int, bd: S
     bd.commit()
 
     mesa_response = MesasResponse.model_validate( {  
-        "id": mesa_existente.id,    
+        "id": mesa_existente.id_mesa,    
         "numero": mesa_existente.numero,
         "pedido": pedido_existente
     })
@@ -399,28 +432,29 @@ async def adicionar_quantidade(mesa_id: int, pedido_id: int, item_id: int, bd: S
     return mesa_response
 
 @router.put("/diminuir-item/{mesa_id}/{pedido_id}/{item_id}", status_code=status.HTTP_200_OK, response_model=MesasResponse)
-async def remover_quantidade(mesa_id: int, pedido_id: int, item_id: int, bd: Session = Depends(get_db)):
-    mesa_existente = bd.query(MesaModel).filter(MesaModel.id == mesa_id).first()
+async def remover_quantidade(mesa_id: int, pedido_id: int, item_id: int, bd: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
+    mesa_existente = bd.query(MesaModel).filter(MesaModel.id_mesa == mesa_id, MesaModel.estabelecimento_id == user_current["estabelecimento_id"]).first()
     pedido_existente = bd.query(
         PedidosMesaModel
         ).filter(
             PedidosMesaModel.id == pedido_id, 
             PedidosMesaModel.mesa_id == mesa_existente.id, 
-            PedidosMesaModel.status == "ABERTO"
+            PedidosMesaModel.status == "ABERTO",
+            PedidosMesaModel.estabelecimento_id == user_current["estabelecimento_id"]
         ).first()
 
-    item_existente = bd.query(PedidoItensModel).filter(PedidoItensModel.pedido_id == pedido_existente.id, PedidoItensModel.produto_id == item_id).first()
+    item_existente = bd.query(PedidoItensModel).filter(PedidoItensModel.pedido_id == pedido_existente.id_pedido_mesa, PedidoItensModel.produto_id == item_id, PedidoItensModel.estabelecimento_id == user_current["estabelecimento_id"]).first()
     if not item_existente:
         raise HTTPException(status_code=404, detail="Item nao encontrado")
     
-    produto_existente = bd.query(ProdutoModel).filter(ProdutoModel.id == item_existente.produto_id).with_for_update().first()
+    produto_existente = bd.query(ProdutoModel).filter(ProdutoModel.id_produto == item_existente.produto_id, ProdutoModel.estabelecimento_id == user_current["estabelecimento_id"]).with_for_update().first()
 
     if not produto_existente:
         raise HTTPException(status_code=404, detail="Produto nao encontrado")
 
     if item_existente.quantidade == 1:
         mesa_response = MesasResponse.model_validate( {  
-            "id": mesa_existente.id,    
+            "id": mesa_existente.id_mesa,    
             "numero": mesa_existente.numero,
             "pedido": pedido_existente
         })
@@ -443,7 +477,7 @@ async def remover_quantidade(mesa_id: int, pedido_id: int, item_id: int, bd: Ses
     bd.commit()
 
     mesa_response = MesasResponse.model_validate( {  
-        "id": mesa_existente.id,    
+        "id": mesa_existente.id_mesa,    
         "numero": mesa_existente.numero,
         "pedido": pedido_existente
     })

@@ -9,8 +9,9 @@ from services.network_conn import handle_network_reply
 import requests
 import base64
 import json
+import os
 
-APIURLDESENV = "http://localhost:8000"
+APIURLDESENV = os.getenv("APIURLDESENV")
 
 def inserir_imagem(parent=None):
     file_dialog = QFileDialog()

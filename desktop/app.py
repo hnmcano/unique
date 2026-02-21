@@ -21,7 +21,7 @@ import sys
 import base64
 import os
 
-APIURLDESENV = "http://localhost:8000"
+APIURLDESENV = os.getenv("APIURLDESENV")
 
 #funcao para centralizar a janelas
 def center_window(self):

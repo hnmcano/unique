@@ -6,8 +6,9 @@ from services.websocket import WebSocketService
 import requests
 
 from datetime import datetime
+import os
 
-APIURLDESENV = "http://localhost:8000"
+APIURLDESENV = os.getenv("APIURLDESENV")
 
 class DadosPedido(QMainWindow, dados_pedidos):
     mensagem_recebida = Signal(dict)

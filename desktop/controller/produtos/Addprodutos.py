@@ -9,8 +9,9 @@ from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest
 
 import requests
 import json
+import os
 
-APIURLDESENV = "http://localhost:8000"
+APIURLDESENV = os.getenv("APIURLDESENV")
 
 def center_window(self):
 

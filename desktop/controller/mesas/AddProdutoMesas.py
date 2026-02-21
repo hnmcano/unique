@@ -5,8 +5,9 @@ from PySide6.QtCore import Qt
 
 import requests
 import json
+import os
 
-APIURLDESENV = "http://localhost:8000"
+APIURLDESENV = os.getenv("APIURLDESENV")
 
 
 class AdicionarProdutoMesa(QMainWindow, addProdutosMesa):

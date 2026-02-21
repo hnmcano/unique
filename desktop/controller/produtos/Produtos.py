@@ -12,8 +12,9 @@ from PySide6.QtCore import Qt, Signal
 
 import requests
 import json
+import os
 
-APIURLDESENV = "http://localhost:8000"
+APIURLDESENV = os.getenv("APIURLDESENV")
 
 class NumericQtTableWidget(QTableWidgetItem):
     def __lt__(self, other):

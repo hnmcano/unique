@@ -2,8 +2,9 @@ from PySide6.QtWidgets import QMainWindow, QMessageBox
 from windows.form_products.add_categorias_ui import Ui_Category as addcategorias
 
 import requests
+import os
 
-APIURLDESENV = "http://localhost:8000"
+APIURLDESENV = os.getenv("APIURLDESENV")
 
 def excluir_categoria(parent=None, categoria_selecionada=None):
 

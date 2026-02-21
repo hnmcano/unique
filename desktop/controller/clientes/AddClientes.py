@@ -7,8 +7,9 @@ from windows.form_clients.add_clientes_ui import Ui_MainWindow as addclientes
 import json
 import requests
 from services.network_conn import handle_network_reply
+import os
 
-APIURLDESENV = "http://localhost:8000"
+APIURLDESENV = os.getenv("APIURLDESENV")
 
 def buscar_cep(parent=None):
     """Busca CEP usando ViaCEP"""

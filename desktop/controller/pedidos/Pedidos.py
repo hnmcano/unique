@@ -11,9 +11,9 @@ from ..produtos.Produtos import FloatQtTableWidget, NumericQtTableWidget
 
 import requests
 from datetime import datetime
+import os
 
-APIURLDESENV = "http://localhost:8000"
-
+APIURLDESENV = os.getenv("APIURLDESENV")
 
 class Pedidos(QMainWindow, delivery):
     def __init__(self, pedido_store, parent=None):

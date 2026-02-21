@@ -8,8 +8,9 @@ from PySide6.QtCore import *
 from PySide6.QtGui import *
 
 import json
+import os
 
-APIURLDESENV = "http://localhost:8000"
+APIURLDESENV = os.getenv("APIURLDESENV")
 
 
 def enviar_dados_estabelecimento(parent=None):

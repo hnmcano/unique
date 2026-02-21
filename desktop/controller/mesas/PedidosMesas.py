@@ -8,8 +8,9 @@ from datetime import datetime
 import requests
 
 from services.websocket import WebSocketService
+import os
 
-APIURLDESENV = "http://localhost:8000"
+APIURLDESENV = os.getenv("APIURLDESENV")
 
 def exibir_confirmacao_exclusao(parent= None, data=None):
     msg_box = QMessageBox(parent)

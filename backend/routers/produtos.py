@@ -11,6 +11,7 @@ from sqlalchemy import join
 from time import sleep
 import pandas as pd
 import base64
+from service.depencias import get_current_user
 
 router = APIRouter()
 
@@ -18,8 +19,10 @@ router = APIRouter()
 
 # Rotas para inserir produtos ao banco de dados, com a validação do Pydantic, baseado no envio do desktop
 @router.post("/desktop/add/product")
-async def adicionar_produto(product: ProdutoSchema, db: Session = Depends(get_db)):
+async def adicionar_produto(product: ProdutoSchema, db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
     db_product = ProductModel(**product.dict())
+    estabelecimento_id = user_current["estabelecimento_id"]
+    db_product.estabelecimento_id = estabelecimento_id
 
     if db_product.imagem is None:
         with open("backend/static/default_product.png", "rb") as image_file:
@@ -33,9 +36,13 @@ async def adicionar_produto(product: ProdutoSchema, db: Session = Depends(get_db
     db.commit()
     db.refresh(db_product)
 
-    produtos = db.query(ProductModel).all()
-    categorias = db.query(CategoryModel).all()
+    produtos = db.query(ProductModel).filter(
+        ProductModel.estabelecimento_id == estabelecimento_id
+    ).all()
 
+    categorias = db.query(CategoryModel).filter(
+        CategoryModel.estabelecimento_id == estabelecimento_id
+    )
     categorias_map = {
         c.id_categoria: c.nome for c in categorias
     }
@@ -77,16 +84,18 @@ async def adicionar_produto(product: ProdutoSchema, db: Session = Depends(get_db
 
 # Rota para popular tabela de produtos disponivel no desktop na aba produtos
 @router.get("/desktop/table")
-async def read_products(db: Session = Depends(get_db)):
-    produtos = db.query(ProductModel).all()
-    categorias = db.query(CategoryModel).all()
+async def read_products(db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
+    estabelecimento_id = user_current["estabelecimento_id"]
+
+    produtos = db.query(ProductModel).filter(ProductModel.estabelecimento_id == estabelecimento_id).all()
+    categorias = db.query(CategoryModel).filter(CategoryModel.estabelecimento_id == estabelecimento_id).all()
 
 
     if not produtos:
         return []
 
     categorias_map = {
-        c.id: c.nome for c in categorias
+        c.id_categoria: c.nome for c in categorias
     }
 
     data = []
@@ -96,7 +105,7 @@ async def read_products(db: Session = Depends(get_db)):
         nome_categoria = categorias_map.get(p.categoria_id, "Sem categoria")
 
         produto = {
-            "id": p.id,
+            "id": p.id_produto,
             "categoria_id": p.categoria_id,
             "cod_pdv": p.cod_pdv,
             "nome": p.nome,
@@ -118,15 +127,17 @@ async def read_products(db: Session = Depends(get_db)):
     return data
 
 @router.get("/mesa-add-product")
-async def read_products(db: Session = Depends(get_db)):
-    produtos = db.query(ProductModel).all()
-    categorias = db.query(CategoryModel).all()
+async def read_products(db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
+    estabelecimento_id = user_current["estabelecimento_id"]
+
+    produtos = db.query(ProductModel).filter(ProductModel.estabelecimento_id == estabelecimento_id).all()
+    categorias = db.query(CategoryModel).filter(CategoryModel.estabelecimento_id == estabelecimento_id).all()
 
     if not produtos:
         return []
 
     categorias_map = {
-        c.id: c.nome for c in categorias
+        c.id_categoria: c.nome for c in categorias
     }
 
     data = []
@@ -138,7 +149,7 @@ async def read_products(db: Session = Depends(get_db)):
         nome_categoria = categorias_map.get(p.categoria_id, "Sem categoria")
 
         produto = {
-            "id": p.id,
+            "id": p.id_produto,
             "categoria_id": p.categoria_id,
             "cod_pdv": p.cod_pdv,
             "nome": p.nome,
@@ -161,16 +172,17 @@ async def read_products(db: Session = Depends(get_db)):
 
 # Rota para listar todos os produtos com os nomes das categorias no front-end com react
 @router.get("/react/catalago")
-async def list_products(db: Session = Depends(get_db)):
+async def list_products(db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
+    estabelecimento_id = user_current["estabelecimento_id"]
 
-    produtos = db.query(ProductModel).all()
-    categorias = db.query(CategoryModel).all()
+    produtos = db.query(ProductModel).filter(ProductModel.estabelecimento_id == estabelecimento_id).all()
+    categorias = db.query(CategoryModel).filter(CategoryModel.estabelecimento_id == estabelecimento_id).all()
 
     if not produtos:
         return []
     
     categorias_map = {
-        c.id: c.nome for c in categorias
+        c.id_categoria: c.nome for c in categorias
     }
 
     resultado = {}
@@ -182,7 +194,7 @@ async def list_products(db: Session = Depends(get_db)):
         nome_categoria = categorias_map.get(p.categoria_id, "Sem categoria")
 
         produto_dict = {
-            "id": p.id,
+            "id": p.id_produto,
             "cod_pdv": p.cod_pdv,
             "nome": p.nome,
             "preco_custo": p.preco_custo,
@@ -214,8 +226,10 @@ async def list_products(db: Session = Depends(get_db)):
     ]
 
 @router.delete("/desktop/delete-product-data-base/{product_id}")
-async def delete_product(product_id: str, db: Session = Depends(get_db)):
-    db_product = db.query(ProductModel).filter(ProductModel.id == product_id).first()
+async def delete_product(product_id: str, db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
+    estabelecimento_id = user_current["estabelecimento_id"]
+
+    db_product = db.query(ProductModel).filter(ProductModel.id_produto == product_id, ProductModel.estabelecimento_id == estabelecimento_id).first()
     if db_product:
         db.delete(db_product)
         db.commit()
@@ -223,8 +237,11 @@ async def delete_product(product_id: str, db: Session = Depends(get_db)):
     raise HTTPException(status_code=404, detail="Produto nao encontrado")
 
 @router.put("/desktop/alter-product-data-base/{product_id}")
-async def update_product(product_id: str, product: ProdutoSchema, db: Session = Depends(get_db)):
-    db_product = db.query(ProductModel).filter(ProductModel.id == product_id).first()
+async def update_product(product_id: str, product: ProdutoSchema, db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
+
+    estabelecimento_id = user_current["estabelecimento_id"]
+
+    db_product = db.query(ProductModel).filter(ProductModel.id_produto == product_id, ProductModel.estabelecimento_id == estabelecimento_id).first()
 
     if not db_product:
         raise HTTPException(status_code=404, detail="Produto nao encontrado")
@@ -236,5 +253,3 @@ async def update_product(product_id: str, product: ProdutoSchema, db: Session = 
     db.refresh(db_product)
     return {"message": "Produto atualizado com sucesso"}
 
-
-############################################# CATEGORIAS ################################################

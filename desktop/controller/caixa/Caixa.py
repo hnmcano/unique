@@ -2,8 +2,9 @@ from PySide6.QtWidgets import *
 from windows.form_box.Caixa_ui import Ui_CAIXA as caixa
 
 import requests
+import os
 
-APIURLDESENV = "http://localhost:8000"
+APIURLDESENV = os.getenv("APIURLDESENV")
 
 class Caixa(QMainWindow, caixa):
     def __init__(self, parent=None):

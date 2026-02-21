@@ -4,9 +4,12 @@ from windows.form_orders.mesas_ui import Ui_MainWindow as mesas
 from ..mesas.PedidosMesas import DadosMesa
 from PySide6.QtNetwork import *
 import requests
+import os
+
+APIURLDESENV = os.getenv("APIURLDESENV")
 
 def atualizar_dados(numero_mesa):
-        response = requests.post("http://127.0.0.1:8000/mesas/abrir-mesa", json={
+        response = requests.post(f"{APIURLDESENV}/mesas/abrir-mesa", json={
             "numero": numero_mesa,
             "pedido": {
                 "status": "ABERTO",
@@ -27,7 +30,7 @@ class Mesas(QMainWindow, mesas):
 
         self.network_manager = QNetworkAccessManager(self)
 
-        response = requests.get("http://localhost:8000/mesas/em-atendimento")
+        response = requests.get(f"{APIURLDESENV}/mesas/em-atendimento")
         mesa = response.json()
 
         if response.status_code == 200: 
