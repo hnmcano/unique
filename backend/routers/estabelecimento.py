@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from bd.connection import get_db
+from database.connection import get_db
 import pandas as pd
 from sqlalchemy.orm import Session
 from models.estabelecimento import Estabelecimento as EstabelecimentoModel
@@ -9,17 +9,13 @@ router = APIRouter()
 
 @router.post("/desktop/add")
 async def info_data_estabelecimento(dados_estabelecimento: Estabelecimentoschema, db: Session = Depends(get_db)):
-    db_estabelecimento = EstabelecimentoModel(**dados_estabelecimento.dict())
-
-    db_estabelecimento_valid = db.query(EstabelecimentoModel).filter(EstabelecimentoModel.nome == dados_estabelecimento.nome).first()
-
-    if db_estabelecimento_valid:
-        raise HTTPException(status_code=400, detail="Estabelecimento já cadastrado")
-
-    db.add(db_estabelecimento)
+    bd_estabelecimento = EstabelecimentoModel(**dados_estabelecimento.dict())
+    db.add(bd_estabelecimento)
     db.commit()
-    db.refresh(db_estabelecimento)
-    return db_estabelecimento
+    db.refresh(bd_estabelecimento)
+    return bd_estabelecimento
+
+
 
 
 @router.put("/desktop/update/{estabelecimento_nome}")

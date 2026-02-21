@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime, ForeignKey, Text, text
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from bd.connection import Base
+from database.connection import Base
 from datetime import datetime
 import uuid
 from sqlalchemy.dialects.postgresql import UUID

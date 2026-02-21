@@ -4,7 +4,7 @@ from models.produtos import Produto as ProductModel
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from bd.connection import get_db
+from database.connection import get_db
 from sqlalchemy import join
 from time import sleep
 import pandas as pd

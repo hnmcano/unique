@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from bd.connection import get_db
+from database.connection import get_db
 from schemas.caixa import Caixa as CaixaSchema
 from models.caixa import Caixa as CaixaModel
 from models.pedidos import Pedido as PedidoModel

@@ -1,9 +1,10 @@
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
+
 from sqlalchemy.sql import func
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, relationship
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, text
-from bd.connection import Base
+from database.connection import Base
 
 
 class Estabelecimento(Base):
@@ -30,3 +31,4 @@ class Estabelecimento(Base):
     criado_em = Column(DateTime(timezone=True), server_default=func.now())
     atualizado_em = Column(DateTime(timezone=True), onupdate=func.now())
 
+    usuarios = relationship("Usuarios", back_populates="estabelecimento")

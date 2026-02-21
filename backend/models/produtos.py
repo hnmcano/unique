@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, text
 from typing import List
 from sqlalchemy.orm import relationship, Mapped
-from bd.connection import Base
+from database.connection import Base
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
 

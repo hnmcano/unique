@@ -1,12 +1,12 @@
-from sqlalchemy import Column, Integer, String, Float, text 
-from bd.connection import Base
+from sqlalchemy import Column, Integer, String, Float, text, ForeignKey
+from database.connection import Base
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
 
 class Carrinho(Base):
     __tablename__ = "carrinhos"
     id = Column(UUID(as_uuid=True), default=uuid.uuid4,server_default=text("gen_random_uuid()"), primary_key=True, nullable=False)
-    estabelecimento_id = Column(UUID(as_uuid=True), primary_key=True, nullable=False)
+    estabelecimento_id = Column(UUID(as_uuid=True), ForeignKey('estabelecimentos.id'), primary_key=True, nullable=False)
     produto_id = Column(UUID(as_uuid=True), primary_key=True, nullable=False)
     cod_pdv = Column(String(20), nullable=False)
     categoria = Column(String(30), nullable=False)

@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
 from service.websocketservice import notificar_todos
 from sqlalchemy.orm import Session
-from bd.connection import get_db
+from database.connection import get_db
 from sqlalchemy import join
 from time import sleep
 import pandas as pd
@@ -37,7 +37,7 @@ async def adicionar_produto(product: ProdutoSchema, db: Session = Depends(get_db
     categorias = db.query(CategoryModel).all()
 
     categorias_map = {
-        c.id: c.nome for c in categorias
+        c.id_categoria: c.nome for c in categorias
     }
 
     data = []
@@ -47,7 +47,8 @@ async def adicionar_produto(product: ProdutoSchema, db: Session = Depends(get_db
         nome_categoria = categorias_map.get(p.categoria_id, "Sem categoria")
 
         produto = {
-            "id": p.id,
+            "estabelecimento_id": p.estabelecimento_id,
+            "id_produto": p.id_produto,
             "categoria_id": p.categoria_id,
             "cod_pdv": p.cod_pdv,
             "nome": p.nome,

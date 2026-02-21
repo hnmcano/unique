@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session, joinedload
-from bd.connection import get_db
+from database.connection import get_db
 from models.caixa import Caixa as CaixaModel
 from fastapi.encoders import jsonable_encoder
 from schemas.mesas import MesasResponse, AberturaMesa, AdicionarItensMesa

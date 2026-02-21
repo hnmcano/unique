@@ -3,14 +3,14 @@ from PySide6.QtGui import *
 from PySide6.QtCore import *
 from PySide6.QtMultimedia import QSoundEffect
 
-from objetos.estabelecimento.Estabelecimento import Estabelecimento
-from objetos.configuracao.PainelConfig import PainelConfig
-from objetos.produtos.Produtos import Produtos
-from objetos.clientes.Clientes import Clientes
-from objetos.pedidos.Pedidos import Pedidos
-from objetos.caixa.Caixa import Caixa
-from objetos.mesas.Mesas import Mesas
-from telas.unique_ui import Ui_Unique as uniq
+from controller.estabelecimento.Estabelecimento import Estabelecimento
+from controller.configuracao.PainelConfig import PainelConfig
+from controller.produtos.Produtos import Produtos
+from controller.clientes.Clientes import Clientes
+from controller.pedidos.Pedidos import Pedidos
+from controller.caixa.Caixa import Caixa
+from controller.mesas.Mesas import Mesas
+from windows.unique_ui import Ui_Unique as uniq
 
 from services.websocket import WebSocketService 
 from services.websocket import PedidoStore

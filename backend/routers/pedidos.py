@@ -14,7 +14,7 @@ from models.clientes import Clientes
 from models.produtos import Produto as ProdutoModel
 from models.caixa import Caixa as CaixaModel
 from service.websocketservice import notificar_todos
-from bd.connection import get_db
+from database.connection import get_db
 from datetime import datetime
 
 router = APIRouter()

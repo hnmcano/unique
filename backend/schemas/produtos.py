@@ -2,8 +2,9 @@ from pydantic import BaseModel, Field
 
 # Modelo padrão para produtos
 class Produto(BaseModel):
+    estabelecimento_id: str
     categoria_id: int
-    cod_pdv: str | None = None
+    cod_pdv: str | None = None  
     nome: str = Field(..., min_length= 3, max_length=50)
     preco_custo: float = Field(..., ge=0)
     preco_venda: float = Field(..., gt=0)
@@ -23,6 +24,7 @@ class Produto(BaseModel):
 
 # Modelo para categorias
 class Categoria(BaseModel):
+    estabelecimento_id: str
     nome: str = Field(..., min_length=3, max_length=30)
 
     model_config = {

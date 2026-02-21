@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 import pandas as pd
 from sqlalchemy.orm import Session
 from sqlalchemy import update, select
-from bd.connection import get_db
+from database.connection import get_db
 from typing import List, Dict
 from models.carrinhos import Carrinho as CarrinhoModel
 from schemas.carrinhos import Carrinho as CarrinhoSchema
