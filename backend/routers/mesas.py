@@ -5,10 +5,12 @@ from models.caixa import Caixa as CaixaModel
 from fastapi.encoders import jsonable_encoder
 from schemas.mesas import MesasResponse, AberturaMesa, AdicionarItensMesa
 from models.mesas import Mesas as MesaModel, PedidosMesa as PedidosMesaModel, PedidoItens as PedidoItensModel
+from models.produtos import Categoria as CategoryModel
 from models.produtos import Produto as ProdutoModel
 from service.websocketservice import clientes_conectados, notificar_todos
 from service.depencias import get_current_user
 from models.caixa import Caixa
+from uuid import UUID
 import time
 import json
 
@@ -16,7 +18,7 @@ router = APIRouter()
 
 @router.post(
     "/abrir-mesa",
-    status_code=status.HTTP_201_CREATED,
+    status_code=status.HTTP_200_OK,
     response_model=MesasResponse
 )
 def abrir_mesa(
@@ -46,7 +48,7 @@ def abrir_mesa(
 
         if pedido_aberto:
             return {
-                "id": mesa_existente.id_mesa,
+                "id_mesa": mesa_existente.id_mesa,
                 "numero": mesa_existente.numero,
                 "caixa_id": mesa_existente.caixa_id,
                 "pedido": pedido_aberto
@@ -76,7 +78,7 @@ def abrir_mesa(
     db.refresh(db_pedido)
 
     return {
-        "id": db_mesa.id_mesa,
+        "id_mesa": db_mesa.id_mesa,
         "numero": db_mesa.numero,
         "caixa_id": db_mesa.caixa_id,
         "pedido": db_pedido
@@ -115,6 +117,8 @@ async def adicionar_produto(
     produto_existente = db.query(ProdutoModel).filter(ProdutoModel.id_produto == mesa.produto_id,
         ProdutoModel.estabelecimento_id == user_current["estabelecimento_id"]).with_for_update().first()
 
+    estabelecimento_id = user_current["estabelecimento_id"]
+
     if produto_existente.estoque <= 0:
         raise HTTPException(status_code=400, detail="Estoque insuficiente")
 
@@ -126,20 +130,20 @@ async def adicionar_produto(
         produto_existente.estoque -= 1
 
         mesa_response = MesasResponse.model_validate( {
-            "id": mesa_existente.id_mesa,    
+            "id_mesa": mesa_existente.id_mesa,    
             "numero": mesa_existente.numero,
             "pedido": pedido_aberto
         })
 
         db.commit()
 
-        await notificar_todos({
+        await notificar_todos(estabelecimento_id,{
             "tipo": "produto_em_mesa",
             "dados": jsonable_encoder(mesa_response)
         })
 
         return {
-            "id": mesa_existente.id_mesa,
+            "id_mesa": mesa_existente.id_mesa,
             "numero": mesa_existente.numero,
             "caixa_id": mesa_existente.caixa_id,
             "pedido": pedido_aberto
@@ -166,18 +170,18 @@ async def adicionar_produto(
     db.refresh(pedido_aberto)
 
     mesa_response = MesasResponse.model_validate( {  
-        "id": mesa_existente.id_mesa,    
+        "id_mesa": mesa_existente.id_mesa,    
         "numero": mesa_existente.numero,
         "pedido": pedido_aberto
     })
 
-    await notificar_todos({
+    await notificar_todos(estabelecimento_id, {
         "tipo": "produto_em_mesa",
         "dados": jsonable_encoder(mesa_response)
     })
 
     return {
-        "id": mesa_existente.id_mesa,
+        "id_mesa": mesa_existente.id_mesa,
         "numero": mesa_existente.numero,
         "caixa_id": mesa_existente.caixa_id,
         "pedido": pedido_aberto
@@ -248,7 +252,7 @@ async def excluir_pedido_mesa(
         status_code=status.HTTP_204_NO_CONTENT
     )
 async def excluir_mesa(
-    mesa_id: int, 
+    mesa_id: UUID, 
     db: Session = Depends(get_db),
     user_current: dict = Depends(get_current_user)
 ):
@@ -302,10 +306,7 @@ async def mesas_em_atendimento(
 ):
     pedidos_abertos = db.query(PedidosMesaModel).filter(PedidosMesaModel.status == "ABERTO",
         PedidosMesaModel.estabelecimento_id == user_current["estabelecimento_id"]).all()
-
-    if not pedidos_abertos:
-        raise HTTPException(status_code=404, detail="Nenhum pedido em atendimento")
-
+    
     mesas_em_atendimento = []
 
     for pedido in pedidos_abertos:
@@ -319,9 +320,9 @@ async def mesas_em_atendimento(
         status_code=status.HTTP_200_OK
 )
 async def excluir_item_pedido_mesa(
-    mesa_id: int, 
-    pedido_id: int, 
-    item_id: int, 
+    mesa_id: UUID, 
+    pedido_id: UUID, 
+    item_id: UUID, 
     db: Session = Depends(get_db),
     user_current: dict = Depends(get_current_user)
 ):  
@@ -334,9 +335,7 @@ async def excluir_item_pedido_mesa(
             ).with_for_update().first()
 
     if mesa and pedido:
-        item_existente = db.query(PedidoItensModel).filter
-        (PedidoItensModel.pedido_id == pedido_id, PedidoItensModel.produto_id == item_id, 
-         PedidoItensModel.estabelecimento_id == user_current["estabelecimento_id"]).with_for_update().first()
+        item_existente = db.query(PedidoItensModel).filter(PedidoItensModel.pedido_id == pedido_id, PedidoItensModel.produto_id == item_id, PedidoItensModel.estabelecimento_id == user_current["estabelecimento_id"]).with_for_update().first()
 
         if not item_existente:
             raise HTTPException(status_code=404, detail="Item nao encontrado")
@@ -360,7 +359,7 @@ async def excluir_item_pedido_mesa(
         if not pedido_aberto:
             raise HTTPException(status_code=404, detail="Pedido nao encontrado")
 
-        produto = db.query(ProdutoModel).filter(ProdutoModel.id_produto == item_existente.produto_id, ProdutoModel.estabelecimento_id == user_current["estabelecimento_id"]).with_for_update().first()
+        produto = db.query(ProdutoModel).filter(ProdutoModel.id_produto == item_existente.produto_id, ProdutoModel.estabelecimento_id == user_current["estabelecimento_id"]).first()
         produto.estoque += item_existente.quantidade
 
         db.delete(item_existente)
@@ -371,13 +370,15 @@ async def excluir_item_pedido_mesa(
         
         db.commit()
 
+        estabelecimento_id = user_current["estabelecimento_id"]
+
         mesa_response = MesasResponse.model_validate( {  
-            "id": mesa.id_mesa,    
+            "id_mesa": mesa.id_mesa,    
             "numero": mesa.numero,
             "pedido": pedido
         })
 
-        await notificar_todos({
+        await notificar_todos(estabelecimento_id, {
             "tipo": "produto_em_mesa",
             "dados": jsonable_encoder(mesa_response)
         })
@@ -386,7 +387,7 @@ async def excluir_item_pedido_mesa(
         raise HTTPException(status_code=404, detail="Mesa ou pedido não encontrados.")
     
 @router.put("/aumentar-item/{mesa_id}/{pedido_id}/{item_id}", status_code=status.HTTP_200_OK, response_model=MesasResponse)
-async def adicionar_quantidade(mesa_id: int, pedido_id: int, item_id: int, bd: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
+async def adicionar_quantidade(mesa_id: UUID, pedido_id: UUID, item_id: UUID, bd: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
     mesa_existente = bd.query(MesaModel).filter(MesaModel.id_mesa == mesa_id, MesaModel.estabelecimento_id == user_current["estabelecimento_id"]).first()
     pedido_existente = bd.query(
         PedidosMesaModel
@@ -406,7 +407,7 @@ async def adicionar_quantidade(mesa_id: int, pedido_id: int, item_id: int, bd: S
         raise HTTPException(status_code=404, detail="Produto nao encontrado")
     
     if produto_existente.estoque <= 0:
-        raise HTTPException(status_code=400, detail="Estoque insuficiente")
+        raise HTTPException(status_code=409, detail="Estoque insuficiente")
  
     item_existente.quantidade += 1
     item_existente.valor_total += item_existente.valor_unitario
@@ -418,13 +419,15 @@ async def adicionar_quantidade(mesa_id: int, pedido_id: int, item_id: int, bd: S
 
     bd.commit()
 
+    estabelecimento_id = user_current["estabelecimento_id"]
+
     mesa_response = MesasResponse.model_validate( {  
-        "id": mesa_existente.id_mesa,    
+        "id_mesa": mesa_existente.id_mesa,    
         "numero": mesa_existente.numero,
         "pedido": pedido_existente
     })
 
-    await notificar_todos({
+    await notificar_todos(estabelecimento_id, {
         "tipo": "produto_em_mesa",
         "dados": jsonable_encoder(mesa_response)
     })
@@ -432,13 +435,13 @@ async def adicionar_quantidade(mesa_id: int, pedido_id: int, item_id: int, bd: S
     return mesa_response
 
 @router.put("/diminuir-item/{mesa_id}/{pedido_id}/{item_id}", status_code=status.HTTP_200_OK, response_model=MesasResponse)
-async def remover_quantidade(mesa_id: int, pedido_id: int, item_id: int, bd: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
+async def remover_quantidade(mesa_id: UUID, pedido_id: UUID, item_id: UUID, bd: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
     mesa_existente = bd.query(MesaModel).filter(MesaModel.id_mesa == mesa_id, MesaModel.estabelecimento_id == user_current["estabelecimento_id"]).first()
     pedido_existente = bd.query(
         PedidosMesaModel
         ).filter(
-            PedidosMesaModel.id == pedido_id, 
-            PedidosMesaModel.mesa_id == mesa_existente.id, 
+            PedidosMesaModel.id_pedido_mesa == pedido_id, 
+            PedidosMesaModel.mesa_id == mesa_existente.id_mesa, 
             PedidosMesaModel.status == "ABERTO",
             PedidosMesaModel.estabelecimento_id == user_current["estabelecimento_id"]
         ).first()
@@ -452,14 +455,16 @@ async def remover_quantidade(mesa_id: int, pedido_id: int, item_id: int, bd: Ses
     if not produto_existente:
         raise HTTPException(status_code=404, detail="Produto nao encontrado")
 
+    estabelecimento_id = user_current["estabelecimento_id"]
+
     if item_existente.quantidade == 1:
         mesa_response = MesasResponse.model_validate( {  
-            "id": mesa_existente.id_mesa,    
+            "id_mesa": mesa_existente.id_mesa,    
             "numero": mesa_existente.numero,
             "pedido": pedido_existente
         })
 
-        await notificar_todos({
+        await notificar_todos(estabelecimento_id, {
             "tipo": "produto_em_mesa",
             "dados": jsonable_encoder(mesa_response)
         })
@@ -477,14 +482,64 @@ async def remover_quantidade(mesa_id: int, pedido_id: int, item_id: int, bd: Ses
     bd.commit()
 
     mesa_response = MesasResponse.model_validate( {  
-        "id": mesa_existente.id_mesa,    
+        "id_mesa": mesa_existente.id_mesa,    
         "numero": mesa_existente.numero,
         "pedido": pedido_existente
     })
 
-    await notificar_todos({
+    await notificar_todos(estabelecimento_id, {
         "tipo": "produto_em_mesa",
         "dados": jsonable_encoder(mesa_response)
     })
 
     return mesa_response
+
+
+@router.get("/add-produto", status_code=status.HTTP_200_OK)
+async def read_products(db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
+    estabelecimento_id = user_current["estabelecimento_id"]
+
+    produtos = db.query(ProdutoModel).filter(ProdutoModel.estabelecimento_id == estabelecimento_id).all()
+    categorias = db.query(CategoryModel).filter(CategoryModel.estabelecimento_id == estabelecimento_id).all()
+
+
+    if not produtos:
+        return []
+
+    categorias_map = {
+        c.id_categoria: c.nome for c in categorias
+    }
+
+    data = []
+
+    for p in produtos:
+
+        nome_categoria = categorias_map.get(p.categoria_id, "Sem categoria")
+
+        produto = {
+            "id": p.id_produto,
+            "categoria_id": p.categoria_id,
+            "cod_pdv": p.cod_pdv,
+            "nome": p.nome,
+            "preco_custo": p.preco_custo,
+            "preco_venda": p.preco_venda,
+            "medida": p.medida,
+            "estoque": p.estoque,
+            "estoque_min": p.estoque_min,
+            "descricao": p.descricao,
+            "ficha_tecnica": p.ficha_tecnica,
+            "status_venda": p.status_venda,
+            "imagem_name": p.imagem_name,
+            "imagem": p.imagem
+        }
+
+        produto["nome_categoria"] = nome_categoria
+        data.append(produto)
+
+    filter = []
+    
+    for p in data:
+        if p["status_venda"] == "Ativo":
+            filter.append(p)
+
+    return filter

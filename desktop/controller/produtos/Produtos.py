@@ -7,14 +7,14 @@ from .DadosProdutos import DadosProduto
 from .AddCategoria import AddCategoria
 from .Addprodutos import AddProdutos
 from services.websocket import WebSocketService
+from core.app_context import app_context as APPContext
 
 from PySide6.QtCore import Qt, Signal
 
 import requests
 import json
 import os
-
-APIURLDESENV = os.getenv("APIURLDESENV")
+from config.config import settings
 
 class NumericQtTableWidget(QTableWidgetItem):
     def __lt__(self, other):
@@ -33,12 +33,19 @@ def center_window(self):
     window_geometry.moveCenter(screen_geometry.center())
     self.move(window_geometry.topLeft())
 
-def carregar_produto():
-    response = requests.get(f"{APIURLDESENV}/produtos/desktop/table")
-    response.raise_for_status()  # Levanta um erro para códigos de status HTTP ruins
-    produtos = response.json()
+def carregar_produto(self):
 
-    return produtos
+    try:
+        response = APPContext.api_client.get("/produtos/desktop/table")
+        produtos = response
+
+        return produtos
+    
+    except Exception as e:
+        QMessageBox.critical(self, "Erro", f"Erro ao buscar produtos: {str(e)}")
+
+
+
 
 class Produtos(QMainWindow, produtos):
     mensagem_recebida = Signal(dict)
@@ -48,16 +55,13 @@ class Produtos(QMainWindow, produtos):
         self.setupUi(self)
         center_window(self)
 
-        self.ws = WebSocketService()
-        self.ws.mensagem_recebida.connect(self.on_evento_recebido)
-        self.ws.start()
-
-
         self.layout_tabela()
         self.tableWidget.cellDoubleClicked.connect(self.abrir_dados_produto)
 
-        data = carregar_produto()
+
+        data = carregar_produto(self)
         self.atualizar_tabela(data)
+
 
         # Ao clicar no botão adicionar produto, abre a janela de adicionar produtos
         
@@ -66,7 +70,7 @@ class Produtos(QMainWindow, produtos):
 
     def layout_tabela(parent):
 
-        columns = ["ID","CODIGO PDV", "CATEGORIA", "NOME", "PREÇO DE CUSTO", "PREÇO DE VENDA","ESTOQUE MIN", "ESTOQUE", "MEDIDA", "STATUS"]
+        columns = ["CODIGO PDV", "CATEGORIA", "NOME", "PREÇO DE CUSTO", "PREÇO DE VENDA","ESTOQUE MIN", "ESTOQUE", "MEDIDA", "STATUS"]
         # Esconde o botão do windows de fechar(X) a janela
         
         tela = (str(parent).split('.')[1]).split('(')[0]
@@ -77,7 +81,7 @@ class Produtos(QMainWindow, produtos):
         parent.tableWidget.setHorizontalHeaderLabels(columns)
         header = parent.tableWidget.horizontalHeader()
         header.setSectionResizeMode(QHeaderView.Stretch)
-        header.setSectionResizeMode(3, QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
         parent.tableWidget.setSortingEnabled(True)
         parent.tableWidget.verticalHeader().setVisible(False)
         parent.tableWidget.setSelectionBehavior(QTableWidget.SelectRows)
@@ -93,51 +97,46 @@ class Produtos(QMainWindow, produtos):
 
         for i, prod in enumerate(data):
 
-            item_id = NumericQtTableWidget(str(prod["id"]))
-            item_id.setData(Qt.UserRole + 1, prod)
-            item_id.setData(Qt.UserRole, int(prod["id"]))
-            item_id.setTextAlignment(Qt.AlignCenter)
-            parent.tableWidget.setItem(i, 0, item_id)
-            
             item_cod_pdv = QTableWidgetItem(prod["cod_pdv"])
+            item_cod_pdv.setData(Qt.UserRole, prod)
             item_cod_pdv.setTextAlignment(Qt.AlignCenter)
-            parent.tableWidget.setItem(i, 1, item_cod_pdv)
+            parent.tableWidget.setItem(i, 0, item_cod_pdv)
 
             item_nome_categoria = QTableWidgetItem(prod["nome_categoria"])
             item_nome_categoria.setTextAlignment(Qt.AlignCenter)
-            parent.tableWidget.setItem(i, 2, item_nome_categoria)
+            parent.tableWidget.setItem(i, 1, item_nome_categoria)
 
             item_nome = QTableWidgetItem(prod["nome"])
             item_nome.setTextAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-            parent.tableWidget.setItem(i, 3, item_nome)
+            parent.tableWidget.setItem(i, 2, item_nome)
 
             item_preco_custo = FloatQtTableWidget(str(prod["preco_custo"]))
             item_preco_custo.setData(Qt.UserRole, float(prod["preco_custo"]))
             item_preco_custo.setTextAlignment(Qt.AlignCenter)
-            parent.tableWidget.setItem(i, 4, item_preco_custo)
+            parent.tableWidget.setItem(i, 3, item_preco_custo)
 
             item_preco_venda = FloatQtTableWidget(str(prod["preco_venda"]))
             item_preco_venda.setData(Qt.UserRole, float(prod["preco_venda"]))
             item_preco_venda.setTextAlignment(Qt.AlignCenter)
-            parent.tableWidget.setItem(i, 5, item_preco_venda)
+            parent.tableWidget.setItem(i, 4, item_preco_venda)
 
             item_estoque_min = NumericQtTableWidget(str(prod["estoque_min"]))
             item_estoque_min.setData(Qt.UserRole, int(prod["estoque_min"]))
             item_estoque_min.setTextAlignment(Qt.AlignCenter)
-            parent.tableWidget.setItem(i, 6, item_estoque_min)
+            parent.tableWidget.setItem(i, 5, item_estoque_min)
 
             item_estoque = NumericQtTableWidget(str(prod["estoque"]))
             item_estoque.setData(Qt.UserRole, int(prod["estoque"]))
             item_estoque.setTextAlignment(Qt.AlignCenter)
-            parent.tableWidget.setItem(i, 7, item_estoque)
+            parent.tableWidget.setItem(i, 6, item_estoque)
 
             item_medida = QTableWidgetItem(prod["medida"])
             item_medida.setTextAlignment(Qt.AlignCenter)
-            parent.tableWidget.setItem(i, 8, item_medida)
+            parent.tableWidget.setItem(i, 7, item_medida)
 
             item_status = QTableWidgetItem(prod["status_venda"])
             item_status.setTextAlignment(Qt.AlignCenter)
-            parent.tableWidget.setItem(i, 9, item_status)
+            parent.tableWidget.setItem(i, 8, item_status)
 
 
     def abrir_add_produto(self):
@@ -146,7 +145,7 @@ class Produtos(QMainWindow, produtos):
 
     def abrir_dados_produto(self, row):
         item = self.tableWidget.item(row, 0)
-        produto = item.data(Qt.UserRole + 1)
+        produto = item.data(Qt.UserRole)
         self.dados_produto_window = DadosProduto(produto=produto, parent=self)
         self.dados_produto_window.show()
 
@@ -172,4 +171,11 @@ class Produtos(QMainWindow, produtos):
                 data = [data]
 
             self.atualizar_tabela(data)
+
+    def showEvent(self, event):
+        super().showEvent(event)
+        
+        APPContext.websocket_client.mensagem_recebida.connect(
+            self.on_evento_recebido
+        )
 

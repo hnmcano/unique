@@ -7,10 +7,12 @@ from PySide6.QtCore import Signal, Qt
 from datetime import datetime
 import requests
 
-from services.websocket import WebSocketService
-import os
+from core.app_context import app_context as APPContext
 
-APIURLDESENV = os.getenv("APIURLDESENV")
+
+import os
+from config.config import settings
+
 
 def exibir_confirmacao_exclusao(parent= None, data=None):
     msg_box = QMessageBox(parent)
@@ -24,14 +26,15 @@ def exibir_confirmacao_exclusao(parent= None, data=None):
 
     if resposta == QMessageBox.Yes: # type: ignore
         # Se o usuário confirmar, emita o sinal e feche a janela
-        response = requests.delete(f"{APIURLDESENV}/mesas/excluir-mesa/{data["id"]}")
+        try:
+            response = APPContext.api_client.delete(f"/mesas/excluir-mesa/{data['id_mesa']}")
 
-        if response.status_code == 200:
             QMessageBox.information(parent, "Sucesso", "Mesa excluida com sucesso!")
             
             parent.mesa_excluida.emit(data) # type: ignore
             parent.close() # type: ignore
-        else:
+
+        except Exception as e:
             QMessageBox.critical(parent, "Erro", "Falha ao excluir mesa.")
             return
 
@@ -48,13 +51,9 @@ class DadosMesa(QMainWindow, pedido_mesa):
     def __init__(self, mesa, data, parent=None):
         super().__init__(parent)
         self.setupUi(self)
-
-        self.ws = WebSocketService()
-        self.ws.mensagem_recebida.connect(self.on_evento_recebido)
-        self.ws.start()
-
+        
         self.mesa.setText(f"{str.replace(mesa, '_', ' ')} ")
-        self.id_mesa = data["id"]
+        self.id_mesa = data["id_mesa"]
 
         data_str = data["pedido"]["data_criacao"]
         dt_utc = datetime.fromisoformat(data_str.replace("Z", "+00:00"))
@@ -63,8 +62,6 @@ class DadosMesa(QMainWindow, pedido_mesa):
 
         self.status.setText(data["pedido"]["status"])
         self.data_criacao.setText(data_formatada)
-
-        self.network_manager = QNetworkAccessManager(self)
 
         self.setup_table()
         self.atualizar_tabela(data["pedido"]["itens"], data)
@@ -187,23 +184,33 @@ class DadosMesa(QMainWindow, pedido_mesa):
 
     def on_evento_recebido(self, evento: dict):
         if evento["tipo"] == "produto_em_mesa":
-            if evento["dados"]["id"] == self.id_mesa:
+            if evento["dados"]["id_mesa"] == self.id_mesa:
                 self.atualizar_tabela(evento["dados"]["pedido"]["itens"], evento["dados"])
 
     def aumentar_quantidade(self, row, data):
-        response = requests.put(f"{APIURLDESENV}/mesas/aumentar-item/{data["id"]}/{data["pedido"]["id"]}/{data["pedido"]["itens"][row]['produto_id']}")
 
-        if response.status_code == 400:
-            QMessageBox.critical(self, "Erro", f"{response.json()['detail']}")
+        try:
+            response = APPContext.api_client.put(f"/mesas/aumentar-item/{data["id_mesa"]}/{data["pedido"]["id_pedido_mesa"]}/{data["pedido"]["itens"][row]['produto_id']}", data=None)
+
+        except Exception as e:
+            QMessageBox.critical(self, "Erro", f"Estoque Insuficiente!")
+
 
     def diminuir_quantidade(self,row, data):
-        response = requests.put(f"{APIURLDESENV}/mesas/diminuir-item/{data["id"]}/{data["pedido"]["id"]}/{data["pedido"]["itens"][row]['produto_id']}")
-
-        if response.status_code == 400:
-            QMessageBox.critical(self, "Erro", f"{response.json()['detail']}")
+        try:
+            response = APPContext.api_client.put(f"/mesas/diminuir-item/{data['id_mesa']}/{data['pedido']['id_pedido_mesa']}/{data['pedido']['itens'][row]['produto_id']}", data=None)
+        except Exception as e:
+            QMessageBox.critical(self, "Erro", f"{e}")
 
     def excluir_item(self, row, data):  
-        response = requests.delete(f"{APIURLDESENV}/mesas/excluir-item/{data["id"]}/{data["pedido"]["id"]}/{data["pedido"]["itens"][row]['produto_id']}")
+        try:
+            response = APPContext.api_client.delete(f"/mesas/excluir-item/{data['id_mesa']}/{data['pedido']['id_pedido_mesa']}/{data['pedido']['itens'][row]['produto_id']}")
+        except Exception as e:
+            QMessageBox.critical(self, "Erro", f"{e}")
 
-        if response.status_code == 400:
-            QMessageBox.critical(self, "Erro", f"{response.json()['detail']}")
+    def showEvent(self, event):
+        super().showEvent(event)
+        
+        APPContext.websocket_client.mensagem_recebida.connect(
+            self.on_evento_recebido
+        )

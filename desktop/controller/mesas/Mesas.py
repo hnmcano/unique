@@ -1,25 +1,26 @@
 
 from PySide6.QtWidgets import (QApplication, QPushButton, QMainWindow, QMessageBox, QTableWidgetItem, QWidget, QHeaderView, QTableWidget, QAbstractItemView, QFileDialog)
 from windows.form_orders.mesas_ui import Ui_MainWindow as mesas
+from core.app_context import app_context as APPContext
 from ..mesas.PedidosMesas import DadosMesa
 from PySide6.QtNetwork import *
 import requests
 import os
+from config.config import settings
 
-APIURLDESENV = os.getenv("APIURLDESENV")
 
 def atualizar_dados(numero_mesa):
-        response = requests.post(f"{APIURLDESENV}/mesas/abrir-mesa", json={
+        data_json = {
             "numero": numero_mesa,
             "pedido": {
                 "status": "ABERTO",
                 "itens": []
-                }
             }
-        )
+        }
+        
+        response = APPContext.api_client.post("/mesas/abrir-mesa", data_json)
 
-        data = response.json()
-        return response, data
+        return response
 
 class Mesas(QMainWindow, mesas):
     def __init__(self, parent=None):
@@ -27,32 +28,27 @@ class Mesas(QMainWindow, mesas):
         self.setupUi(self)
 
         self.estilos_originais = {}
-
-        self.network_manager = QNetworkAccessManager(self)
-
-        response = requests.get(f"{APIURLDESENV}/mesas/em-atendimento")
-        mesa = response.json()
-
-        if response.status_code == 200: 
-            for i in range(len(mesa)):
-                if mesa[i] < 10:
-                    mesa[i] = f"0{mesa[i]}"
         
-                self.estilos_originais[f"Mesa_{mesa[i]}"] = self.findChild(QPushButton, f"Mesa_{mesa[i]}").setStyleSheet( """QPushButton {
-                    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                        stop: 0 #000000, stop: 1 #000000);
-                    color: white;
-                    border: 2px solid green;
-                    padding: 12px 24px;
-                    border-radius: 8px;
-                    font-weight: bold;
-                    font-size: 14px;
-                }""")
+        mesa = APPContext.api_client.get("/mesas/em-atendimento")
+
+        for i in range(len(mesa)):
+            if mesa[i] < 10:
+                mesa[i] = f"0{mesa[i]}"
+    
+            self.estilos_originais[f"Mesa_{mesa[i]}"] = self.findChild(QPushButton, f"Mesa_{mesa[i]}").setStyleSheet( """QPushButton {
+                background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                    stop: 0 #000000, stop: 1 #000000);
+                color: white;
+                border: 2px solid green;
+                padding: 12px 24px;
+                border-radius: 8px;
+                font-weight: bold;
+                font-size: 14px;
+            }""")
 
         for botao in self.findChildren(QPushButton):
             if botao.objectName().startswith("Mesa_"):
                 botao.clicked.connect(self.abrir_mesas_cor_atualiza)
-
 
 
     def abrir_mesas_cor_atualiza(self):
@@ -79,18 +75,12 @@ class Mesas(QMainWindow, mesas):
                 font-size: 14px;
             }""")
 
-        response, data = atualizar_dados(numero_mesa)
 
-        if response.status_code == 201:
-            self.window_table = DadosMesa(mesa=name_button, data=data, parent=self)
-            self.window_table.mesa_excluida.connect(self.mesa_excluida_manualmente)
-            self.window_table.show()
+        data = atualizar_dados(numero_mesa)
+        self.window_table = DadosMesa(mesa=name_button, data=data, parent=self)
+        self.window_table.mesa_excluida.connect(self.mesa_excluida_manualmente)
+        self.window_table.show()
             
-        elif response.status_code == 400:
-            QMessageBox.information(self, "aviso", "Não há caixa aberto, por favor realizar a abertura do caixa para continuar")
-            botao_clicado.setStyleSheet("""
-            """)
-            return
 
 
     def restaurar_cor(self, nome_do_botao):

@@ -3,9 +3,10 @@ from typing import List, Optional
 from datetime import datetime
 from decimal import Decimal
 from .produtos import Produto
+from uuid import UUID
 
 class ItemPedidoInput(BaseModel):
-    produto_id: int
+    produto_id: UUID
     quantidade: int 
     valor_unitario: float 
 
@@ -42,7 +43,7 @@ class NovoPedidoSchema(BaseModel):
 
 # 1. Detalhes de Item em um Pedido
 class ItemPedidoResponse(BaseModel):
-    id: int
+    id_itens_pedido: UUID
     produto_id: int
     quantidade: int
     # O preço histórico é crucial e deve ser retornado com precisão
@@ -55,7 +56,7 @@ class ItemPedidoResponse(BaseModel):
 
 # 2. Endereço Histórico
 class EnderecoPedidoResponse(BaseModel):
-    id: int
+    id_endereco_pedido: UUID
     endereco: str
     numero: int
     complemento: Optional[str]
@@ -69,7 +70,7 @@ class EnderecoPedidoResponse(BaseModel):
 
 # 3. Informações do Cliente
 class ClienteResponse(BaseModel):
-    id: int
+    id: UUID
     nome: str
     email: str
     telefone: str
@@ -83,7 +84,7 @@ class PedidoResponse(BaseModel):
     """
     Schema de saída para um Pedido, incluindo todas as suas relações aninhadas.
     """
-    id: int # ID auto-gerado
+    id_pedido: UUID # ID auto-gerado
     cliente_id: int
     data_criacao: datetime  # Retorna o timestamp gerado pelo DB
     status: str

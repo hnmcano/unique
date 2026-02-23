@@ -1,8 +1,9 @@
 from pydantic import BaseModel, Field
+from uuid import UUID
 
 # Modelo padrão para produtos
 class Produto(BaseModel):
-    categoria_id: int
+    categoria_id: UUID
     cod_pdv: str | None = None  
     nome: str = Field(..., min_length= 3, max_length=50)
     preco_custo: float = Field(..., ge=0)

@@ -5,13 +5,13 @@ from PySide6.QtNetwork import QNetworkRequest, QNetworkAccessManager
 from PySide6.QtGui import QPixmap
 from PySide6.QtCore import *
 from services.network_conn import handle_network_reply
+from core.app_context import app_context as APPContext
 
 import requests
 import base64
 import json
 import os
-
-APIURLDESENV = os.getenv("APIURLDESENV")
+from config.config import settings
 
 def inserir_imagem(parent=None):
     file_dialog = QFileDialog()
@@ -55,7 +55,6 @@ def atualizar_dados_produtos(parent=None):
 
     try:
         QMessageBox.information(parent, "Aguarde", "Enviando dados para o servidor!")
-        url= QUrl(f"{APIURLDESENV}/produtos/desktop/alter-product-data-base/{produto_id}")
         data_json = {
                 "categoria_id": f"{categoria_id}",
                 "cod_pdv": f"{cod_pdv}",
@@ -72,21 +71,13 @@ def atualizar_dados_produtos(parent=None):
                 "imagem": f"{imagem_data_string}"
         }
         
-        json_data=json.dumps(data_json).encode("utf-8")
-        data_to_send=QByteArray(json_data)
-        request= QNetworkRequest(url)
-        request.setHeader(QNetworkRequest.ContentTypeHeader, "application/json")# type: ignore
-        reply= parent.network_manager.put(request, data_to_send)# type: ignore
-        reply.finished.connect(lambda: handle_network_reply(reply, parent))
-
+        response = APPContext.api_client.put(f"/produtos/desktop/alter-product-data-base/{produto_id}", data_json)
         QMessageBox.information(parent, "Sucesso", "Produto atualizado com sucesso!")
-        
     except ValueError:
         QMessageBox.warning(parent, "Erro", "A informação está incorreta.")
     except Exception as e:
         QMessageBox.critical(parent, "Erro de BD", f"Ocorreu um erro: {e}")
-        # Limpa o objeto de resposta para evitar vazamento de memória (melhor prática)
-        reply.deleteLater()
+
 
 def excluir_produto_base_dados(id, parent=None):
 
@@ -102,20 +93,10 @@ def excluir_produto_base_dados(id, parent=None):
         return
 
     try:
-        response = requests.delete(
-            f"{APIURLDESENV}/produtos/desktop/delete-product-data-base/{id}"
+        response = APPContext.api_client.delete(f"/produtos/desktop/delete-product-data-base/{id}")
+        QMessageBox.information(
+            parent, "Sucesso", "Produto excluído com sucesso!"
         )
-
-        if response.status_code == 200:
-            QMessageBox.information(
-                parent, "Sucesso", "Produto excluído com sucesso!"
-            )
-        else:
-            QMessageBox.critical(
-                parent, "Erro",
-                f"Falha ao excluir produto (status {response.status_code})"
-            )
-
     except requests.RequestException as e:
         QMessageBox.critical(
             parent, "Erro", f"Erro ao excluir produto: {str(e)}"
@@ -124,12 +105,16 @@ def excluir_produto_base_dados(id, parent=None):
 def preencher_dropdown_categoria(parent=None):
     parent.categoria_combo.clear()
     parent.categoria_combo.addItem("")
-    response = requests.get(f"{APIURLDESENV}/categorias/dropdown/categories")
-    if response.status_code == 200:
-        categorias = response.json()
+    try:
+        response = APPContext.api_client.get("/categorias/dropdown/categories")
+
+        categorias = response
 
         for categoria in categorias:
-            parent.categoria_combo.addItem(categoria["nome"], categoria["id"])
+            parent.categoria_combo.addItem(categoria["nome"], categoria["id_categoria"])
+            
+    except Exception as e:
+        QMessageBox.critical(parent, "Erro", f"Erro ao buscar categorias: {str(e)}")
 
 
 class DadosProduto(QMainWindow, DataProduto):
@@ -137,6 +122,8 @@ class DadosProduto(QMainWindow, DataProduto):
 
         super().__init__(parent)
         self.setupUi(self)
+
+        print("produto:", produto)
         
         self.network_manager = QNetworkAccessManager(self)
 

@@ -7,13 +7,12 @@ from services.websocket import WebSocketService, PedidoStore
 from PySide6.QtNetwork import *
 from PySide6.QtMultimedia import *
 from ..produtos.Produtos import FloatQtTableWidget, NumericQtTableWidget
-
+from core.app_context import app_context as APPContext
 
 import requests
 from datetime import datetime
 import os
-
-APIURLDESENV = os.getenv("APIURLDESENV")
+from config.config import settings
 
 class Pedidos(QMainWindow, delivery):
     def __init__(self, pedido_store, parent=None):
@@ -27,8 +26,7 @@ class Pedidos(QMainWindow, delivery):
         pedidos = self.pedido_store.listar()
 
         if len(pedidos) == 0:
-            response = requests.get(f"{APIURLDESENV}/pedidos/desktop/tabela")
-            pedidos = response.json()
+            pedidos = APPContext.api_client.get("/pedidos/desktop/tabela")
 
             for pedido in pedidos:
                 self.pedido_store.adicionar(pedido)
@@ -39,7 +37,7 @@ class Pedidos(QMainWindow, delivery):
 
         self.FilterPedidos.setPlaceholderText("Pesquisar pedidos realizados.....")
 
-        columns = ["id_pedido", "nome_cliente", "telefone", "data_pedido", "hora_pedido", "status", "valor_total"]
+        columns = [ "nome_cliente", "telefone", "data_pedido", "hora_pedido", "status", "valor_total"]
 
         quantidade_columns = len(columns)
 
@@ -49,7 +47,7 @@ class Pedidos(QMainWindow, delivery):
         self.tableWidget.setHorizontalHeaderLabels(columns)
         header = self.tableWidget.horizontalHeader()
         header.setSectionResizeMode(QHeaderView.Stretch)
-        header.setSectionResizeMode(3, QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(0, QHeaderView.ResizeToContents)
         self.tableWidget.setSortingEnabled(True)
         self.tableWidget.verticalHeader().setVisible(False)
         self.tableWidget.setSelectionBehavior(QTableWidget.SelectRows)
@@ -61,36 +59,31 @@ class Pedidos(QMainWindow, delivery):
 
         for index, pedido in enumerate(data):
             
-            item_id = NumericQtTableWidget(str(pedido["id"]))
-            item_id.setData(Qt.UserRole, int(pedido["id"]))
-            item_id.setData(Qt.UserRole + 1, pedido)
-            item_id.setTextAlignment(Qt.AlignCenter)
-            self.tableWidget.setItem(index, 0, item_id)
-
             item_nome = QTableWidgetItem(str(pedido["cliente"]["nome"]))
+            item_nome.setData(Qt.UserRole + 1, pedido)
             item_nome.setTextAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-            self.tableWidget.setItem(index, 1, item_nome)
+            self.tableWidget.setItem(index, 0, item_nome)
 
             item_telefone = QTableWidgetItem(str(pedido["cliente"]["telefone"]))
             item_telefone.setTextAlignment(Qt.AlignCenter)
-            self.tableWidget.setItem(index, 2, item_telefone)
+            self.tableWidget.setItem(index, 1, item_telefone)
 
             item_data_pedido = QTableWidgetItem(datetime.fromisoformat(pedido["data_criacao"]).strftime("%d/%m/%Y"))
             item_data_pedido.setTextAlignment(Qt.AlignCenter)
-            self.tableWidget.setItem(index, 3, item_data_pedido)
+            self.tableWidget.setItem(index, 2, item_data_pedido)
 
             item_hora_pedido = QTableWidgetItem(datetime.fromisoformat(pedido["data_criacao"]).strftime("%H:%M:%S"))
             item_hora_pedido.setTextAlignment(Qt.AlignCenter)
-            self.tableWidget.setItem(index, 4, item_hora_pedido)
+            self.tableWidget.setItem(index, 3, item_hora_pedido)
 
             item_status = QTableWidgetItem(str(pedido["status"]))
             item_status.setTextAlignment(Qt.AlignCenter)
-            self.tableWidget.setItem(index, 5, item_status)
+            self.tableWidget.setItem(index, 4, item_status)
 
             item_valor = FloatQtTableWidget(str(pedido["valor_total"]))
             item_valor.setData(Qt.UserRole, float(pedido["valor_total"]))
             item_valor.setTextAlignment(Qt.AlignCenter)
-            self.tableWidget.setItem(index, 6, item_valor)
+            self.tableWidget.setItem(index, 5, item_valor)
 
     def abrir_dados_pedido(self, row):
         item = self.tableWidget.item(row, 0)

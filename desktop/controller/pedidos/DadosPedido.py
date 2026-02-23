@@ -7,8 +7,8 @@ import requests
 
 from datetime import datetime
 import os
+from config.config import settings
 
-APIURLDESENV = os.getenv("APIURLDESENV")
 
 class DadosPedido(QMainWindow, dados_pedidos):
     mensagem_recebida = Signal(dict)
@@ -19,11 +19,7 @@ class DadosPedido(QMainWindow, dados_pedidos):
         self.network_manager = QNetworkAccessManager(self)
         self.pedido = pedido
 
-        self.id = pedido["id"]
-
-        self.ws = WebSocketService()
-        self.ws.mensagem_recebida.connect(self.on_evento_recebido)
-        self.ws.start()
+        self.id = pedido["id_pedido"]
 
         self.status.setText(pedido["status"])
         self.status.setAlignment(Qt.AlignCenter)
@@ -161,19 +157,19 @@ class DadosPedido(QMainWindow, dados_pedidos):
         
         print("dados:", data)
 
-        response = requests.put(f"{APIURLDESENV}/pedidos/aumentar-item/{pedido["id"]}/{data["id"]}/{data["pedido"]["itens"]["produtos"][row]['produto_id']}")
+        response = requests.put(f"{settings.API_URL}/pedidos/aumentar-item/{pedido["id"]}/{data["id"]}/{data["pedido"]["itens"]["produtos"][row]['produto_id']}")
 
         if response.status_code == 404:
             QMessageBox.critical(self, "Erro", f"{response.json()['detail']}")
 
     def diminuir_quantidade(self,row, data):
-        response = requests.put(f"{APIURLDESENV}/pedidos/diminuir-item/{data["id"]}/{data["pedido"]["id"]}/{data["pedido"]["itens"][row]['produto_id']}")
+        response = requests.put(f"{settings.API_URL}/pedidos/diminuir-item/{data["id"]}/{data["pedido"]["id"]}/{data["pedido"]["itens"][row]['produto_id']}")
 
         if response.status_code == 400:
             QMessageBox.critical(self, "Erro", f"{response.json()['detail']}")
 
     def excluir_item(self, row, data):  
-        response = requests.delete(f"{APIURLDESENV}/pedidos/excluir-item/{data["id"]}/{data["pedido"]["id"]}/{data["pedido"]["itens"][row]['produto_id']}")
+        response = requests.delete(f"{settings.API_URL}/pedidos/excluir-item/{data["id"]}/{data["pedido"]["id"]}/{data["pedido"]["itens"][row]['produto_id']}")
 
         if response.status_code == 400:
             QMessageBox.critical(self, "Erro", f"{response.json()['detail']}")

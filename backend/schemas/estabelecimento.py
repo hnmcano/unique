@@ -6,3 +6,4 @@ class EstabelecimentoBase(BaseModel):
     documento: str = Field(..., min_length=14, max_length=14)
     telefone: str = Field(..., min_length=11, max_length=11)
     email: EmailStr
+    senha: str

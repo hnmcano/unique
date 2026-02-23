@@ -9,8 +9,7 @@ from PySide6.QtGui import *
 
 import json
 import os
-
-APIURLDESENV = os.getenv("APIURLDESENV")
+from config.config import settings
 
 
 def enviar_dados_estabelecimento(parent=None):
@@ -28,7 +27,7 @@ def enviar_dados_estabelecimento(parent=None):
 
     try:
         QMessageBox.information(parent, "Aguarde", "Enviando dados para o servidor!")
-        url= QUrl(f"{APIURLDESENV}/estabelecimento/desktop/add")
+        url= QUrl(f"{settings.API_URL}/estabelecimento/desktop/add")
         data_json = {
                 "nome": f"{nome}",
                 "endereco": f"{endereco}",

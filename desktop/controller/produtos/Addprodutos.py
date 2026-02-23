@@ -6,12 +6,14 @@ from services.network_conn import handle_network_reply
 from PySide6.QtCore import *
 from PySide6.QtGui import *
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest
+from core.app_context import app_context as APPContext
 
 import requests
 import json
 import os
 
-APIURLDESENV = os.getenv("APIURLDESENV")
+from config.config import settings
+
 
 def center_window(self):
 
@@ -24,16 +26,14 @@ def center_window(self):
 
 def preencher_dropdown_categoria(parent=None):
     try:
-        response = requests.get(f"{APIURLDESENV}/categorias/dropdown/categories")
-        if response.status_code == 200:
-            categorias = response.json()
-            parent.categoria_combo.clear()
-            parent.categoria_combo.addItem("")
+        response = APPContext.api_client.get("/categorias/dropdown/categories")
+        
+        categorias = response
+        parent.categoria_combo.clear()
+        parent.categoria_combo.addItem("")
 
-            for categoria in categorias:
-                parent.categoria_combo.addItem(categoria["nome"], categoria["id"])
-        else:
-            QMessageBox.critical(parent, "Erro", "Falha ao buscar categorias.")
+        for categoria in categorias:
+                parent.categoria_combo.addItem(categoria["nome"], categoria["id_categoria"])
 
     except Exception as e:
         QMessageBox.critical(parent, "Erro", f"Erro ao buscar categorias: {str(e)}")
@@ -66,7 +66,6 @@ def salvar_dados_produtos(parent=None):
 
         try:
             QMessageBox.information(parent, "Aguarde", "Enviando dados para o servidor!")
-            url= QUrl(f"{APIURLDESENV}/produtos/desktop/add/product")
             data_json = {
                     "categoria_id": f"{categoria_id}",
                     "cod_pdv": f"{cod_pdv}",
@@ -83,12 +82,7 @@ def salvar_dados_produtos(parent=None):
                     "imagem": f"{imagem_data_string}"
             }
 
-            json_data=json.dumps(data_json).encode("utf-8")
-            data_to_send=QByteArray(json_data)
-            request= QNetworkRequest(url)
-            request.setHeader(QNetworkRequest.ContentTypeHeader, "application/json")# type: ignore
-            reply= parent.network_manager.post(request, data_to_send)# type: ignore
-            reply.finished.connect(lambda: handle_network_reply(reply, parent))
+            response = APPContext.api_client.post("/produtos/desktop/add/product", data_json)
 
             QMessageBox.information(parent, "Sucesso", "Produto adicionado com sucesso!")
 
@@ -96,16 +90,18 @@ def salvar_dados_produtos(parent=None):
                 line_edit.clear()
             
             parent.buttonGroup.setExclusive(False) # type: ignore
+
             for button in parent.buttonGroup.buttons(): # type: ignore
                 button.setChecked(False)
+
             parent.buttonGroup.setExclusive(True) # type: ignore
 
         except ValueError:
             QMessageBox.warning(parent, "Erro", "A informação está incorreta.")
+
         except Exception as e:
             QMessageBox.critical(parent, "Erro de BD", f"Ocorreu um erro: {e}")
             # Limpa o objeto de resposta para evitar vazamento de memória (melhor prática)
-            reply.deleteLater()
 
 def exibir_confirmacao_exclusao(parent= None):
     msg_box = QMessageBox(parent)

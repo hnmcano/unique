@@ -1,20 +1,18 @@
 from PySide6.QtWidgets import QMainWindow, QMessageBox
 from windows.form_products.add_categorias_ui import Ui_Category as addcategorias
+from core.app_context import app_context as APPContext
 
 import requests
 import os
+from config.config import settings
 
-APIURLDESENV = os.getenv("APIURLDESENV")
 
 def excluir_categoria(parent=None, categoria_selecionada=None):
 
     try:
-        response = requests.delete(f"{APIURLDESENV}/categorias/category/{categoria_selecionada}")
-        if response.status_code == 200:
-            QMessageBox.information(parent, "Sucesso", "Categoria excluida com sucesso!")
-            parent.preencher_dropdown()  # Atualiza o dropdown
-        else:
-            QMessageBox.critical(parent, "Erro", "Falha ao excluir categoria.")
+        response = APPContext.api_client.delete(f"/categorias/category/{categoria_selecionada}")
+        QMessageBox.information(parent, "Sucesso", "Categoria excluida com sucesso!")
+        parent.preencher_dropdown()  # Atualiza o dropdown
     except Exception as e:
         QMessageBox.critical(parent, "Erro", f"Erro ao excluir categoria: {str(e)}")
 
@@ -25,16 +23,11 @@ def adicionar_categoria(parent=None):
         return
 
     try:
-        response = requests.post(
-            f"{APIURLDESENV}/categorias/category",
-            json={"nome": nova_categoria}
-        )
-        if response.status_code == 200:
-            QMessageBox.information(parent, "Sucesso", "Categoria adicionada com sucesso!")
-            parent.adicionar_cat_input.clear()
-            parent.preencher_dropdown()  # Atualiza o dropdown
-        else:
-            QMessageBox.critical(parent, "Erro", "Falha ao adicionar categoria.")
+        response = APPContext.api_client.post("/categorias/category", {"nome": nova_categoria})
+        QMessageBox.information(parent, "Sucesso", "Categoria adicionada com sucesso!")
+        parent.adicionar_cat_input.clear()
+        parent.preencher_dropdown()  # Atualiza o dropdown
+
     except Exception as e:
         QMessageBox.critical(parent, "Erro", f"Erro ao adicionar categoria: {str(e)}")
 
@@ -80,15 +73,13 @@ class AddCategoria(QMainWindow, addcategorias):
         self.drop_modificar.addItem("")  # espaço em branco
 
         try:
-            response = requests.get(f"{APIURLDESENV}/categorias/dropdown/categories")
-            if response.status_code == 200:
-                categories = response.json() 
+            response = APPContext.api_client.get("/categorias/dropdown/categories")
 
-                for nome in categories:
-                    self.drop_modificar.addItem(nome["nome"])
-            else:
-                # Falha na requisição
-                QMessageBox.critical(self, "Erro", "Falha ao buscar categorias")
+            categories = response
+
+            for nome in categories:
+                self.drop_modificar.addItem(nome["nome"])
+
         except Exception as e:
             QMessageBox.critical(self, "Erro", f"Erro na busca das categorias: {str(e)}")# type: ignore
 
@@ -101,11 +92,8 @@ class AddCategoria(QMainWindow, addcategorias):
         excluir_categoria(self, categoria_selecionada)
 
         try:
-            response = requests.delete(f"{APIURLDESENV}/categorias/category/{categoria_selecionada}")
-            if response.status_code == 200:
-                QMessageBox.information(self, "Sucesso", "Categoria excluída com sucesso!")
-                self.preencher_dropdown()  # Atualiza o dropdown
-            else:
-                QMessageBox.critical(self, "Erro", "Falha ao excluir categoria.")
+            response = APPContext.api_client.delete(f"/categorias/category/{categoria_selecionada}")
+            QMessageBox.information(self, "Sucesso", "Categoria excluída com sucesso!")
+            self.preencher_dropdown()  # Atualiza o dropdown
         except Exception as e:
             QMessageBox.critical(self, "Erro", f"Erro ao excluir categoria: {str(e)}")

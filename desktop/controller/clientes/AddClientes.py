@@ -3,13 +3,15 @@ from PySide6.QtCore import *
 from PySide6.QtGui import *
 from PySide6.QtNetwork import *
 from windows.form_clients.add_clientes_ui import Ui_MainWindow as addclientes
+from core.app_context import app_context as APPContext
 
 import json
 import requests
 from services.network_conn import handle_network_reply
 import os
 
-APIURLDESENV = os.getenv("APIURLDESENV")
+from config.config import settings
+
 
 def buscar_cep(parent=None):
     """Busca CEP usando ViaCEP"""
@@ -18,17 +20,15 @@ def buscar_cep(parent=None):
         if len(cep) != 8:
             QMessageBox.warning(parent, "CEP Inválido", "Digite um CEP válido com 8 dígitos")
             return
-
-        response = requests.get(f"https://viacep.com.br/ws/{cep}/json/")
-        if response.status_code == 200:
-            data = response.json()
+        try:
+            response = APPContext.api_client.get(f"https://viacep.com.br/ws/{cep}/json/")
+            data = response
             if "erro" not in data:
                 parent.endereco_input.setText(data.get("logradouro", ""))# type: ignore
                 parent.bairro_input.setText(data.get("bairro", ""))# type: ignore
                 parent.cidade_input.setText(f"{data.get('localidade', '')}/{data.get('uf', '')}")# type: ignore
-            else:
-                QMessageBox.warning(parent, "CEP não encontrado", "O CEP informado não foi encontrado")
-        else:
+
+        except Exception as e:
             QMessageBox.critical(parent, "Erro", "Falha ao buscar CEP")
 
     except Exception as e:
@@ -50,7 +50,6 @@ def salvar_dados_clientes(parent=None):
 
     try:
         QMessageBox.information(parent, "Aguarde", "Enviando dados para o servidor!")
-        url= QUrl(f"{APIURLDESENV}/clientes/users")
         data_json = {
                 "cliente": f"{cliente}",
                 "telefone": f"{telefone}",
@@ -63,12 +62,7 @@ def salvar_dados_clientes(parent=None):
                 "referencia": f"{referencia}"
         }
 
-        json_data=json.dumps(data_json).encode("utf-8")
-        data_to_send=QByteArray(json_data)
-        request= QNetworkRequest(url)
-        request.setHeader(QNetworkRequest.ContentTypeHeader, "application/json")# type: ignore
-        reply= parent.network_manager.post(request, data_to_send)# type: ignore
-        reply.finished.connect(lambda: handle_network_reply(reply, parent))
+        response = APPContext.api_client.post("/clientes/users", data_json)
 
         #adicionar_novo_usuario(Cliente, email, telefone, cep, endereco, bairro, cidade, complemento, referencia)
         QMessageBox.information(parent, "Sucesso", "Usuário adicionado com sucesso!")
@@ -87,8 +81,6 @@ def salvar_dados_clientes(parent=None):
         QMessageBox.warning(parent, "Erro", "A informação está incorreta.")
     except Exception as e:
         QMessageBox.critical(parent, "Erro de BD", f"Ocorreu um erro: {e}")
-        # Limpa o objeto de resposta para evitar vazamento de memória (melhor prática)
-        reply.deleteLater()
 
 
 def exibir_confirmacao_exclusao(parent= None):

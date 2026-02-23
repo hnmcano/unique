@@ -1,7 +1,8 @@
 from pydantic import BaseModel, Field
+from uuid import UUID
 
 class Carrinho(BaseModel):
-    produto_id: int
+    produto_id: UUID
     cod_pdv: str | None = None
     categoria: str = Field(..., min_length= 3, max_length=30)
     nome: str = Field(..., min_length= 3, max_length=50)
@@ -18,5 +19,5 @@ class Carrinho(BaseModel):
     quantidade: int = Field(..., ge=1)
 
 class CarrinhoUpdate(Carrinho):
-    id: int = Field(..., gt=0)
+    id: UUID
     quantidade: int = Field(..., ge=1)

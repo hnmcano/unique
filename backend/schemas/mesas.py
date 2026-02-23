@@ -2,10 +2,11 @@ from pydantic import BaseModel, Field
 from typing import List, Optional
 from datetime import datetime
 from .produtos import Produto
+from uuid import UUID
 
 
 class ItensPedidosMesa(BaseModel):
-    produto_id: int = Field(..., gt=0)
+    produto_id: UUID
     quantidade: int = Field(..., gt=0)
     valor_unitario: float
 
@@ -27,40 +28,20 @@ class AberturaMesa(BaseModel):
         from_atributes = True
 
 
-
-
 class AdicionarItensMesa(BaseModel):
-    mesa_id: int
-    produto_id: int
+    mesa_id: UUID
+    produto_id: UUID
     quantidade: int
     valor_unitario: float
 
-    class Config:
-        from_atributes = True
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    model_config = {
+        "from_attributes": True
+    }
 
 
 
 class ItensPedidosMesaResponse(BaseModel):
-    produto_id: int = Field(..., ge=0)
+    produto_id: UUID
     quantidade: int = Field(..., ge=0)
     valor_unitario: float
     valor_total: float
@@ -71,7 +52,7 @@ class ItensPedidosMesaResponse(BaseModel):
     }
 
 class CriacaoPedidosResponse(BaseModel):
-    id: int
+    id_pedido_mesa: UUID
     status: str
     data_criacao: datetime
     data_atualizacao: datetime | None
@@ -83,7 +64,7 @@ class CriacaoPedidosResponse(BaseModel):
         "from_attributes": True
     }
 class MesasResponse(BaseModel):
-    id: int = Field(..., gt=0)
+    id_mesa: UUID
     numero: int = Field(..., gt=0)
     pedido: CriacaoPedidosResponse
 

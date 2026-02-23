@@ -1,20 +1,34 @@
 from PySide6.QtCore import *
 import websocket
 import json
+import time
 
 class WebSocketService(QThread):
     mensagem_recebida = Signal(dict)
 
+    def __init__(self, token):
+        super().__init__()
+        self.token = token
+
     def run(self):
         print("Conectando ao WS...")
-        self.ws = websocket.WebSocketApp(
-            "ws://localhost:8000/ws",
-            on_message=self.on_message,
-            on_open=self._on_open,
-            on_error=self._on_error,
-            on_close=self._on_close,
-        )
-        self.ws.run_forever()
+        while True:
+            try:
+                url = f"ws://localhost:8000/ws?token={self.token}"
+                self.ws = websocket.WebSocketApp(
+                    url,
+                    on_message=self.on_message,
+                    on_open=self._on_open,
+                    on_error=self._on_error,
+                    on_close=self._on_close,
+                )
+                self.ws.run_forever()
+            except Exception as e:
+                print("Erro ao conectar ao WS:", e)
+            
+            print("Reconectando ao WS...")
+            time.sleep(5)
+
 
     def on_message(self, ws, message: str):
         try:

@@ -75,7 +75,7 @@ async def adicionar_produto(product: ProdutoSchema, db: Session = Depends(get_db
         data.append(produto)
 
 
-    await notificar_todos({
+    await notificar_todos(estabelecimento_id, {
                             "tipo": "Atualizar_produtos",
                             "dados": jsonable_encoder(data)
                             })

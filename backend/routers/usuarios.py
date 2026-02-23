@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from database.connection import get_db
 from schemas.usuarios import Usuarios as UsuariosSchema
@@ -19,8 +19,8 @@ def create_acess_token(data: dict):
     encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     return encoded_jwt
 
-@router.post("/login")
-def create_user(user: UsuariosSchema, db: Session = Depends(get_db)):
+@router.post("/login", status_code=status.HTTP_200_OK)
+def Login_user(user: UsuariosSchema, db: Session = Depends(get_db)):
     usuario = autenticar_usuario(user.email, user.senha_hash, db)
 
     if not usuario:
@@ -38,6 +38,3 @@ def create_user(user: UsuariosSchema, db: Session = Depends(get_db)):
         "token_type": "bearer",
     }
 
-@router.get("/me")
-def me(usuario = Depends(get_current_user)):
-    return usuario
