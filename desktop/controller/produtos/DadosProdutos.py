@@ -28,7 +28,7 @@ def inserir_imagem(parent=None):
 
 def atualizar_dados_produtos(parent=None):
         
-    produto_id = parent.produto["id"]
+    produto_id = parent.produto["id_produto"]
 
     categoria_id = parent.categoria_combo.currentData()
     cod_pdv = parent.cod_pdv_input.text()# type: ignore
@@ -128,7 +128,7 @@ class DadosProduto(QMainWindow, DataProduto):
         self.network_manager = QNetworkAccessManager(self)
 
         self.produto = produto        
-        self.id = produto["id"]
+        self.id = produto["id_produto"]
 
         preencher_dropdown_categoria(self)
 

@@ -155,13 +155,14 @@ class Produtos(QMainWindow, produtos):
 
     def filtrar_produtos(self, text):
         for row in range(self.tableWidget.rowCount()):
-            item = self.tableWidget.item(row, 3)
+            item = self.tableWidget.item(row, 2)
             if text.lower() in item.text().lower():
                 self.tableWidget.showRow(row)
             else:
                 self.tableWidget.hideRow(row)
 
     def on_evento_recebido(self, evento: dict):
+        print("Evento recebido:", evento)
 
         data = evento["dados"]
 

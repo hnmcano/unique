@@ -133,7 +133,7 @@ async def criar_novo_pedido(novo_pedido_data: NovoPedidoSchema,db: Session = Dep
         # 8. REFRESH e RETORNO (Obtém o Pedido final com todas as relações carregadas)
         db.refresh(db_pedido)
 
-        pedido_serializado = PedidoResponse.model_validate(db_pedido)
+        pdido_serializado = PedidoResponse.model_validate(db_pedido)
 
         await notificar_todos(jsonable_encoder({
             "tipo": "delivery_acionado",

@@ -4,8 +4,6 @@ from database.connection import get_db
 from models.estabelecimento import Estabelecimento as EstabelecimentoModel
 
 def get_estabelecimento(x_tenant_slug:str = Header(None), db: Session = Depends(get_db)):
-
-    print(x_tenant_slug)
     
     if not x_tenant_slug:
         raise HTTPException(status_code=400, detail="x-tenant-slug header is required")

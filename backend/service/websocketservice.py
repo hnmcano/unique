@@ -4,6 +4,8 @@ from core.config import settings
 from typing import Dict, List
 import json
 
+from uuid import UUID
+
 router = APIRouter()
 
 # estabelecimento_id -> lista de conexões
@@ -11,14 +13,10 @@ clientes_conectados: Dict[str, List[WebSocket]] = {}
 
 
 def estabelecimento_esta_online(estabelecimento_id: str) -> bool:
-    for estabelecimento_id in clientes_conectados and len(clientes_conectados[estabelecimento_id]) > 0:
-        return True
-    else:
-        return False
+    return (estabelecimento_id in clientes_conectados and len(clientes_conectados[estabelecimento_id]) > 0)
+
     
-
-
-@router.websocket("/ws")
+@router.websocket("")
 async def websocket_endpoint(websocket: WebSocket, token: str):
 
     try:

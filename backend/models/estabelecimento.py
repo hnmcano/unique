@@ -20,6 +20,10 @@ class Estabelecimento(Base):
     telefone = Column(String(20))
     email = Column(String(200))
 
+    logo_img = Column(String)
+    endereco = Column(String(300))
+    rede_social = Column(String(300))
+
     plano = Column(String(50), default="basico")
     limite_usuarios = Column(Integer, default=1)
 

@@ -1,6 +1,5 @@
 import axios from "axios";
-import { getSlugFromHost } from "../../utils/tenant";
-
+import { getSlugFromHost } from "../utils/tenant";
 
 console.log("API URL:", import.meta.env.VITE_API_URL)
 

@@ -108,7 +108,7 @@ async def read_products(db: Session = Depends(get_db), user_current: dict = Depe
         nome_categoria = categorias_map.get(p.categoria_id, "Sem categoria")
 
         produto = {
-            "id": p.id_produto,
+            "id_produto": p.id_produto,
             "categoria_id": p.categoria_id,
             "cod_pdv": p.cod_pdv,
             "nome": p.nome,
@@ -252,6 +252,50 @@ async def update_product(product_id: str, product: ProdutoSchema, db: Session = 
         setattr(db_product, key, value)
 
     db.commit()
-    db.refresh(db_product)
-    return {"message": "Produto atualizado com sucesso"}
+    db.flush()
 
+    produtos = db.query(ProductModel).filter(
+        ProductModel.estabelecimento_id == estabelecimento_id
+    ).all()
+
+    categorias = db.query(CategoryModel).filter(
+        CategoryModel.estabelecimento_id == estabelecimento_id
+    )
+    categorias_map = {
+        c.id_categoria: c.nome for c in categorias
+    }
+
+    data = []
+
+    for p in produtos:
+
+        nome_categoria = categorias_map.get(p.categoria_id, "Sem categoria")
+
+        produto = {
+            "estabelecimento_id": p.estabelecimento_id,
+            "id_produto": p.id_produto,
+            "categoria_id": p.categoria_id,
+            "cod_pdv": p.cod_pdv,
+            "nome": p.nome,
+            "preco_custo": p.preco_custo,
+            "preco_venda": p.preco_venda,
+            "medida": p.medida,
+            "estoque": p.estoque,
+            "estoque_min": p.estoque_min,
+            "descricao": p.descricao,
+            "ficha_tecnica": p.ficha_tecnica,
+            "status_venda": p.status_venda,
+            "imagem_name": p.imagem_name,
+            "imagem": p.imagem
+        }
+
+        produto["nome_categoria"] = nome_categoria
+        data.append(produto)
+
+
+    await notificar_todos(estabelecimento_id, {
+                            "tipo": "Atualizar_produtos",
+                            "dados": jsonable_encoder(data)
+                            })
+
+    return data

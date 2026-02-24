@@ -10,7 +10,7 @@ export function EstabelecimentoProvider({ children }) {
     useEffect(() => {
         async function carregar() {
             try {
-                const response = await api.get("/estabelecimento/dados_estabelecimento");
+                const response = await api.get("/estabelecimento/carregar-dados");
                 setEstabelecimento(response.data);
                 document.title = response.data.nome;
                 console.log(response.data);

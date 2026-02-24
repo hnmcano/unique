@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import api from "../api/api";
-import { getSlugFromHost } from "../../utils/tenant";
+import { getSlugFromHost } from "../utils/tenant";
 
 const fetchProdutos = async () => {
     const { data } = await api.get("/produtos/react/catalago");

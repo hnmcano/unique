@@ -10,22 +10,24 @@ class ItensPedidosMesa(BaseModel):
     quantidade: int = Field(..., gt=0)
     valor_unitario: float
 
-    class Config:
-        from_atributes = True
-
+    model_config = {
+        "from_attributes": True
+    }
 class CriacaoPedidoMesa(BaseModel):
     status: str
     itens: Optional[List[ItensPedidosMesa]]
 
-    class Config:
-        from_atributes = True
+    model_config = {
+        "from_attributes": True
+    }
 
 class AberturaMesa(BaseModel):
     numero: int = Field(..., gt=0)
     pedido: CriacaoPedidoMesa
 
-    class Config:
-        from_atributes = True
+    model_config = {
+        "from_attributes": True
+    }
 
 
 class AdicionarItensMesa(BaseModel):
