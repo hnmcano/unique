@@ -1,10 +1,21 @@
 import axios from "axios";
+import { getSlugFromHost } from "../../utils/tenant";
 
-const urlapi = "http://localhost:8000";
-// const urlapi = "https://api.uniqsystems.com.br";
+
+console.log("API URL:", import.meta.env.VITE_API_URL)
 
 const api = axios.create({
-    baseURL: urlapi,
+    baseURL: import.meta.env.VITE_API_URL
+})
+
+api.interceptors.request.use((config) => {
+    const slug = getSlugFromHost();
+    if (slug) {
+        config.headers['x-tenant-Slug'] = slug;
+    }
+
+    return config;
 });
 
 export default api;
+

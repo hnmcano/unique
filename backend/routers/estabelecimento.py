@@ -4,6 +4,9 @@ import pandas as pd
 from sqlalchemy.orm import Session
 from models.estabelecimento import Estabelecimento as EstabelecimentoModel
 from schemas.estabelecimento import EstabelecimentoBase as Estabelecimentoschema
+
+from service.websocketservice import estabelecimento_esta_online
+from core.dependencies.tenant import get_estabelecimento
 from models.usuarios import Usuarios as UsuariosModel
 from auth.security import gerar_hash
 
@@ -35,3 +38,19 @@ async def info_data_estabelecimento(dados_estabelecimento: Estabelecimentoschema
     db.add(bd_usuario)
 
     db.commit()
+
+
+@router.get("/dados_estabelecimento")
+def react_estabelecimento(db: Session = Depends(get_db), estabelecimento: EstabelecimentoModel = Depends(get_estabelecimento)):
+
+    online = estabelecimento_esta_online(str(estabelecimento.id))
+
+    return {
+        "id": estabelecimento.id,
+        "nome": estabelecimento.nome,
+        "nome_fantasia": estabelecimento.nome_fantasia,
+        "documento": estabelecimento.documento,
+        "telefone": estabelecimento.telefone,
+        "email": estabelecimento.email,
+        "online": online
+    }

@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import api from "../api/api";
+import { getSlugFromHost } from "../../utils/tenant";
 
 const fetchProdutos = async () => {
     const { data } = await api.get("/produtos/react/catalago");
@@ -8,6 +9,8 @@ const fetchProdutos = async () => {
 };
 
 export const useProdutos = () => {
+    const slug = getSlugFromHost();
+
     const {
         data: base = [],
         isLoading,
@@ -15,7 +18,7 @@ export const useProdutos = () => {
         error,
         refetch
     } = useQuery({
-        queryKey: ["produtos-catalogo"],
+        queryKey: ["produtos-catalogo", slug],
         queryFn: fetchProdutos,
         staleTime: 1000 * 60 * 5,   // 5 minutos cache
         cacheTime: 1000 * 60 * 30,  // 30 minutos em memória

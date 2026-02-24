@@ -32,3 +32,4 @@ class Estabelecimento(Base):
     atualizado_em = Column(DateTime(timezone=True), onupdate=func.now())
 
     usuarios = relationship("Usuarios", back_populates="estabelecimento")
+    pedido = relationship("Pedido", back_populates="estabelecimento")

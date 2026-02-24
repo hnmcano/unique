@@ -1,4 +1,9 @@
-function DadosLojaCatalago({estabelecimento, status}) {
+import { useEstabelecimento } from "../../contexts/EstabelecimentoContext";
+
+
+function DadosLojaCatalago({}) {
+    const { estabelecimento, loading } = useEstabelecimento();
+    const status = estabelecimento?.status === "ABERTO" ? "ABERTO" : "FECHADO";
 
     return (
         <>

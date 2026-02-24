@@ -7,7 +7,7 @@ app = FastAPI(title="UniqueSystems - PDV", version="1.0.0")
 origins = [
     "http://localhost:5173",
     "http://localhost:8000",
-    "http://127.0.0.1:5173",
+    "http://hookahshisha.localhost:5173",
     "http://127.0.0.1:8000",
     "https://catalogo.uniqsystems.com.br",
     "frontend-react-git-master-hnmcanos-projects.vercel.app"

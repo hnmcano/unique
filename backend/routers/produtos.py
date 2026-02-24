@@ -1,6 +1,7 @@
 from models.produtos import Produto as ProductModel
 from schemas.produtos import Produto as ProdutoSchema
 from models.produtos import Categoria as CategoryModel
+from models.estabelecimento import Estabelecimento as EstabelecimentoModel
 
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
@@ -12,6 +13,8 @@ from time import sleep
 import pandas as pd
 import base64
 from service.depencias import get_current_user
+from core.dependencies.tenant import get_estabelecimento
+from fastapi import HTTPException, Header
 
 router = APIRouter()
 
@@ -172,11 +175,10 @@ async def read_products(db: Session = Depends(get_db), user_current: dict = Depe
 
 # Rota para listar todos os produtos com os nomes das categorias no front-end com react
 @router.get("/react/catalago")
-async def list_products(db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
-    estabelecimento_id = user_current["estabelecimento_id"]
+async def list_products(db: Session = Depends(get_db), estabelecimento: EstabelecimentoModel = Depends(get_estabelecimento)):
 
-    produtos = db.query(ProductModel).filter(ProductModel.estabelecimento_id == estabelecimento_id).all()
-    categorias = db.query(CategoryModel).filter(CategoryModel.estabelecimento_id == estabelecimento_id).all()
+    produtos = db.query(ProductModel).filter(ProductModel.estabelecimento_id == estabelecimento.id).all()
+    categorias = db.query(CategoryModel).filter(CategoryModel.estabelecimento_id == estabelecimento.id).all()
 
     if not produtos:
         return []

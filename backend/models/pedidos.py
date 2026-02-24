@@ -27,6 +27,7 @@ class Pedido(Base):
     endereco_entrega = relationship("EnderecoPedido", back_populates="pedido", cascade="all, delete-orphan", uselist=False)
     itens = relationship("ItemPedido", back_populates="pedido", cascade="all, delete-orphan")
     caixa = relationship("Caixa", back_populates="pedido")
+    estabelecimento = relationship("Estabelecimento", back_populates="pedido")
 
     def __repr__(self):
         return f"Pedido(id={self.id}, cliente_id={self.cliente_id}, data_criacao={self.data_criacao}, data_atualizacao={self.data_atualizacao})"

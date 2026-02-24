@@ -1,5 +1,7 @@
 function FiltrosCategCatalogo({selectedCategories, produtos, handleFilterClick}) {
 
+    console.log("produtos: " + produtos);
+
     return (
         <>
             <div className="div-buttons-filters">

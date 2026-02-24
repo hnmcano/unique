@@ -12,7 +12,10 @@ from schemas.pedidos import NovoPedidoSchema, PedidoResponse
 from models.pedidos import Pedido, EnderecoPedido, ItemPedido
 from models.clientes import Clientes
 from models.produtos import Produto as ProdutoModel
+from models.estabelecimento import Estabelecimento as EstabelecimentoModel
 from models.caixa import Caixa as CaixaModel
+
+from core.dependencies.tenant import get_estabelecimento
 from service.websocketservice import notificar_todos
 from service.depencias import get_current_user
 from database.connection import get_db
@@ -22,13 +25,13 @@ router = APIRouter()
 
 # --- Funções Auxiliares (Simplificadas para o Exemplo) ---
 
-def get_or_create_cliente(cliente_data, db: Session, user_current: dict) -> Tuple[int, Clientes]:
+def get_or_create_cliente(cliente_data, db: Session, estabelecimento: dict) -> Tuple[int, Clientes]:
     """
     Simula a busca do cliente por e-mail/telefone ou a criação de um novo.
     Retorna o ID do cliente e o objeto Cliente.
     """
     # 1. Tenta encontrar o cliente pelo email (ou telefone)
-    cliente_db = db.query(Clientes).filter(Clientes.email == cliente_data.email, Clientes.estabelecimento_id == user_current["estabelecimento_id"]).first()
+    cliente_db = db.query(Clientes).filter(Clientes.email == cliente_data.email, Clientes.estabelecimento_id == estabelecimento.id).first()
     
     if not cliente_db:
         # 2. Se não existir, cria o novo cliente no DB
@@ -36,7 +39,7 @@ def get_or_create_cliente(cliente_data, db: Session, user_current: dict) -> Tupl
             nome=cliente_data.nome,
             email=cliente_data.email,
             telefone=cliente_data.telefone,
-            estabelecimento_id=user_current["estabelecimento_id"]
+            estabelecimento_id=estabelecimento.id
         )
         db.add(cliente_db)
         db.flush() # Garante que o cliente_id seja gerado antes de usar
@@ -55,9 +58,9 @@ async def delete_pedido(pedido_id: int, db: Session = Depends(get_db), user_curr
 
 #  Usa o schema de resposta completo para serializar o pedido final em response_model=PedidoResponse
 @router.post("/react", status_code=status.HTTP_201_CREATED, response_model=PedidoResponse)
-async def criar_novo_pedido(novo_pedido_data: NovoPedidoSchema,db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
+async def criar_novo_pedido(novo_pedido_data: NovoPedidoSchema,db: Session = Depends(get_db), estabelecimento: EstabelecimentoModel = Depends(get_estabelecimento)):
 
-    caixa = db.query(CaixaModel).filter(CaixaModel.status == "ABERTO", CaixaModel.estabelecimento_id == user_current["estabelecimento_id"]).first()
+    caixa = db.query(CaixaModel).filter(CaixaModel.status == "ABERTO", CaixaModel.estabelecimento_id == estabelecimento.id).first()
 
     if not caixa:
         raise HTTPException(
@@ -68,7 +71,7 @@ async def criar_novo_pedido(novo_pedido_data: NovoPedidoSchema,db: Session = Dep
     try:
         # 1. OBTER/CRIAR O CLIENTE
         # Esta função garante que tenhamos o ID do cliente logado ou recém-criado
-        cliente_id = get_or_create_cliente(novo_pedido_data.cliente, db, user_current)
+        cliente_id = get_or_create_cliente(novo_pedido_data.cliente, db, estabelecimento)
         
         # 2. VALIDAÇÃO DE PRECISÃO (Opcional: Verifica a soma do frontend)
         # O Pydantic já garantiu que valor_total, preco_unitario e taxa_entrega são Decimais.
@@ -92,7 +95,7 @@ async def criar_novo_pedido(novo_pedido_data: NovoPedidoSchema,db: Session = Dep
             caixa_id=caixa.id,
             metodo_pagamento=novo_pedido_data.metodo_pagamento,
             valor_total=novo_pedido_data.valor_total,
-            estabelecimento_id=user_current["estabelecimento_id"],
+            estabelecimento_id=estabelecimento.id,
             # status e data_pedido usam defaults do modelo
         )
 
@@ -108,7 +111,7 @@ async def criar_novo_pedido(novo_pedido_data: NovoPedidoSchema,db: Session = Dep
         db_endereco = EnderecoPedido(
             pedido_id=db_pedido.id_pedido,
             **novo_pedido_data.entrega.model_dump(exclude_unset=True),
-            estabelecimento_id=user_current["estabelecimento_id"] # Mapeia todos os campos de entrega
+            estabelecimento_id=estabelecimento.id # Mapeia todos os campos de entrega
         )
         db.add(db_endereco)
 
@@ -120,7 +123,7 @@ async def criar_novo_pedido(novo_pedido_data: NovoPedidoSchema,db: Session = Dep
                 produto_id=item_data.produto_id,
                 quantidade=item_data.quantidade,
                 valor_unitario=item_data.valor_unitario,
-                estabelecimento_id=user_current["estabelecimento_id"]
+                estabelecimento_id=estabelecimento.id
             )
             db.add(db_item)
 
@@ -161,7 +164,7 @@ def listar_pedidos(db: Session = Depends(get_db), user_current: dict = Depends(g
                           joinedload(Pedido.endereco_entrega),
                           joinedload(Pedido.cliente),
                           joinedload(Pedido.caixa),
-                          joinedload(Pedido.estabelecimento_id),
+                          joinedload(Pedido.estabelecimento),
                     ).all()
             )
 
