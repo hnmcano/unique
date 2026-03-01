@@ -1,0 +1,138 @@
+.options {
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: -260px;
+  width: 50%;
+  height: 100vh;
+  background: #111;
+  z-index: 1000;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 16px 10px rgba(0, 0, 0, 0.76);
+}
+
+@media (min-width: 600px) {
+    .options {
+        width: 40%;
+    }
+}
+
+@media (min-width: 768px) {
+    .options {
+        width: 25%;
+    }
+}
+
+@media (min-width: 1024px) {
+    .options {
+        width: 12.5%;
+    }
+}
+
+.options.open {
+  left: 0;
+}
+
+/* OVERLAY */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.837);
+  z-index: 1000;
+}
+
+.options-container-name-icons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  color: white;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  margin-top: 8px;
+}
+
+.name-menu {
+  font-size: 1.2rem;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  color: white;
+  flex-grow: 1;
+  text-align: center;
+}
+
+
+.icons {
+  font-size: 2rem;
+  cursor: pointer;
+  color: white;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.icons-ajustes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  margin-top: 5px;
+  flex-grow: 1;
+}
+
+.div-button-login {
+
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+
+}
+
+
+.user-profile {
+  width: 131px;
+  height: 51px;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  background: linear-gradient(
+    to bottom right,
+    #e32eff 0%,
+    rgba(46, 142, 255, 0) 30%
+  );
+  background-color: rgba(46, 142, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-profile:hover,
+.user-profile:focus {
+  background-color: hsla(297, 100%, 59%, 0.7);
+  box-shadow: 0 0 10px rgba(175, 46, 255, 0.5);
+  outline: none;
+}
+
+.user-profile-inner {
+  width: 127px;
+  height: 47px;
+  border-radius: 13px;
+  background-color: #1a1a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  color: #fff;
+  font-weight: 600;
+}
+
+.user-profile-inner svg {
+  width: 27px;
+  height: 27px;
+  fill: #fff;
+}

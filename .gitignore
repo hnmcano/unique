@@ -1,7 +1,0 @@
-**/.env
-**/.gitignore
-frontend/node_modules
-frontend/src/api
-**/venv/
-**/build/
-**/dist/
