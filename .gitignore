@@ -1,0 +1,19 @@
+# dependencies
+node_modules/
+**/node_modules/
+
+# env files
+.env
+*.env
+**/.env
+
+# build
+dist/
+build/
+
+# vercel
+.vercel
+
+# python
+__pycache__/
+*.pyc
