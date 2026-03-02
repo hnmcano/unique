@@ -1,19 +1,11 @@
-# dependencies
-node_modules/
-**/node_modules/
-
-# env files
-.env
-*.env
+**/venv
+**/node_modules
+**/__pycache__
 **/.env
-
-# build
-dist/
-build/
-
-# vercel
-.vercel
-
-# python
-__pycache__/
-*.pyc
+**/dist
+/dist.zip
+**/build
+/build
+**/alembic.ini
+**/config
+**/vercel.json
