@@ -166,7 +166,6 @@ class Estabelecimento(QMainWindow, estabelecimento):
         response = evento["dados"]
         if evento["tipo"] == "Atualizar_estabelecimento":
             # Se vier um dicionário único, transformamos em lista
-            print("Response:", response)
             self.atualizar_dados(response)
 
     def showEvent(self, event):

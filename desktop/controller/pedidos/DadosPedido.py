@@ -154,11 +154,7 @@ class DadosPedido(QMainWindow, dados_pedidos):
                 self.atualizar_tabela(evento["dados"])
 
     def aumentar_quantidade(self, row, data, pedido):
-        
-        print("dados:", data)
-
         response = requests.put(f"{settings.API_URL}/pedidos/aumentar-item/{pedido["id"]}/{data["id"]}/{data["pedido"]["itens"]["produtos"][row]['produto_id']}")
-
         if response.status_code == 404:
             QMessageBox.critical(self, "Erro", f"{response.json()['detail']}")
 

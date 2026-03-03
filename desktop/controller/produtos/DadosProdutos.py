@@ -122,8 +122,6 @@ class DadosProduto(QMainWindow, DataProduto):
 
         super().__init__(parent)
         self.setupUi(self)
-
-        print("produto:", produto)
         
         self.network_manager = QNetworkAccessManager(self)
 

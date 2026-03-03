@@ -3,6 +3,8 @@ import websocket
 import json
 import time
 
+from config.config import settings
+
 class WebSocketService(QThread):
     mensagem_recebida = Signal(dict)
 
@@ -12,9 +14,11 @@ class WebSocketService(QThread):
 
     def run(self):
         print("Conectando ao WS...")
+        print(f"{settings.WS_URL}/ws?token={self.token}")
         while True:
             try:
-                url = f"ws://98.92.91.205:8000/ws?token={self.token}"
+                
+                url = f"{settings.WS_URL}/ws?token={self.token}"
                 self.ws = websocket.WebSocketApp(
                     url,
                     on_message=self.on_message,
@@ -25,9 +29,6 @@ class WebSocketService(QThread):
                 self.ws.run_forever()
             except Exception as e:
                 print("Erro ao conectar ao WS:", e)
-            
-            print("Reconectando ao WS...")
-            time.sleep(5)
 
 
     def on_message(self, ws, message: str):

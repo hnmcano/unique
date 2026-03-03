@@ -162,8 +162,6 @@ class Produtos(QMainWindow, produtos):
                 self.tableWidget.hideRow(row)
 
     def on_evento_recebido(self, evento: dict):
-        print("Evento recebido:", evento)
-
         data = evento["dados"]
 
         if evento["tipo"] == "Atualizar_produtos":

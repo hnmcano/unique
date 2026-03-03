@@ -31,7 +31,6 @@ export function CheckoutProvider({ children }) {
             telefone: "",
             email: "",
             cpf: "",
-            observacoes: "",
         },
 
         "entrega": {
@@ -43,7 +42,7 @@ export function CheckoutProvider({ children }) {
             estado: "",
             complemento: "",
             referencia: "",
-            taxa_entrega: 0,
+            taxa_entrega: 7.0,
         }
     });
 

@@ -164,13 +164,13 @@ function FormularioCliente() {
                                   onKeyDown={(e) => {if (e.key === "Enter") {e.preventDefault(); focusNextInput(3);}}} />
                         </div>
                         <div className="Grupo-Formulario">
-                            <label className="Names-Formulario" htmlFor="cpf">OBSERVAÇÕES: (opcional)</label>
+                            <label className="Names-Formulario" htmlFor="observacoes">OBSERVAÇÕES: (opcional)</label>
                             <textarea 
                                 className="Entrada-Formulario-Observacoes" 
                                 type="text" 
                                 id="observacoes"
                                 name="observacoes" 
-                                value={data.cliente.observacoes} 
+                                value={data.observacoes} 
                                 onChange={handleChangeClient}
                                 ref={(el) => (refs.current[4] = el)}
                                 enterKeyHint="next"
