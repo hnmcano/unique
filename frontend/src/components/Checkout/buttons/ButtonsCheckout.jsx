@@ -1,4 +1,4 @@
-import "../../styles/Checkout.css";
+import "../../../styles/Checkout.css"
 
 export function ButtonNext ({handledSubmit}) {
     return (
