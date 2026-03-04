@@ -1,3 +1,7 @@
+:root {
+  --bg-padrao-dark: #1a1a1a;
+}
+
 
 * {
     caret-color: transparent;
@@ -6,8 +10,9 @@
     padding: 0;
 }
 
+
 body {
-    background-color: rgb(46, 44, 44);
+    background-color: var(--bg-padrao-dark);
 }
 
 .logo {
@@ -21,7 +26,7 @@ body {
 }
 
 .main {
-  background-color: rgb(46, 44, 44);
+  background-color: var(--bg-padrao-dark);
   display: flex;
   flex-direction: column;
 }
@@ -32,7 +37,7 @@ body {
     justify-content: space-between;
     height: 100vh;
     width: 100vw;
-    background-color: rgb(46, 44, 44);
+    background-color: var(--bg-padrao-dark);
 }
 
 .menu {
@@ -46,108 +51,75 @@ body {
     justify-content: space-between;
     color: white;
 }
-:root {
-  --primary-green: #2ecc71;
-  --dark-bg: #1a1a1a;
-  --card-bg: #252525;
-  --text-main: #ffffff;
-  --text-dim: #a0a0a0;
-}
 
-body {
-  background-color: var(--dark-bg);
-  font-family: 'Segoe UI', Roboto, sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
-}
-
-.shop-card {
-  background: var(--card-bg);
-  padding: 40px;
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  text-align: center;
-  max-width: 400px;
-  width: 90%;
-  border: 1px solid #333;
-}
-
-.status-badge {
-  background-color: var(--primary-green);
-  color: black;
-  display: inline-block;
-  padding: 5px 20px;
-  border-radius: 50px;
-  font-weight: bold;
-  font-size: 0.8rem;
-  letter-spacing: 2px;
-  box-shadow: 0 0 15px rgba(46, 204, 113, 0.4);
-  margin-bottom: 20px;
-}
-
-h1 {
-  color: var(--text-main);
-  margin: 0;
-  font-size: 2.2rem;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-}
-
-.subtitle {
-  color: var(--primary-green);
-  margin-top: 5px;
-  font-size: 0.9rem;
-  letter-spacing: 5px;
-  opacity: 0.8;
-}
-
-.info-container {
-  margin: 30px 0;
-  border-top: 1px solid #333;
-  border-bottom: 1px solid #333;
-  padding: 20px 0;
-}
-
-.info-item {
-  margin-bottom: 15px;
-}
-
-.label {
-  display: block;
-  color: var(--text-dim);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  margin-bottom: 5px;
-}
-
-.value {
-  color: var(--text-main);
-  font-size: 1.1rem;
-  font-weight: 500;
-}
-
-.accent {
-  color: var(--primary-green);
-}
-
-.contact-bar {
+.data {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  align-items: center;
+  justify-content: center;
 }
 
-.contact-link {
-  color: var(--text-dim);
-  text-decoration: none;
-  font-size: 0.9rem;
-  transition: 0.3s;
+.infos {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
-.contact-link:hover {
-  color: var(--primary-green);
+.infos-data {
+    margin-top: 5px;
+    font-size: 14px;
+    align-items: center;
+}
+
+.montserrat-data {
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 14px;
+}
+
+@media (width: 360px) {
+    .montserrat-data {
+        font-size: 12px;
+    }
+}
+
+
+@media (min-width: 1024px) {
+    .montserrat-data {
+        font-size: 23px;
+    }
+}
+
+.status-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: -16px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.status_aberto {
+    color: white;
+    text-align: center;
+    background-color: #2ecc71;
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+
+.status_fechado {
+
+    color: white;
+    text-align: center;
+    background-color: rgb(216, 15, 15);
+    border-radius: 5px;
+    padding: 5px 10px;
+
 }
 
 .container {
@@ -250,7 +222,7 @@ button.buttons-filters:focus {
     color: white;
     border-radius: 5px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    background-color: rgb(46, 44, 44);
+    background-color: var(--bg-padrao-dark);
     overflow-y: auto;
 }
 
@@ -296,7 +268,7 @@ button.buttons-filters:focus {
     align-items: center;
     flex-direction: column;
     flex-grow: 1;
-    background-color: rgb(46, 44, 44);
+    background-color: var(--bg-padrao-dark);
 
 }
 
