@@ -4,6 +4,7 @@ import api from "../../api/api";
 import { PagamentoCredito, PagamentoDebito, PagamentoDinheiro, PagamentoPix } from "./pagamentos/FormasDePagamentos";
 import { IconePix, IconeCredito, IconeDebito, IconeDinheiro } from "./pagamentos/iconesSvg";
 import { ButtonBack} from "./buttons/ButtonsCheckout";
+import { useState } from "react";
 
 function FormasPagPedido() {
     const { data, 
