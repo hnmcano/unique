@@ -1,36 +1,36 @@
 html,
 body {
-  align-items: center;
-  background: #333;
-  display: flex;
-  justify-content: center;
-  height: 100vh;
+    align-items: center;
+    background: #333;
+    display: flex;
+    justify-content: center;
+    height: 100vh;
 }
 
 
 .send {
-  background: none;
-  color: white;
-  border: 1px solid #45981B;
-  border-radius: 70px;
-  box-shadow: 0 0 0 0 rgba(69, 152, 27, 0.5);
-  cursor: pointer;
-  font-size: clamp(12px, 2.0rem, 14px);
-  min-height: 35px;
-  min-width: 40px;
-  outline: none;
-  padding: 5px 30px;
-  transition: background, padding 500ms ease-in-out;
+    background: none;
+    color: white;
+    border: 1px solid #45981B;
+    border-radius: 70px;
+    box-shadow: 0 0 0 0 rgba(69, 152, 27, 0.5);
+    cursor: pointer;
+    font-size: clamp(12px, 2.0rem, 14px);
+    min-height: 2.9rem;
+    min-width: 8.5rem;
+    outline: none;
+    padding: 5px 30px;
+    transition: background, padding 500ms ease-in-out;
   
-  &.is-loading {
+    &.is-loading {
     animation: pulse 1.5s infinite;
     padding: 9px 11px;
-  }
-  
-  &.is-success {
+    }
+
+    &.is-success {
     background: #45981B;
     padding: 9px 11px;
-  }
+    }
 }
 
 .send svg {
@@ -96,4 +96,23 @@ body {
   align-items: center;
   justify-content: center;
   animation: fadeIn 0.3s ease-in-out;
+}
+
+.fullscreen-loading::after {
+  content: "";
+  width: 60px;
+  height: 60px;
+  border: 5px solid #45981B;
+  border-top: 5px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
