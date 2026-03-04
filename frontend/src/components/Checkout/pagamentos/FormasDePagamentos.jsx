@@ -91,7 +91,7 @@ export function PagamentoDinheiro() {
                             <label className="descricao-dinheiro">Irá precisar de troco?</label>
                             <div className="valor-dinheiro">
                                 <div className="opcao-copy-pix">
-                                    <input type="text" placeholder="Valor Dinheiro"/>
+                                    <input type="text" placeholder="Valor em dinheiro"/>
                                 </div>
                                 <IoIosCopy className="chave-pix-copy" />
                             </div>

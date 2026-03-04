@@ -279,7 +279,6 @@
     border: 1px solid black;
     padding: 10px;
     text-align: center;
-    font-family: 'montserrat', sans-serif;
     color: white;
 }
 
@@ -303,7 +302,6 @@
 }
 
 .value-total-geral {
-    font-family: 'montserrat', sans-serif;
     color: hsl(290, 76%, 41%);
     display: flex;
     justify-content: space-between;
@@ -474,7 +472,6 @@
   padding: 5px 15px 5px 15px;
   box-shadow: 0px 10px 20px rgba(0,0,0,0.17);
   color: white;
-  font-family: 'montserrat', sans-serif;
   align-items: center;
   background-color: rgb(41, 41, 41);
   width: 100%;
@@ -493,7 +490,6 @@
 .label-checkbox-pagamentos {
 
     text-align: center;
-    font-family: 'montserrat', sans-serif;
     font-size: clamp(14px, 2.5vw, 18px);
     color: white;
     width: 100%;
@@ -524,14 +520,12 @@
 .descricao-pix {
 
     margin-bottom: 20px;
-    font-family: 'montserrat', sans-serif;
     font-size: clamp(14px, 2.5vw, 18px);
     text-align: center;
 } 
 
 .chave-pix {
 
-    font-family: 'montserrat', sans-serif;
     font-size: clamp(14px, 2.5vw, 18px);
     word-break: break-all;
     text-align: center;
@@ -548,7 +542,6 @@
     background-color: rgb(255, 255, 255);
     border: none;
     color: black;
-    font-family: 'montserrat', sans-serif;
     font-size: clamp(14px, 2.5vw, 18px);
     text-align: center;
     border-radius: 20px;
@@ -586,7 +579,6 @@
 }
 
 .bandeiras-cartoes {
-    font-family: 'montserrat', sans-serif;
     font-size: clamp(14px, 2.5vw, 18px);
     color: black;
     box-shadow: 0px 10px 20px rgba(0,0,0,0.32);
@@ -625,3 +617,43 @@
     box-shadow: 0px 16px 16px 16px rgba(0,0,0,0.36)
 }
 
+.bandeira-metodo-dinheiro {
+
+    border: 1px solid black;
+    border-radius: 10px;
+    background-color: rgb(41, 41, 41);
+    box-shadow: 0px 10px 20px rgba(0,0,0,0.17);
+    margin: 10px;
+}
+
+
+.metodo-pagamento-dinheiro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: rgb(41, 41, 41);
+    box-shadow: 0px 10px 20px rgba(0,0,0,0.17);
+    margin: 10px;
+    color: white;
+}
+
+.bandeiras-dinheiro {
+    font-size: clamp(14px, 2.5vw, 18px);
+    color: black;
+    box-shadow: 0px 10px 20px rgba(0,0,0,0.32);
+    margin: 0px 5px 0px 5px;
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 5px;
+    color: white;
+}
+.descricao-dinheiro {
+
+    margin-bottom: 20px;
+    font-size: clamp(14px, 2.5vw, 18px);
+    text-align: center;
+} 
