@@ -13,7 +13,7 @@ function BotaoCarrinho({MenuOpen, quantidade}) {
     return (
         <>
             { !modalShoppingOpen && !MenuOpen && !produtoModalOpen && (
-                <button className="button-shopping-cart">
+                <button onClick={openModal} className="botao-carrinho-modal">
                     <GiShoppingCart onClick={openModal} className="icons"/> <span className="quantidade-botao-carrinho">{quantidade}</span>
                 </button>
             )}

@@ -46,75 +46,108 @@ body {
     justify-content: space-between;
     color: white;
 }
+:root {
+  --primary-green: #2ecc71;
+  --dark-bg: #1a1a1a;
+  --card-bg: #252525;
+  --text-main: #ffffff;
+  --text-dim: #a0a0a0;
+}
 
-.data {
+body {
+  background-color: var(--dark-bg);
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.shop-card {
+  background: var(--card-bg);
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  border: 1px solid #333;
+}
+
+.status-badge {
+  background-color: var(--primary-green);
+  color: black;
+  display: inline-block;
+  padding: 5px 20px;
+  border-radius: 50px;
+  font-weight: bold;
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  box-shadow: 0 0 15px rgba(46, 204, 113, 0.4);
+  margin-bottom: 20px;
+}
+
+h1 {
+  color: var(--text-main);
+  margin: 0;
+  font-size: 2.2rem;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+.subtitle {
+  color: var(--primary-green);
+  margin-top: 5px;
+  font-size: 0.9rem;
+  letter-spacing: 5px;
+  opacity: 0.8;
+}
+
+.info-container {
+  margin: 30px 0;
+  border-top: 1px solid #333;
+  border-bottom: 1px solid #333;
+  padding: 20px 0;
+}
+
+.info-item {
+  margin-bottom: 15px;
+}
+
+.label {
+  display: block;
+  color: var(--text-dim);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+
+.value {
+  color: var(--text-main);
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.accent {
+  color: var(--primary-green);
+}
+
+.contact-bar {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  gap: 10px;
 }
 
-.infos {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+.contact-link {
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: 0.3s;
 }
 
-.infos-data {
-    margin-top: 5px;
-    font-size: 14px;
-    align-items: center;
-}
-
-.montserrat-data {
-    font-family: "Montserrat", sans-serif;
-    font-optical-sizing: auto;
-    font-weight: 400;
-    font-style: normal;
-    font-size: 14px;
-}
-
-@media (width: 360px) {
-    .montserrat-data {
-        font-size: 12px;
-    }
-}
-
-
-@media (min-width: 1024px) {
-    .montserrat-data {
-        font-size: 23px;
-    }
-}
-
-.status-container {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: -16px;
-    margin-bottom: 20px;
-    position: relative;
-}
-
-.status_aberto {
-    color: white;
-    text-align: center;
-    background-color: rgb(31, 216, 15);
-    border-radius: 5px;
-    padding: 5px 10px;
-}
-
-.status_fechado {
-
-    color: white;
-    text-align: center;
-    background-color: rgb(216, 15, 15);
-    border-radius: 5px;
-    padding: 5px 10px;
-
+.contact-link:hover {
+  color: var(--primary-green);
 }
 
 .container {
@@ -134,19 +167,17 @@ body {
     justify-content: right;
     margin-top: 10px;
 }
-
 .button-filter {
     /* From Uiverse.io by JaydipPrajapati1910 */ 
   color: white;
   background-color: #222;
-  font-weight: 120;
   border-radius: 0.5rem;
   font-size: 0.7rem;
   line-height: 2rem;
-  padding-left: 1.7rem;
-  padding-right: 1.7rem;
-  padding-top: 0.7rem;
-  padding-bottom: 0.7rem;
+  padding-left: 1.0rem;
+  padding-right: 1.0rem;
+  padding-top: 0.2rem;
+  padding-bottom: 0.2rem;
   cursor: pointer;
   text-align: center;
   margin-right: 0.5rem;
@@ -156,14 +187,14 @@ body {
 }
 
 .button-filter:hover {
-  background-color: #333;
+  background-color: #48008b;
 }
 
 .button-filter svg {
   display: inline;
-  width: 1.3rem;
+  width: 1.0rem;
   height: 1.2rem;
-  margin-right: 0.75rem;
+  margin-right: 0.3rem;
   color: white;
 }
 
@@ -190,7 +221,6 @@ body {
     overflow-x:auto;
     height: 45px;
 }
-
 
 .buttons-filters {
     color: white;
@@ -516,7 +546,7 @@ input[type]:checked ~ span.mid {
     color: white;
 }
 
-.button-shopping-cart {
+.botao-carrinho-modal {
     padding: 10px;
     border-radius: 20px;
     position: fixed;
@@ -528,6 +558,23 @@ input[type]:checked ~ span.mid {
     box-shadow: 0 16px 16px rgba(0, 0, 0, 0.76);
     background-color: #48008b;
     color: white;
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.botao-carrinho-modal:hover {
+    background-color: #47999b;
 }
 
 .quantidade-botao-carrinho{
@@ -542,5 +589,5 @@ input[type]:checked ~ span.mid {
     justify-content: center;
     font-size: 12px;
     bottom: 40px;
-    right: 42%;
+    right: 3%;
 }

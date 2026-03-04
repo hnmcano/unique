@@ -10,20 +10,28 @@ function DadosLojaCatalago({}) {
             <div className="logotipo-hookah">
                 <img className="logotipo" src={`data:image/png;base64,${estabelecimento?.logo_img}`} alt="Logo"/>
             </div>
-            <div className="data">
-                <div className="status-container">
-                    <label className={status === "ABERTO" ? "status_aberto" : "status_fechado"}>{status}</label>
-                </div>
-                <div className="infos">
-                    <div className="infos-data">
-                        <div className="montserrat-data">Endereço: {estabelecimento?.endereco}</div>
+            <div>
+                <div class="shop-card">
+                    <div class="status-badge">ABERTO</div>
+                    <header>
+                        <h1>Hookah Shisha</h1>
+                        <p class="subtitle">Tabacaria & Lounge</p>
+                    </header>
+                    <div class="info-container">
+                        <div class="info-item">
+                        <span class="label">Endereço</span>
+                        <span class="value accent">ONLINE</span>
+                        </div>
+                        
+                        <div class="info-item">
+                        <span class="label">Horário</span>
+                        <span class="value">13:00 às 17:00</span>
+                        </div>
                     </div>
-                    <div className="infos-data">
-                        <div className="montserrat-data">Telefone: {estabelecimento?.telefone} | Instagram: {estabelecimento?.rede_social}</div>
-                    </div>
-                    <div className="infos-data">
-                        <div className="montserrat-data"> Horário: 13:00 às 17:00</div>
-                    </div>
+                    <footer class="contact-bar">
+                        <a href="https://wa.me/5514996323908" class="contact-link">📞 (14) 99632-3908</a>
+                        <a href="#" class="contact-link">📸 @HookahshishaTabacaria</a>
+                    </footer>
                 </div>
             </div>
         </>
