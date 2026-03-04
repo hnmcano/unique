@@ -9,6 +9,7 @@ import { ButtonBack, ButtonNext } from "./buttons/ButtonsCheckout";
 function FormularioEntrega() {
     const Navigate = useNavigate();
     const {data, setData} = useCheckout();
+    const {checked} = useState(true) 
     const [position, setPosition] = useState(null);
     const refs = useRef([]);
 
@@ -173,17 +174,17 @@ function FormularioEntrega() {
 
                     <div className="Grupo-Formulario">
                         <label className="Names-Formulario" htmlFor="bairro">Bairro:</label>
-                        <input className="Entrada-Formulario"type="text" id="bairro" name="bairro" value={data.entrega.bairro} onChange={handledChangeEntrega} disabled style={{ color: "white" }} />
+                        <input className="Entrada-Formulario"type="text" id="bairro" name="bairro" value={data.entrega.bairro} onChange={handledChangeEntrega} disabled style={{ color: "black", cursor: "not-allowed", pointerEvents: "none", backgroundColor: "#686868" }} />
                     </div>
                     
                     <div className="Grupo-Formulario">
                         <label className="Names-Formulario" htmlFor="cidade">Cidade:</label>
-                        <input className="Entrada-Formulario" type="text" id="cidade" name="cidade" value={data.entrega.cidade} onChange={handledChangeEntrega} disabled style={{ color: "white" }} />
+                        <input className="Entrada-Formulario" type="text" id="cidade" name="cidade" value={data.entrega.cidade} onChange={handledChangeEntrega} disabled style={{ color: "black", cursor: "not-allowed", pointerEvents: "none", backgroundColor: "#686868"  }} />
                     </div>
                     
                     <div className="Grupo-Formulario">
                         <label className="Names-Formulario" htmlFor="estado">Estado:</label>
-                        <input className="Entrada-Formulario" type="text" id="estado" name="estado" value={data.entrega.estado} onChange={handledChangeEntrega} disabled style={{ color: "white" }} />
+                        <input className="Entrada-Formulario" type="text" id="estado" name="estado" value={data.entrega.estado} onChange={handledChangeEntrega} disabled style={{color: "black", cursor: "not-allowed", pointerEvents: "none", backgroundColor: "#686868"  }} />
                     </div>
                 </form>
                 {position && (
@@ -207,7 +208,7 @@ function FormularioEntrega() {
                     <Link to="/Checkout/Etapa1">
                         <ButtonBack/>
                     </Link>
-                    <ButtonNext handledSubmit={handledSubmit}/>
+                    <ButtonNext checked={checked} handledSubmit={handledSubmit}/>
                 </div>
             </div>
         </>

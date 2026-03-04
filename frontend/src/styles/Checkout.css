@@ -194,7 +194,7 @@
   color: #fff;
   width: 8.5em;
   height: 2.9em;
-  border: #3654ff 0.2em solid;
+  border: #b536ff 0.2em solid;
   border-radius: 11px;
   /* Alinha o texto para a direita */
   text-align: right; 
@@ -211,7 +211,7 @@
 
 
 .button-Back:hover {
-  background-color: #3654ff;
+  background-color: #b536ff;
 }
 
 .button-Back svg {
