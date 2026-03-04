@@ -81,21 +81,32 @@ export function PagamentoDebito() {
 
 export function PagamentoDinheiro() {
     const {opcoesDisponiveis, ToogleVisibility} = useCheckout();
+    const [value, setValue] = useState(null);
+    const [troco, setTroco] = useState(false);
 
     return (
-            <>
-            <div>
-                <div className={opcoesDisponiveis["dinheiro"] ? "bandeira-metodo-dinheiro" : "oculto"}>
-                    <div className="metodo-pagamento-dinheiro">
-                        <div className="bandeiras-dinheiro">
-                            <label className="descricao-dinheiro">Irá precisar de troco?</label>
-                            <div className="valor-dinheiro">
-                                <div className="opcao-copy-pix">
-                                    <input type="text" placeholder="Valor em dinheiro"/>
+        <>
+            <div className={opcoesDisponiveis["dinheiro"] ? "bandeira-metodo-dinheiro" : "oculto"}>
+                <div className="metodo-pagamento-dinheiro">
+                    <div className="bandeiras-dinheiro">
+                        <label className="descricao-dinheiro">"Há necessidade de troco?"</label>
+                        <label> 
+                            <input type="radio" name="troco" value="sim" onClick={() => setTroco(true)}/>Sim 
+                        </label>
+                        <label>
+                            <input type="radio" name="troco" value="nao" onClick={() => setTroco(false)}/>Nao
+                        </label>
+                        {troco === true && (
+                            <div>
+                                <label className="descricao-dinheiro">"Qual o valor?"</label>
+                                <div className="valor-dinheiro">
+                                    <div className="opcao-copy-pix">
+                                        <input type="text" placeholder="Valor em dinheiro"/>
+                                    </div>
+                                    <IoIosCopy className="chave-pix-copy" />
                                 </div>
-                                <IoIosCopy className="chave-pix-copy" />
                             </div>
-                        </div>
+                        )}
                     </div>
                 </div>
             </div>

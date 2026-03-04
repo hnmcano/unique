@@ -656,4 +656,13 @@
     margin-bottom: 20px;
     font-size: clamp(14px, 2.5vw, 18px);
     text-align: center;
-} 
+}
+
+.valor-dinheiro {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    margin-top: 10px;
+}
