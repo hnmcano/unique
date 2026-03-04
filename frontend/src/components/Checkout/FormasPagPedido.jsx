@@ -66,7 +66,7 @@ function FormasPagPedido() {
                         </label>
                         {opcoesDisponiveis === "pix" && (<PagamentoPix />)}
                     </div>
-                <div className="opcao-pagamento" >
+                    <div className="opcao-pagamento" >
                         <label className="checkbox-pagamentos" onClick={() => ToogleVisibility("credito")}>
                             <IconeCredito onClick={() => ToogleVisibility("credito")}/>
                             <span className="label-checkbox-pagamentos" onClick={() => ToogleVisibility("credito")}>CRÉDITO</span>
@@ -97,7 +97,7 @@ function FormasPagPedido() {
                         {opcoesDisponiveis === "debito" && (<PagamentoDebito />)}
                     </div>
                     <div className="opcao-pagamento" >
-                        <div className="checkbox-pagamentos" onClick={() => ToogleVisibility("dinheiro")}>
+                        <label className="checkbox-pagamentos" onClick={() => ToogleVisibility("dinheiro")}>
                             <IconeDinheiro onClick={() => ToogleVisibility("dinheiro")}/>
                             <span className="label-checkbox-pagamentos" onClick={() => ToogleVisibility("dinheiro")}>DINHEIRO</span>
                             <input
@@ -108,7 +108,7 @@ function FormasPagPedido() {
                                 checked={formaPagamento === "dinheiro"}
                                 onChange={() => handleSelect("dinheiro")}
                             />
-                        </div>
+                        </label>
                         {opcoesDisponiveis === "dinheiro" && (<PagamentoDinheiro />)}
                     </div>
                 </div>

@@ -91,20 +91,21 @@ export function PagamentoDinheiro() {
                 <div className="metodo-pagamento-dinheiro">
                     <div className="bandeiras-dinheiro">
                         <label className="descricao-dinheiro">"Há necessidade de troco?"</label>
-                        <label> 
-                            <input type="radio" name="troco" value="sim" onClick={() => setTroco(true)}/>Sim 
-                        </label>
-                        <label>
-                            <input type="radio" name="troco" value="nao" onClick={() => setTroco(false)}/>Nao
-                        </label>
+                        <div className="botoes-radio">
+                            <label> 
+                                <input type="radio" name="troco" value="sim" onClick={() => setTroco(true)}/>Sim 
+                            </label>
+                            <label>
+                                <input type="radio" name="troco" value="nao" onClick={() => setTroco(false)}/>Nao
+                            </label>
+                        </div>
                         {troco === true && (
-                            <div>
+                            <div className="valor-troco">
                                 <label className="descricao-dinheiro">"Qual o valor?"</label>
                                 <div className="valor-dinheiro">
                                     <div className="opcao-copy-pix">
                                         <input type="text" placeholder="Valor em dinheiro"/>
                                     </div>
-                                    <IoIosCopy className="chave-pix-copy" />
                                 </div>
                             </div>
                         )}
