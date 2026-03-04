@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useRef } from "react";
 
 import { useCheckout } from "../../contexts/CheckoutContext";
+import { ButtonNext, ButtonBack } from "./buttons/ButtonsCheckout";
 
 import "../../styles/Checkout.css";
 
@@ -80,7 +81,6 @@ function FormularioCliente() {
 
         if (
             clienteFinal.nome &&
-            clienteFinal.email &&
             clienteFinal.telefone &&
             checked
         ) {
@@ -95,6 +95,9 @@ function FormularioCliente() {
                     cliente: clienteFinal,
                 },
             });
+        } else {
+            alert("Por favor, preencha todos os campos obrigatórios.");
+            return;
         }
     };
 
@@ -158,7 +161,7 @@ function FormularioCliente() {
                     </div>
                     <div className="Grupo-Formulario-2">
                         <div className="Grupo-Formulario">
-                            <label className="Names-Formulario" htmlFor="cpf">CPF: (opcional)</label>
+                            <label className="Names-Formulario" htmlFor="cpf">Cpf: (opcional)</label>
                             <input
                              className="Entrada-Formulario"
                               type="text"
@@ -171,7 +174,7 @@ function FormularioCliente() {
                                   onKeyDown={(e) => {if (e.key === "Enter") {e.preventDefault(); focusNextInput(3);}}} />
                         </div>
                         <div className="Grupo-Formulario">
-                            <label className="Names-Formulario" htmlFor="observacoes">OBSERVAÇÕES: (opcional)</label>
+                            <label className="Names-Formulario" htmlFor="observacoes">Observações: (opcional)</label>
                             <textarea
                                 className="Entrada-Formulario-Observacoes" 
                                 type="text" 
@@ -209,17 +212,16 @@ function FormularioCliente() {
                                 <path d="M4 14l8 7L24 7"></path>
                             </svg>
                             </span>
-                            <p className="checkbox__textwrapper">Ao continuar, você concorda em fornecer seus dados pessoais.</p>
+                            <p className="checkbox__textwrapper">Ao continuar, você concorda em fornecer seus dados pessoais. <label style={{"color": "red"}}>* </label></p>
                         </label>
                     </div>
                 </form>
-
                 {/* Botões */}
                 <div className="Botoes-Checkout">
                     <Link to="/">
-                        <button className="voltar" type="button">CANCELAR</button>
+                        <ButtonBack/>
                     </Link>
-                    <button onClick={handledSubmit} className="continuar-Checkout">CONTINUAR</button>
+                    <ButtonNext handledSubmit={handledSubmit}/>
                 </div>
             </div>
         </>

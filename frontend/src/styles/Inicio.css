@@ -84,6 +84,7 @@ body {
   align-items: center;
   justify-content: space-around;
   color: var(--txt-padrao);
+  margin-top: 5px;
 
 }
 

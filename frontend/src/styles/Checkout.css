@@ -132,7 +132,6 @@
     color: white;
     margin-bottom: 5px;
 }
-
 .Botoes-Checkout {
     width: 100%;
     display: flex;
@@ -143,29 +142,49 @@
     padding: 10px;
 }
 
-.continuar-Checkout {
-    background-color: hsl(290, 76%, 41%);
-    color: white;
-    font-size: clamp(14px, 2.5vw, 18px);
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0px 10px 20px rgba(0,0,0,0.17);
-    font-family: 'montserrat', sans-serif;
+.button-next {
+  background-color: #ffffff00;
+  color: #fff;
+  width: 8.5em;
+  height: 2.9em;
+  border: #3654ff 0.2em solid;
+  border-radius: 11px;
+  text-align: right;
+  transition: all 0.6s ease;
 }
 
-.disabled-continuar-checkout {
-    background-color: hsl(0, 0%, 28%);
-    color: white;
-    font-size: clamp(14px, 2.5vw, 18px);
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0px 10px 20px rgba(0,0,0,0.17);
-    font-family: 'montserrat', sans-serif;
+.button-next-disabled {
+  background-color: #ffffff00;
+  color: #fff;
+  width: 8.5em;
+  height: 2.9em;
+  border: gray 0.2em solid;
+  border-radius: 11px;
+  text-align: right;
+  transition: all 0.6s ease;
 }
 
-.continuar-Checkout:hover {
-    background-color: hsl(290, 76%, 51%);
+.button:hover {
+  background-color: #3654ff;
+  cursor: pointer;
 }
+
+.button svg {
+  width: 1.6em;
+  margin: -0.2em 0.8em 1em;
+  position: absolute;
+  display: flex;
+  transition: all 0.6s ease;
+}
+
+.button:hover svg {
+  transform: translateX(5px);
+}
+
+.text {
+  margin: 0 1.5em
+}
+
 
 .voltar {
     background-color: gray;
