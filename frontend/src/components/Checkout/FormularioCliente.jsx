@@ -75,7 +75,8 @@ function FormularioCliente() {
         if (
             clienteFinal.nome &&
             clienteFinal.email &&
-            clienteFinal.telefone
+            clienteFinal.telefone &&
+            clienteFinal.checked
         ) {
 
             setData((prev) => ({
@@ -164,8 +165,8 @@ function FormularioCliente() {
                                   onKeyDown={(e) => {if (e.key === "Enter") {e.preventDefault(); focusNextInput(3);}}} />
                         </div>
                         <div className="Grupo-Formulario">
-                            <label className="Names-Formulario" htmlFor="cpf">OBSERVAÇÕES: (opcional)</label>
-                            <textarea 
+                            <label className="Names-Formulario" htmlFor="observacoes">OBSERVAÇÕES: (opcional)</label>
+                            <input
                                 className="Entrada-Formulario-Observacoes" 
                                 type="text" 
                                 id="observacoes"
