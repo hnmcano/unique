@@ -65,7 +65,7 @@ function ListProdutosPedido({}){
                 <div>
                     <div className="container-total-geral">
                         <h3 style={{"color": "white"}}>TOTAL GERAL</h3>
-                        <h3 className="value-total-geral"><label>R$</label>{valor_total.toFixed(2)}</h3>
+                        <h3 className="value-total-geral"><label>R${valor_total.toFixed(2)}</label></h3>
                     </div>
                     <div className="checkbox-wrapper-33">
                         <label className="checkbox">

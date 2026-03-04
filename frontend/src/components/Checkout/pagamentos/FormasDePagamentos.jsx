@@ -83,12 +83,22 @@ export function PagamentoDinheiro() {
     const {opcoesDisponiveis, ToogleVisibility} = useCheckout();
 
     return (
-        <>
-        <div>
-            <div className={opcoesDisponiveis["dinheiro"] ? "bandeira-metodo-dinheiro" : "oculto"}>
-                DINHEIRO
+            <>
+            <div>
+                <div className={opcoesDisponiveis["dinheiro"] ? "bandeira-metodo-dinheiro" : "oculto"}>
+                    <div className="metodo-pagamento-dinheiro">
+                        <div className="bandeiras-dinheiro">
+                            <label className="descricao-dinheiro">Irá precisar de troco?</label>
+                            <div className="valor-dinheiro">
+                                <div className="opcao-copy-pix">
+                                    <input type="text" placeholder="Valor Dinheiro"/>
+                                </div>
+                                <IoIosCopy className="chave-pix-copy" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
         </>
     )
 }

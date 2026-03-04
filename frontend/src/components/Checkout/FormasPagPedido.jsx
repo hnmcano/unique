@@ -118,7 +118,7 @@ function FormasPagPedido() {
                         <h3 className="value-total-geral"><label>R${valor_total.toFixed(2)}</label></h3>
                     </div>
                     <div className="Botoes-Checkout">
-                        <Link to="/Checkout/Etapa2">
+                        <Link to="/Checkout/Etapa3">
                             <ButtonBack/>
                         </Link>
                         <button
