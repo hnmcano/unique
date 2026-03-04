@@ -1,5 +1,12 @@
 :root {
   --bg-padrao-dark: #1a1a1a;
+  --status-bg-aberto: #2ecc71;
+  --status-bg-fechado: #d62e2e;
+  --txt-padrao: #a0a0a0;
+  --bg-filter-padrao: #222;
+  --box-filter-padrao: #0000004d;
+  --bg-liqui-fill: linear-gradient(90deg, #4f46e5, #7c3aed, #ec4899, #f59e0b);
+  --focus-filters: #6e00a1bb;
 }
 
 
@@ -49,7 +56,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    color: white;
+    color: var(--txt-padrao);
 }
 
 .data {
@@ -105,21 +112,19 @@ body {
 }
 
 .status_aberto {
-    color: white;
+    color: var(--txt-padrao);
     text-align: center;
-    background-color: #2ecc71;
+    background-color: var(--status-bg-aberto);
     border-radius: 5px;
     padding: 5px 10px;
 }
 
 .status_fechado {
-
-    color: white;
+    color: var(--txt-padrao);
     text-align: center;
-    background-color: rgb(216, 15, 15);
+    background-color: var(--status-bg-fechado);
     border-radius: 5px;
     padding: 5px 10px;
-
 }
 
 .container {
@@ -128,7 +133,7 @@ body {
   justify-content: space-between;
   flex-direction: column;
   align-items: center;
-  color: white;
+  color: var(--txt-padrao);
 }
 
 .filter-all {
@@ -141,8 +146,8 @@ body {
 }
 .button-filter {
     /* From Uiverse.io by JaydipPrajapati1910 */ 
-  color: white;
-  background-color: #222;
+  color: var(--txt-padrao);
+  background-color: var(--bg-filter-padrao);
   border-radius: 0.5rem;
   font-size: 0.7rem;
   line-height: 2rem;
@@ -159,7 +164,7 @@ body {
 }
 
 .button-filter:hover {
-  background-color: #48008b;
+  background-color: var(--fucos-filters);
 }
 
 .button-filter svg {
@@ -167,7 +172,7 @@ body {
   width: 1.0rem;
   height: 1.2rem;
   margin-right: 0.3rem;
-  color: white;
+  color: var(--txt-padrao);
 }
 
 .button-filter:focus svg {
@@ -195,8 +200,8 @@ body {
 }
 
 .buttons-filters {
-    color: white;
-    background-color: #222;
+    color: var(--txt-padrao);
+    background-color: var(--bg-filter-padrao);
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     padding-top: 0.5rem;
@@ -206,7 +211,7 @@ body {
 }
 
 button.buttons-filters:focus {
-    background-color: rgba(110, 0, 161, 0.733);
+    background-color: var(--focus-filters);
 }
 
 
@@ -219,9 +224,9 @@ button.buttons-filters:focus {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
+    color: var(--txt-padrao);
     border-radius: 5px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 5px 15px var(--box-filter-padrao);
     background-color: var(--bg-padrao-dark);
     overflow-y: auto;
 }
@@ -236,7 +241,7 @@ button.buttons-filters:focus {
 
 .produtos-item {
     flex: 1 1 100px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 5px 15px var(--box-filter-padrao);
     padding: 0.5rem;
     border-radius: 5px;
 }
@@ -345,7 +350,7 @@ button.buttons-filters:focus {
   border-radius: 16px;
   overflow: hidden;
   box-shadow:
-    inset 0 2px 4px rgba(0, 0, 0, 0.6),
+    inset 0 2px 4px var(--box-filter-padrao),
     0 1px 3px rgba(255, 255, 255, 0.1);
 }
 
@@ -354,7 +359,7 @@ button.buttons-filters:focus {
   top: 2px;
   left: 2px;
   height: calc(100% - 4px);
-  background: linear-gradient(90deg, #4f46e5, #7c3aed, #ec4899, #f59e0b);
+  background: var(--bg-liqui-fill);
   border-radius: 14px;
   animation:
     fillProgress 4s ease-out infinite,
@@ -504,18 +509,17 @@ input[type]:checked ~ span.mid {
 }
 
 .footer-catalago {
-    background-color: #474747;
+    background-color: var(--bg-filter-padrao);
     height: 45px;
     width: 100%;
     padding: 20px;
     display: flex;
     align-items: center;
     justify-content: right;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    background-color: rgb(46, 44, 44);
+    box-shadow: 0 5px 15px var(--box-filter-padrao);
     font-family: 'montserrat', sans-serif;
     font-size: clamp(11px, 2.5vw, 18px);
-    color: white;
+    color: var(--txt-padrao);
 }
 
 .botao-carrinho-modal {
@@ -527,9 +531,9 @@ input[type]:checked ~ span.mid {
     font-size: 32px;
     display: flex;
     align-items: center;
-    box-shadow: 0 16px 16px rgba(0, 0, 0, 0.76);
-    background-color: #48008b;
-    color: white;
+    box-shadow: 0 16px 16px var(--box-filter-padrao);
+    background-color: var(--focus-filters);
+    color: var(--txt-padrao);
     animation: pulse 1.5s infinite ease-in-out;
 }
 
