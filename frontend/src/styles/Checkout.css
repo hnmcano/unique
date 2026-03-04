@@ -141,8 +141,8 @@
     position: relative;
     padding: 10px;
 }
-
-.button-next {
+/* From Uiverse.io by reshades */ 
+.button-Next {
   background-color: #ffffff00;
   color: #fff;
   width: 8.5em;
@@ -153,23 +153,27 @@
   transition: all 0.6s ease;
 }
 
-.button-next-disabled {
+.button-Next-disabled {
   background-color: #ffffff00;
-  color: #fff;
+  color: gray;
   width: 8.5em;
   height: 2.9em;
   border: gray 0.2em solid;
   border-radius: 11px;
   text-align: right;
-  transition: all 0.6s ease;
+  padding-right: 1.2em;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  opacity: 0.6;
 }
 
-.button:hover {
+.button-Next:hover {
   background-color: #3654ff;
   cursor: pointer;
 }
 
-.button svg {
+.button-Next svg {
   width: 1.6em;
   margin: -0.2em 0.8em 1em;
   position: absolute;
@@ -177,7 +181,7 @@
   transition: all 0.6s ease;
 }
 
-.button:hover svg {
+.button-Next:hover svg {
   transform: translateX(5px);
 }
 
@@ -185,6 +189,48 @@
   margin: 0 1.5em
 }
 
+.button-Back {
+  background-color: #ffffff00;
+  color: #fff;
+  width: 8.5em;
+  height: 2.9em;
+  border: #3654ff 0.2em solid;
+  border-radius: 11px;
+  /* Alinha o texto para a direita */
+  text-align: right; 
+  /* Espaço na direita para o texto não colar na borda */
+  padding-right: 1.2em; 
+  transition: all 0.6s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Garante que o conteúdo flex vá para a direita */
+  cursor: pointer;
+}
+
+
+
+.button-Back:hover {
+  background-color: #3654ff;
+}
+
+.button-Back svg {
+  width: 1.6em;
+  height: 1.6em;
+  position: absolute;
+  /* Fixa o ícone na esquerda do botão */
+  left: 0.8em; 
+  transition: all 0.6s ease;
+  /* scaleX(-1) vira a seta para a esquerda */
+  transform: scaleX(-1); 
+}
+
+/* Efeito de animação ao passar o mouse */
+.button-Back:hover svg {
+  /* Move a seta um pouco mais para a esquerda no hover */
+  left: 0.4em;
+  transform: scaleX(-1);
+}
 
 .voltar {
     background-color: gray;

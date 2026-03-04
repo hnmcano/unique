@@ -221,7 +221,7 @@ function FormularioCliente() {
                     <Link to="/">
                         <ButtonBack/>
                     </Link>
-                    <ButtonNext handledSubmit={handledSubmit}/>
+                    <ButtonNext handledSubmit={handledSubmit} disabled={!checked} checked={checked}/>
                 </div>
             </div>
         </>

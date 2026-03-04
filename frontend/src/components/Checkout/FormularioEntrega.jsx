@@ -4,6 +4,7 @@ import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { useCheckout } from "../../contexts/CheckoutContext";
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
+import { ButtonBack, ButtonNext } from "./buttons/ButtonsCheckout";
 
 function FormularioEntrega() {
     const Navigate = useNavigate();
@@ -106,7 +107,7 @@ function FormularioEntrega() {
             <div className="Formulario-Entrega"> 
                 <form>
                     <div className="Grupo-Formulario">
-                        <label className="Names-Formulario" htmlFor="cep">CEP:</label>
+                        <label className="Names-Formulario" htmlFor="cep">CEP:<label style={{"color": "red"}}>* </label></label>
                         <div className="Grupo-Formulario-concat">
                             <input 
                                 className="Entrada-Formulario"
@@ -141,7 +142,7 @@ function FormularioEntrega() {
                             style={{ color: "white" }} />
                         </div>
                         <div className="Grupo-Formulario">
-                            <label className="Names-Formulario" htmlFor="numero">Número:</label>
+                            <label className="Names-Formulario" htmlFor="numero">Número:<label style={{"color": "red"}}>* </label></label>
                             {/* O número é digitado pelo usuário */}
                             <input 
                             className="Entrada-Formulario" 
@@ -158,7 +159,7 @@ function FormularioEntrega() {
                     </div>
                     
                     <div className="Grupo-Formulario">
-                        <label className="Names-Formulario" htmlFor="complemento">Complemento:</label>
+                        <label className="Names-Formulario" htmlFor="complemento">Complemento:<label style={{"color": "red"}}>* </label></label>
                         <input className="Entrada-Formulario" 
                         type="text" id="complemento" 
                         name="complemento" 
@@ -204,9 +205,9 @@ function FormularioEntrega() {
                 {/* Botões */}
                 <div className="Botoes-Checkout">
                     <Link to="/Checkout/Etapa1">
-                        <button className="voltar" type="button">VOLTAR</button>
+                        <ButtonBack/>
                     </Link>
-                    <button onClick={handledSubmit} className="continuar-Checkout">CONTINUAR</button>
+                    <ButtonNext handledSubmit={handledSubmit}/>
                 </div>
             </div>
         </>
