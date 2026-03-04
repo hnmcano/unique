@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useCheckout } from "../../contexts/CheckoutContext";
 import { Link, useNavigate } from "react-router-dom";
+import { ButtonBack, ButtonNext } from "./buttons/ButtonsCheckout";
 
 function ListProdutosPedido({}){
     const { data, produtos, totalQuantidade, totalCarrinho, valor_total, entregaTaxa } = useCheckout();
@@ -91,9 +92,9 @@ function ListProdutosPedido({}){
                     </div>
                     <div className="Botoes-Checkout">
                         <Link to="/Checkout/Etapa2">
-                            <button className="voltar" type="button">VOLTAR</button>
+                            <ButtonBack/>
                         </Link>
-                        <button onClick={handlesubmit} type="submit" disabled={!checked} className={!checked ? "disabled-continuar-checkout" : "continuar-Checkout"}>CONTINUAR</button>
+                        <ButtonNext checked={checked} handledSubmit={handlesubmit}/>
                     </div>
                 </div>
             </div>

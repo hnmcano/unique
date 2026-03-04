@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import api from "../../api/api";
 import { PagamentoCredito, PagamentoDebito, PagamentoDinheiro, PagamentoPix } from "./pagamentos/FormasDePagamentos";
 import { IconePix, IconeCredito, IconeDebito, IconeDinheiro } from "./pagamentos/iconesSvg";
-import { useState } from "react";
+import { ButtonBack, ButtonEnviar } from "./buttons/ButtonsCheckout";
 
 function FormasPagPedido() {
     const { data, 
@@ -14,15 +14,34 @@ function FormasPagPedido() {
             formaPagamento,
             handleSelect
         } = useCheckout();
+    const btn = document.getElementById('send');
 
 
     const handledSubmit = async (event) => {
+        const [isLoading, setIsLoading] = useCheckout();
+        setIsLoading(true);
         
+        if (isLoading) {
+            btn.classList.add('is-loading');
+        }
+
         event.preventDefault();
 
-        const response = await api.post("/pedidos/react", data);
-        const pedido = response.data;
-        console.log(pedido);
+        try{
+            const response = await api.post("/pedidos/react", data);
+            const pedido = response.data;
+
+            console.log(response.data);
+            setIsLoading(false);
+            btn.classList.add('is-success');
+            btn.classList.remove('is-loading');
+            btn.removeEventListener('click', send);
+
+        }catch(error){
+            console.log(error);
+            setIsLoading(false);
+        }
+
     }
     
     return (
@@ -97,9 +116,9 @@ function FormasPagPedido() {
                 </div>
                 <div className="Botoes-Checkout">
                     <Link to="/Checkout/Etapa2">
-                        <button className="voltar" type="button">VOLTAR</button>
+                        <ButtonBack/>
                     </Link>
-                    <button onClick={handledSubmit} className="continuar-Checkout" type="submit">FINALIZAR COMPRA</button>
+                    <ButtonEnviar onClick={handledSubmit}/>
                 </div>
             </div>
         </div>
