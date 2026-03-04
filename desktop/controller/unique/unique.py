@@ -39,7 +39,7 @@ class SoundService:
     def __init__(self):
         self.notificacao = QSoundEffect()
 
-        caminho = os.path.abspath("desktop/Sound/notificacao.wav")
+        caminho = os.path.abspath("Sound/notificacao.wav")
 
         self.notificacao.setSource(QUrl.fromLocalFile(caminho))
         self.notificacao.setVolume(0.8)
@@ -118,3 +118,9 @@ class Uniq(QMainWindow, uniq):
             pedido = evento["dados"]
             self.pedido_store.adicionar(pedido)
             
+    def showEvent(self, event):
+        super().showEvent(event)
+        
+        APPContext.websocket_client.mensagem_recebida.connect(
+            self.on_evento_recebido
+        )

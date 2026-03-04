@@ -37,7 +37,7 @@ class Login(QMainWindow, login_ui):
 
     def autenticar_usuario(self):
 
-        try:
+        try:    
             response = AppContext.api_client.post("usuarios/login", {
                 "email": self.LoginLine.text(), 
                 "senha_hash": self.PassLine.text()

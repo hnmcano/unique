@@ -25,12 +25,35 @@ class Pedidos(QMainWindow, delivery):
         self.pedido_store = pedido_store
         pedidos = self.pedido_store.listar()
 
-        if len(pedidos) == 0:
-            pedidos = APPContext.api_client.get("/pedidos/desktop/tabela")
+        menor_data = None
+        maior_data = None
 
-            for pedido in pedidos:
-                self.pedido_store.adicionar(pedido)
+        if pedidos:
+            menor_data = min(p["data_criacao"] for p in pedidos)
+            maior_data = max(p["data_criacao"] for p in pedidos)
 
+        print(menor_data, maior_data)
+        
+        if maior_data:
+            pedidos_novos = APPContext.api_client.get(
+                f"/pedidos/desktop/tabela?after={maior_data}"
+            )
+        else:
+            pedidos_novos = APPContext.api_client.get(
+                "/pedidos/desktop/tabela"
+            )
+
+        if menor_data:
+            pedidos_anteriores = APPContext.api_client.get(
+                f"/pedidos/desktop/tabela?before={menor_data}"
+            )
+        else:
+            pedidos_anteriores = []
+
+        for pedidos in pedidos_novos + pedidos_anteriores:
+            self.pedido_store.adicionar(pedidos)
+
+        pedidos = self.pedido_store.listar()
         self.atualizar_tabela(pedidos)
 
     def layout_tabela(self):
