@@ -29,17 +29,3 @@ export function ButtonBack () {
         </>
     )
 }
-
-export function ButtonEnviar ({handledSubmit}) {
-    return(
-        <>
-            <button onClick={handledSubmit} id="send" className="send">
-                <svg viewBox="0 0 90.594 59.714">
-                    <polyline className="check" fill="none" stroke="#FFFFFF" stroke-width="10" stroke-miterlimit="10" points="1.768,23.532 34.415,56.179 88.826,1.768"/>
-                </svg>
-                <span>Send</span>
-            </button>
-        </>
-    )
-
-}

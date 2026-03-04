@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import api from "../../api/api";
 import { PagamentoCredito, PagamentoDebito, PagamentoDinheiro, PagamentoPix } from "./pagamentos/FormasDePagamentos";
 import { IconePix, IconeCredito, IconeDebito, IconeDinheiro } from "./pagamentos/iconesSvg";
-import { ButtonBack, ButtonEnviar } from "./buttons/ButtonsCheckout";
+import { ButtonBack} from "./buttons/ButtonsCheckout";
 
 function FormasPagPedido() {
     const { data, 
@@ -14,33 +14,58 @@ function FormasPagPedido() {
             formaPagamento,
             handleSelect
         } = useCheckout();
-    const btn = document.getElementById('send');
+
+    const [isLoading, setIsLoading] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
 
 
     const handledSubmit = async (event) => {
-        const [isLoading, setIsLoading] = useCheckout();
-        setIsLoading(true);
-        
-        if (isLoading) {
-            btn.classList.add('is-loading');
-        }
-
         event.preventDefault();
+        
+        if (isLoading) return;
+
+        setIsLoading(true);
+        setIsSuccess(false);
 
         try{
             const response = await api.post("/pedidos/react", data);
             const pedido = response.data;
 
-            console.log(response.data);
             setIsLoading(false);
-            btn.classList.add('is-success');
-            btn.classList.remove('is-loading');
-            btn.removeEventListener('click', send);
+            setIsSuccess(true);
+
+            setTimeout(() => {
+                setIsSuccess(false);
+            }, 2000);
 
         }catch(error){
             console.log(error);
             setIsLoading(false);
         }
+        return (
+            <>
+                {isLoading && <div className="fullscreen-loading" />}
+
+                <button
+                    onClick={handledSubmit}
+                    className={`send 
+                        ${isLoading ? "is-loading" : ""} 
+                        ${isSuccess ? "is-success" : ""}`}
+                >
+                    <svg viewBox="0 0 90.594 59.714">
+                        <polyline
+                            className="check"
+                            fill="none"
+                            stroke="#FFFFFF"
+                            strokeWidth="10"
+                            strokeMiterlimit="10"
+                            points="1.768,23.532 34.415,56.179 88.826,1.768"
+                        />
+                    </svg>
+                    <span>Send</span>
+                </button>
+            </>
+        );
 
     }
     
@@ -118,7 +143,12 @@ function FormasPagPedido() {
                     <Link to="/Checkout/Etapa2">
                         <ButtonBack/>
                     </Link>
-                    <ButtonEnviar onClick={handledSubmit}/>
+                    <button onClick={handledSubmit} id="send" className="send">
+                        <svg viewBox="0 0 90.594 59.714">
+                            <polyline className="check" fill="none" stroke="#FFFFFF" stroke-width="10" stroke-miterlimit="10" points="1.768,23.532 34.415,56.179 88.826,1.768"/>
+                        </svg>
+                        <span>Send</span>
+                    </button>
                 </div>
             </div>
         </div>
