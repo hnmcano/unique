@@ -1,5 +1,4 @@
 import "../../../styles/Checkout.css"
-import { useCheckout } from "../../contexts/CheckoutContext";
 import "../../../styles/Enviar.css"
 
 export function ButtonNext ({checked,handledSubmit}) {
@@ -32,8 +31,6 @@ export function ButtonBack () {
 }
 
 export function ButtonEnviar ({handledSubmit}) {
-    
-
     return(
         <>
             <button onClick={handledSubmit} id="send" className="send">
