@@ -73,11 +73,23 @@ body {
     align-items: center;
     justify-content: center;
     color: var(--txt-padrao);
+    margin-top: 5px;
+}
+
+.infos-contact {
+
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  color: var(--txt-padrao);
+
 }
 
 .subtitle {
   color: var(--status-bg-aberto);
-  margin-top: 0px;
+  margin-top: 0;
 }
 
 .endereco-definido {

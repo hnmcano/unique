@@ -20,16 +20,17 @@ function DadosLojaCatalago({}) {
                 </header>
                 <div className="infos">
                     <div className="infos">
-                        <span className="montserrat-data">Endereço: {estabelecimento?.endereco}</span>
+                        <a>Endereço</a>
+                        <a className="endereco-definido">{estabelecimento?.endereco}</a>
                     </div>
                     <div className="infos">
                         <span class="label">Horário</span>
                         <span class="value">13:00 às 17:00</span>
                     </div>
                 </div>
-                <footer className="infos">
-                    <a href="https://wa.me/5514996323908" class="contact-link">📞 {estabelecimento?.telefone}</a>
-                    <a href="#" class="contact-link">📸 {estabelecimento?.rede_social}</a>
+                <footer className="infos-contact">
+                    <span href="https://wa.me/5514996323908" class="contact-link">📞 {estabelecimento?.telefone}</span>
+                    <span href="#" class="contact-link">📸 {estabelecimento?.rede_social}</span>
                 </footer>
             </div>
         </>
