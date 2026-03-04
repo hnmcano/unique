@@ -90,21 +90,21 @@ export function PagamentoDinheiro() {
             <div className={opcoesDisponiveis["dinheiro"] ? "bandeira-metodo-dinheiro" : "oculto"}>
                 <div className="metodo-pagamento-dinheiro">
                     <div className="bandeiras-dinheiro">
-                        <label className="descricao-dinheiro">"Há necessidade de troco?"</label>
+                        <label className="descricao-dinheiro">Há necessidade de troco?</label>
                         <div className="botoes-radio">
                             <label> 
-                                <input type="radio" name="troco" value="sim" onClick={() => setTroco(true)}/>Sim 
+                                <input type="radio" name="troco" value="sim" onClick={() => setTroco(true)}/> SIM 
                             </label>
                             <label>
-                                <input type="radio" name="troco" value="nao" onClick={() => setTroco(false)}/>Nao
+                                <input type="radio" name="troco" value="nao" onClick={() => setTroco(false)}/> NÃO
                             </label>
                         </div>
                         {troco === true && (
                             <div className="valor-troco">
-                                <label className="descricao-dinheiro">"Qual o valor?"</label>
+                                <label className="descricao-dinheiro">Qual seria o valor (Que será entregue) ?</label>
                                 <div className="valor-dinheiro">
-                                    <div className="opcao-copy-pix">
-                                        <input type="text" placeholder="Valor em dinheiro"/>
+                                    <div className="dinheiro-input-container">
+                                        <input className="input-valor-dinheiro" type="text" placeholder="Valor em dinheiro"/>
                                     </div>
                                 </div>
                             </div>

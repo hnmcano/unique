@@ -657,7 +657,7 @@
 }
 
 .descricao-dinheiro {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     font-size: clamp(14px, 2.5vw, 18px);
     text-align: center;
     margin-top: 10px;
@@ -670,6 +670,8 @@
     flex-wrap: nowrap;
     justify-content: space-around;
     margin-top: 10px;
+    width: 100%;
+    font-size: 18px;
 }
 
 .valor-dinheiro {
@@ -678,7 +680,7 @@
     justify-content: center;
     flex-direction: row;
     flex-wrap: nowrap;
-    margin-top: 10px;
+    margin-top: 3px;
     width: 100%;
 }
 
@@ -689,4 +691,14 @@
     justify-content: flex-end;
     align-items: center;
     width: 100%;
+}
+
+.dinheiro-input-container {
+    padding: 5px;
+}
+
+.input-valor-dinheiro {
+    padding: 7px;
+    border-radius: 7px;
+    font-size: 14px;
 }
