@@ -1,5 +1,6 @@
 import { useCheckout } from "../../../contexts/CheckoutContext";
 import { IoIosCopy } from "react-icons/io";
+import { useState } from "react";
 
 export function PagamentoPix() {
     const {opcoesDisponiveis, ToogleVisibility} = useCheckout();
