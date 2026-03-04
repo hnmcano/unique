@@ -550,9 +550,9 @@ input[type]:checked ~ span.mid {
     font-size: 32px;
     display: flex;
     align-items: center;
-    box-shadow: 0 16px 16px var(--box-filter-padrao);
+    box-shadow: 0 16px 16px rgba(255, 255, 255, 0.1);
     background-color: var(--focus-filters);
-    color: var(--txt-padrao);
+    color: white;
     animation: pulse 1.5s infinite ease-in-out;
 }
 
