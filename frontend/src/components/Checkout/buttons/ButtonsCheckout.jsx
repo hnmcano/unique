@@ -1,3 +1,5 @@
+import "../../styles/Checkout.css";
+
 export function ButtonNext ({handledSubmit}) {
     return (
         <>
