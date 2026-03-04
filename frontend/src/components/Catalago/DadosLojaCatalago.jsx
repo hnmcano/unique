@@ -10,26 +10,24 @@ function DadosLojaCatalago({}) {
             <div className="logotipo-hookah">
                 <img className="logotipo" src={`data:image/png;base64,${estabelecimento?.logo_img}`} alt="Logo"/>
             </div>
-            <div>
+            <div className="data">
                 <div class="status-container">
                     <label className={status === "ABERTO" ? "status_aberto" : "status_fechado"}>{status}</label>
                 </div>
-                <header>
+                <header className="infos">
                     <h1>Hookah Shisha</h1>
-                    <p class="subtitle">Tabacaria</p>
+                    <p className="subtitle">Tabacaria</p>
                 </header>
-                <div class="info-container">
-                    <div class="info-item">
+                <div className="infos">
+                    <div className="infos">
                         <span className="montserrat-data">Endereço: {estabelecimento?.endereco}</span>
-                        <span class="value accent">ONLINE</span>
                     </div>
-                    
-                    <div class="info-item">
+                    <div className="infos">
                         <span class="label">Horário</span>
                         <span class="value">13:00 às 17:00</span>
                     </div>
                 </div>
-                <footer class="contact-bar">
+                <footer className="infos">
                     <a href="https://wa.me/5514996323908" class="contact-link">📞 {estabelecimento?.telefone}</a>
                     <a href="#" class="contact-link">📸 {estabelecimento?.rede_social}</a>
                 </footer>

@@ -2,21 +2,20 @@
   --bg-padrao-dark: #1a1a1a;
   --status-bg-aberto: #2ecc71;
   --status-bg-fechado: #d62e2e;
-  --txt-padrao: #a0a0a0;
+  --txt-padrao: #f3f3f3;
   --bg-filter-padrao: #222;
   --box-filter-padrao: #0000004d;
   --bg-liqui-fill: linear-gradient(90deg, #4f46e5, #7c3aed, #ec4899, #f59e0b);
   --focus-filters: #6e00a1bb;
 }
 
-
 * {
     caret-color: transparent;
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    font-family: 'Segoe UI', Roboto, sans-serif;
 }
-
 
 body {
     background-color: var(--bg-padrao-dark);
@@ -64,6 +63,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: 100vw;
 }
 
 .infos {
@@ -72,6 +72,16 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    color: var(--txt-padrao);
+}
+
+.subtitle {
+  color: var(--status-bg-aberto);
+  margin-top: 0px;
+}
+
+.endereco-definido {
+  color: var(--status-bg-aberto);
 }
 
 .infos-data {
@@ -80,20 +90,11 @@ body {
     align-items: center;
 }
 
-.montserrat-data {
-    font-family: "Montserrat", sans-serif;
-    font-optical-sizing: auto;
-    font-weight: 400;
-    font-style: normal;
-    font-size: 14px;
-}
-
 @media (width: 360px) {
     .montserrat-data {
         font-size: 12px;
     }
 }
-
 
 @media (min-width: 1024px) {
     .montserrat-data {
@@ -125,6 +126,13 @@ body {
     background-color: var(--status-bg-fechado);
     border-radius: 5px;
     padding: 5px 10px;
+}
+
+.contact-link {
+  color: var(--txt-padrao);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: 0.3s;
 }
 
 .container {
@@ -337,7 +345,6 @@ button.buttons-filters:focus {
   align-items: center;
   gap: 5px;
   padding: 20px;
-  font-family: system-ui, sans-serif;
   width: 100vw;
   height: 100vh;
 }
@@ -517,7 +524,6 @@ input[type]:checked ~ span.mid {
     align-items: center;
     justify-content: right;
     box-shadow: 0 5px 15px var(--box-filter-padrao);
-    font-family: 'montserrat', sans-serif;
     font-size: clamp(11px, 2.5vw, 18px);
     color: var(--txt-padrao);
 }
