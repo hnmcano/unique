@@ -446,13 +446,12 @@
 }
 
 .metodos-pagamento-container {
-
   margin: 10px;
   display: flex;
   justify-content: space-between;
   flex-direction: column;
   height: 90vh;
-
+  width: 90vw;
 }
 
 .formas-pagamentos {

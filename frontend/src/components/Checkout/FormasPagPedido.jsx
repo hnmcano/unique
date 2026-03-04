@@ -115,7 +115,7 @@ function FormasPagPedido() {
                 <div style={{"width":"100%"}}>
                     <div className="container-total-geral" style={{marginBottom: "20px"}}>
                         <h3 style={{"color": "white"}}>TOTAL GERAL</h3>
-                        <h3 className="value-total-geral"><label>R$</label>{valor_total.toFixed(2)}</h3>
+                        <h3 className="value-total-geral"><label>R${valor_total.toFixed(2)}</label></h3>
                     </div>
                     <div className="Botoes-Checkout">
                         <Link to="/Checkout/Etapa2">
