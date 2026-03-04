@@ -82,7 +82,7 @@ function FormularioCliente() {
             clienteFinal.nome &&
             clienteFinal.email &&
             clienteFinal.telefone &&
-            clienteFinal.checked
+            checked
         ) {
 
             setData((prev) => ({
