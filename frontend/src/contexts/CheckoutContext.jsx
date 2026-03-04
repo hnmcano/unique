@@ -9,7 +9,6 @@ export function CheckoutProvider({ children }) {
     const [ bandeiraCartao, setBandeiraCartao ] = useState(null);
     const [ opcoesDisponiveis, setOpcoesDisponiveis ] = useState(null)
 
-    console.log("TotalCarrinho: " + totalCarrinho);
 
     const [ data, setData] = useState({
 
@@ -80,7 +79,6 @@ export function CheckoutProvider({ children }) {
 
     const handleSelect = (tipo) => {
         setFormaPagamento(tipo);
-        console.log("forma de pagamento: " + tipo);
 
         setData(prevState => ({
             ...prevState,

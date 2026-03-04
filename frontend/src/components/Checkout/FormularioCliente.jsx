@@ -46,14 +46,20 @@ function FormularioCliente() {
     const handleChangeClient = (event) => {
         const { name, value } = event.target;
 
-        setData(prevState => ({
-            ...prevState,
-            cliente: {
-                ...prevState.cliente,
-                [name]: value
-            }
-
-        }));
+        if (name === "observacoes") {
+            setData((prev) => ({
+                ...prev,
+                observacoes: value,
+            }));
+        } else {
+            setData(prevState => ({
+                ...prevState,
+                cliente: {
+                    ...prevState.cliente,
+                    [name]: value
+                }
+            }));
+        }
     };
 
     useEffect(() => {
@@ -166,7 +172,7 @@ function FormularioCliente() {
                         </div>
                         <div className="Grupo-Formulario">
                             <label className="Names-Formulario" htmlFor="observacoes">OBSERVAÇÕES: (opcional)</label>
-                            <input
+                            <textarea
                                 className="Entrada-Formulario-Observacoes" 
                                 type="text" 
                                 id="observacoes"

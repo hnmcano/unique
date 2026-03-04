@@ -3,7 +3,7 @@ import { useEstabelecimento } from "../../contexts/EstabelecimentoContext";
 
 function DadosLojaCatalago({}) {
     const { estabelecimento, loading } = useEstabelecimento();
-    const status = estabelecimento?.ativo === true ? "ABERTO" : "FECHADO";
+    const status = estabelecimento?.online === true ? "ABERTO" : "FECHADO";
     
     return (
         <>
