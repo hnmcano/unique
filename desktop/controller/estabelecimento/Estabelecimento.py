@@ -1,7 +1,6 @@
 from PySide6.QtWidgets import *
 from windows.form_establishment.form_estabelecimento_ui import Ui_MainWindow as estabelecimento
 
-from services.network_conn import handle_network_reply
 from core.app_context import app_context as APPContext
 
 from PySide6.QtNetwork import *

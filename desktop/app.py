@@ -9,12 +9,14 @@ from controller.unique.unique import Uniq as unique
 from infra.api_client import APIClient
 from core.app_context import app_context as AppContext
 from config.config import settings
+from pictures import imagens_rc
+
+import sys
+import ctypes
 
 AppContext.api_client = APIClient(settings.API_URL)
 
-import sys
-import requests
-import os
+ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("unique.pos.system")
 
 #funcao para centralizar a janelas
 def center_window(self):
@@ -36,7 +38,6 @@ class Login(QMainWindow, login_ui):
         self.CancelButton.clicked.connect(self.cancelar_login)
 
     def autenticar_usuario(self):
-
         try:    
             response = AppContext.api_client.post("usuarios/login", {
                 "email": self.LoginLine.text(), 
@@ -50,6 +51,7 @@ class Login(QMainWindow, login_ui):
             AppContext.api_client.set_token(token)
 
             AppContext.websocket_client = WebSocketService(AppContext.token)
+            print("Websocket criado:", AppContext.websocket_client)
             AppContext.websocket_client.start()
 
             self.close()
@@ -58,7 +60,7 @@ class Login(QMainWindow, login_ui):
             self.unique_window.show()
 
         except Exception as e:
-            return False, e
+            return print(e)
 
 
     def cancelar_login(self):
@@ -68,6 +70,8 @@ class Login(QMainWindow, login_ui):
 # funcao principal da aplicação
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    app.setApplicationName("Unique POS")
+    app.setWindowIcon(QIcon(":/unique/icone.png"))
     window = Login()
     window.show()
     sys.exit(app.exec())

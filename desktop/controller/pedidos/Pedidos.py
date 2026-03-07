@@ -9,8 +9,10 @@ from PySide6.QtMultimedia import *
 from ..produtos.Produtos import FloatQtTableWidget, NumericQtTableWidget
 from core.app_context import app_context as APPContext
 
+
+
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 from config.config import settings
 
@@ -31,8 +33,6 @@ class Pedidos(QMainWindow, delivery):
         if pedidos:
             menor_data = min(p["data_criacao"] for p in pedidos)
             maior_data = max(p["data_criacao"] for p in pedidos)
-
-        print(menor_data, maior_data)
         
         if maior_data:
             pedidos_novos = APPContext.api_client.get(
@@ -95,7 +95,7 @@ class Pedidos(QMainWindow, delivery):
             item_data_pedido.setTextAlignment(Qt.AlignCenter)
             self.tableWidget.setItem(index, 2, item_data_pedido)
 
-            item_hora_pedido = QTableWidgetItem(datetime.fromisoformat(pedido["data_criacao"]).strftime("%H:%M:%S"))
+            item_hora_pedido = QTableWidgetItem((datetime.fromisoformat(pedido["data_criacao"]) - timedelta(hours=3)).strftime("%H:%M:%S") )
             item_hora_pedido.setTextAlignment(Qt.AlignCenter)
             self.tableWidget.setItem(index, 3, item_hora_pedido)
 

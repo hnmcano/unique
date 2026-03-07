@@ -5,11 +5,6 @@ from PySide6.QtNetwork import *
 from windows.form_clients.add_clientes_ui import Ui_MainWindow as addclientes
 from core.app_context import app_context as APPContext
 
-import json
-import requests
-from services.network_conn import handle_network_reply
-import os
-
 from config.config import settings
 
 

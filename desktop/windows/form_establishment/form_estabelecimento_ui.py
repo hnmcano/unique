@@ -92,6 +92,7 @@ class Ui_MainWindow(object):
         self.IdLine.setObjectName(u"IdLine")
         self.IdLine.setEnabled(False)
         self.IdLine.setMaximumSize(QSize(170, 16777215))
+        self.IdLine.setEchoMode(QLineEdit.EchoMode.Password)
 
         self.horizontalLayout_3.addWidget(self.IdLine)
 
@@ -117,6 +118,7 @@ class Ui_MainWindow(object):
         font = QFont()
         font.setStrikeOut(False)
         self.DocumentoLine.setFont(font)
+        self.DocumentoLine.setEchoMode(QLineEdit.EchoMode.Password)
 
         self.horizontalLayout_3.addWidget(self.DocumentoLine)
 

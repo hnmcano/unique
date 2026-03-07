@@ -1,7 +1,6 @@
 from PySide6.QtWidgets import *
 from windows.form_products.add_produtos_ui import Ui_MainWindow as addprodutos
 from .AddCategoria import AddCategoria
-from services.network_conn import handle_network_reply
 
 from PySide6.QtCore import *
 from PySide6.QtGui import *

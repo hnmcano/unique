@@ -3,15 +3,44 @@ from windows.form_delivery.pedido_delivery_ui import Ui_MainWindow as dados_pedi
 from PySide6.QtNetwork import *
 from PySide6.QtCore import *
 from services.websocket import WebSocketService
+from core.app_context import app_context as APPContext
 import requests
+from uuid import UUID
 
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 from config.config import settings
+
+def exibir_confirmacao_exclusao(self):
+    msg_box = QMessageBox(self)
+    msg_box.setIcon(QMessageBox.Question) # type: ignore
+    msg_box.setWindowTitle("Confirmar Exclusão")
+    msg_box.setText("Tem certeza que gostaria de excluir esse pedido? Todos os dados serão perdidos.")
+    msg_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No) # type: ignore
+
+    # A resposta é armazenada aqui, o código é bloqueado até o usuário interagir
+    resposta = msg_box.exec()
+
+    print(self.id)
+
+    if resposta == QMessageBox.Yes: # type: ignore
+        # Se o usuário confirmar, emita o sinal e feche a janela
+        try:
+            response = APPContext.api_client.delete(f"/pedidos/excluir-pedido")
+            
+            QMessageBox.information(self, "Sucesso", "Pedido excluido com sucesso!")
+
+            self.pedido_excluido.emit(self.id) # type: ignore
+            self.close() # type: ignore
+
+        except Exception as e:
+            QMessageBox.critical(self, "Erro", f"Falha ao excluir pedido. {str(e)}")
+            return
 
 
 class DadosPedido(QMainWindow, dados_pedidos):
     mensagem_recebida = Signal(dict)
+    pedido_excluido = Signal(UUID)
     def __init__(self, pedido: dict, parent=None):
         super().__init__(parent=parent)
         self.setupUi(self)
@@ -28,7 +57,7 @@ class DadosPedido(QMainWindow, dados_pedidos):
         elif self.status.text() == "EM PRODUCAO":
              self.status.setStyleSheet("background-color: green; color: black; font-weight: bold;")    
 
-        self.data_criacao.setText(f"{datetime.fromisoformat(pedido["data_criacao"]).strftime('%d/%m/%Y %H:%M:%S')}")
+        self.data_criacao.setText(f"{(datetime.fromisoformat(pedido["data_criacao"])- timedelta(hours=3)).strftime('%d/%m/%Y %H:%M:%S')}")
         self.data_criacao.setAlignment(Qt.AlignCenter)
 
         quantidade_itens = str(len(pedido["itens"]))
@@ -42,6 +71,8 @@ class DadosPedido(QMainWindow, dados_pedidos):
 
         self.setup_table()
         self.atualizar_tabela(pedido)
+
+        self.btn_excluir.clicked.connect(lambda: exibir_confirmacao_exclusao(self))
 
     def setup_table(self):
         columns = ["NOME", "QUANTIDADE", "VALOR", "EDITAR", "EXCLUIR"]

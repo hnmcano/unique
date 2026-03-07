@@ -23,6 +23,30 @@ class Clientes(QMainWindow, Ui_MainWindow):
 
         self.add_clientes.clicked.connect(self.adicionar_clientes)
 
+    
+    # def layout_tabela(self):
+
+    #     columns = ["nome", "telefone", "email", "endereco"]
+
+
+
+    # def atualizar_tabela(self, data):
+
+    
+    
+
+
+
+
+    # def on_evento_recebido(self, evento: dict):
+    #     data = evento["dados"]
+
+    #     if evento["tipo"] == "Atualizar_clientes":
+    #         # Se vier um dicionário único, transformamos em lista
+    #         if isinstance(data, dict):
+    #             data = [data]
+
+    #         self.atualizar_tabela(data)
 
     def adicionar_clientes(self):
         self.add_clientes_window = AddClientes(self)

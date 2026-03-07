@@ -1,16 +1,17 @@
 from PySide6.QtCore import *
 import websocket
 import json
-import time
 
 from config.config import settings
 
 class WebSocketService(QThread):
     mensagem_recebida = Signal(dict)
+    status = Signal(str)
 
     def __init__(self, token):
         super().__init__()
         self.token = token
+        self.status_atual = "desconectado"
 
     def run(self):
         while True:
@@ -37,12 +38,20 @@ class WebSocketService(QThread):
             print("Erro ao processar WS:", e)
     
     def _on_open(self, ws):
+        self.ws = ws
+        self.status_atual = "conectado"
+
+        self.status.emit("conectado")
         print("WS CONECTADO")
+
 
     def _on_error(self, ws, error):
         print("WS ERRO:", error)
 
     def _on_close(self, ws, *args):
+        self.status_atual = "desconectado"
+
+        self.status.emit("desconectado")
         print("WS FECHADO")
 
 class PedidoStore:

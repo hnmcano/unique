@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>384</width>
-    <height>590</height>
+    <width>377</width>
+    <height>546</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -134,7 +134,14 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="PassLine"/>
+              <widget class="QLineEdit" name="PassLine">
+               <property name="inputMask">
+                <string/>
+               </property>
+               <property name="echoMode">
+                <enum>QLineEdit::EchoMode::Password</enum>
+               </property>
+              </widget>
              </item>
             </layout>
            </widget>

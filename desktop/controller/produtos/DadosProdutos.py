@@ -4,7 +4,6 @@ from windows.form_products.data_produto_ui import Ui_MainWindow as DataProduto
 from PySide6.QtNetwork import QNetworkRequest, QNetworkAccessManager
 from PySide6.QtGui import QPixmap
 from PySide6.QtCore import *
-from services.network_conn import handle_network_reply
 from core.app_context import app_context as APPContext
 
 import requests

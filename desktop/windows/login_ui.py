@@ -24,7 +24,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(384, 590)
+        MainWindow.resize(377, 546)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
@@ -92,6 +92,7 @@ class Ui_MainWindow(object):
 
         self.PassLine = QLineEdit(self.widget_7)
         self.PassLine.setObjectName(u"PassLine")
+        self.PassLine.setEchoMode(QLineEdit.EchoMode.Password)
 
         self.verticalLayout_5.addWidget(self.PassLine)
 
@@ -148,6 +149,7 @@ class Ui_MainWindow(object):
         self.label.setText("")
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"USER:", None))
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"PASSWORD:", None))
+        self.PassLine.setInputMask("")
         self.LoginButton.setText(QCoreApplication.translate("MainWindow", u"LOGIN", None))
         self.CancelButton.setText(QCoreApplication.translate("MainWindow", u"CANCEL", None))
     # retranslateUi

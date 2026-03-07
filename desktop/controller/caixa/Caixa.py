@@ -3,8 +3,6 @@ from windows.form_box.Caixa_ui import Ui_CAIXA as caixa
 from infra.api_client import APIClient
 from core.app_context import app_context as APPContext
 from config.config import settings
-import requests
-import os
 
 class Caixa(QMainWindow, caixa):
     def __init__(self, parent=None):

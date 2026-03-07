@@ -13,16 +13,10 @@ from controller.mesas.Mesas import Mesas
 from windows.unique_ui import Ui_Unique as uniq
 from services.websocket import WebSocketService 
 from services.websocket import PedidoStore
-
-from core.app_context import app_context as APPContext
-
-import requests
-import sys
-import base64
-import os
-
 from config.config import settings
 
+from core.app_context import app_context as APPContext
+import os
 
 
 #funcao para centralizar a janelas
@@ -49,7 +43,8 @@ class SoundService:
 
 # classe principal da aplicação
 class Uniq(QMainWindow, uniq):
-    mensagem_recebida = Signal(dict)
+
+
     def __init__(self):
         # inicializa a classe pai
         super().__init__()
@@ -58,9 +53,19 @@ class Uniq(QMainWindow, uniq):
         center_window(self)
         self.valid_caixa()
 
+        data = self.dados_cliente()
+        self.IdUsuario.setText(f"ID USUARIO: {data['id']}")
+        self.BemVindo.setText(f"Seja bem vindo, {data['nome']}")
+        
         self.sound = SoundService()
         self.pedido_store = PedidoStore()
+        self.websocket = APPContext.websocket_client
+        self.websocket = APPContext.websocket_client
+        self.websocket.status.connect(self.atualizar_status)
 
+        # sincroniza estado atual
+        self.atualizar_status(self.websocket.status_atual)
+        self.websocket.mensagem_recebida.connect(self.on_evento_recebido)
 
        # Inicializa as janelas como None
         self.clientes_window = None
@@ -79,8 +84,13 @@ class Uniq(QMainWindow, uniq):
 
     # Funções para abrir a janela filhas de mesas, clientes e produtos
     def abrir_caixa(self):
-        self.caixa_window = Caixa(parent=self)
+        if self.caixa_window is None:
+            self.caixa_window = Caixa(parent=self)
+
         self.caixa_window.show()
+        self.caixa_window.raise_()
+        self.caixa_window.activateWindow()
+
     # considerando que a janela Uniq é a janela pai, que ao fechada, fecha as janelas filhas
     def abrir_mesas(self):
         self.mesas_window = Mesas(parent=self)
@@ -111,16 +121,23 @@ class Uniq(QMainWindow, uniq):
         except:
             QMessageBox.information(self, "Caixa Fechado", "Seu caixa esta fechado, por favor abra-o")
 
+    def dados_cliente(self):
+        try:
+            response = APPContext.api_client.get("/usuarios/dados")
+            return response
+        except:
+            QMessageBox.information(self, "Dados Incorretos", "Não localizamos o usuario na base de dados!")
+
     def on_evento_recebido(self, evento):
         if evento["tipo"] == "delivery_acionado":
             self.sound.play()
             print("Delivery acionado")
             pedido = evento["dados"]
             self.pedido_store.adicionar(pedido)
-            
-    def showEvent(self, event):
-        super().showEvent(event)
-        
-        APPContext.websocket_client.mensagem_recebida.connect(
-            self.on_evento_recebido
-        )
+
+    def atualizar_status(self, status):
+        print("Atualizando status:", status)
+        if status == "conectado":
+            self.labelStatus.setText("Status: 🟢Conectado")
+        else:
+            self.labelStatus.setText("Status: 🔴Desconectado")
