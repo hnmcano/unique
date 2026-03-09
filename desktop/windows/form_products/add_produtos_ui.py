@@ -27,7 +27,35 @@ class Ui_MainWindow(object):
         MainWindow.resize(646, 546)
         MainWindow.setMinimumSize(QSize(0, 0))
         MainWindow.setMaximumSize(QSize(1731691, 16777215))
-        MainWindow.setStyleSheet(u"")
+        MainWindow.setStyleSheet(u"#centralwidget {\n"
+"	background-color: black;	\n"
+"}\n"
+"\n"
+"#centralwidget QLineEdit{\n"
+"	background-color: #131314;	\n"
+"}\n"
+"\n"
+"#centralwidget QComboBox{\n"
+"	background-color: #131314;\n"
+"}\n"
+"\n"
+"#centralwidget QPlainTextEdit{\n"
+"	background-color: #131314;\n"
+"	border-radius: 10px;\n"
+"}\n"
+"\n"
+"#centralwidget #widget_4  QPushButton {\n"
+"	background-color: #131314;\n"
+"}\n"
+"\n"
+"#centralwidget #widget_4 QPushButton:hover {\n"
+"	background-color: #3c3c3c;\n"
+"}\n"
+"\n"
+"#centralwidget #widget_4  QFrame {\n"
+"	background-color: transparent;\n"
+"}\n"
+"")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.centralwidget.setStyleSheet(u"")
@@ -121,12 +149,16 @@ class Ui_MainWindow(object):
         self.gridLayout_4.setObjectName(u"gridLayout_4")
         self.add_produto = QPushButton(self.widget_3)
         self.add_produto.setObjectName(u"add_produto")
+        self.add_produto.setMinimumSize(QSize(0, 35))
+        self.add_produto.setMaximumSize(QSize(16777215, 16777215))
         self.add_produto.setStyleSheet(u"")
 
         self.gridLayout_4.addWidget(self.add_produto, 0, 0, 1, 1)
 
         self.cancelar = QPushButton(self.widget_3)
         self.cancelar.setObjectName(u"cancelar")
+        self.cancelar.setMinimumSize(QSize(0, 35))
+        self.cancelar.setMaximumSize(QSize(16777215, 16777215))
 
         self.gridLayout_4.addWidget(self.cancelar, 0, 1, 1, 1)
 

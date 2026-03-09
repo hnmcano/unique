@@ -3,17 +3,12 @@ from PySide6.QtCore import *
 from PySide6.QtGui import *
 from windows.form_delivery.delivery_ui import Ui_MainWindow as delivery
 from .DadosPedido import DadosPedido
-from services.websocket import WebSocketService, PedidoStore
 from PySide6.QtNetwork import *
 from PySide6.QtMultimedia import *
-from ..produtos.Produtos import FloatQtTableWidget, NumericQtTableWidget
+from ..produtos.Produtos import FloatQtTableWidget
 from core.app_context import app_context as APPContext
 
-
-
-import requests
 from datetime import datetime, timedelta
-import os
 from config.config import settings
 
 class Pedidos(QMainWindow, delivery):

@@ -26,7 +26,7 @@ def exibir_confirmacao_exclusao(self):
     if resposta == QMessageBox.Yes: # type: ignore
         # Se o usuário confirmar, emita o sinal e feche a janela
         try:
-            response = APPContext.api_client.delete(f"/pedidos/excluir-pedido")
+            response = APPContext.api_client.delete(f"/pedidos/excluir-pedido/{self.id}")
             
             QMessageBox.information(self, "Sucesso", "Pedido excluido com sucesso!")
 
@@ -36,7 +36,6 @@ def exibir_confirmacao_exclusao(self):
         except Exception as e:
             QMessageBox.critical(self, "Erro", f"Falha ao excluir pedido. {str(e)}")
             return
-
 
 class DadosPedido(QMainWindow, dados_pedidos):
     mensagem_recebida = Signal(dict)

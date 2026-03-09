@@ -27,7 +27,25 @@ class Ui_MainWindow(object):
         MainWindow.setWindowModality(Qt.WindowModality.NonModal)
         MainWindow.resize(1217, 669)
         MainWindow.setMaximumSize(QSize(1217, 669))
-        MainWindow.setStyleSheet(u"")
+        MainWindow.setStyleSheet(u"#centralwidget {\n"
+"	background-color: black;\n"
+"}\n"
+"\n"
+"#centralwidget #tableWidget {\n"
+"	background-color: #131314;\n"
+"}\n"
+"\n"
+"#centralwidget QLineEdit{\n"
+"	background-color: #131314;\n"
+"}\n"
+"\n"
+"QPushButton{\n"
+"	background-color: #131314;\n"
+"}\n"
+"\n"
+"QPushButton:hover{\n"
+"		background-color: rgb(60,60,60);\n"
+"}")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.centralwidget.setStyleSheet(u"")
@@ -89,6 +107,7 @@ class Ui_MainWindow(object):
         self.add_categoria = QPushButton(self.widget_5)
         self.add_categoria.setObjectName(u"add_categoria")
         self.add_categoria.setMaximumSize(QSize(16777215, 45))
+        self.add_categoria.setStyleSheet(u"")
 
         self.horizontalLayout_2.addWidget(self.add_categoria)
 
@@ -96,6 +115,7 @@ class Ui_MainWindow(object):
         self.add_products.setObjectName(u"add_products")
         self.add_products.setMinimumSize(QSize(50, 45))
         self.add_products.setMaximumSize(QSize(16777215, 45))
+        self.add_products.setStyleSheet(u"")
 
         self.horizontalLayout_2.addWidget(self.add_products)
 
@@ -118,6 +138,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
         self.tableWidget = QTableWidget(self.products)
         self.tableWidget.setObjectName(u"tableWidget")
+        self.tableWidget.setStyleSheet(u"")
         self.tableWidget.horizontalHeader().setVisible(True)
         self.tableWidget.horizontalHeader().setCascadingSectionResizes(False)
         self.tableWidget.horizontalHeader().setHighlightSections(True)

@@ -23,7 +23,25 @@
    <string>PRODUTOS</string>
   </property>
   <property name="styleSheet">
-   <string notr="true"/>
+   <string notr="true">#centralwidget {
+	background-color: black;
+}
+
+#centralwidget #tableWidget {
+	background-color: #131314;
+}
+
+#centralwidget QLineEdit{
+	background-color: #131314;
+}
+
+QPushButton{
+	background-color: #131314;
+}
+
+QPushButton:hover{
+		background-color: rgb(60,60,60);
+}</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="styleSheet">
@@ -179,6 +197,9 @@ border-right: 1px solid red;</string>
               <height>45</height>
              </size>
             </property>
+            <property name="styleSheet">
+             <string notr="true"/>
+            </property>
             <property name="text">
              <string>ADD CATEGORIA</string>
             </property>
@@ -197,6 +218,9 @@ border-right: 1px solid red;</string>
               <width>16777215</width>
               <height>45</height>
              </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true"/>
             </property>
             <property name="text">
              <string>ADD PRODUTO</string>
@@ -233,6 +257,9 @@ border-right: 1px solid red;</string>
       <layout class="QVBoxLayout" name="verticalLayout_5">
        <item>
         <widget class="QTableWidget" name="tableWidget">
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
          <attribute name="horizontalHeaderVisible">
           <bool>true</bool>
          </attribute>

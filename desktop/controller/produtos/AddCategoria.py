@@ -8,7 +8,6 @@ from config.config import settings
 
 
 def excluir_categoria(parent=None, categoria_selecionada=None):
-
     try:
         response = APPContext.api_client.delete(f"/categorias/category/{categoria_selecionada}")
         QMessageBox.information(parent, "Sucesso", "Categoria excluida com sucesso!")
@@ -31,43 +30,25 @@ def adicionar_categoria(parent=None):
     except Exception as e:
         QMessageBox.critical(parent, "Erro", f"Erro ao adicionar categoria: {str(e)}")
 
-
-
 class AddCategoria(QMainWindow, addcategorias):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
 
-        self.drop_modificar.hide() # Esconde o dropdown inicialmente
-        self.btn_excluir.hide() # Esconde o botão de excluir inicialmente
+        self.preencher_dropdown()
 
-        self.modificar_botao.clicked.connect(self.mostrar_dropdown_categoria)
-        self.adicionar_botao.clicked.connect(self.mostrar_input_categoria)
+        self.excluir_botao.clicked.connect(
+            lambda: self.stackedWidget.setCurrentWidget(self.page)
+        )
+
+        self.adicionar_botao.clicked.connect(
+            lambda: self.stackedWidget.setCurrentWidget(self.page_2)
+        )
+
         self.btn_adicionar.clicked.connect(lambda: adicionar_categoria(self))
         self.btn_excluir.clicked.connect(self.excluir_categoria)
 
     # Função definida para adicionar categoria ao banco de dados
-
-    # Função definida para mostrar o input de categoria e ocultar o dropdown
-    def mostrar_input_categoria(self):
-        self.adicionar_cat_input.show()
-        self.btn_adicionar.show()
-
-        if self.btn_excluir.isVisible():
-            self.btn_excluir.hide()
-            self.drop_modificar.hide()
-
-    # Função definida para mostrar o dropdown de categorias e ocultar o input
-    def mostrar_dropdown_categoria(self):
-        if self.adicionar_cat_input.isVisible():
-            self.adicionar_cat_input.hide()
-            self.btn_adicionar.hide()
-
-        self.btn_excluir.show()
-        self.drop_modificar.show()
-        self.preencher_dropdown()
-
-    # Função definida para preencher o dropdown com categorias do servidor
     def preencher_dropdown(self):
         self.drop_modificar.clear()
         self.drop_modificar.addItem("")  # espaço em branco

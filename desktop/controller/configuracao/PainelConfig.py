@@ -19,8 +19,3 @@ class PainelConfig(QMainWindow, painel_configuracoes):
         self.setupUi(self)
         center_window(self)
 
-        self.btn_estabelecimento.clicked.connect(self.abrir_estabelecimento)
-
-    def abrir_estabelecimento(self):
-        self.estabelecimento_window = Estabelecimento(parent=self)
-        self.estabelecimento_window.show()

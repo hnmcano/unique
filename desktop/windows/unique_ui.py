@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'unique.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.10.2
+## Created by: Qt User Interface Compiler version 6.9.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -18,7 +18,7 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QTransform)
 from PySide6.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
     QLabel, QMainWindow, QPushButton, QSizePolicy,
-    QVBoxLayout, QWidget)
+    QStackedWidget, QVBoxLayout, QWidget)
 from pictures import imagens_rc
 
 class Ui_Unique(object):
@@ -222,9 +222,10 @@ class Ui_Unique(object):
 
         self.verticalLayout_2.addWidget(self.widget_5)
 
-        self.WidgetVendas = QWidget(self.widget_3)
-        self.WidgetVendas.setObjectName(u"WidgetVendas")
-        self.WidgetVendas.setStyleSheet(u"QFrame {\n"
+        self.StackedWidgetVendas = QStackedWidget(self.widget_3)
+        self.StackedWidgetVendas.setObjectName(u"StackedWidgetVendas")
+        self.StackedWidgetVendas.setEnabled(True)
+        self.StackedWidgetVendas.setStyleSheet(u"QFrame {\n"
 "	background-color: #131314;\n"
 "	border-radius: 10px;\n"
 "}\n"
@@ -232,6 +233,11 @@ class Ui_Unique(object):
 "QFrame:hover {\n"
 "	background-color: rgb(60,60,60);\n"
 "}")
+        self.WidgetRelatorios = QWidget()
+        self.WidgetRelatorios.setObjectName(u"WidgetRelatorios")
+        self.StackedWidgetVendas.addWidget(self.WidgetRelatorios)
+        self.WidgetVendas = QWidget()
+        self.WidgetVendas.setObjectName(u"WidgetVendas")
         self.gridLayout = QGridLayout(self.WidgetVendas)
         self.gridLayout.setSpacing(15)
         self.gridLayout.setObjectName(u"gridLayout")
@@ -274,19 +280,19 @@ class Ui_Unique(object):
         self.horizontalLayout_5.setSpacing(0)
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
         self.horizontalLayout_5.setContentsMargins(0, 0, 0, 0)
-        self.pushButton_3 = QPushButton(self.widget_12)
-        self.pushButton_3.setObjectName(u"pushButton_3")
-        self.pushButton_3.setMinimumSize(QSize(27, 27))
-        self.pushButton_3.setMaximumSize(QSize(45, 45))
+        self.btn_estabelecimento = QPushButton(self.widget_12)
+        self.btn_estabelecimento.setObjectName(u"btn_estabelecimento")
+        self.btn_estabelecimento.setMinimumSize(QSize(27, 27))
+        self.btn_estabelecimento.setMaximumSize(QSize(45, 45))
         font2 = QFont()
         font2.setPointSize(14)
         font2.setBold(True)
         font2.setKerning(True)
-        self.pushButton_3.setFont(font2)
-        self.pushButton_3.setStyleSheet(u"")
-        self.pushButton_3.setIconSize(QSize(20, 16))
+        self.btn_estabelecimento.setFont(font2)
+        self.btn_estabelecimento.setStyleSheet(u"")
+        self.btn_estabelecimento.setIconSize(QSize(20, 16))
 
-        self.horizontalLayout_5.addWidget(self.pushButton_3)
+        self.horizontalLayout_5.addWidget(self.btn_estabelecimento)
 
         self.label_6 = QLabel(self.widget_12)
         self.label_6.setObjectName(u"label_6")
@@ -393,15 +399,15 @@ class Ui_Unique(object):
         self.horizontalLayout_4.setSpacing(0)
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
         self.horizontalLayout_4.setContentsMargins(0, 0, 0, 0)
-        self.pushButton_2 = QPushButton(self.widget_10)
-        self.pushButton_2.setObjectName(u"pushButton_2")
-        self.pushButton_2.setMinimumSize(QSize(27, 27))
-        self.pushButton_2.setMaximumSize(QSize(45, 45))
-        self.pushButton_2.setFont(font2)
-        self.pushButton_2.setStyleSheet(u"")
-        self.pushButton_2.setIconSize(QSize(20, 16))
+        self.btn_funcionarios = QPushButton(self.widget_10)
+        self.btn_funcionarios.setObjectName(u"btn_funcionarios")
+        self.btn_funcionarios.setMinimumSize(QSize(27, 27))
+        self.btn_funcionarios.setMaximumSize(QSize(45, 45))
+        self.btn_funcionarios.setFont(font2)
+        self.btn_funcionarios.setStyleSheet(u"")
+        self.btn_funcionarios.setIconSize(QSize(20, 16))
 
-        self.horizontalLayout_4.addWidget(self.pushButton_2)
+        self.horizontalLayout_4.addWidget(self.btn_funcionarios)
 
         self.label_5 = QLabel(self.widget_10)
         self.label_5.setObjectName(u"label_5")
@@ -1132,8 +1138,9 @@ class Ui_Unique(object):
 
         self.gridLayout.addWidget(self.frame, 0, 2, 1, 1)
 
+        self.StackedWidgetVendas.addWidget(self.WidgetVendas)
 
-        self.verticalLayout_2.addWidget(self.WidgetVendas)
+        self.verticalLayout_2.addWidget(self.StackedWidgetVendas)
 
         self.widget_4 = QWidget(self.widget_3)
         self.widget_4.setObjectName(u"widget_4")
@@ -1176,6 +1183,7 @@ class Ui_Unique(object):
         self.btn_venda.setDefault(False)
         self.btn_relatorios.setDefault(False)
         self.btn_loggout.setDefault(False)
+        self.StackedWidgetVendas.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(Unique)
@@ -1192,13 +1200,13 @@ class Ui_Unique(object):
         self.btn_loggout.setText(QCoreApplication.translate("Unique", u"Sair", None))
         self.BemVindo.setText("")
         self.label_2.setText("")
-        self.pushButton_3.setText(QCoreApplication.translate("Unique", u"+", None))
+        self.btn_estabelecimento.setText(QCoreApplication.translate("Unique", u"+", None))
         self.label_6.setText("")
         self.label_40.setText("")
         self.label_41.setText(QCoreApplication.translate("Unique", u"Loja", None))
         self.label_42.setText(QCoreApplication.translate("Unique", u"Store", None))
         self.label_43.setText("")
-        self.pushButton_2.setText(QCoreApplication.translate("Unique", u"+", None))
+        self.btn_funcionarios.setText(QCoreApplication.translate("Unique", u"+", None))
         self.label_5.setText("")
         self.label_39.setText("")
         self.label_27.setText(QCoreApplication.translate("Unique", u"Funcionarios", None))

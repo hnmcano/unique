@@ -13,7 +13,6 @@ def center_window(self):
     window_geometry.moveCenter(screen_geometry.center())
     self.move(window_geometry.topLeft())
 
-
 class Clientes(QMainWindow, Ui_MainWindow):
 
     def __init__(self, parent=None):

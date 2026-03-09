@@ -27,7 +27,26 @@ class Ui_MainWindow(object):
         MainWindow.setWindowModality(Qt.WindowModality.NonModal)
         MainWindow.resize(1120, 523)
         MainWindow.setMaximumSize(QSize(1217, 669))
-        MainWindow.setStyleSheet(u"")
+        MainWindow.setStyleSheet(u"#centralwidget{\n"
+"	background-color: black;\n"
+"}\n"
+"\n"
+"#centralwidget QLineEdit{\n"
+"	background-color: #131314;\n"
+"}\n"
+"\n"
+"#centralwidget QPushButton{\n"
+"	background-color: #131314;\n"
+"}\n"
+"\n"
+"#centralwidget QPushButton:hover{\n"
+"	background-color: 3c3c3c;\n"
+"}\n"
+"\n"
+"#centralwidget #tableWidget{\n"
+"	background-color: #131314;\n"
+"	border-radius: 10px;\n"
+"}")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.centralwidget.setStyleSheet(u"")

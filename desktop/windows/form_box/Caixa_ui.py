@@ -23,7 +23,7 @@ class Ui_CAIXA(object):
     def setupUi(self, CAIXA):
         if not CAIXA.objectName():
             CAIXA.setObjectName(u"CAIXA")
-        CAIXA.setWindowModality(Qt.WindowModality.ApplicationModal)
+        CAIXA.setWindowModality(Qt.WindowModality.NonModal)
         CAIXA.resize(536, 498)
         CAIXA.setMinimumSize(QSize(536, 498))
         CAIXA.setMaximumSize(QSize(536, 498))

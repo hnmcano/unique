@@ -23,7 +23,26 @@
    <string>PEDIDOS DELIVERY</string>
   </property>
   <property name="styleSheet">
-   <string notr="true"/>
+   <string notr="true">#centralwidget{
+	background-color: black;
+}
+
+#centralwidget QLineEdit{
+	background-color: #131314;
+}
+
+#centralwidget QPushButton{
+	background-color: #131314;
+}
+
+#centralwidget QPushButton:hover{
+	background-color: 3c3c3c;
+}
+
+#centralwidget #tableWidget{
+	background-color: #131314;
+	border-radius: 10px;
+}</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="styleSheet">

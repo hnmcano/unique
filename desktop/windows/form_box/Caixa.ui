@@ -3,7 +3,7 @@
  <class>CAIXA</class>
  <widget class="QMainWindow" name="CAIXA">
   <property name="windowModality">
-   <enum>Qt::WindowModality::ApplicationModal</enum>
+   <enum>Qt::WindowModality::NonModal</enum>
   </property>
   <property name="geometry">
    <rect>

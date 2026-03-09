@@ -26,7 +26,43 @@
    <string>PRODUTOS</string>
   </property>
   <property name="styleSheet">
-   <string notr="true"/>
+   <string notr="true">#centralwidget{
+	background-color: black;
+}
+
+#centralwidget QLineEdit{
+	background-color: #131314;
+}
+
+#centralwidget QPlainTextEdit{
+
+	background-color: #131314;
+	
+}
+
+#centralwidget #frame{
+	background-color: #131314;
+}
+
+
+#centralwidget #frame QPushButton{
+	background-color: black;
+}
+
+#centralwidget #frame QPushButton:hover{
+	background-color: #3c3c3c;
+}
+
+
+#centralwidget #frame_2{
+	background-color: #131314;
+}
+
+#centralwidget #image_label{
+	background-color: #131314;
+}
+
+</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="styleSheet">
@@ -666,7 +702,7 @@
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="GroupStatus"/>
   <buttongroup name="GroupMedida"/>
+  <buttongroup name="GroupStatus"/>
  </buttongroups>
 </ui>
