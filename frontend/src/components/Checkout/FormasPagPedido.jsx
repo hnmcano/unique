@@ -5,10 +5,11 @@ import { PagamentoCredito, PagamentoDebito, PagamentoDinheiro, PagamentoPix } fr
 import { IconePix, IconeCredito, IconeDebito, IconeDinheiro } from "./pagamentos/iconesSvg";
 import { ButtonBack} from "./buttons/ButtonsCheckout";
 import { useState } from "react";
+import "../../styles/Enviar.css";
 
 function FormasPagPedido() {
     const { data, 
-            setData, 
+            setData,    
             valor_total, 
             SelecionarMetodo, 
             opcoesDisponiveis,
@@ -18,7 +19,25 @@ function FormasPagPedido() {
 
     const [isLoading, setIsLoading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const [error, setError] = useState(null);
+    const [respostaServidor, setRespostaServidor] = useState(null);
 
+    if (respostaServidor) {
+        return (
+            <>
+                <div className="resposta-servidor-container">
+                    <div className="resposta-servidor-text">
+                        <p className="resposta-servidor">{respostaServidor}</p>
+                    </div>
+                    <div className="resposta-servidor-button">
+                        <Link to="/">
+                            <ButtonBack />
+                        </Link>
+                    </div>
+                </div>
+            </>
+        );
+    }
 
     const handledSubmit = async (event) => {
         event.preventDefault();
@@ -30,7 +49,7 @@ function FormasPagPedido() {
 
         try{
             const response = await api.post("/pedidos/react", data);
-            const pedido = response.data;
+            
 
             setIsLoading(false);
             setIsSuccess(true);
@@ -39,10 +58,14 @@ function FormasPagPedido() {
                 setIsSuccess(false);
             }, 2000);
 
+
         }catch(error){
             console.log(error);
             setIsLoading(false);
+            setError(error);
+            setRespostaServidor(error.response.data.detail);
         }
+
 
     }
     
@@ -121,7 +144,9 @@ function FormasPagPedido() {
                             onClick={handledSubmit}
                             className={`send 
                                 ${isLoading ? "is-loading" : ""} 
-                                ${isSuccess ? "is-success" : ""}`}
+                                ${isSuccess ? "is-success" : ""}
+                                ${error ? "is-error" : ""}
+                            `}
                         >
                             <svg viewBox="0 0 90.594 59.714">
                                 <polyline
@@ -131,7 +156,7 @@ function FormasPagPedido() {
                                     strokeWidth="10"
                                     strokeMiterlimit="10"
                                     points="1.768,23.532 34.415,56.179 88.826,1.768"
-                                />
+                                />  
                             </svg>
                             <span>Send</span>
                         </button>
