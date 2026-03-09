@@ -6,9 +6,7 @@ const CheckoutContext = createContext();
 export function CheckoutProvider({ children }) {
     const { produtos, totalCarrinho } = useCarrinho();
     const [ formaPagamento, setFormaPagamento ] = useState(null);
-    const [ bandeiraCartao, setBandeiraCartao ] = useState(null);
     const [ opcoesDisponiveis, setOpcoesDisponiveis ] = useState(null)
-
 
     const [ data, setData] = useState({
 
@@ -21,7 +19,7 @@ export function CheckoutProvider({ children }) {
         ],
 
         metodo_pagamento: "",
-        // bandeiraCartao: "",
+        opcoes_pagamento: "",
         valor_total: 0,
         observacoes: "",
 
@@ -45,6 +43,7 @@ export function CheckoutProvider({ children }) {
         }
     });
 
+    console.log(data);
 
     const totalQuantidade = produtos.reduce(
         (acc, p) => acc + p.quantidade, 0
@@ -66,7 +65,8 @@ export function CheckoutProvider({ children }) {
         }));
     }, [produtos, totalCarrinho, totalQuantidade]);
 
-    const ToogleVisibility = (metodo) => {
+    const SelecionarMetodo = (metodo) => {
+
         setOpcoesDisponiveis(prev =>
             prev === metodo ? null : metodo
         );
@@ -74,21 +74,23 @@ export function CheckoutProvider({ children }) {
         setData(prevState => ({
             ...prevState,
             metodo_pagamento: metodo,
-        }));
+            opcoes_pagamento: metodo === "pix" ? "14991231554" : "",
+        }))
+
     };
 
-    const handleSelect = (tipo) => {
+    const SelecionarBandeira = (tipo) => {
         setFormaPagamento(tipo);
 
         setData(prevState => ({
             ...prevState,
-            metodo_pagamento: tipo,
+            opcoes_pagamento: tipo
         }));
     }
 
     
     return (
-        <CheckoutContext.Provider value={{ data, setData, produtos, totalQuantidade, totalCarrinho, entregaTaxa, ToogleVisibility, opcoesDisponiveis, formaPagamento, valor_total, handleSelect }} >
+        <CheckoutContext.Provider value={{ data, setData, produtos, totalQuantidade, totalCarrinho, entregaTaxa, SelecionarMetodo, opcoesDisponiveis, formaPagamento, valor_total, SelecionarBandeira }} >
             {children}
         </CheckoutContext.Provider>
     )

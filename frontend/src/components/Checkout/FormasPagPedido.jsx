@@ -10,10 +10,10 @@ function FormasPagPedido() {
     const { data, 
             setData, 
             valor_total, 
-            ToogleVisibility, 
+            SelecionarMetodo, 
             opcoesDisponiveis,
             formaPagamento,
-            handleSelect
+            SelecionarBandeira
         } = useCheckout();
 
     const [isLoading, setIsLoading] = useState(false);
@@ -52,61 +52,57 @@ function FormasPagPedido() {
             <div className="metodos-pagamento-container">
                 <div className="formas-pagamentos">
                     <div className="opcao-pagamento" >
-                        <label className="checkbox-pagamentos" onClick={() => ToogleVisibility("pix")} >
-                            <IconePix onClick={() => ToogleVisibility("pix")}/>
-                            <span className="label-checkbox-pagamentos" onClick={() => ToogleVisibility("pix")}>PIX</span>
+                        <label className={data.metodo_pagamento === "pix" ? "checkbox-pagamentos-ativo" : "checkbox-pagamentos"} onClick={() => SelecionarMetodo("pix")} >
+                            <IconePix onClick={() => SelecionarMetodo("pix")}/>
+                            <span className="label-checkbox-pagamentos" onClick={() => SelecionarMetodo("pix")}>PIX</span>
                             <input
                                 type="radio"
                                 name="pagamento"
                                 value="pix"
                                 style={{ display: "none"}}
                                 checked={formaPagamento === "pix"}
-                                onChange={() => handleSelect("pix")}
                             />
                         </label>
                         {opcoesDisponiveis === "pix" && (<PagamentoPix />)}
                     </div>
                     <div className="opcao-pagamento" >
-                        <label className="checkbox-pagamentos" onClick={() => ToogleVisibility("credito")}>
-                            <IconeCredito onClick={() => ToogleVisibility("credito")}/>
-                            <span className="label-checkbox-pagamentos" onClick={() => ToogleVisibility("credito")}>CRÉDITO</span>
+                        <label className={data.metodo_pagamento === "credito" ? "checkbox-pagamentos-ativo" : "checkbox-pagamentos"} onClick={() => SelecionarMetodo("credito")}>
+                            <IconeCredito onClick={() => SelecionarMetodo("credito")}/>
+                            <span className="label-checkbox-pagamentos" onClick={() => SelecionarMetodo("credito")}>CRÉDITO</span>
                             <input
                                 type="radio"
                                 name="pagamento"
                                 value="credito"
                                 style={{ display: "none"}}
                                 checked={formaPagamento === "credito"}
-                                onChange={() => handleSelect("credito")}
                             />
                         </label>
                         {opcoesDisponiveis === "credito" && (<PagamentoCredito />)}
                     </div>
                     <div className="opcao-pagamento" >
-                        <label className="checkbox-pagamentos" onClick={() => ToogleVisibility("debito")}>
-                            <IconeDebito onClick={() => ToogleVisibility("debito")} />
-                            <span className="label-checkbox-pagamentos" onClick={() => ToogleVisibility("debito")}>DÉBITO</span>
+                        <label className={data.metodo_pagamento === "debito" ? "checkbox-pagamentos-ativo" : "checkbox-pagamentos"} onClick={() => SelecionarMetodo("debito")}>
+                            <IconeDebito onClick={() => SelecionarMetodo("debito")} />
+                            <span className="label-checkbox-pagamentos" onClick={() => SelecionarMetodo("debito")}>DÉBITO</span>
                             <input
                                 type="radio"
                                 name="pagamento"
                                 value="debito"
                                 style={{ display: "none"}}
                                 checked={formaPagamento === "debito"}
-                                onChange={() => handleSelect("debito")}
                             />
                         </label>
                         {opcoesDisponiveis === "debito" && (<PagamentoDebito />)}
                     </div>
                     <div className="opcao-pagamento" >
-                        <label className="checkbox-pagamentos" onClick={() => ToogleVisibility("dinheiro")}>
-                            <IconeDinheiro onClick={() => ToogleVisibility("dinheiro")}/>
-                            <span className="label-checkbox-pagamentos" onClick={() => ToogleVisibility("dinheiro")}>DINHEIRO</span>
+                        <label className={data.metodo_pagamento === "dinheiro" ? "checkbox-pagamentos-ativo" : "checkbox-pagamentos"} onClick={() => SelecionarMetodo("dinheiro")}>
+                            <IconeDinheiro onClick={() => SelecionarMetodo("dinheiro")}/>
+                            <span className="label-checkbox-pagamentos" onClick={() => SelecionarMetodo("dinheiro")}>DINHEIRO</span>
                             <input
                                 type="radio"
                                 name="pagamento"
                                 value="dinheiro"
                                 style={{ display: "none"}}
                                 checked={formaPagamento === "dinheiro"}
-                                onChange={() => handleSelect("dinheiro")}
                             />
                         </label>
                         {opcoesDisponiveis === "dinheiro" && (<PagamentoDinheiro />)}

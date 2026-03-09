@@ -11,7 +11,6 @@
 
 
 * {
-    caret-color: black;
     margin: 0;
     padding: 0;
     font-family: 'Segoe UI', Roboto, sans-serif;
@@ -99,6 +98,7 @@
 }
 
 .Entrada-Formulario {
+    caret-color: #000;
     border-radius: 10px;
     border: 2px solid black;
     padding: 10px;
@@ -110,6 +110,7 @@
 }
 
 .Entrada-Formulario-Observacoes {
+    caret-color: #000;
     border-radius: 10px;
     border: 2px solid black;
     padding: 10px;
@@ -444,6 +445,7 @@
 }
 
 .metodos-pagamento-container {
+  caret-color: transparent;
   margin: 10px;
   display: flex;
   justify-content: space-between;
@@ -477,13 +479,18 @@
   width: 100%;
 }
 
-.checkbox-pagamentos:hover {
+.checkbox-pagamentos-ativo {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 5px 15px 5px 15px;
+  box-shadow: 0px 10px 20px rgba(0,0,0,0.17);
+  color: white;
+  align-items: center;
   background-color: hsl(290, 76%, 51%);
-}
-
-.checkbox-pagamentos:active {
-  background-color: hsl(290, 76%, 51%);
-  transform: translate(2px);
+  width: 100%;
 }
 
 
