@@ -25,6 +25,29 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">#centralwidget{
+	background-color: black;
+}
+
+#centralwidget #widget_5{
+	background-color: black;
+}
+
+#centralwidget #widget_6{
+	background-color: black;
+}
+
+#centralwidget #widget_7{
+	background-color: black;
+
+}
+
+#centralwidget QLineEdit{
+	background-color: #131314;
+
+}</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <property name="spacing">

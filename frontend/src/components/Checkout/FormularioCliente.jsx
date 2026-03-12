@@ -1,10 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useRef } from "react";
-
 import { useCheckout } from "../../contexts/CheckoutContext";
 import { ButtonNext, ButtonBack } from "./buttons/ButtonsCheckout";
-
 import "../../styles/Checkout.css";
 
 function FormularioCliente() {

@@ -9,17 +9,19 @@ from ..produtos.Produtos import FloatQtTableWidget
 from core.app_context import app_context as APPContext
 
 from datetime import datetime, timedelta
-from config.config import settings
 
 class Pedidos(QMainWindow, delivery):
     def __init__(self, pedido_store, parent=None):
         super().__init__(parent)
         self.setupUi(self)
 
+        self.pedido_store = pedido_store
+
         self.layout_tabela()
         self.tableWidget.cellDoubleClicked.connect(self.abrir_dados_pedido)
+        self.pedido_store.pedido_adicionado.connect(self.on_pedido_adicionado)
+        self.pedido_store.pedido_atualizado.connect(self.on_pedido_atualizado)
 
-        self.pedido_store = pedido_store
         pedidos = self.pedido_store.listar()
 
         menor_data = None
@@ -45,10 +47,11 @@ class Pedidos(QMainWindow, delivery):
         else:
             pedidos_anteriores = []
 
-        for pedidos in pedidos_novos + pedidos_anteriores:
-            self.pedido_store.adicionar(pedidos)
+        for pedido in pedidos_novos + pedidos_anteriores:
+            self.pedido_store.adicionar(pedido)
 
         pedidos = self.pedido_store.listar()
+
         self.atualizar_tabela(pedidos)
 
     def layout_tabela(self):
@@ -107,12 +110,23 @@ class Pedidos(QMainWindow, delivery):
         item = self.tableWidget.item(row, 0)
         pedido = item.data(Qt.UserRole + 1)
         self.dados_pedidos = DadosPedido(pedido=pedido, parent=self)
+        self.pedido_store.pedido_removido.connect(self.on_pedido_removido)
         self.dados_pedidos.show()
     
     def filtrar_produtos(self, text):
         for row in range(self.tableWidget.rowCount()):
-            item = self.tableWidget.item(row, 1)
+            item = self.tableWidget.item(row, 0)
             if text.lower() in item.text().lower():
                 self.tableWidget.showRow(row)
             else:
                 self.tableWidget.hideRow(row)
+
+    def on_pedido_adicionado(self, pedido):
+        self.atualizar_tabela(self.pedido_store.listar())
+
+    def on_pedido_removido(self, pedido):
+        print("Pedido removido:", pedido)
+        self.atualizar_tabela(self.pedido_store.listar())
+
+    def on_pedido_atualizado(self, pedido):
+        self.atualizar_tabela(self.pedido_store.listar())

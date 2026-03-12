@@ -35,8 +35,8 @@ class APIClient:
         response.raise_for_status()
         return response.json()
     
-    def delete(self, endpoint: str):
-        response = requests.delete(f"{self.base_url}/{endpoint}", headers=self.headers())
+    def delete(self, endpoint: str, data: dict):
+        response = requests.delete(f"{self.base_url}/{endpoint}", json=data, headers=self.headers())
         response.raise_for_status()
         return response.json()
     

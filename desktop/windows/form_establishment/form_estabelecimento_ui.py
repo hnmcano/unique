@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'form_estabelecimento.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.10.2
+## Created by: Qt User Interface Compiler version 6.9.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -26,6 +26,27 @@ class Ui_MainWindow(object):
         MainWindow.resize(840, 640)
         MainWindow.setMinimumSize(QSize(840, 640))
         MainWindow.setMaximumSize(QSize(840, 640))
+        MainWindow.setStyleSheet(u"#centralwidget{\n"
+"	background-color: black;\n"
+"}\n"
+"\n"
+"#centralwidget #widget_5{\n"
+"	background-color: black;\n"
+"}\n"
+"\n"
+"#centralwidget #widget_6{\n"
+"	background-color: black;\n"
+"}\n"
+"\n"
+"#centralwidget #widget_7{\n"
+"	background-color: black;\n"
+"\n"
+"}\n"
+"\n"
+"#centralwidget QLineEdit{\n"
+"	background-color: #131314;\n"
+"\n"
+"}")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)

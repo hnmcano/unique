@@ -23,6 +23,19 @@ class Ui_MainWindow(object):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.resize(994, 618)
+        MainWindow.setStyleSheet(u"#centralwidget {\n"
+"	background-color:black;\n"
+"}\n"
+"\n"
+"#centralwidget QPushButton{\n"
+"\n"
+"	background-color: #131314;\n"
+"\n"
+"}\n"
+"\n"
+"#centralwidget QPushButton:hover{\n"
+"	background-color: #3c3c3c;\n"
+"}")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
@@ -47,47 +60,7 @@ class Ui_MainWindow(object):
         self.Mesa_01.setMaximumSize(QSize(120, 120))
         self.Mesa_01.setStyleSheet(u"")
 
-        self.gridLayout.addWidget(self.Mesa_01, 0, 2, 1, 1)
-
-        self.Mesa_02 = QPushButton(self.widget_3)
-        self.Mesa_02.setObjectName(u"Mesa_02")
-        self.Mesa_02.setMinimumSize(QSize(120, 120))
-        self.Mesa_02.setMaximumSize(QSize(120, 120))
-        self.Mesa_02.setStyleSheet(u"")
-
-        self.gridLayout.addWidget(self.Mesa_02, 0, 3, 1, 1)
-
-        self.Mesa_03 = QPushButton(self.widget_3)
-        self.Mesa_03.setObjectName(u"Mesa_03")
-        self.Mesa_03.setMinimumSize(QSize(120, 120))
-        self.Mesa_03.setMaximumSize(QSize(120, 120))
-        self.Mesa_03.setStyleSheet(u"")
-
-        self.gridLayout.addWidget(self.Mesa_03, 0, 4, 1, 1)
-
-        self.Mesa_04 = QPushButton(self.widget_3)
-        self.Mesa_04.setObjectName(u"Mesa_04")
-        self.Mesa_04.setMinimumSize(QSize(120, 120))
-        self.Mesa_04.setMaximumSize(QSize(120, 120))
-        self.Mesa_04.setStyleSheet(u"")
-
-        self.gridLayout.addWidget(self.Mesa_04, 0, 5, 1, 1)
-
-        self.Mesa_07 = QPushButton(self.widget_3)
-        self.Mesa_07.setObjectName(u"Mesa_07")
-        self.Mesa_07.setMinimumSize(QSize(120, 120))
-        self.Mesa_07.setMaximumSize(QSize(120, 120))
-        self.Mesa_07.setStyleSheet(u"")
-
-        self.gridLayout.addWidget(self.Mesa_07, 1, 4, 1, 1)
-
-        self.Mesa_06 = QPushButton(self.widget_3)
-        self.Mesa_06.setObjectName(u"Mesa_06")
-        self.Mesa_06.setMinimumSize(QSize(120, 120))
-        self.Mesa_06.setMaximumSize(QSize(120, 120))
-        self.Mesa_06.setStyleSheet(u"")
-
-        self.gridLayout.addWidget(self.Mesa_06, 1, 3, 1, 1)
+        self.gridLayout.addWidget(self.Mesa_01, 0, 0, 1, 1)
 
         self.Mesa_05 = QPushButton(self.widget_3)
         self.Mesa_05.setObjectName(u"Mesa_05")
@@ -95,7 +68,39 @@ class Ui_MainWindow(object):
         self.Mesa_05.setMaximumSize(QSize(120, 120))
         self.Mesa_05.setStyleSheet(u"")
 
-        self.gridLayout.addWidget(self.Mesa_05, 1, 2, 1, 1)
+        self.gridLayout.addWidget(self.Mesa_05, 1, 0, 1, 1)
+
+        self.Mesa_06 = QPushButton(self.widget_3)
+        self.Mesa_06.setObjectName(u"Mesa_06")
+        self.Mesa_06.setMinimumSize(QSize(120, 120))
+        self.Mesa_06.setMaximumSize(QSize(120, 120))
+        self.Mesa_06.setStyleSheet(u"")
+
+        self.gridLayout.addWidget(self.Mesa_06, 1, 1, 1, 1)
+
+        self.Mesa_02 = QPushButton(self.widget_3)
+        self.Mesa_02.setObjectName(u"Mesa_02")
+        self.Mesa_02.setMinimumSize(QSize(120, 120))
+        self.Mesa_02.setMaximumSize(QSize(120, 120))
+        self.Mesa_02.setStyleSheet(u"")
+
+        self.gridLayout.addWidget(self.Mesa_02, 0, 1, 1, 1)
+
+        self.Mesa_03 = QPushButton(self.widget_3)
+        self.Mesa_03.setObjectName(u"Mesa_03")
+        self.Mesa_03.setMinimumSize(QSize(120, 120))
+        self.Mesa_03.setMaximumSize(QSize(120, 120))
+        self.Mesa_03.setStyleSheet(u"")
+
+        self.gridLayout.addWidget(self.Mesa_03, 0, 2, 1, 1)
+
+        self.Mesa_07 = QPushButton(self.widget_3)
+        self.Mesa_07.setObjectName(u"Mesa_07")
+        self.Mesa_07.setMinimumSize(QSize(120, 120))
+        self.Mesa_07.setMaximumSize(QSize(120, 120))
+        self.Mesa_07.setStyleSheet(u"")
+
+        self.gridLayout.addWidget(self.Mesa_07, 1, 2, 1, 1)
 
         self.Mesa_08 = QPushButton(self.widget_3)
         self.Mesa_08.setObjectName(u"Mesa_08")
@@ -103,15 +108,31 @@ class Ui_MainWindow(object):
         self.Mesa_08.setMaximumSize(QSize(120, 120))
         self.Mesa_08.setStyleSheet(u"")
 
-        self.gridLayout.addWidget(self.Mesa_08, 1, 5, 1, 1)
+        self.gridLayout.addWidget(self.Mesa_08, 1, 3, 1, 1)
+
+        self.Mesa_04 = QPushButton(self.widget_3)
+        self.Mesa_04.setObjectName(u"Mesa_04")
+        self.Mesa_04.setMinimumSize(QSize(120, 120))
+        self.Mesa_04.setMaximumSize(QSize(120, 120))
+        self.Mesa_04.setStyleSheet(u"")
+
+        self.gridLayout.addWidget(self.Mesa_04, 0, 3, 1, 1)
 
 
         self.verticalLayout.addWidget(self.widget_3)
 
         self.widget_2 = QWidget(self.centralwidget)
         self.widget_2.setObjectName(u"widget_2")
-        self.widget_2.setMaximumSize(QSize(16777215, 30))
+        self.widget_2.setMaximumSize(QSize(16777215, 50))
         self.widget_2.setStyleSheet(u"")
+        self.verticalLayout_2 = QVBoxLayout(self.widget_2)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.btn_add_mesa = QPushButton(self.widget_2)
+        self.btn_add_mesa.setObjectName(u"btn_add_mesa")
+        self.btn_add_mesa.setMaximumSize(QSize(120, 30))
+
+        self.verticalLayout_2.addWidget(self.btn_add_mesa)
+
 
         self.verticalLayout.addWidget(self.widget_2)
 
@@ -128,12 +149,13 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MESAS", None))
         self.Mesa_01.setText(QCoreApplication.translate("MainWindow", u"Mesa 01", None))
+        self.Mesa_05.setText(QCoreApplication.translate("MainWindow", u"Mesa 05", None))
+        self.Mesa_06.setText(QCoreApplication.translate("MainWindow", u"Mesa 06", None))
         self.Mesa_02.setText(QCoreApplication.translate("MainWindow", u"Mesa 02", None))
         self.Mesa_03.setText(QCoreApplication.translate("MainWindow", u"Mesa 03", None))
-        self.Mesa_04.setText(QCoreApplication.translate("MainWindow", u"Mesa 04", None))
         self.Mesa_07.setText(QCoreApplication.translate("MainWindow", u"Mesa 07", None))
-        self.Mesa_06.setText(QCoreApplication.translate("MainWindow", u"Mesa 06", None))
-        self.Mesa_05.setText(QCoreApplication.translate("MainWindow", u"Mesa 05", None))
         self.Mesa_08.setText(QCoreApplication.translate("MainWindow", u"Mesa 08", None))
+        self.Mesa_04.setText(QCoreApplication.translate("MainWindow", u"Mesa 04", None))
+        self.btn_add_mesa.setText(QCoreApplication.translate("MainWindow", u"ADD MESA", None))
     # retranslateUi
 

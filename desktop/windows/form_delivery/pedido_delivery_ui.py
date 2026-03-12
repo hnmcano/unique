@@ -71,10 +71,10 @@ class Ui_MainWindow(object):
         self.widget_8.setStyleSheet(u"")
         self.verticalLayout_4 = QVBoxLayout(self.widget_8)
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
-        self.adicionar_produto = QPushButton(self.widget_8)
-        self.adicionar_produto.setObjectName(u"adicionar_produto")
+        self.btn_adicionar = QPushButton(self.widget_8)
+        self.btn_adicionar.setObjectName(u"btn_adicionar")
 
-        self.verticalLayout_4.addWidget(self.adicionar_produto)
+        self.verticalLayout_4.addWidget(self.btn_adicionar)
 
 
         self.horizontalLayout_3.addWidget(self.widget_8)
@@ -295,7 +295,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"PEDIDOS EM MESA", None))
         self.mesa.setText("")
-        self.adicionar_produto.setText(QCoreApplication.translate("MainWindow", u"ADD PRODUTO", None))
+        self.btn_adicionar.setText(QCoreApplication.translate("MainWindow", u"ADD PRODUTO", None))
         self.status.setText("")
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"TAXA DE ENTREGA", None))
         self.taxa_entrega.setText("")

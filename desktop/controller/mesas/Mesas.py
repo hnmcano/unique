@@ -34,8 +34,9 @@ class Mesas(QMainWindow, mesas):
         for i in range(len(mesa)):
             if mesa[i] < 10:
                 mesa[i] = f"0{mesa[i]}"
-    
-            self.estilos_originais[f"Mesa_{mesa[i]}"] = self.findChild(QPushButton, f"Mesa_{mesa[i]}").setStyleSheet( """QPushButton {
+
+            botao = self.findChild(QPushButton, f"Mesa_{mesa[i]}")
+            botao.setStyleSheet("""QPushButton {
                 background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                     stop: 0 #000000, stop: 1 #000000);
                 color: white;
@@ -46,10 +47,14 @@ class Mesas(QMainWindow, mesas):
                 font-size: 14px;
             }""")
 
+            self.estilos_originais[f"Mesa_{mesa[i]}"] = botao.styleSheet()
+
         for botao in self.findChildren(QPushButton):
             if botao.objectName().startswith("Mesa_"):
                 botao.clicked.connect(self.abrir_mesas_cor_atualiza)
 
+        self.btn_add_mesa.clicked.connect(self.adicionar_mesa)
+        
 
     def abrir_mesas_cor_atualiza(self):
 
@@ -79,10 +84,7 @@ class Mesas(QMainWindow, mesas):
         data = atualizar_dados(numero_mesa)
         self.window_table = DadosMesa(mesa=name_button, data=data, parent=self)
         self.window_table.mesa_excluida.connect(self.mesa_excluida_manualmente)
-        self.window_table.show()
-            
-
-
+        self.window_table.show()    
     def restaurar_cor(self, nome_do_botao):
 
         # 5. Restaurar a cor original do botão
@@ -94,7 +96,6 @@ class Mesas(QMainWindow, mesas):
         if botao_a_restaurar is not None:
             botao_a_restaurar.setStyleSheet("""
             """)
-
     def mesa_excluida_manualmente(self, mesa):
         numero = mesa["numero"]
 
@@ -103,3 +104,24 @@ class Mesas(QMainWindow, mesas):
 
         self.estilos_originais[f"Mesa_{numero}"] = self.findChild(QPushButton, f"Mesa_{numero}").setStyleSheet( """
                 }""")
+
+    def adicionar_mesa(self):
+
+        layout = self.gridLayout
+        total = layout.count()
+
+        colunas = 4  # quantidade real de mesas por linha
+
+        linha = total // colunas
+        coluna = total % colunas
+
+        numero_mesa = total + 1
+
+        botao = QPushButton(f"Mesa {numero_mesa:02d}")
+        botao.setObjectName(f"Mesa_{numero_mesa:02d}")
+        botao.setMinimumSize(120,120)
+        botao.setMaximumSize(120,120)
+
+        botao.clicked.connect(self.abrir_mesas_cor_atualiza)
+
+        layout.addWidget(botao, linha, coluna)

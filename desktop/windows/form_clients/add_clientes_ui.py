@@ -23,29 +23,34 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(456, 600)
-        MainWindow.setStyleSheet(u"QFrame {\n"
-"	background-color: transparent;\n"
-"	border: transparent;\n"
+        MainWindow.resize(439, 508)
+        MainWindow.setStyleSheet(u"#centralwidget{\n"
+"	background-color: black;\n"
+"}\n"
+"\n"
+"#centralwidget QLineEdit{\n"
+"	background-color: #131314;\n"
+"}\n"
+"\n"
+"#centralwidget QFrame{\n"
+"	background-color: black;\n"
+"}\n"
+"\n"
+"#centralwidget QPushButton{\n"
+"	background-color: #131314;\n"
+"}\n"
+"\n"
+"#centralwidget QPushButton:hover{\n"
+"	background-color: #3c3c3c;\n"
 "}")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.label = QLabel(self.centralwidget)
-        self.label.setObjectName(u"label")
-        font = QFont()
-        font.setFamilies([u"Monotype Corsiva"])
-        font.setPointSize(45)
-        self.label.setFont(font)
-        self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.verticalLayout.addWidget(self.label)
-
         self.frame_2 = QFrame(self.centralwidget)
         self.frame_2.setObjectName(u"frame_2")
         palette = QPalette()
-        brush = QBrush(QColor(0, 0, 0, 0))
+        brush = QBrush(QColor(0, 0, 0, 255))
         brush.setStyle(Qt.BrushStyle.SolidPattern)
         palette.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.Button, brush)
         brush1 = QBrush(QColor(255, 255, 255, 255))
@@ -209,6 +214,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.cad_clientes = QPushButton(self.widget_3)
         self.cad_clientes.setObjectName(u"cad_clientes")
+        self.cad_clientes.setMinimumSize(QSize(0, 40))
         self.cad_clientes.setStyleSheet(u"")
         icon = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ContactNew))
         self.cad_clientes.setIcon(icon)
@@ -217,6 +223,7 @@ class Ui_MainWindow(object):
 
         self.cancelar = QPushButton(self.widget_3)
         self.cancelar.setObjectName(u"cancelar")
+        self.cancelar.setMinimumSize(QSize(0, 40))
         self.cancelar.setStyleSheet(u"")
         icon1 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ApplicationExit))
         self.cancelar.setIcon(icon1)
@@ -228,7 +235,6 @@ class Ui_MainWindow(object):
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.frame_3.raise_()
-        self.label.raise_()
         self.frame_2.raise_()
         self.frame.raise_()
         self.widget_3.raise_()
@@ -240,7 +246,6 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"CADASTRAR CLIENTES", None))
-        self.label.setText(QCoreApplication.translate("MainWindow", u"Cadastro de Clientes", None))
         self.label_nome.setText(QCoreApplication.translate("MainWindow", u"Cliente:", None))
         self.label_telefone.setText(QCoreApplication.translate("MainWindow", u"Telefone:", None))
         self.label_email.setText(QCoreApplication.translate("MainWindow", u"E-mail:", None))

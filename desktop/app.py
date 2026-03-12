@@ -62,7 +62,6 @@ class Login(QMainWindow, login_ui):
         except Exception as e:
             return print(e)
 
-
     def cancelar_login(self):
         pass
 

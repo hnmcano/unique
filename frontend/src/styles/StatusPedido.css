@@ -1,0 +1,95 @@
+:root {
+  --bg-padrao-dark: #1a1a1a;
+  --status-bg-aberto: #2ecc71;
+  --status-bg-fechado: #d62e2e;
+  --txt-padrao: #f3f3f3;
+  --bg-filter-padrao: #222;
+  --box-filter-padrao: #0000004d;
+  --bg-liqui-fill: linear-gradient(90deg, #4f46e5, #7c3aed, #ec4899, #f59e0b);
+  --focus-filters: #6e00a1bb;
+}
+
+.container-pedido{
+    background-color: var(--bg-padrao-dark);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    gap: 20px;
+    padding: 40px;
+}
+
+.icone-status-pedido{
+    color: var(--status-bg-aberto);
+    height: 100px;
+    width: 100px;
+}
+
+.container-status-pedido{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    width: 100vw;
+    gap: 20px;
+    padding: 20px;
+    color: var(--txt-padrao)
+}
+
+.container-data-pedido{
+    background-color: var(--bg-padrao-dark);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 90vw;
+    height: 20vh;
+    gap: 20px;
+    padding: 20px;
+    border: 2px solid black;
+    border-radius: 10px;
+    color: var(--txt-padrao);
+    box-shadow: 0 15px 15px var(--box-filter-padrao);
+}
+
+.label-id_pedido{
+
+    font-size: clamp(14px, 2.5vw, 18px);
+    font-weight: bold;
+    color: var(--txt-padrao);
+    display: flex;
+    flex-direction: row;
+    align-items: left;
+    width: 100%;
+}
+
+.informacoes-data-hora{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.data-data_criacao{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: clamp(14px, 2.5vw, 18px);
+    color: var(--txt-padrao);
+    width: 100%;
+}
+
+.informacoes-valor-total{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    font-size: clamp(14px, 2.5vw, 18px);
+    color: var(--txt-padrao);
+    width: 100%;
+}

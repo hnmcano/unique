@@ -13,6 +13,21 @@
   <property name="windowTitle">
    <string>MESAS</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">#centralwidget {
+	background-color:black;
+}
+
+#centralwidget QPushButton{
+
+	background-color: #131314;
+
+}
+
+#centralwidget QPushButton:hover{
+	background-color: #3c3c3c;
+}</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <property name="spacing">
@@ -49,7 +64,7 @@
        <string notr="true"/>
       </property>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="0" column="2">
+       <item row="0" column="0">
         <widget class="QPushButton" name="Mesa_01">
          <property name="minimumSize">
           <size>
@@ -71,7 +86,51 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="3">
+       <item row="1" column="0">
+        <widget class="QPushButton" name="Mesa_05">
+         <property name="minimumSize">
+          <size>
+           <width>120</width>
+           <height>120</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>120</width>
+           <height>120</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+         <property name="text">
+          <string>Mesa 05</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QPushButton" name="Mesa_06">
+         <property name="minimumSize">
+          <size>
+           <width>120</width>
+           <height>120</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>120</width>
+           <height>120</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+         <property name="text">
+          <string>Mesa 06</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
         <widget class="QPushButton" name="Mesa_02">
          <property name="minimumSize">
           <size>
@@ -93,7 +152,7 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="4">
+       <item row="0" column="2">
         <widget class="QPushButton" name="Mesa_03">
          <property name="minimumSize">
           <size>
@@ -115,29 +174,7 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="5">
-        <widget class="QPushButton" name="Mesa_04">
-         <property name="minimumSize">
-          <size>
-           <width>120</width>
-           <height>120</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>120</width>
-           <height>120</height>
-          </size>
-         </property>
-         <property name="styleSheet">
-          <string notr="true"/>
-         </property>
-         <property name="text">
-          <string>Mesa 04</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="4">
+       <item row="1" column="2">
         <widget class="QPushButton" name="Mesa_07">
          <property name="minimumSize">
           <size>
@@ -160,50 +197,6 @@
         </widget>
        </item>
        <item row="1" column="3">
-        <widget class="QPushButton" name="Mesa_06">
-         <property name="minimumSize">
-          <size>
-           <width>120</width>
-           <height>120</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>120</width>
-           <height>120</height>
-          </size>
-         </property>
-         <property name="styleSheet">
-          <string notr="true"/>
-         </property>
-         <property name="text">
-          <string>Mesa 06</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="2">
-        <widget class="QPushButton" name="Mesa_05">
-         <property name="minimumSize">
-          <size>
-           <width>120</width>
-           <height>120</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>120</width>
-           <height>120</height>
-          </size>
-         </property>
-         <property name="styleSheet">
-          <string notr="true"/>
-         </property>
-         <property name="text">
-          <string>Mesa 05</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="5">
         <widget class="QPushButton" name="Mesa_08">
          <property name="minimumSize">
           <size>
@@ -225,6 +218,28 @@
          </property>
         </widget>
        </item>
+       <item row="0" column="3">
+        <widget class="QPushButton" name="Mesa_04">
+         <property name="minimumSize">
+          <size>
+           <width>120</width>
+           <height>120</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>120</width>
+           <height>120</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+         <property name="text">
+          <string>Mesa 04</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </item>
@@ -233,12 +248,27 @@
       <property name="maximumSize">
        <size>
         <width>16777215</width>
-        <height>30</height>
+        <height>50</height>
        </size>
       </property>
       <property name="styleSheet">
        <string notr="true"/>
       </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QPushButton" name="btn_add_mesa">
+         <property name="maximumSize">
+          <size>
+           <width>120</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>ADD MESA</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </item>
    </layout>

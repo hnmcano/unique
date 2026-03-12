@@ -26,7 +26,25 @@
    <string>PEDIDOS EM MESA</string>
   </property>
   <property name="styleSheet">
-   <string notr="true"/>
+   <string notr="true">#centralwidget{
+	background-color: black;
+}
+
+#centralwidget QPushButton{
+	background-color: #131314;
+}
+
+#centralwidget QPushButton:hover{
+	background-color: #131314;
+}
+
+#centralwidget #tableWidget{
+	background-color: #131314;
+}
+
+#centralwidget QLineEdit{
+	background-color: #131314;
+}</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="minimumSize">

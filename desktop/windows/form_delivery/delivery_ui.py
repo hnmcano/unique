@@ -81,7 +81,13 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout.addWidget(self.widget_3)
 
-        self.widget_4 = QWidget(self.widget)
+        self.widget_5 = QWidget(self.widget)
+        self.widget_5.setObjectName(u"widget_5")
+        self.widget_5.setMinimumSize(QSize(200, 0))
+        self.widget_5.setStyleSheet(u"")
+        self.horizontalLayout_2 = QHBoxLayout(self.widget_5)
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.widget_4 = QWidget(self.widget_5)
         self.widget_4.setObjectName(u"widget_4")
         self.widget_4.setMinimumSize(QSize(700, 0))
         self.verticalLayout_3 = QVBoxLayout(self.widget_4)
@@ -97,14 +103,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.addWidget(self.FilterPedidos)
 
 
-        self.horizontalLayout.addWidget(self.widget_4)
+        self.horizontalLayout_2.addWidget(self.widget_4)
 
-        self.widget_5 = QWidget(self.widget)
-        self.widget_5.setObjectName(u"widget_5")
-        self.widget_5.setMinimumSize(QSize(200, 0))
-        self.widget_5.setStyleSheet(u"")
-        self.horizontalLayout_2 = QHBoxLayout(self.widget_5)
-        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.pushButton = QPushButton(self.widget_5)
         self.pushButton.setObjectName(u"pushButton")
         self.pushButton.setMinimumSize(QSize(0, 55))

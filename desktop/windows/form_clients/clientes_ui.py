@@ -25,6 +25,24 @@ class Ui_MainWindow(object):
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.resize(1217, 652)
         MainWindow.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
+        MainWindow.setStyleSheet(u"#centralwidget{\n"
+"	background-color: black;\n"
+"}\n"
+"\n"
+"#centralwidget QLineEdit{\n"
+"	background-color: #131314;\n"
+"}\n"
+"\n"
+"#centralwidget QTableWidget{\n"
+"	background-color: #131314;\n"
+"	border-radius: 10px;\n"
+"}\n"
+"\n"
+"#centralwidget QPushButton{\n"
+"	background-color: #3c3c3c;\n"
+"	border-radius: 10px;\n"
+"}\n"
+"")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)

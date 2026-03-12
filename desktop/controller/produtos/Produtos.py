@@ -46,7 +46,6 @@ def carregar_produto(self):
 
 
 
-
 class Produtos(QMainWindow, produtos):
     mensagem_recebida = Signal(dict)
 

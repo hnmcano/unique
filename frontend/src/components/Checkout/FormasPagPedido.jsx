@@ -1,4 +1,6 @@
 import { useCheckout } from "../../contexts/CheckoutContext";
+import { useNavigate } from "react-router-dom";
+import { useStatus } from "../../contexts/StatusContext";
 import { Link } from "react-router-dom";
 import api from "../../api/api";
 import { PagamentoCredito, PagamentoDebito, PagamentoDinheiro, PagamentoPix } from "./pagamentos/FormasDePagamentos";
@@ -14,13 +16,17 @@ function FormasPagPedido() {
             SelecionarMetodo, 
             opcoesDisponiveis,
             formaPagamento,
-            SelecionarBandeira
+            SelecionarBandeira,
+            statusPedido
         } = useCheckout();
+
+    const { dataStatus, setDataStatus } = useStatus();
 
     const [isLoading, setIsLoading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
     const [error, setError] = useState(null);
     const [respostaServidor, setRespostaServidor] = useState(null);
+    const navigate = useNavigate();
 
     if (respostaServidor) {
         return (
@@ -56,8 +62,10 @@ function FormasPagPedido() {
 
             setTimeout(() => {
                 setIsSuccess(false);
+                console.log("resposta-servidor, sucesso",response);
+                setDataStatus(response.data);
+                navigate(`/Status/Pedido/${response.data.id_pedido}`);
             }, 2000);
-
 
         }catch(error){
             console.log(error);
@@ -65,7 +73,6 @@ function FormasPagPedido() {
             setError(error);
             setRespostaServidor(error.response.data.detail);
         }
-
 
     }
     

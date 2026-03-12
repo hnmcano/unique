@@ -54,15 +54,33 @@ class WebSocketService(QThread):
         self.status.emit("desconectado")
         print("WS FECHADO")
 
-class PedidoStore:
+class PedidoStore(QObject):
+    pedido_adicionado = Signal(dict)
+    pedido_removido = Signal(dict)
+    pedido_atualizado = Signal(dict)
+
     def __init__(self):
+        super().__init__()
         self.pedidos = []
+
+    def adicionar(self, pedido):
+        self.pedidos.append(pedido)
+        self.pedido_adicionado.emit(pedido)
+
+    def remover(self, pedido):
+        if pedido in self.pedidos:
+            self.pedidos.remove(pedido)
+            self.pedido_removido.emit(pedido)
+
+    def atualizar(self, pedido_atualizado):
+        for i, p in enumerate(self.pedidos):
+            if p["id"] == pedido_atualizado["id"]:
+                self.pedidos[i] = pedido_atualizado
+                self.pedido_atualizado.emit(pedido_atualizado)
+                break
 
     def listar(self):
         return self.pedidos
 
-    def adicionar(self, pedido):
-        self.pedidos.append(pedido)
-
-    def remover(self, pedido):
-        self.pedidos.remove(pedido)
+    def contar_pendentes(self):
+        return sum(1 for p in self.pedidos if p["status"] == "PENDENTE")

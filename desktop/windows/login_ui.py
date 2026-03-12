@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'login.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.10.2
+## Created by: Qt User Interface Compiler version 6.9.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -24,7 +24,16 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(377, 546)
+        MainWindow.resize(321, 417)
+        MainWindow.setStyleSheet(u"#centralwidget{\n"
+"	background-color: #131314;\n"
+"}\n"
+"\n"
+"#centralwidget QLineEdit{\n"
+"	background-color: black;\n"
+"	padding: 3px;\n"
+"}\n"
+"")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
@@ -41,8 +50,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.label = QLabel(self.widget_2)
         self.label.setObjectName(u"label")
-        self.label.setPixmap(QPixmap(u":/unique/login.png"))
-        self.label.setScaledContents(False)
+        self.label.setPixmap(QPixmap(u":/unique/unique.png"))
+        self.label.setScaledContents(True)
 
         self.verticalLayout_2.addWidget(self.label)
 
@@ -53,17 +62,20 @@ class Ui_MainWindow(object):
         self.widget.setObjectName(u"widget")
         self.widget.setStyleSheet(u"")
         self.verticalLayout_3 = QVBoxLayout(self.widget)
+        self.verticalLayout_3.setSpacing(0)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.widget_4 = QWidget(self.widget)
         self.widget_4.setObjectName(u"widget_4")
         self.verticalLayout_4 = QVBoxLayout(self.widget_4)
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
+        self.verticalLayout_4.setContentsMargins(-1, 0, -1, -1)
         self.widget_6 = QWidget(self.widget_4)
         self.widget_6.setObjectName(u"widget_6")
         self.widget_6.setStyleSheet(u"")
         self.verticalLayout_6 = QVBoxLayout(self.widget_6)
         self.verticalLayout_6.setSpacing(0)
         self.verticalLayout_6.setObjectName(u"verticalLayout_6")
+        self.verticalLayout_6.setContentsMargins(-1, 0, -1, -1)
         self.label_2 = QLabel(self.widget_6)
         self.label_2.setObjectName(u"label_2")
         self.label_2.setMaximumSize(QSize(16777215, 30))
@@ -83,6 +95,7 @@ class Ui_MainWindow(object):
         self.widget_7.setObjectName(u"widget_7")
         self.widget_7.setStyleSheet(u"")
         self.verticalLayout_5 = QVBoxLayout(self.widget_7)
+        self.verticalLayout_5.setSpacing(0)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
         self.label_3 = QLabel(self.widget_7)
         self.label_3.setObjectName(u"label_3")
@@ -99,41 +112,43 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_4.addWidget(self.widget_7)
 
+        self.widget_3 = QWidget(self.widget_4)
+        self.widget_3.setObjectName(u"widget_3")
+        self.widget_3.setMaximumSize(QSize(16777215, 60))
+
+        self.verticalLayout_4.addWidget(self.widget_3)
+
 
         self.verticalLayout_3.addWidget(self.widget_4)
 
         self.widget_5 = QWidget(self.widget)
         self.widget_5.setObjectName(u"widget_5")
         self.widget_5.setMaximumSize(QSize(16777215, 50))
-
-        self.verticalLayout_3.addWidget(self.widget_5)
-
-
-        self.verticalLayout.addWidget(self.widget)
-
-        self.widget_3 = QWidget(self.centralwidget)
-        self.widget_3.setObjectName(u"widget_3")
-        self.widget_3.setMaximumSize(QSize(16777215, 90))
-        self.widget_3.setStyleSheet(u"")
-        self.horizontalLayout = QHBoxLayout(self.widget_3)
+        self.horizontalLayout = QHBoxLayout(self.widget_5)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.LoginButton = QPushButton(self.widget_3)
+        self.LoginButton = QPushButton(self.widget_5)
         self.LoginButton.setObjectName(u"LoginButton")
         self.LoginButton.setAutoDefault(True)
         self.LoginButton.setFlat(False)
 
         self.horizontalLayout.addWidget(self.LoginButton)
 
-        self.CancelButton = QPushButton(self.widget_3)
+        self.CancelButton = QPushButton(self.widget_5)
         self.CancelButton.setObjectName(u"CancelButton")
         self.CancelButton.setAutoDefault(True)
 
         self.horizontalLayout.addWidget(self.CancelButton)
 
 
-        self.verticalLayout.addWidget(self.widget_3)
+        self.verticalLayout_3.addWidget(self.widget_5)
+
+
+        self.verticalLayout.addWidget(self.widget)
 
         MainWindow.setCentralWidget(self.centralwidget)
+        QWidget.setTabOrder(self.LoginLine, self.PassLine)
+        QWidget.setTabOrder(self.PassLine, self.LoginButton)
+        QWidget.setTabOrder(self.LoginButton, self.CancelButton)
 
         self.retranslateUi(MainWindow)
 
@@ -145,7 +160,7 @@ class Ui_MainWindow(object):
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"LOGIN", None))
         self.label.setText("")
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"USER:", None))
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"PASSWORD:", None))

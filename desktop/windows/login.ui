@@ -6,12 +6,23 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>377</width>
-    <height>546</height>
+    <width>321</width>
+    <height>417</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>LOGIN</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">#centralwidget{
+	background-color: #131314;
+}
+
+#centralwidget QLineEdit{
+	background-color: black;
+	padding: 3px;
+}
+</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -63,10 +74,10 @@
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap resource="../pictures/imagens.qrc">:/unique/login.png</pixmap>
+          <pixmap resource="../pictures/imagens.qrc">:/unique/unique.png</pixmap>
          </property>
          <property name="scaledContents">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -79,9 +90,15 @@
        <string notr="true"/>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_3">
+       <property name="spacing">
+        <number>0</number>
+       </property>
        <item>
         <widget class="QWidget" name="widget_4" native="true">
          <layout class="QVBoxLayout" name="verticalLayout_4">
+          <property name="topMargin">
+           <number>0</number>
+          </property>
           <item>
            <widget class="QWidget" name="widget_6" native="true">
             <property name="styleSheet">
@@ -89,6 +106,9 @@
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_6">
              <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
               <number>0</number>
              </property>
              <item>
@@ -120,6 +140,9 @@
              <string notr="true"/>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_5">
+             <property name="spacing">
+              <number>0</number>
+             </property>
              <item>
               <widget class="QLabel" name="label_3">
                <property name="maximumSize">
@@ -146,6 +169,16 @@
             </layout>
            </widget>
           </item>
+          <item>
+           <widget class="QWidget" name="widget_3" native="true">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>60</height>
+             </size>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
@@ -157,50 +190,37 @@
            <height>50</height>
           </size>
          </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item>
-     <widget class="QWidget" name="widget_3" native="true">
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>90</height>
-       </size>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QPushButton" name="LoginButton">
-         <property name="text">
-          <string>LOGIN</string>
-         </property>
-         <property name="autoDefault">
-          <bool>true</bool>
-         </property>
-         <property name="default">
-          <bool>true</bool>
-         </property>
-         <property name="flat">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="CancelButton">
-         <property name="text">
-          <string>CANCEL</string>
-         </property>
-         <property name="autoDefault">
-          <bool>true</bool>
-         </property>
-         <property name="default">
-          <bool>true</bool>
-         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QPushButton" name="LoginButton">
+            <property name="text">
+             <string>LOGIN</string>
+            </property>
+            <property name="autoDefault">
+             <bool>true</bool>
+            </property>
+            <property name="default">
+             <bool>true</bool>
+            </property>
+            <property name="flat">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="CancelButton">
+            <property name="text">
+             <string>CANCEL</string>
+            </property>
+            <property name="autoDefault">
+             <bool>true</bool>
+            </property>
+            <property name="default">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
       </layout>
@@ -209,6 +229,12 @@
    </layout>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>LoginLine</tabstop>
+  <tabstop>PassLine</tabstop>
+  <tabstop>LoginButton</tabstop>
+  <tabstop>CancelButton</tabstop>
+ </tabstops>
  <resources>
   <include location="../pictures/imagens.qrc"/>
  </resources>

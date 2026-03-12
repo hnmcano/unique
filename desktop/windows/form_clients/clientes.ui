@@ -16,6 +16,26 @@
   <property name="layoutDirection">
    <enum>Qt::LayoutDirection::LeftToRight</enum>
   </property>
+  <property name="styleSheet">
+   <string notr="true">#centralwidget{
+	background-color: black;
+}
+
+#centralwidget QLineEdit{
+	background-color: #131314;
+}
+
+#centralwidget QTableWidget{
+	background-color: #131314;
+	border-radius: 10px;
+}
+
+#centralwidget QPushButton{
+	background-color: #3c3c3c;
+	border-radius: 10px;
+}
+</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <property name="spacing">

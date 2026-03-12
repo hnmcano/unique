@@ -84,7 +84,6 @@ class DadosMesa(QMainWindow, pedido_mesa):
         self.tableWidget.setSelectionBehavior(QTableWidget.SelectRows)
         self.tableWidget.setSelectionMode(QTableWidget.SingleSelection)
         self.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
-
     def atualizar_tabela(self, itens, mesa):
 
             valor_total_formatado = f"R$ {mesa['pedido']['valor_total']:.2f}"
@@ -204,7 +203,7 @@ class DadosMesa(QMainWindow, pedido_mesa):
 
     def excluir_item(self, row, data):  
         try:
-            response = APPContext.api_client.delete(f"/mesas/excluir-item/{data['id_mesa']}/{data['pedido']['id_pedido_mesa']}/{data['pedido']['itens'][row]['produto_id']}")
+            response = APPContext.api_client.delete(f"/mesas/excluir-item/{data['id_mesa']}/{data['pedido']['id_pedido_mesa']}/{data['pedido']['itens'][row]['produto_id']}", data=None)
         except Exception as e:
             QMessageBox.critical(self, "Erro", f"{e}")
 

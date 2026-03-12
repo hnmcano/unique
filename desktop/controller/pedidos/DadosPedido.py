@@ -1,11 +1,12 @@
 from PySide6.QtWidgets import *
 from windows.form_delivery.pedido_delivery_ui import Ui_MainWindow as dados_pedidos
+from controller.pedidos.AtualizarQuantidade import AtualizarQuantidade_ui as EditarItem
+from controller.pedidos.AddProdutoPedidos import AdicionarProdutoPedido
+
 from PySide6.QtNetwork import *
 from PySide6.QtCore import *
-from services.websocket import WebSocketService
 from core.app_context import app_context as APPContext
-import requests
-from uuid import UUID
+
 
 from datetime import datetime, timedelta
 import os
@@ -21,16 +22,14 @@ def exibir_confirmacao_exclusao(self):
     # A resposta é armazenada aqui, o código é bloqueado até o usuário interagir
     resposta = msg_box.exec()
 
-    print(self.id)
-
     if resposta == QMessageBox.Yes: # type: ignore
         # Se o usuário confirmar, emita o sinal e feche a janela
         try:
-            response = APPContext.api_client.delete(f"/pedidos/excluir-pedido/{self.id}")
+            response = APPContext.api_client.delete(f"pedidos/desktop/deletar-dados-pedidos/{self.id}", data=None )
             
             QMessageBox.information(self, "Sucesso", "Pedido excluido com sucesso!")
 
-            self.pedido_excluido.emit(self.id) # type: ignore
+            APPContext.pedido_store.remover(self.pedido)
             self.close() # type: ignore
 
         except Exception as e:
@@ -39,8 +38,8 @@ def exibir_confirmacao_exclusao(self):
 
 class DadosPedido(QMainWindow, dados_pedidos):
     mensagem_recebida = Signal(dict)
-    pedido_excluido = Signal(UUID)
-    def __init__(self, pedido: dict, parent=None):
+
+    def __init__(self, pedido, parent=None):
         super().__init__(parent=parent)
         self.setupUi(self)
 
@@ -48,6 +47,10 @@ class DadosPedido(QMainWindow, dados_pedidos):
         self.pedido = pedido
 
         self.id = pedido["id_pedido"]
+
+        self.websocket = APPContext.websocket_client
+
+        self.websocket.mensagem_recebida.connect(self.on_evento_recebido)
 
         self.status.setText(pedido["status"])
         self.status.setAlignment(Qt.AlignCenter)
@@ -59,19 +62,11 @@ class DadosPedido(QMainWindow, dados_pedidos):
         self.data_criacao.setText(f"{(datetime.fromisoformat(pedido["data_criacao"])- timedelta(hours=3)).strftime('%d/%m/%Y %H:%M:%S')}")
         self.data_criacao.setAlignment(Qt.AlignCenter)
 
-        quantidade_itens = str(len(pedido["itens"]))
-        self.quantidade_itens_mesa.setText(quantidade_itens)
-
-        valor_total_formatado = f"R$ {pedido['valor_total']}"
-        self.valor_total_mesa.setText(valor_total_formatado)
-
-        taxa_entrega_formatada = f"R$ {pedido["endereco_entrega"]['taxa_entrega']}"
-        self.taxa_entrega.setText(taxa_entrega_formatada)
-
         self.setup_table()
         self.atualizar_tabela(pedido)
 
         self.btn_excluir.clicked.connect(lambda: exibir_confirmacao_exclusao(self))
+        self.btn_adicionar.clicked.connect(lambda: self.abrir_produtos(data=pedido))
 
     def setup_table(self):
         columns = ["NOME", "QUANTIDADE", "VALOR", "EDITAR", "EXCLUIR"]
@@ -88,7 +83,16 @@ class DadosPedido(QMainWindow, dados_pedidos):
         self.tableWidget.setSelectionMode(QTableWidget.SingleSelection)
         self.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
-    def atualizar_tabela(self, data, columns=None):
+    def atualizar_tabela(self, data):
+            quantidade_itens = str(len(data["itens"]))
+            self.quantidade_itens_mesa.setText(quantidade_itens)
+
+            valor_total_formatado = f"R$ {data['valor_total']}"
+            self.valor_total_mesa.setText(valor_total_formatado)
+
+            taxa_entrega_formatada = f"R$ {data["endereco_entrega"]['taxa_entrega']}"
+            self.taxa_entrega.setText(taxa_entrega_formatada)
+
 
             self.tableWidget.setRowCount(len(data["itens"]))
 
@@ -106,56 +110,30 @@ class DadosPedido(QMainWindow, dados_pedidos):
                 item_valor.setTextAlignment(Qt.AlignCenter)
                 self.tableWidget.setItem(i, 2, item_valor)
 
-                container = QWidget()
-
-                # Cria layout horizontal
-                layout = QHBoxLayout(container)
-                layout.setContentsMargins(0, 0, 0, 0)
-                layout.setSpacing(5)
-
                 # Botão editar
-                btn_adicionar = QPushButton("+")
-                btn_adicionar.setStyleSheet("""
+                btn_editar = QPushButton()
+                btn_editar.setIcon(
+                    QApplication.style().standardIcon(QStyle.SP_FileDialogContentsView)
+                )
+
+                btn_editar.setStyleSheet("""
                 QPushButton {
-                    max-width: 40px;
-                    height: 20px;
-                    background-color: green;
-                    font-size: 16px;
+                    background-color: transparent; 
+                    border: none;
                 }
                 QPushButton:hover {
                     background-color: rgb(131, 131, 131);
                 }
-
-                QPushButton:clicked {
+                QPushButton:pressed {
                     background-color: rgb(131, 131, 131);
                 }
                 """)
-                btn_adicionar.clicked.connect(lambda _, row=i: self.aumentar_quantidade(row, data=item, pedido=data))
 
-                # Botão excluir
-                btn_diminuir = QPushButton("-")
-                btn_diminuir.setStyleSheet("""QPushButton {
-                    max-width: 40px;
-                    height: 20px;
-                    background-color: red;
-                    font-size: 26px;
-                }
-                QPushButton:hover {
-                    background-color: rgb(131, 131, 131);
-                }
+                btn_editar.clicked.connect(
+                    lambda _, row=i: self.editar_item_quantidade(row=row, data=data)
+                )
 
-                QPushButton:clicked {
-                    background-color: rgb(131, 131, 131);
-                }
-
-                """)
-                btn_diminuir.clicked.connect(lambda _, row=i: self.diminuir_quantidade(row, data=item))
-
-                # Adiciona os botões ao layout
-                layout.addWidget(btn_adicionar)
-                layout.addWidget(btn_diminuir)
-                # Define o container como widget da célula
-                self.tableWidget.setCellWidget(i, 3, container)
+                self.tableWidget.setCellWidget(i, 3, btn_editar)
 
                 btn_excluir = QPushButton()
                 btn_excluir.setIcon(
@@ -175,27 +153,35 @@ class DadosPedido(QMainWindow, dados_pedidos):
                         }
                     """
                 )
-                btn_excluir.clicked.connect(lambda _, row=i: self.excluir_item(row, data=item))
+                btn_excluir.clicked.connect(lambda _, row=i: self.excluir_item(row=row, data=data))
                 self.tableWidget.setCellWidget(i, 4, btn_excluir)
 
     def on_evento_recebido(self, evento: dict):
         if evento["tipo"] == "pedido_em_delivery":
-            if evento["dados"]["id"] == self.id:
+            print(evento["dados"])
+            if evento["dados"]["id_pedido"] == self.id:
                 self.atualizar_tabela(evento["dados"])
 
-    def aumentar_quantidade(self, row, data, pedido):
-        response = requests.put(f"{settings.API_URL}/pedidos/aumentar-item/{pedido["id"]}/{data["id"]}/{data["pedido"]["itens"]["produtos"][row]['produto_id']}")
-        if response.status_code == 404:
-            QMessageBox.critical(self, "Erro", f"{response.json()['detail']}")
+    def editar_item_quantidade( self,row, data=None):
+        id = data["id_pedido"]
+        data = data["itens"][row]
 
-    def diminuir_quantidade(self,row, data):
-        response = requests.put(f"{settings.API_URL}/pedidos/diminuir-item/{data["id"]}/{data["pedido"]["id"]}/{data["pedido"]["itens"][row]['produto_id']}")
+        self.editar_item = EditarItem(item=data, id=id, parent=self)
+        self.editar_item.show()
 
-        if response.status_code == 400:
-            QMessageBox.critical(self, "Erro", f"{response.json()['detail']}")
+    def excluir_item( self,row, data=None):
+        id = data["id_pedido"]
+        data = data["itens"][row]
 
-    def excluir_item(self, row, data):  
-        response = requests.delete(f"{settings.API_URL}/pedidos/excluir-item/{data["id"]}/{data["pedido"]["id"]}/{data["pedido"]["itens"][row]['produto_id']}")
+        try:
+            response = APPContext.api_client.delete(f"/pedidos/desktop/deletar-item-pedido", 
+                                                    {
+                                                        "id_pedido": id, 
+                                                        "id_itens_pedido": data["id_itens_pedido"]
+                                                     })
+        except Exception as e:
+            QMessageBox.critical(self, "Erro", f"{e}")
 
-        if response.status_code == 400:
-            QMessageBox.critical(self, "Erro", f"{response.json()['detail']}")
+    def abrir_produtos(self, data=None):
+        self.produtos = AdicionarProdutoPedido(parent=self, data=data)
+        self.produtos.show()

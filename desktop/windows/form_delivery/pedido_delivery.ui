@@ -137,7 +137,7 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_4">
           <item>
-           <widget class="QPushButton" name="adicionar_produto">
+           <widget class="QPushButton" name="btn_adicionar">
             <property name="text">
              <string>ADD PRODUTO</string>
             </property>
