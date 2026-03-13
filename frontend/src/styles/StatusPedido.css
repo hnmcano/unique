@@ -46,7 +46,7 @@
     align-items: center;
     justify-content: space-between;
     width: 90vw;
-    height: 20vh;
+    height: 40vh;
     gap: 20px;
     padding: 20px;
     border: 2px solid black;
@@ -56,8 +56,7 @@
 }
 
 .label-id_pedido{
-
-    font-size: clamp(14px, 2.5vw, 18px);
+    font-size: clamp(14px, 2.5vw, 16px);
     font-weight: bold;
     color: var(--txt-padrao);
     display: flex;
@@ -72,6 +71,7 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
+    font-size: clamp(16px, 2.5vw, 20px);
 }
 
 .data-data_criacao{
@@ -79,7 +79,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    font-size: clamp(14px, 2.5vw, 18px);
+    font-size: clamp(16px, 2.5vw, 20px);
     color: var(--txt-padrao);
     width: 100%;
 }
@@ -88,8 +88,29 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
-    font-size: clamp(14px, 2.5vw, 18px);
+    justify-content: space-around;
+    font-size: clamp(16px, 2.5vw, 20px);
     color: var(--txt-padrao);
     width: 100%;
+}
+
+.informacoes-prazo-entrega{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    font-size: clamp(16px, 2.5vw, 20px);
+    color: var(--txt-padrao);
+    width: 100%;
+}
+
+.informacoes-entrega-endereco{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    font-size: clamp(16px, 2.5vw, 20px);
+    color: var(--txt-padrao);
+    width: 100%;
+    gap: 5px;
 }

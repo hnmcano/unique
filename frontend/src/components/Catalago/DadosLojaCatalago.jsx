@@ -15,7 +15,7 @@ function DadosLojaCatalago({}) {
                     <label className={status === "ABERTO" ? "status_aberto" : "status_fechado"}>{status}</label>
                 </div>
                 <header className="infos">
-                    <h1>Hookah Shisha</h1>
+                    <h1>{estabelecimento?.nome_fantasia}</h1>
                     <p className="subtitle">Tabacaria</p>
                 </header>
                 <div className="infos">
@@ -25,12 +25,16 @@ function DadosLojaCatalago({}) {
                     </div>
                     <div className="infos">
                         <span class="label">Horário</span>
-                        <span class="value">13:00 às 17:00</span>
+                        <span class="value"> Seg à Sex: 14:00 às 22:00</span>
+                        <div style={{ display: "flex", flexDirection: "row", gap: 10,}}>
+                            <span class="value"> Sab: 15:00 às 21:00</span>
+                            <span class="value"> Dom: 14:00 às 18:00</span>
+                        </div>
                     </div>
                 </div>
                 <footer className="infos-contact">
-                    <span href="https://wa.me/5514996323908" class="contact-link">📞 {estabelecimento?.telefone}</span>
-                    <span href="#" class="contact-link">📸 {estabelecimento?.rede_social}</span>
+                    <span onClick={() => window.open("https://wa.me/" + estabelecimento?.telefone)} className="contact-link">📞 {estabelecimento?.telefone}</span>
+                    <span onClick={() => window.open("https://www.instagram.com/" + estabelecimento?.rede_social)} className="contact-link">📸 {estabelecimento?.rede_social}</span>
                 </footer>
             </div>
         </>

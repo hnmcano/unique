@@ -12,11 +12,9 @@ export default function AcompanhamentoPedido() {
     const hora_pedido = dayjs(dataStatus.data_criacao).format('hh:mm:ss');
 
 
-    useEffect(() => {
-        
+    useEffect(() => {  
         if (!dataStatus || dataStatus.id_pedido !== id_pedido) {
-            
-            fetch(`http://localhost:5000/pedidos/${id_pedido}`)
+            fetch(`https://api.uniqsystems.com.br/pedidos/${id_pedido}`)
             .then((response) => {response.json()
                 .then((data) => {
                     setDataStatus(data);
@@ -61,9 +59,17 @@ export default function AcompanhamentoPedido() {
                             <label>{hora_pedido}</label>
                         </div>
                     </div>
+                    <div className='informacoes-prazo-entrega'>
+                        <span>Prazo Entrega:</span>
+                        <label>50 min à 70min</label>
+                    </div>
                     <div className='informacoes-valor-total'>
                         <span>Valor Total:</span>
-                        <label>{dataStatus.valor_total}</label>
+                        <label>{dataStatus.valor_total.toFixed(2)}</label>
+                    </div>
+                    <div className='informacoes-entrega-endereco'>
+                        <span>Endereço de Entrega:</span>
+                        <label>{dataStatus.endereco_entrega.endereco}, {dataStatus.endereco_entrega.numero}</label>
                     </div>
                 </div>
             </div>
