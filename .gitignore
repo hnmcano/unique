@@ -24,3 +24,28 @@ build/
 # IDE
 .vscode/
 .idea/
+
+
+# Installer
+installer/
+**/installer
+
+
+# ENV
+version_info.txt
+version_info.txt*
+**/version_info.txt
+**/version_info.txt*
+
+
+# ENV
+app.spec
+app.spec*
+**/app.spec
+**/app.spec*
+
+
+unique.spec
+unique.spec*
+**/unique.spec
+**/unique.spec*

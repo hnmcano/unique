@@ -27,7 +27,7 @@ def exibir_confirmacao_exclusao(parent= None, data=None):
     if resposta == QMessageBox.Yes: # type: ignore
         # Se o usuário confirmar, emita o sinal e feche a janela
         try:
-            response = APPContext.api_client.delete(f"/mesas/excluir-mesa/{data['id_mesa']}")
+            response = APPContext.api_client.delete(f"/mesas/excluir-mesa/{data['id_mesa']}", data=None)
 
             QMessageBox.information(parent, "Sucesso", "Mesa excluida com sucesso!")
             
@@ -35,7 +35,7 @@ def exibir_confirmacao_exclusao(parent= None, data=None):
             parent.close() # type: ignore
 
         except Exception as e:
-            QMessageBox.critical(parent, "Erro", "Falha ao excluir mesa.")
+            QMessageBox.critical(parent, "Erro", f"Falha ao excluir mesa.{str(e)}")
             return
 
     # Se a resposta for QMessageBox.No, o diálogo simplesmente fecha e nada acontece

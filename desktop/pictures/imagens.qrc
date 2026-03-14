@@ -18,5 +18,6 @@
         <file>unique.png</file>
         <file>conectado.png</file>
         <file>desconectado.png</file>
+        <file>icone.ico</file>
     </qresource>
 </RCC>

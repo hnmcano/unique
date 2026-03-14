@@ -65,7 +65,6 @@ class Login(QMainWindow, login_ui):
     def cancelar_login(self):
         pass
 
-
 # funcao principal da aplicação
 if __name__ == "__main__":
     app = QApplication(sys.argv)
