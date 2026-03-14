@@ -157,7 +157,7 @@ class DadosPedido(QMainWindow, dados_pedidos):
                 self.tableWidget.setCellWidget(i, 4, btn_excluir)
 
     def on_evento_recebido(self, evento: dict):
-        if evento["tipo"] == "pedido_em_delivery":
+        if evento["tipo"] == "pedido_em_delivery_atualizado":
             print(evento["dados"])
             if evento["dados"]["id_pedido"] == self.id:
                 self.atualizar_tabela(evento["dados"])

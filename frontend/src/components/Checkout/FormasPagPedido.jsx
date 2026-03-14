@@ -4,9 +4,11 @@ import { useStatus } from "../../contexts/StatusContext";
 import { Link } from "react-router-dom";
 import api from "../../api/api";
 import { PagamentoCredito, PagamentoDebito, PagamentoDinheiro, PagamentoPix } from "./pagamentos/FormasDePagamentos";
+import { useEstabelecimento } from "../../contexts/EstabelecimentoContext";
 import { IconePix, IconeCredito, IconeDebito, IconeDinheiro } from "./pagamentos/iconesSvg";
 import { ButtonBack} from "./buttons/ButtonsCheckout";
 import { useState } from "react";
+import { MdOutlineCancel } from "react-icons/md";
 import "../../styles/Enviar.css";
 
 function FormasPagPedido() {
@@ -20,7 +22,8 @@ function FormasPagPedido() {
             statusPedido
         } = useCheckout();
 
-    const { dataStatus, setDataStatus } = useStatus();
+    const { pedidos, atualizarPedido } = useStatus();
+    const { estabelecimento } = useEstabelecimento();
 
     const [isLoading, setIsLoading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
@@ -32,8 +35,13 @@ function FormasPagPedido() {
         return (
             <>
                 <div className="resposta-servidor-container">
+                    <MdOutlineCancel className="resposta-servidor-icon"/>
                     <div className="resposta-servidor-text">
                         <p className="resposta-servidor">{respostaServidor}</p>
+                    </div>
+                    <div className='resposta-servidor-contato'>
+                        <span>Qualquer Duvida, entre em contato:</span>
+                        <span onClick={() => window.open("https://wa.me/" + estabelecimento?.telefone)} className="contact-link">📞 {estabelecimento?.telefone}</span>
                     </div>
                     <div className="resposta-servidor-button">
                         <Link to="/">
@@ -56,14 +64,13 @@ function FormasPagPedido() {
         try{
             const response = await api.post("/pedidos/react", data);
             
-
             setIsLoading(false);
             setIsSuccess(true);
 
             setTimeout(() => {
                 setIsSuccess(false);
                 console.log("resposta-servidor, sucesso",response);
-                setDataStatus(response.data);
+                atualizarPedido(response.data);
                 navigate(`/Status/Pedido/${response.data.id_pedido}`);
             }, 2000);
 

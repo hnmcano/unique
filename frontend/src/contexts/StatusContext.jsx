@@ -4,21 +4,31 @@ const StatusContext = createContext();
 
 export function StatusProvider({ children }) {
 
-    const [dataStatus, setDataStatus] = useState(() => {
-        const salvo = localStorage.getItem("status");
-        return salvo ? JSON.parse(salvo) : [];
+    const [pedidos, setPedidos] = useState(() => {
+        const salvo = localStorage.getItem("pedidos_status");
+        return salvo ? JSON.parse(salvo) : {};
     });
 
     useEffect(() => {
-        localStorage.setItem("status", JSON.stringify(dataStatus));
-    }, [dataStatus]);
+        localStorage.setItem("pedidos_status", JSON.stringify(pedidos));
+    }, [pedidos]);
+
+    const atualizarPedido = (dados) => {
+        console.log(dados);
+        setPedidos(prev => ({
+            ...prev,
+            [dados.id_pedido]: {
+                ...prev[dados.id_pedido],
+                ...dados
+            }
+        }));
+    };
 
     return (
-        <StatusContext.Provider value={{ dataStatus, setDataStatus }}>
+        <StatusContext.Provider value={{ pedidos, atualizarPedido }}>
             {children}
         </StatusContext.Provider>
     );
-    
 }
 
 export function useStatus() {

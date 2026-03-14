@@ -1,7 +1,9 @@
+from PySide6.QtCore import QEvent
 from PySide6.QtWidgets import *
 from PySide6.QtCore import *
 from PySide6.QtGui import *
 from windows.form_delivery.delivery_ui import Ui_MainWindow as delivery
+from controller.pedidos.StatusPedido import StatusPedido
 from .DadosPedido import DadosPedido
 from PySide6.QtNetwork import *
 from PySide6.QtMultimedia import *
@@ -97,9 +99,10 @@ class Pedidos(QMainWindow, delivery):
             item_hora_pedido.setTextAlignment(Qt.AlignCenter)
             self.tableWidget.setItem(index, 3, item_hora_pedido)
 
-            item_status = QTableWidgetItem(str(pedido["status"]))
-            item_status.setTextAlignment(Qt.AlignCenter)
-            self.tableWidget.setItem(index, 4, item_status)
+            item_status = QPushButton(str(pedido["status"]))
+            self.tableWidget.setCellWidget(index, 4, item_status)
+
+            item_status.clicked.connect(lambda _, row=index: self.abrir_status_pedido(row))
 
             item_valor = FloatQtTableWidget(str(pedido["valor_total"]))
             item_valor.setData(Qt.UserRole, float(pedido["valor_total"]))
@@ -129,4 +132,11 @@ class Pedidos(QMainWindow, delivery):
         self.atualizar_tabela(self.pedido_store.listar())
 
     def on_pedido_atualizado(self, pedido):
+        print("Pedido atualizado:", pedido)
         self.atualizar_tabela(self.pedido_store.listar())
+
+    def abrir_status_pedido(self, row):
+        item = self.tableWidget.item(row, 0)
+        pedido = item.data(Qt.UserRole + 1)
+        self.status_pedido = StatusPedido(pedido=pedido, parent=self)
+        self.status_pedido.show()

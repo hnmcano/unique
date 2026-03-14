@@ -114,3 +114,24 @@
     width: 100%;
     gap: 5px;
 }
+
+.informacoes-contato{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    font-size: clamp(16px, 2.5vw, 20px);
+    color: var(--txt-padrao);
+    width: 100%;
+    gap: 20px;
+}
+
+.label-nome-cliente{
+    font-size: clamp(16px, 2.5vw, 20px);
+    font-weight: bold;
+    color: var(--txt-padrao);
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 100%;
+}

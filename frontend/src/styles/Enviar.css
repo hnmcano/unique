@@ -127,7 +127,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: space-between;
     height: 100vh;
     width: 100vw;
     gap: 10px;
@@ -140,7 +140,6 @@ body {
     padding: 15px;
     align-items: center;
     font-family: 'montserrat', sans-serif;
-    flex-grow: 1;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -165,4 +164,23 @@ body {
     margin-top: 10px;
     width: 100vw;
     padding: 20px;
+}
+
+.resposta-servidor-contato{
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    font-size: clamp(16px, 2.5vw, 20px);
+    color: var(--txt-padrao);
+    width: 100%;
+    gap: 20px;
+
+}
+
+.resposta-servidor-icon {
+    color: var(--status-bg-fechado);
+    height: 100px;
+    width: 100px;
 }
