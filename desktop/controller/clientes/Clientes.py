@@ -22,21 +22,18 @@ class Clientes(QMainWindow, Ui_MainWindow):
 
         self.add_clientes.clicked.connect(self.adicionar_clientes)
 
-    
-    # def layout_tabela(self):
+    def layout_tabela(self):
 
-    #     columns = ["nome", "telefone", "email", "endereco"]
+        columns = ["nome", "telefone", "email", "cpf"]
 
-
+        # self.tableWidget.setColumnCount(len(columns))
+        # self.tableWidget.setHorizontalHeaderLabels(columns)
+        # header = self.tableWidget.horizontalHeader()
+        # header.setSectionResizeMode(QHeaderView.Stretch)
 
     # def atualizar_tabela(self, data):
 
     
-    
-
-
-
-
     # def on_evento_recebido(self, evento: dict):
     #     data = evento["dados"]
 

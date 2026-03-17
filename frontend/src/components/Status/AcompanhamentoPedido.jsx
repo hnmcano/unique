@@ -55,6 +55,14 @@ export default function AcompanhamentoPedido() {
                 <div className='container-status-pedido'>
                     <p>{pedido.status}</p>
                 </div>
+                <div className="wrapper">
+                    <div className="circle"></div>
+                    <div className="circle"></div>
+                    <div className="circle"></div>
+                    <div className="shadow"></div>
+                    <div className="shadow"></div>
+                    <div className="shadow"></div>
+                </div>
                 <div className='container-data-pedido'>
                     <label className='label-id_pedido'>ID: {pedido.id_pedido}</label>
                     <div className='label-nome-cliente'>

@@ -20,4 +20,7 @@
         <file>desconectado.png</file>
         <file>icone.ico</file>
     </qresource>
+    <qresource prefix="/Sound">
+        <file>Sound/notificacao.wav</file>
+    </qresource>
 </RCC>

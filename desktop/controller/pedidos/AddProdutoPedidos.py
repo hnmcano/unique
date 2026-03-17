@@ -65,6 +65,8 @@ class AdicionarProdutoPedido(QMainWindow, addProdutosPedido):
         header.setSectionResizeMode(QHeaderView.Interactive)
         self.tableWidget.setSortingEnabled(True)
         header.setSectionResizeMode(QHeaderView.Stretch)
+        header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
         self.tableWidget.verticalHeader().setVisible(False)
         self.tableWidget.setSelectionBehavior(QTableWidget.SelectRows)
         self.tableWidget.setSelectionMode(QTableWidget.SingleSelection)
@@ -93,3 +95,17 @@ class AdicionarProdutoPedido(QMainWindow, addProdutosPedido):
             self.tableWidget.setCellWidget(i, 2, btn_adicionar)
 
             btn_adicionar.clicked.connect(lambda _, row=i: self.adicionar_produto(row, data=data))
+            btn_adicionar.setStyleSheet("""
+                                        QPushButton {
+                                            background-color: green; 
+                                            border: none; 
+                                            color: white; 
+                                            font-size: 20px; 
+                                            max-width: 30px; 
+                                            height: 30px;
+                                            border-radius: 5px;
+                                        }
+                                        QPushButton:hover {
+                                            background-color: darkgreen;
+                                        }
+                                        """)

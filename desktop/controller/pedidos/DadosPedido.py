@@ -48,6 +48,8 @@ class DadosPedido(QMainWindow, dados_pedidos):
 
         self.id = pedido["id_pedido"]
 
+        print(pedido)
+
         self.websocket = APPContext.websocket_client
 
         self.websocket.mensagem_recebida.connect(self.on_evento_recebido)
@@ -55,12 +57,30 @@ class DadosPedido(QMainWindow, dados_pedidos):
         self.status.setText(pedido["status"])
         self.status.setAlignment(Qt.AlignCenter)
         if self.status.text() == "PENDENTE":
-            self.status.setStyleSheet("background-color: yellow; color: black; font-weight: bold;")
-        elif self.status.text() == "EM PRODUCAO":
-             self.status.setStyleSheet("background-color: green; color: black; font-weight: bold;")    
+            self.status.setStyleSheet("background-color: orange; color: black; font-weight: bold;")
+        elif self.status.text() == "EM PRODUÇÃO":
+             self.status.setStyleSheet("background-color: red; color: white; font-weight: bold;")
+        elif self.status.text() == "SAIU PARA ENTREGA":
+             self.status.setStyleSheet("background-color: green; color: black; font-weight: bold;")
+        elif self.status.text() == "PRONTO PARA RETIRADA":
+             self.status.setStyleSheet("background-color: blue; color: black; font-weight: bold;")
+        elif self.status.text() == "FINALIZADO":
+             self.status.setStyleSheet("background-color: black; color: white; font-weight: bold;") 
 
         self.data_criacao.setText(f"{(datetime.fromisoformat(pedido["data_criacao"])- timedelta(hours=3)).strftime('%d/%m/%Y %H:%M:%S')}")
         self.data_criacao.setAlignment(Qt.AlignCenter)
+
+        self.label_cliente.setText(pedido["cliente"]["nome"])
+        self.label_telefone.setText(pedido["cliente"]["telefone"])
+        self.label_email.setText(pedido["cliente"]["email"])
+
+        self.label_cep.setText(pedido["endereco_entrega"]["cep"])
+        self.label_rua.setText(pedido["endereco_entrega"]["endereco"])
+        self.label_numero.setText(str(pedido["endereco_entrega"]["numero"]))
+        self.label_complemento.setText(pedido["endereco_entrega"]["complemento"])
+        self.label_bairro.setText(pedido["endereco_entrega"]["bairro"])
+
+        self.plainTextEdit.setPlainText(pedido["endereco_entrega"]["observacoes"])
 
         self.setup_table()
         self.atualizar_tabela(pedido)

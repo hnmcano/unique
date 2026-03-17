@@ -13,9 +13,12 @@ from controller.mesas.Mesas import Mesas
 from windows.unique_ui import Ui_Unique as uniq
 from services.websocket import PedidoStore
 from config.config import settings
+from pictures import imagens_rc
+
 
 from core.app_context import app_context as APPContext
 import os
+import sys
 
 #funcao para centralizar a janelas
 def center_window(self):
@@ -27,13 +30,15 @@ def center_window(self):
     window_geometry.moveCenter(screen_geometry.center())
     self.move(window_geometry.topLeft())
 
+
 class SoundService:
     def __init__(self):
         self.notificacao = QSoundEffect()
 
-        caminho = os.path.abspath("Sound/notificacao.wav")
+        self.notificacao.setSource(
+            QUrl("qrc:/Sound/Sound/notificacao.wav")
+        )
 
-        self.notificacao.setSource(QUrl.fromLocalFile(caminho))
         self.notificacao.setVolume(0.8)
 
     def play(self):

@@ -122,7 +122,8 @@
     resize: none;
 
     vertical-align: top;
-    line-height: 4;
+    line-height: 1.5;
+    min-height: 15vh;
 
     display: block;
 }

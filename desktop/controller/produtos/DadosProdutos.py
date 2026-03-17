@@ -92,7 +92,7 @@ def excluir_produto_base_dados(id, parent=None):
         return
 
     try:
-        response = APPContext.api_client.delete(f"/produtos/desktop/delete-product-data-base/{id}")
+        response = APPContext.api_client.delete(f"/produtos/desktop/delete-product-data-base/{id}", data=None)
         QMessageBox.information(
             parent, "Sucesso", "Produto excluído com sucesso!"
         )

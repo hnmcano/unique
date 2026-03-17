@@ -103,6 +103,7 @@ class Pedidos(QMainWindow, delivery):
             self.tableWidget.setCellWidget(index, 4, item_status)
 
             item_status.clicked.connect(lambda _, row=index: self.abrir_status_pedido(row))
+            item_status.setStyleSheet("background-color: transparent; border: none; color: white;")
 
             item_valor = FloatQtTableWidget(str(pedido["valor_total"]))
             item_valor.setData(Qt.UserRole, float(pedido["valor_total"]))

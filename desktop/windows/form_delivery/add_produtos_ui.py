@@ -25,8 +25,8 @@ class Ui_MainWindow(object):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.setWindowModality(Qt.WindowModality.NonModal)
-        MainWindow.resize(930, 520)
-        MainWindow.setMinimumSize(QSize(930, 520))
+        MainWindow.resize(544, 442)
+        MainWindow.setMinimumSize(QSize(0, 0))
         MainWindow.setMaximumSize(QSize(930, 520))
         MainWindow.setStyleSheet(u"#centralwidget{\n"
 "	background-color: black;\n"

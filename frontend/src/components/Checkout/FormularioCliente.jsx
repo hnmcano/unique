@@ -139,7 +139,7 @@ function FormularioCliente() {
                         />
                     </div>
                     <div className="Grupo-Formulario">
-                        <label className="Names-Formulario" htmlFor="email">E-mail:(opcional)</label>
+                        <label className="Names-Formulario" htmlFor="email"><label style={{"color": "red"}}>* </label>E-mail:</label>
                         <input 
                         className="Entrada-Formulario"
                          type="email" 
