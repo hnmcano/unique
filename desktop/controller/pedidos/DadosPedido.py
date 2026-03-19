@@ -6,7 +6,7 @@ from controller.pedidos.AddProdutoPedidos import AdicionarProdutoPedido
 from PySide6.QtNetwork import *
 from PySide6.QtCore import *
 from core.app_context import app_context as APPContext
-
+from controller.configuracao.Impressoras import imprimir_raw_windows
 
 from datetime import datetime, timedelta
 import os
@@ -87,6 +87,7 @@ class DadosPedido(QMainWindow, dados_pedidos):
 
         self.btn_excluir.clicked.connect(lambda: exibir_confirmacao_exclusao(self))
         self.btn_adicionar.clicked.connect(lambda: self.abrir_produtos(data=pedido))
+        self.imprimir.clicked.connect(lambda: self.imprimir_pedido(pedido=pedido))
 
     def setup_table(self):
         columns = ["NOME", "QUANTIDADE", "VALOR", "EDITAR", "EXCLUIR"]
@@ -205,3 +206,8 @@ class DadosPedido(QMainWindow, dados_pedidos):
     def abrir_produtos(self, data=None):
         self.produtos = AdicionarProdutoPedido(parent=self, data=data)
         self.produtos.show()
+
+    def imprimir_pedido(self, pedido=None):
+        response = APPContext.api_client.get("/impressoras/padrao")
+        print(response)
+

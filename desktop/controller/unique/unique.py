@@ -68,6 +68,12 @@ class Uniq(QMainWindow, uniq):
 
         # Inicializações do sistema
         self.valid_caixa()
+        try:
+            impressora_padrao = self.validar_impressora()
+            APPContext.impressora_store = impressora_padrao
+        except:
+            pass
+            ---
         data = self.dados_cliente()
         self.IdUsuario.setText(f"ID USUARIO: {data['id']}")
         self.BemVindo.setText(f"Seja bem vindo, {data['nome']}")
@@ -220,3 +226,11 @@ class Uniq(QMainWindow, uniq):
             self.labelStatus.setText("Status: 🟢Conectado")
         else:
             self.labelStatus.setText("Status: 🔴Desconectado")
+    
+    def validar_impressora(self):
+        try:
+            response = APPContext.api_client.get("impressora/default/disponivel")
+
+            return response
+        except:
+            QMessageBox.information(self, "Impressora Desconectada", "Impressora desconectada, por favor conecte-a")

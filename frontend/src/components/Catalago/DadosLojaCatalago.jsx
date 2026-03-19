@@ -25,7 +25,7 @@ function DadosLojaCatalago({}) {
                     </div>
                     <div className="infos">
                         <span class="label">Horário</span>
-                        <span class="value"> Seg à Sex: 14:00 às 22:00</span>
+                        <span class="value"> Seg à Sex: 15:00 às 22:00</span>
                         <div style={{ display: "flex", flexDirection: "row", gap: 10,}}>
                             <span class="value"> Sab: 15:00 às 21:00</span>
                             <span class="value"> Dom: 14:00 às 18:00</span>

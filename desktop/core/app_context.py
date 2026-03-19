@@ -6,5 +6,6 @@ class AppContext:
         self.api_client = None
         self.websocket_client = None
         self.pedido_store = None
+        self.impressora_store = None
 
 app_context = AppContext()

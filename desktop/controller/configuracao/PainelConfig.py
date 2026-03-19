@@ -1,11 +1,9 @@
 from PySide6.QtWidgets import *
 from PySide6.QtGui import QGuiApplication
 from windows.form_config.painel_configuracoes_ui import Ui_MainWindow as painel_configuracoes
-
-from controller.estabelecimento.Estabelecimento import Estabelecimento
+from controller.configuracao.Impressoras import impressoras
 
 def center_window(self):
-
     screen = QGuiApplication.primaryScreen()
     screen_geometry = screen.availableGeometry()
     window_geometry = self.frameGeometry()
@@ -19,3 +17,8 @@ class PainelConfig(QMainWindow, painel_configuracoes):
         self.setupUi(self)
         center_window(self)
 
+        self.btn_impressoras.clicked.connect(self.abrir_impressoras)
+
+    def abrir_impressoras(self):
+        self.impressoras = impressoras(parent=self)
+        self.impressoras.showNormal()
