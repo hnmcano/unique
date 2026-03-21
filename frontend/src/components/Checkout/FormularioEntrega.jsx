@@ -83,6 +83,9 @@ function FormularioEntrega() {
 
     const handledChangeEntrega = (event) =>{
         const { name, value } = event.target;
+        if (name === "numero") {
+            const value = value.replace(/[^0-9]/g, '');
+        }
         setData(prevState => ({
             ...prevState,
             entrega: {

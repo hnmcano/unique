@@ -4,6 +4,7 @@ from PySide6.QtCore import *
 from PySide6.QtMultimedia import QSoundEffect
 
 from controller.estabelecimento.Estabelecimento import Estabelecimento
+from controller.configuracao.Impressoras import imprimir_raw_windows, imprimir_cupom_pedido
 from controller.configuracao.PainelConfig import PainelConfig
 from controller.produtos.Produtos import Produtos
 from controller.clientes.Clientes import Clientes
@@ -14,11 +15,10 @@ from windows.unique_ui import Ui_Unique as uniq
 from services.websocket import PedidoStore
 from config.config import settings
 from pictures import imagens_rc
-
+import win32print
 
 from core.app_context import app_context as APPContext
-import os
-import sys
+
 
 #funcao para centralizar a janelas
 def center_window(self):
@@ -30,6 +30,15 @@ def center_window(self):
     window_geometry.moveCenter(screen_geometry.center())
     self.move(window_geometry.topLeft())
 
+def get_printers():
+    printers = win32print.EnumPrinters(win32print.PRINTER_ENUM_LOCAL | win32print.PRINTER_ENUM_CONNECTIONS)
+
+    lista = []
+    for p in printers:
+        nome = p[2]
+        lista.append(nome)
+
+    return lista
 
 class SoundService:
     def __init__(self):
@@ -68,12 +77,18 @@ class Uniq(QMainWindow, uniq):
 
         # Inicializações do sistema
         self.valid_caixa()
+
         try:
             impressora_padrao = self.validar_impressora()
-            APPContext.impressora_store = impressora_padrao
+
+            for impressoras_conetadas in get_printers():
+                if impressoras_conetadas == impressora_padrao:
+                    APPContext.impressora_store = impressora_padrao
+                elif impressoras_conetadas != impressora_padrao:
+                    pass
         except:
             pass
-            ---
+
         data = self.dados_cliente()
         self.IdUsuario.setText(f"ID USUARIO: {data['id']}")
         self.BemVindo.setText(f"Seja bem vindo, {data['nome']}")
@@ -151,9 +166,6 @@ class Uniq(QMainWindow, uniq):
         self.produtos_window.activateWindow()
 
     def abrir_delivery(self):
-
-        print("pedido_store.listar():",self.pedido_store.listar())
-
         self.delivery_window = Pedidos(pedido_store=self.pedido_store, parent=self)
         
         # Opcional: Zerar a badge ao abrir a janela de delivery
@@ -216,6 +228,7 @@ class Uniq(QMainWindow, uniq):
             self.sound.play()
             pedido = evento["dados"]
             self.pedido_store.adicionar(pedido)
+            self.imprimir_pedido(pedido)
     
     def atualizar_badge(self, *args):
         qtd = self.pedido_store.contar_pendentes()
@@ -229,8 +242,17 @@ class Uniq(QMainWindow, uniq):
     
     def validar_impressora(self):
         try:
-            response = APPContext.api_client.get("impressora/default/disponivel")
-
-            return response
-        except:
+            response = APPContext.api_client.get("impressoras/default/disponivel")
+            Impressora_padrao = response["impressora"]
+            return Impressora_padrao
+        except Exception as e:
             QMessageBox.information(self, "Impressora Desconectada", "Impressora desconectada, por favor conecte-a")
+
+    def imprimir_pedido(self, pedido=None):
+        nome = APPContext.impressora_store
+        linhas_cupom = imprimir_cupom_pedido(self, pedido)
+
+        imprimir_raw_windows(
+            nome,
+            linhas_cupom
+        )

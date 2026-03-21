@@ -6,7 +6,7 @@ from controller.pedidos.AddProdutoPedidos import AdicionarProdutoPedido
 from PySide6.QtNetwork import *
 from PySide6.QtCore import *
 from core.app_context import app_context as APPContext
-from controller.configuracao.Impressoras import imprimir_raw_windows
+from controller.configuracao.Impressoras import imprimir_raw_windows, imprimir_cupom_pedido
 
 from datetime import datetime, timedelta
 import os
@@ -48,8 +48,6 @@ class DadosPedido(QMainWindow, dados_pedidos):
 
         self.id = pedido["id_pedido"]
 
-        print(pedido)
-
         self.websocket = APPContext.websocket_client
 
         self.websocket.mensagem_recebida.connect(self.on_evento_recebido)
@@ -71,10 +69,16 @@ class DadosPedido(QMainWindow, dados_pedidos):
         self.data_criacao.setAlignment(Qt.AlignCenter)
 
         self.label_cliente.setText(pedido["cliente"]["nome"])
-        self.label_telefone.setText(pedido["cliente"]["telefone"])
+        self.label_telefone.setText(        
+                f"""{
+                    '('+ str(pedido['cliente']['telefone'])[0:2] + ') ' \
+                   + str(pedido["cliente"]["telefone"])[2:7] + '-' \
+                   + str(pedido["cliente"]["telefone"])[7:]
+                }"""
+            )
         self.label_email.setText(pedido["cliente"]["email"])
 
-        self.label_cep.setText(pedido["endereco_entrega"]["cep"])
+        self.label_cep.setText(f"{str(pedido["endereco_entrega"]["cep"])[0:5] + '-' + str(pedido['endereco_entrega']['cep'])[5:]}")
         self.label_rua.setText(pedido["endereco_entrega"]["endereco"])
         self.label_numero.setText(str(pedido["endereco_entrega"]["numero"]))
         self.label_complemento.setText(pedido["endereco_entrega"]["complemento"])
@@ -87,7 +91,7 @@ class DadosPedido(QMainWindow, dados_pedidos):
 
         self.btn_excluir.clicked.connect(lambda: exibir_confirmacao_exclusao(self))
         self.btn_adicionar.clicked.connect(lambda: self.abrir_produtos(data=pedido))
-        self.imprimir.clicked.connect(lambda: self.imprimir_pedido(pedido=pedido))
+        self.btn_imprimir.clicked.connect(lambda: self.imprimir_pedido(pedido=pedido))
 
     def setup_table(self):
         columns = ["NOME", "QUANTIDADE", "VALOR", "EDITAR", "EXCLUIR"]
@@ -179,7 +183,6 @@ class DadosPedido(QMainWindow, dados_pedidos):
 
     def on_evento_recebido(self, evento: dict):
         if evento["tipo"] == "pedido_em_delivery_atualizado":
-            print(evento["dados"])
             if evento["dados"]["id_pedido"] == self.id:
                 self.atualizar_tabela(evento["dados"])
 
@@ -208,6 +211,12 @@ class DadosPedido(QMainWindow, dados_pedidos):
         self.produtos.show()
 
     def imprimir_pedido(self, pedido=None):
-        response = APPContext.api_client.get("/impressoras/padrao")
-        print(response)
+        nome = APPContext.impressora_store
+        linhas_cupom = imprimir_cupom_pedido(self, pedido)
+
+        imprimir_raw_windows(
+            nome,
+            linhas_cupom
+        )
+
 

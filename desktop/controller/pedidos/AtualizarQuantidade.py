@@ -10,9 +10,6 @@ class AtualizarQuantidade_ui(QMainWindow, EditarItem):
         self.setupUi(self)
         self.item = item.copy()
         self.id = id
-
-        print(self.item)
-
         self.quantidade.setText(str(self.item["quantidade"]))
 
         self.btn_aumentar.clicked.connect(self.aumentar_quantidade)

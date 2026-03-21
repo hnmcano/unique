@@ -87,7 +87,14 @@ class Pedidos(QMainWindow, delivery):
             item_nome.setTextAlignment(Qt.AlignLeft | Qt.AlignVCenter)
             self.tableWidget.setItem(index, 0, item_nome)
 
-            item_telefone = QTableWidgetItem(str(pedido["cliente"]["telefone"]))
+            item_telefone = QTableWidgetItem(
+                f"""{
+                    '('+ str(pedido['cliente']['telefone'])[0:2] + ') ' \
+                   + str(pedido["cliente"]["telefone"])[2:7] + '-' \
+                   + str(pedido["cliente"]["telefone"])[7:]
+                }"""
+            )
+
             item_telefone.setTextAlignment(Qt.AlignCenter)
             self.tableWidget.setItem(index, 1, item_telefone)
 
@@ -105,7 +112,7 @@ class Pedidos(QMainWindow, delivery):
             item_status.clicked.connect(lambda _, row=index: self.abrir_status_pedido(row))
             item_status.setStyleSheet("background-color: transparent; border: none; color: white;")
 
-            item_valor = FloatQtTableWidget(str(pedido["valor_total"]))
+            item_valor = FloatQtTableWidget(f"R$ {float(pedido['valor_total'] or 0):.2f}")
             item_valor.setData(Qt.UserRole, float(pedido["valor_total"]))
             item_valor.setTextAlignment(Qt.AlignCenter)
             self.tableWidget.setItem(index, 5, item_valor)
@@ -129,11 +136,9 @@ class Pedidos(QMainWindow, delivery):
         self.atualizar_tabela(self.pedido_store.listar())
 
     def on_pedido_removido(self, pedido):
-        print("Pedido removido:", pedido)
         self.atualizar_tabela(self.pedido_store.listar())
 
     def on_pedido_atualizado(self, pedido):
-        print("Pedido atualizado:", pedido)
         self.atualizar_tabela(self.pedido_store.listar())
 
     def abrir_status_pedido(self, row):

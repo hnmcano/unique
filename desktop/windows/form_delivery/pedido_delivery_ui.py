@@ -280,10 +280,10 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_2.addWidget(self.pushButton_2)
 
-        self.pushButton_3 = QPushButton(self.widget_9)
-        self.pushButton_3.setObjectName(u"pushButton_3")
+        self.btn_imprimir = QPushButton(self.widget_9)
+        self.btn_imprimir.setObjectName(u"btn_imprimir")
 
-        self.horizontalLayout_2.addWidget(self.pushButton_3)
+        self.horizontalLayout_2.addWidget(self.btn_imprimir)
 
 
         self.verticalLayout_5.addWidget(self.widget_9)
@@ -642,7 +642,7 @@ class Ui_MainWindow(object):
         self.valor_total_mesa.setText("")
         self.btn_excluir.setText(QCoreApplication.translate("MainWindow", u"EXCLUIR", None))
         self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"FINALIZAR", None))
-        self.pushButton_3.setText(QCoreApplication.translate("MainWindow", u"IMPRIMIR", None))
+        self.btn_imprimir.setText(QCoreApplication.translate("MainWindow", u"IMPRIMIR", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"Cliente:", None))
         self.label_cliente.setText("")
         self.label_5.setText(QCoreApplication.translate("MainWindow", u"Telefone:", None))
