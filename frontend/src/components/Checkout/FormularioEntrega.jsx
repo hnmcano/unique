@@ -82,10 +82,8 @@ function FormularioEntrega() {
     }
 
     const handledChangeEntrega = (event) =>{
+        console.log("envento de numero:", event);
         const { name, value } = event.target;
-        if (name === "numero") {
-            const value = value.replace(/[^0-9]/g, '');
-        }
         setData(prevState => ({
             ...prevState,
             entrega: {
@@ -150,10 +148,10 @@ function FormularioEntrega() {
                             {/* O número é digitado pelo usuário */}
                             <input 
                             className="Entrada-Formulario" 
-                            type="text" 
+                            type="text"
                             id="numero" 
                             name="numero" 
-                            value={data.entrega.numero} 
+                            value={data.entrega.numero}
                             onChange={handledChangeEntrega}                            
                             ref={(el) => (refs.current[1] = el)}
                             enterKeyHint="next"
