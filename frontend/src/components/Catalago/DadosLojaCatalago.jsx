@@ -1,34 +1,41 @@
 import { useEstabelecimento } from "../../contexts/EstabelecimentoContext";
+import { useHorarios } from "../../contexts/HorariosContext";
+import Horarios from "../../pages/Horarios";
 
 
 function DadosLojaCatalago({}) {
     const { estabelecimento, loading } = useEstabelecimento();
     const status = estabelecimento?.online === true ? "ABERTO" : "FECHADO";
-    
+    const style = estabelecimento?.cor_layout !== null
+        ? { color: estabelecimento?.cor_layout, marginTop: 0 }
+        : {};
+
+    const classText = estabelecimento?.cor_layout === null ? "subtitle" : "";
+    const {opencard, setOpenCard} = useHorarios();
+
     return (
         <>
             <div className="logotipo-hookah">
                 <img className="logotipo" src={`data:image/png;base64,${estabelecimento?.logo_img}`} alt="Logo"/>
             </div>
             <div className="data">
-                <div class="status-container">
+                <div className="status-container">
                     <label className={status === "ABERTO" ? "status_aberto" : "status_fechado"}>{status}</label>
                 </div>
                 <header className="infos">
                     <h1>{estabelecimento?.nome_fantasia}</h1>
-                    <p className="subtitle">Tabacaria</p>
+                    <p style={style} className={classText}>{estabelecimento?.descricao}</p>
                 </header>
                 <div className="infos">
                     <div className="infos">
                         <a>Endereço</a>
-                        <a className="endereco-definido">{estabelecimento?.endereco}</a>
+                        <a style={style} className={classText}>{estabelecimento?.endereco}</a>
                     </div>
+                    
                     <div className="infos">
-                        <span class="label">Horário</span>
-                        <span class="value"> Seg à Sex: 15:00 às 22:00</span>
-                        <div style={{ display: "flex", flexDirection: "row", gap: 10,}}>
-                            <span class="value"> Sab: 15:00 às 21:00</span>
-                            <span class="value"> Dom: 14:00 às 18:00</span>
+                        <div onClick={() => setOpenCard(true)} className="horarios" style={{backgroundColor: estabelecimento?.cor_layout}}>
+                            <span>HORARIOS</span>
+                            <Horarios></Horarios>
                         </div>
                     </div>
                 </div>

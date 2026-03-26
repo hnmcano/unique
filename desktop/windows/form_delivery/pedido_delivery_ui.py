@@ -275,10 +275,10 @@ class Ui_MainWindow(object):
         self.widget_9.setStyleSheet(u"")
         self.horizontalLayout_2 = QHBoxLayout(self.widget_9)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.pushButton_2 = QPushButton(self.widget_9)
-        self.pushButton_2.setObjectName(u"pushButton_2")
+        self.btn_finalizar = QPushButton(self.widget_9)
+        self.btn_finalizar.setObjectName(u"btn_finalizar")
 
-        self.horizontalLayout_2.addWidget(self.pushButton_2)
+        self.horizontalLayout_2.addWidget(self.btn_finalizar)
 
         self.btn_imprimir = QPushButton(self.widget_9)
         self.btn_imprimir.setObjectName(u"btn_imprimir")
@@ -641,7 +641,7 @@ class Ui_MainWindow(object):
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"TOTAL MESA", None))
         self.valor_total_mesa.setText("")
         self.btn_excluir.setText(QCoreApplication.translate("MainWindow", u"EXCLUIR", None))
-        self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"FINALIZAR", None))
+        self.btn_finalizar.setText(QCoreApplication.translate("MainWindow", u"FINALIZAR", None))
         self.btn_imprimir.setText(QCoreApplication.translate("MainWindow", u"IMPRIMIR", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"Cliente:", None))
         self.label_cliente.setText("")

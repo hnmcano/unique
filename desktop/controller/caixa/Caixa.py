@@ -1,61 +1,79 @@
 from PySide6.QtWidgets import *
+from PySide6.QtCore import *
 from windows.form_box.Caixa_ui import Ui_CAIXA as caixa
 from infra.api_client import APIClient
 from core.app_context import app_context as APPContext
 from config.config import settings
+from datetime import datetime, timedelta
 
 class Caixa(QMainWindow, caixa):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
-        self.ValorCaixa.setText("0,00")
 
         self.validar_caixa()
-        self.open_caixa.clicked.connect(self.iniciar_caixa)
-        self.CloseCaixa.clicked.connect(self.fechar_caixa)
+        self.layout_tabela()
+        self.carregar_tabela()
+        self.AbrirCaixa.clicked.connect(self.iniciar_caixa)
+        self.FecharCaixa.clicked.connect(self.fechar_caixa)
+        self.FecharAndImprimir.clicked.connect(self.fechar_caixa_imprimir)
+
+        
+
+    def layout_tabela(self):
+        columns = [ "Abertura Caixa", "Forma de Pagamento", "Bandeira", "Total"]
+
+        quantidade_columns = len(columns)
+        self.tableCaixa.setColumnCount(quantidade_columns)
+        self.tableCaixa.setHorizontalHeaderLabels(columns)
+        header = self.tableCaixa.horizontalHeader()
+        header.setSectionResizeMode(QHeaderView.Stretch)
+        header.setSectionResizeMode(0, QHeaderView.ResizeToContents)
+        self.tableCaixa.setSortingEnabled(True)
+        self.tableCaixa.verticalHeader().setVisible(False)
+        self.tableCaixa.setSelectionBehavior(QTableWidget.SelectRows)
+        self.tableCaixa.setSelectionMode(QTableWidget.SingleSelection)
+        self.tableCaixa.setEditTriggers(QAbstractItemView.NoEditTriggers)
+
+    def atualizar_tabela(self, dados):
+        self.tableCaixa.setRowCount(len(dados))
+
+        for index, item in enumerate(dados):
+            dataDeAbertura = (datetime.fromisoformat(item["data_abertura"]) - timedelta(hours=3)).strftime("%d/%m/%Y")
+            self.data_abertura =QTableWidgetItem(dataDeAbertura)
+            self.data_abertura.setTextAlignment(Qt.AlignCenter)
+            self.tableCaixa.setItem(index, 0, self.data_abertura)
+
+            self.forma_pagamento = QTableWidgetItem(item["forma_pagamento"])
+            self.forma_pagamento.setTextAlignment(Qt.AlignCenter)
+            self.tableCaixa.setItem(index, 1, self.forma_pagamento)
+
+            self.bandeira = QTableWidgetItem(item["bandeira"])
+            self.bandeira.setTextAlignment(Qt.AlignCenter)
+            self.tableCaixa.setItem(index, 2, self.bandeira)
+
+            self.valor_total = QTableWidgetItem(str(f"R$ {item["total"]:.2f}"))
+            self.valor_total.setTextAlignment(Qt.AlignCenter)
+            self.tableCaixa.setItem(index, 3, self.valor_total)
 
     def iniciar_caixa(self):
         valor_caixa = float(self.ValorCaixa.text().replace(",", "."))
         try:
             data_json = {
-                "valor": valor_caixa
+                "valor_inicial": valor_caixa
             }
 
             response = APPContext.api_client.post("caixa/open_box", data_json)
-
+            self.ValorCaixa.setText(f"{response['valor_inicial']:.2f}")
+            data_abertura = (datetime.fromisoformat(response['data_abertura']) - timedelta(hours=3)).strftime("%d/%m/%Y - %H:%M:%S")
+            self.DataAbertura.setText(data_abertura)
             QMessageBox.information(self, "Sucesso", "Caixa aberto com sucesso")
-            self.CloseCaixa.setDisabled(False)
-            self.CloseCaixa.setStyleSheet("""QPushButton {
-                background: qlineargradient(
-                    spread:pad,
-                    x1:0, y1:0,
-                    x2:1, y2:0,
-                    stop:0 #393939,
-                    stop:1 #7d7d7d
-                );
-                color: white;
-                border: 2px solid #282828;
-                border-radius: 6px;
-                padding: 6px 12px;
-            }
-
-            QPushButton::hover{
-                background: qlineargradient(
-                    spread:pad,
-                    x1:0, y1:0,
-                    x2:1, y2:0,
-                    stop:0 #7d7d7d,
-                    stop:1 #393939
-                );
-            }""")
+ 
             self.StatusCaixa.setText("Caixa Aberto")
             self.StatusCaixa.setStyleSheet("background-color: green; color: white; font-weight: bold;")
 
         except Exception as e:
             QMessageBox.critical(self, "Erro", f"Erro ao abrir caixa: {str(e)}")
-
-        
-        self.ValorCaixa.setText("0,00")
 
     def fechar_caixa(self):
         try:
@@ -67,32 +85,9 @@ class Caixa(QMainWindow, caixa):
                     response = APPContext.api_client.get("caixa/close_box")
                     self.StatusCaixa.setText("Caixa Fechado")
                     self.StatusCaixa.setStyleSheet("background-color: red; color: white; font-weight: bold;")
-                    self.CloseCaixa.setDisabled(True)
-                    self.CloseCaixa.setStyleSheet("background-color: rgb(91, 91, 91); color: black; font-weight: bold;")
-                    self.open_caixa.setDisabled(False)
-                    self.open_caixa.setStyleSheet("""QPushButton {
-                        background: qlineargradient(
-                            spread:pad,
-                            x1:0, y1:0,
-                            x2:1, y2:0,
-                            stop:0 #393939,
-                            stop:1 #7d7d7d
-                        );
-                        color: white;
-                        border: 2px solid #282828;
-                        border-radius: 6px;
-                        padding: 6px 12px;
-                    }
-
-                    QPushButton::hover{
-                        background: qlineargradient(
-                            spread:pad,
-                            x1:0, y1:0,
-                            x2:1, y2:0,
-                            stop:0 #7d7d7d,
-                            stop:1 #393939
-                        );
-                    }""")
+                    self.DataAbertura.setText("00/00/0000 - 00:00:00")
+                    self.ValorCaixa.setText("0,00")
+                    QMessageBox.information(self, "Sucesso", "Caixa fechado com sucesso")
                 except Exception as e:
                     QMessageBox.critical(self, "Erro", f"Erro ao fechar caixa: {str(e)}")
 
@@ -103,39 +98,26 @@ class Caixa(QMainWindow, caixa):
 
         try:
             response = APPContext.api_client.get("caixa/valid_box")
-
-            self.CloseCaixa.setDisabled(False)
+            print(response)
+            self.ValorCaixa.setText(f"{response['valor_inicial']:.2f}")
+            self.LabelTotal.setText(f"{response["valor_final"]:.2f}")
+            data_abertura = (datetime.fromisoformat(response['data_abertura']) - timedelta(hours=3)).strftime("%d/%m/%Y - %H:%M:%S") 
+            self.DataAbertura.setText(data_abertura)
             self.StatusCaixa.setText("Caixa Aberto")
-            self.StatusCaixa.setStyleSheet("background-color: green; color: white; font-weight: bold;")
-            self.open_caixa.setDisabled(True)
-            self.open_caixa.setStyleSheet("background-color: rgb(91, 91, 91); color: black; font-weight: bold;")
-            
+            self.StatusCaixa.setStyleSheet("background-color: green; color: white; font-weight: bold;")            
         except:
-            self.CloseCaixa.setDisabled(True)
-            self.CloseCaixa.setStyleSheet("background-color: rgb(91, 91, 91); color: black; font-weight: bold;")
             self.StatusCaixa.setText("Caixa Fechado")
+            self.DataAbertura.setText("00/00/0000 - 00:00:00")
+            self.ValorCaixa.setText("0,00")
             self.StatusCaixa.setStyleSheet("background-color: red; color: white; font-weight: bold;")
-            self.open_caixa.setDisabled(False)
-            self.open_caixa.setStyleSheet("""QPushButton {
-                background: qlineargradient(
-                    spread:pad,
-                    x1:0, y1:0,
-                    x2:1, y2:0,
-                    stop:0 #393939,
-                    stop:1 #7d7d7d
-                );
-                color: white;
-                border: 2px solid #282828;
-                border-radius: 6px;
-                padding: 6px 12px;
-            }
 
-            QPushButton::hover{
-                background: qlineargradient(
-                    spread:pad,
-                    x1:0, y1:0,
-                    x2:1, y2:0,
-                    stop:0 #7d7d7d,
-                    stop:1 #393939
-                );
-            }""")
+    def fechar_caixa_imprimir(self):
+        print("fechar")
+        print("imprimir")
+
+    def carregar_tabela(self):
+        try:
+            response = APPContext.api_client.get("caixa/desktop/carregar-tabela")
+            self.atualizar_tabela(response)
+        except Exception as e:
+            print(e)

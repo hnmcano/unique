@@ -14,11 +14,11 @@ from controller.mesas.Mesas import Mesas
 from windows.unique_ui import Ui_Unique as uniq
 from services.websocket import PedidoStore
 from config.config import settings
+from datetime import datetime, timedelta
 from pictures import imagens_rc
 import win32print
 
 from core.app_context import app_context as APPContext
-
 
 #funcao para centralizar a janelas
 def center_window(self):
@@ -136,12 +136,8 @@ class Uniq(QMainWindow, uniq):
     
     # Funções para abrir a janela filhas de mesas, clientes e produtos
     def abrir_caixa(self):
-        if self.caixa_window is None:
-            self.caixa_window = Caixa(parent=self)
-
-        self.caixa_window.showNormal()
-        self.caixa_window.raise_()
-        self.caixa_window.activateWindow()
+        self.caixa_window = Caixa(parent=self)
+        self.caixa_window.show()
 
     # considerando que a janela Uniq é a janela pai, que ao fechada, fecha as janelas filhas
     def abrir_mesas(self):
@@ -194,9 +190,12 @@ class Uniq(QMainWindow, uniq):
     def valid_caixa(self):
         try:
             response = APPContext.api_client.get("caixa/valid_box")
-            tempo_aberto = response.get("detail")
+            data_abertura = (datetime.fromisoformat(response['data_abertura'])  - timedelta(hours=3)).strftime("%H:%M:%S")
+            data_atual = datetime.now().strftime("%H:%M:%S")
+            tempo_aberto = datetime.strptime(data_atual, "%H:%M:%S") - datetime.strptime(data_abertura, "%H:%M:%S")
             QMessageBox.information(self, "Caixa Aberto", f"Seu caixa esta aberto há {tempo_aberto}")
-        except:
+        except Exception as e:
+            print(e)
             QMessageBox.information(self, "Caixa Fechado", "Seu caixa esta fechado, por favor abra-o")
 
     def dados_cliente(self):

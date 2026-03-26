@@ -2,6 +2,7 @@ from PySide6.QtWidgets import *
 from windows.form_delivery.pedido_delivery_ui import Ui_MainWindow as dados_pedidos
 from controller.pedidos.AtualizarQuantidade import AtualizarQuantidade_ui as EditarItem
 from controller.pedidos.AddProdutoPedidos import AdicionarProdutoPedido
+from controller.pedidos.FinalizarPedido import FinalizarPedido
 
 from PySide6.QtNetwork import *
 from PySide6.QtCore import *
@@ -54,14 +55,15 @@ class DadosPedido(QMainWindow, dados_pedidos):
 
         self.status.setText(pedido["status"])
         self.status.setAlignment(Qt.AlignCenter)
+
         if self.status.text() == "PENDENTE":
             self.status.setStyleSheet("background-color: orange; color: black; font-weight: bold;")
         elif self.status.text() == "EM PRODUÇÃO":
              self.status.setStyleSheet("background-color: red; color: white; font-weight: bold;")
         elif self.status.text() == "SAIU PARA ENTREGA":
-             self.status.setStyleSheet("background-color: green; color: black; font-weight: bold;")
+             self.status.setStyleSheet("background-color: green; color: white; font-weight: bold;")
         elif self.status.text() == "PRONTO PARA RETIRADA":
-             self.status.setStyleSheet("background-color: blue; color: black; font-weight: bold;")
+             self.status.setStyleSheet("background-color: blue; color: white; font-weight: bold;")
         elif self.status.text() == "FINALIZADO":
              self.status.setStyleSheet("background-color: black; color: white; font-weight: bold;") 
 
@@ -92,6 +94,7 @@ class DadosPedido(QMainWindow, dados_pedidos):
         self.btn_excluir.clicked.connect(lambda: exibir_confirmacao_exclusao(self))
         self.btn_adicionar.clicked.connect(lambda: self.abrir_produtos(data=pedido))
         self.btn_imprimir.clicked.connect(lambda: self.imprimir_pedido(pedido=pedido))
+        self.btn_finalizar.clicked.connect(lambda: self.finalizar_pedido(pedido=pedido))
 
     def setup_table(self):
         columns = ["NOME", "QUANTIDADE", "VALOR", "EDITAR", "EXCLUIR"]
@@ -112,7 +115,7 @@ class DadosPedido(QMainWindow, dados_pedidos):
             quantidade_itens = str(len(data["itens"]))
             self.quantidade_itens_mesa.setText(quantidade_itens)
 
-            valor_total_formatado = f"R$ {data['valor_total']}"
+            valor_total_formatado = f"R$ {data['valor_total']:.2f}"
             self.valor_total_mesa.setText(valor_total_formatado)
 
             taxa_entrega_formatada = f"R$ {data["endereco_entrega"]['taxa_entrega']}"
@@ -219,4 +222,6 @@ class DadosPedido(QMainWindow, dados_pedidos):
             linhas_cupom
         )
 
-
+    def finalizar_pedido(self, pedido=None):
+        self.finalizar = FinalizarPedido(parent=self, data=pedido)
+        self.finalizar.show()

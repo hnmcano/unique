@@ -82,13 +82,15 @@ function FormularioEntrega() {
     }
 
     const handledChangeEntrega = (event) =>{
-        console.log("envento de numero:", event);
         const { name, value } = event.target;
+
+        let newValue = value === "-" ? "": value;
+
         setData(prevState => ({
             ...prevState,
             entrega: {
                 ...prevState.entrega,
-                [name]: value
+                [name]: newValue
             }
         }));
     }  

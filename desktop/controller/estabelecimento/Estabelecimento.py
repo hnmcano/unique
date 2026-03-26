@@ -23,6 +23,10 @@ def enviar_dados_estabelecimento(parent=None):
     telefone = parent.TelefoneLine.text()
     endereco = parent.EnderecoLine.text()
     rede_social =parent.RedeSocialLine.text()
+    descricao = parent.DescricaoLine.text()
+    style = parent.cor_definida.styleSheet()
+    cor = style.split("background-color:")[1].split(";")[0].strip()
+    cor_layout = cor
     plano = parent.PlanoLine.text()
     limite_usuarios = parent.LimiteUsuarioLine.text()
     ativo = parent.AtivoLine.text()
@@ -56,6 +60,8 @@ def enviar_dados_estabelecimento(parent=None):
             "logo_img": f"{imagem_data_string}",
             "endereco": f"{endereco}",
             "rede_social": f"{rede_social}",
+            "descricao": f"{descricao}",
+            "cor_layout": f"{cor_layout}",
             "plano": f"{plano}",
             "limite_usuarios": f"{limite_usuarios}",
             "ativo": f"{ativo}",
@@ -69,7 +75,6 @@ def enviar_dados_estabelecimento(parent=None):
         
     except Exception as e:
         QMessageBox.critical(parent, "Erro", f"Erro ao enviar dados: {str(e)}")
-
 
 def format_data(data):
     dt_utc = datetime.fromisoformat(data.replace("Z", "+00:00"))
@@ -94,6 +99,26 @@ class Estabelecimento(QMainWindow, estabelecimento):
         self.atualizar_dados(response)
         self.EnviaDados.clicked.connect(lambda: enviar_dados_estabelecimento(self))
 
+        self.btn_informacoes.clicked.connect(
+            lambda: self.stackedWidget.setCurrentWidget(self.page)
+        )
+        self.btn_layout.clicked.connect(
+            lambda: self.stackedWidget.setCurrentWidget(self.page_2)
+        )
+
+        self.btn_orange.clicked.connect(
+            lambda: self.atualizar_cor_designer(self.btn_orange)
+        )
+        self.btn_green.clicked.connect(
+            lambda: self.atualizar_cor_designer(self.btn_green)
+        )
+        self.btn_purple.clicked.connect(
+            lambda: self.atualizar_cor_designer(self.btn_purple)
+        )
+        self.btn_red.clicked.connect(
+            lambda: self.atualizar_cor_designer(self.btn_red)
+        )
+
     def atualizar_dados(self, response):
 
 
@@ -105,6 +130,8 @@ class Estabelecimento(QMainWindow, estabelecimento):
         self.TelefoneLine.setText(str(response["telefone"]))
         self.EnderecoLine.setText(str(response["endereco"]))
         self.RedeSocialLine.setText(str(response["rede_social"]))
+        self.DescricaoLine.setText(str(response["descricao"]))
+        self.cor_definida.setStyleSheet(f"background-color: {response['cor_layout']};")
         self.PlanoLine.setText(str(response["plano"]))
         self.LimiteUsuarioLine.setText(str(response["limite_usuarios"]))
         self.AtivoLine.setText(str(response["ativo"]))
@@ -141,7 +168,6 @@ class Estabelecimento(QMainWindow, estabelecimento):
             self.estabelecimento_logo.setAlignment(Qt.AlignCenter)
             self.estabelecimento_logo.setPixmap(self.pixmap)
 
-
     def mouseDoubleClickEvent(self, event):
         if self.estabelecimento_logo.geometry().contains(event.pos()):
             file_dialog = QFileDialog()
@@ -174,3 +200,12 @@ class Estabelecimento(QMainWindow, estabelecimento):
             self.on_evento_recebido
         )
                
+    def atualizar_cor_designer(self, botao):
+        style = botao.styleSheet()
+
+        if "background-color" in style:
+            cor = style.split("background-color:")[1].split(";")[0].strip()
+            if cor:
+                self.cor_definida.setStyleSheet(f"background-color: {cor};")
+            else:
+                self.cor_definida.setStyleSheet("background-color: transparent;")

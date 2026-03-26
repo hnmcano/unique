@@ -2,8 +2,6 @@ from PySide6.QtWidgets import QMainWindow, QMessageBox
 from windows.form_products.add_categorias_ui import Ui_Category as addcategorias
 from core.app_context import app_context as APPContext
 
-import requests
-import os
 from config.config import settings
 
 

@@ -53,8 +53,13 @@ class Pedidos(QMainWindow, delivery):
             self.pedido_store.adicionar(pedido)
 
         pedidos = self.pedido_store.listar()
+        data = []
 
-        self.atualizar_tabela(pedidos)
+        for i in pedidos:
+            if i["status"] != "FINALIZADO":
+                data.append(i)
+
+        self.atualizar_tabela(data)
 
     def layout_tabela(self):
 
@@ -138,8 +143,18 @@ class Pedidos(QMainWindow, delivery):
     def on_pedido_removido(self, pedido):
         self.atualizar_tabela(self.pedido_store.listar())
 
-    def on_pedido_atualizado(self, pedido):
-        self.atualizar_tabela(self.pedido_store.listar())
+    def on_pedido_atualizado(self, data):
+        pedidos = self.pedido_store.listar()
+
+        print("listar", pedidos)
+
+        data_pedidos = []
+
+        for p in pedidos:   
+            if p["status"] != "FINALIZADO":
+                data_pedidos.append(p)
+
+        self.atualizar_tabela(data=data_pedidos)
 
     def abrir_status_pedido(self, row):
         item = self.tableWidget.item(row, 0)

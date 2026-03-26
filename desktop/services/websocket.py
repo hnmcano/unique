@@ -61,7 +61,6 @@ class WebSocketService(QThread):
         print("WS FECHADO")
 
     def processar_evento(self, evento):
-
         tipo = evento.get("tipo")
         dados = evento.get("dados")
 
@@ -73,7 +72,6 @@ class WebSocketService(QThread):
 
         elif tipo == "pedido_removido":
             APPContext.pedido_store.remover(dados)
-
 
 class PedidoStore(QObject):
 
@@ -97,12 +95,14 @@ class PedidoStore(QObject):
                 break
 
     def atualizar(self, pedido_atualizado):
+        print("O sinal esta chegando")
         for i, p in enumerate(self.pedidos):
             if p["id_pedido"] == pedido_atualizado["id_pedido"]:
+                print("Pedido atualizado:", pedido_atualizado)
                 self.pedidos[i] = pedido_atualizado
                 self.pedido_atualizado.emit(pedido_atualizado)
                 break
-
+            
     def listar(self):
         return self.pedidos
 

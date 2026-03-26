@@ -1,5 +1,3 @@
-
-
 class AppContext:
     def __init__(self):
         self.token = None
