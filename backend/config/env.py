@@ -17,8 +17,7 @@ from models.pedidos import Pedido
 from models.caixa import Caixa  # noqa
 from models.mesas import Mesas
 from models.usuarios import Usuarios
-<<<<<<< HEAD
-=======
+
 from models.impressoras import Impressoras
 >>>>>>> 182d746 (Versão atual da infra com backend da VM)
 

@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-from pydantic import BaseModel, Field, EmailStr
-
-class Usuarios(BaseModel):
-    email: EmailStr
-    senha_hash: str
-=======
 from pydantic import BaseModel, Field, EmailStr
 from uuid import UUID
 
