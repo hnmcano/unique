@@ -1,0 +1,76 @@
+[33m57ec4cf[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{0}: reset: moving to HEAD~1
+[33m6b27f3d[m HEAD@{1}: reset: moving to HEAD~1
+[33m74275e0[m HEAD@{2}: reset: moving to HEAD~1
+[33md92d7d1[m HEAD@{3}: commit: corrigindo
+[33m74275e0[m HEAD@{4}: commit: atualização resquisição produtos
+[33m6b27f3d[m HEAD@{5}: commit: Atualização semanal
+[33m57ec4cf[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{6}: commit: atualização erro;
+[33m8eee102[m HEAD@{7}: commit: atualização entrada entrega
+[33m3134002[m HEAD@{8}: commit: ATULIZAÇÃO PAGINAS DESKTOP E FRONTEND
+[33m62724af[m HEAD@{9}: commit: Atualização frontend e desktop
+[33m226cf77[m HEAD@{10}: commit: atualização de .exe desktop
+[33m5e949f0[m HEAD@{11}: commit: atualização de websocket de status
+[33mfe33859[m HEAD@{12}: commit: Atualização em pedido
+[33mc8d1bed[m HEAD@{13}: commit: Atualização status Pedido
+[33mea35bb2[m HEAD@{14}: commit: Validando Erro de Pedido
+[33m48b0344[m HEAD@{15}: commit: atualizações no frontend
+[33m0e56bdd[m HEAD@{16}: commit: subindo novas atualizações
+[33mfb9d434[m HEAD@{17}: commit: atualização portal_vendas
+[33m59b2f58[m HEAD@{18}: commit: Atualizações de telas
+[33me10301e[m HEAD@{19}: commit: Remove __pycache__ from repository
+[33mee61abd[m HEAD@{20}: commit: Remove dist from repository
+[33m4d3c6e6[m HEAD@{21}: commit: Remove node_modules from repository
+[33mcf7b478[m HEAD@{22}: commit: Remove .env files from repository
+[33ma8a10ef[m HEAD@{23}: reset: moving to a8a10ef
+[33m76e6aa8[m HEAD@{24}: reset: moving to 76e6aa8
+[33m76e6aa8[m HEAD@{25}: reset: moving to HEAD~1
+[33ma8a10ef[m HEAD@{26}: commit: Atualizacao Desktop part.1
+[33m76e6aa8[m HEAD@{27}: commit: atualizações Checkout 1.003
+[33m356d783[m HEAD@{28}: commit: atualizações Checkout 1.002
+[33m98a5f71[m HEAD@{29}: commit: atualizações Checkout 1.001
+[33mdd45900[m HEAD@{30}: commit: acrescentando botão radio em FormasPag
+[33mcedf396[m HEAD@{31}: commit: css forma de pagamento
+[33m146a1c1[m HEAD@{32}: commit: atualizações de forma de pagamento
+[33mbc1be88[m HEAD@{33}: commit: Atualização envio
+[33m413c5a1[m HEAD@{34}: commit: Atualização envio de pagamento
+[33me456a1d[m HEAD@{35}: commit: correção no arquivo FormasPagPedidos
+[33m4599bcb[m HEAD@{36}: commit: atualização no botão enviar
+[33m6fb5afa[m HEAD@{37}: commit: Atualização no arquivo Enviar.css
+[33m0888b70[m HEAD@{38}: commit: novas correções no frontend
+[33mcd2f76f[m HEAD@{39}: commit: removendo linha quebrada
+[33md8e8604[m HEAD@{40}: commit: Atualizações checkout
+[33mecdbdb3[m HEAD@{41}: commit: novas atualizações visuais
+[33m27647dd[m HEAD@{42}: commit: subindo arquivos backend
+[33m3d83165[m HEAD@{43}: commit: atualizações botões checkout
+[33m2c92977[m HEAD@{44}: commit: inserindo .css
+[33m776a515[m HEAD@{45}: commit: inserindo css
+[33mf6d30a2[m HEAD@{46}: commit: novas atualizações checkout
+[33mea905fa[m HEAD@{47}: commit: catalago finalizado
+[33mfb8091e[m HEAD@{48}: commit: atualização visual do catalago finalização
+[33me6baad0[m HEAD@{49}: commit: atualização dados da loja
+[33mce5f2fc[m HEAD@{50}: commit: mudanças no frontend
+[33m33d9542[m HEAD@{51}: commit: subindo atualizações
+[33md19f2f5[m HEAD@{52}: commit: Validação checked
+[33me2d27b4[m HEAD@{53}: commit: novas correções frontend
+[33m5d32a59[m HEAD@{54}: commit: atualização de entrada observações
+[33m1ad18cc[m HEAD@{55}: commit: atualização checkout
+[33m94495d7[m HEAD@{56}: commit: Atualização frontend pedidos
+[33m5115912[m HEAD@{57}: commit: atualização dados do produto
+[33m82e79c3[m HEAD@{58}: commit: Reestruturação do zero
+[33m6eadcdb[m HEAD@{59}: commit: atualizando footer catalago
+[33m09b4ea2[m HEAD@{60}: commit: subindo .gitignore
+[33me4515e8[m HEAD@{61}: commit: exclusão de dados sensiveis
+[33ma543287[m HEAD@{62}: commit: tentativa de exclusão node_modules
+[33me0cdf29[m HEAD@{63}: commit: atualização .env
+[33m74eb287[m HEAD@{64}: commit: subir node_modules 2
+[33m34fa946[m HEAD@{65}: commit: subir node_modules
+[33mc4f712a[m HEAD@{66}: commit: atualização npm run build
+[33m7232778[m HEAD@{67}: commit: Exclusão de pasta a mais
+[33m21fb060[m HEAD@{68}: commit: reestruturando o unique
+[33m5cca691[m HEAD@{69}: reset: moving to HEAD~1
+[33m174206b[m HEAD@{70}: reset: moving to HEAD~1
+[33m462b76d[m HEAD@{71}: checkout: moving from master to master
+[33m462b76d[m HEAD@{72}: commit: Reestruturação do Sistema
+[33m174206b[m HEAD@{73}: commit: salvar dados
+[33m5cca691[m HEAD@{74}: commit: atualização git
+[33m3abc6d6[m HEAD@{75}: commit: estrutura validação frontend
