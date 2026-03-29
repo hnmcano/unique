@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from fastapi import APIRouter, Depends
 import pandas as pd
 from sqlalchemy.orm import Session
@@ -75,3 +76,81 @@ async def update_product(product_id: int, quantidade: int, db: Session = Depends
     return {"message": "Produto nao encontrado"}
 
 
+=======
+from fastapi import APIRouter, Depends
+import pandas as pd
+from sqlalchemy.orm import Session
+from sqlalchemy import update, select
+from database.connection import get_db
+from service.depencias import get_current_user
+from typing import List, Dict
+from models.carrinhos import Carrinho as CarrinhoModel
+from schemas.carrinhos import Carrinho as CarrinhoSchema
+from schemas.carrinhos import CarrinhoUpdate as CarrinhoUpdateSchema
+
+router = APIRouter()
+
+@router.get("/preencher-react")
+async def read_products(db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
+    db = db.query(CarrinhoModel).filter(CarrinhoModel.estabelecimento_id == user_current["estabelecimento_id"]).all()
+    db = [p.__dict__ for p in db]
+    dataframe = pd.DataFrame(db).drop(columns=["_sa_istance_state"], errors="ignore")
+
+    if not dataframe.empty:
+        dataframe["valor_total"] = dataframe["preco_venda"] * dataframe["quantidade"]
+
+    qtdprodutos = dataframe["produto_id"].count().item() if not dataframe.empty else 0
+    dataframe = dataframe.to_dict(orient='records')
+
+    return {"dataframe": dataframe, "qtdprodutos": qtdprodutos}
+
+@router.delete("/excluir-all-produtos")
+async def delete_all(db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
+    db.query(CarrinhoModel).filter(CarrinhoModel.estabelecimento_id == user_current["estabelecimento_id"]).delete()
+    db.commit()
+    return {"message": "Carrinho excluido com sucesso"}
+
+@router.post("/adicionar-produto/{product_id}")
+async def post_product(product_id: int, format: CarrinhoSchema, db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
+    db_product = db.query(CarrinhoModel).filter(CarrinhoModel.produto_id == product_id, CarrinhoModel.estabelecimento_id == user_current["estabelecimento_id"]).first()
+    if not db_product:
+        db_product = CarrinhoModel(**format.dict())
+        db_product.estabelecimento_id = user_current["estabelecimento_id"]
+        db.add(db_product)
+        db.commit()
+        db.refresh(db_product)
+        return db_product
+
+    db_product.quantidade = db_product.quantidade + format.quantidade
+    db.commit()
+    db.refresh(db_product)
+    return db_product
+
+@router.delete("/deletar-produto-selecionado/{produto_id}")
+async def delete_product(produto_id: str, db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
+    db_carrinho = db.query(CarrinhoModel).filter(CarrinhoModel.produto_id == produto_id, CarrinhoModel.estabelecimento_id == user_current["estabelecimento_id"]).first()
+    if db_carrinho:
+        db.delete(db_carrinho)
+        db.commit()
+
+        db = db.query(CarrinhoModel).all()
+        db = [p.__dict__ for p in db]
+        dataframe = pd.DataFrame(db).drop(columns=["_sa_istance_state"], errors="ignore")
+
+        qtdprodutos = dataframe["produto_id"].count().item() if not dataframe.empty else 0
+
+        return {"qtdprodutos": qtdprodutos}
+    
+    return {"message": "Produto nao encontrado"}
+
+@router.put("/atualizar/quantidade/{product_id}/{quantidade}")
+async def update_product(product_id: int, quantidade: int, db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
+    db_product = db.query(CarrinhoModel).filter(CarrinhoModel.produto_id == product_id, CarrinhoModel.estabelecimento_id == user_current["estabelecimento_id"]).first()
+    if db_product:
+        db_product.quantidade = quantidade
+        db.commit()
+        return {"message": "Produto atualizado com sucesso"}
+    return {"message": "Produto nao encontrado"}
+
+
+>>>>>>> 182d746 (Versão atual da infra com backend da VM)
