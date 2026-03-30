@@ -11,10 +11,10 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <nav className="container flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-            <span className="text-xl font-bold text-primary-foreground">P</span>
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-foreground">
+          <img src="/apple-icon.png" style={{ maxWidth: "80%"}} alt="Unique"/>
           </div>
-          <span className="text-xl font-bold text-foreground">PDV Pro</span>
+          <span className="text-xl font-bold text-foreground">UNIQUE</span>
         </div>
 
         <div className="hidden items-center gap-8 md:flex">

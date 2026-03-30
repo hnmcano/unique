@@ -7,10 +7,10 @@ export function Footer() {
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           <div>
             <div className="mb-4 flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-                <span className="text-xl font-bold text-primary-foreground">P</span>
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-foreground">
+                <img src="/apple-icon.png" style={{ maxWidth: "80%"}} alt="Unique"/>
               </div>
-              <span className="text-xl font-bold text-foreground">PDV Pro</span>
+              <span className="text-xl font-bold text-foreground">UNIQUE</span>
             </div>
             <p className="text-pretty text-sm text-muted-foreground leading-relaxed">
               A solução completa para gestão de vendas e delivery do seu negócio.
@@ -112,7 +112,7 @@ export function Footer() {
 
         <div className="mt-12 border-t border-border pt-8">
           <div className="flex flex-col items-center justify-between gap-4 text-sm text-muted-foreground md:flex-row">
-            <p>© 2025 PDV Pro. Todos os direitos reservados.</p>
+            <p>© 2026 HNSoftwares. Todos os direitos reservados.</p>
             <div className="flex gap-6">
               <a href="#" className="hover:text-foreground transition-colors">
                 Privacidade

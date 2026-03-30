@@ -6,7 +6,7 @@ export function Pricing() {
   const plans = [
     {
       name: "Starter",
-      price: "R$ 97",
+      price: "R$ 99,90",
       description: "Perfeito para pequenos negócios começando",
       features: [
         "1 Caixa PDV",
@@ -14,13 +14,13 @@ export function Pricing() {
         "Controle de Estoque Básico",
         "Relatórios Essenciais",
         "Suporte por Email",
-        "Até 1.000 vendas/mês",
+        "Vendas Ilimitadas",
       ],
       highlighted: false,
     },
     {
       name: "Professional",
-      price: "R$ 197",
+      price: "R$ 179,90",
       description: "Para negócios em crescimento",
       features: [
         "Até 3 Caixas PDV",
@@ -36,7 +36,7 @@ export function Pricing() {
     },
     {
       name: "Enterprise",
-      price: "R$ 397",
+      price: "R$ 319,90",
       description: "Para operações de grande porte",
       features: [
         "Caixas PDV Ilimitados",
@@ -99,7 +99,6 @@ export function Pricing() {
             </Card>
           ))}
         </div>
-
         <p className="mt-12 text-center text-sm text-muted-foreground">
           Todos os planos incluem 14 dias grátis • Cancele quando quiser • Migração gratuita
         </p>

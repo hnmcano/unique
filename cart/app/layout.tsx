@@ -7,10 +7,11 @@ import "./globals.css"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "PDV Pro - Sistema Completo de PDV e Delivery",
+  title: "Unique - Sistema Completo de PDV e Delivery",
   description:
-    "Gerencie seu negócio com o sistema mais completo de PDV e delivery do mercado. Controle de vendas, estoque, pedidos e muito mais.",
-  generator: "v0.app",
+    "Gerencie seu negócio com o sistema mais completo de PDV e delivery do mercado. Controle de vendas, estoque, pedidos e muito mais." +
+    "Com uma inteface inovadora e fácil de usar, o Unique é a escolha perfeita para restaurantes, lanchonetes, bares e qualquer estabelecimento que queira otimizar suas operações e aumentar suas vendas. Experimente agora e veja a diferença!",
+  generator: "HnSoftwares.com.br",
   icons: {
     icon: [
       {
@@ -36,7 +37,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" className="dark">
       <body className={`${inter.className} font-sans antialiased`}>
         {children}
         <Analytics />
