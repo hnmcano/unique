@@ -20,11 +20,17 @@ export const useProdutos = () => {
     } = useQuery({
         queryKey: ["produtos-catalogo", slug],
         queryFn: fetchProdutos,
-        enabled: !!slug,              // 🔥 evita chamadas inválidas
-        retry: false,                 // 🔥 evita spam em 404
+        enabled: !!slug,              // Evita chamadas sem slug
+        retry: false,                 // Não tenta novamente em 404
         staleTime: 1000 * 60 * 5,
         cacheTime: 1000 * 60 * 30,
-        refetchOnWindowFocus: false
+        refetchOnWindowFocus: false,
+        onError: (err) => {
+            if (err.response && err.response.status === 404) {
+                console.error("Erro 404: Produto não encontrado.");
+                // Interrompe ou trata como necessário, por exemplo, não refetchar.
+            }
+        },
     });
 
     return {
