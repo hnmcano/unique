@@ -546,4 +546,3 @@ async def read_products(db: Session = Depends(get_db), user_current: dict = Depe
             filter.append(p)
 
     return filter
->>>>>>> 182d746 (Versão atual da infra com backend da VM)

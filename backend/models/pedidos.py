@@ -72,4 +72,3 @@ class ItemPedido(Base):
 
     def __repr__(self):
         return f"ItemPedido(id_itens_pedido={self.id_itens_pedido}, pedido_id={self.pedido_id},quantidade={self.quantidade}, valor_unitario={self.valor_unitario})"
->>>>>>> 182d746 (Versão atual da infra com backend da VM)

@@ -52,5 +52,3 @@ async def delete_category(category_id: str, db: Session = Depends(get_db), user_
 async def filter_category(category_id: str, db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
     estabelecimento_id = user_current["estabelecimento_id"]
     return db.query(ProductModel).filter(ProductModel.categoria_id == category_id, ProductModel.estabelecimento_id == estabelecimento_id).all()
-
->>>>>>> 182d746 (Versão atual da infra com backend da VM)

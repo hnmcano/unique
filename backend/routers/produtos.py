@@ -300,5 +300,4 @@ async def update_product(product_id: str, product: ProdutoSchema, db: Session = 
                             "dados": jsonable_encoder(data)
                             })
 
->>>>>>> 182d746 (Versão atual da infra com backend da VM)
     return data

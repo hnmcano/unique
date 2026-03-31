@@ -24,7 +24,7 @@ class Estabelecimento(Base):
     rede_social = Column(String(300))
     descricao = Column(String(300))
     cor_layout = Column(String(300))
-    redirecionamento = Column(String(300))
+    redirecionamento = Column(String(300), default="unique", nullable=False)
 
     plano = Column(String(50), default="basico")
     limite_usuarios = Column(Integer, default=1)
@@ -61,4 +61,3 @@ class HorariosExcecao(Base):
     hora_abertura = Column(Time, nullable=True)
     hora_fechamento = Column(Time, nullable=True)
     fechado = Column(Boolean, default=False)
->>>>>>> 182d746 (Versão atual da infra com backend da VM)

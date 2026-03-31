@@ -24,4 +24,4 @@ class CaixaResponse(BaseModel):
         "from_attributes": True
     }
 
->>>>>>> 182d746 (Versão atual da infra com backend da VM)
+

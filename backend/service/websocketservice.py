@@ -111,5 +111,5 @@ async def notificar_todos(estabelecimento_id: UUID, evento: dict):
     # Se não sobrar nenhuma conexão, remove o estabelecimento
     if len(conexoes_ativas) == 0:
         del clientes_conectados[estabelecimento_id]
->>>>>>> 182d746 (Versão atual da infra com backend da VM)
+
         

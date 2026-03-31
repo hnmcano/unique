@@ -22,4 +22,3 @@ class Carrinho(Base):
     status_venda = Column(String(20), nullable=False)
     imagem_url = Column(String, nullable=True)
     quantidade = Column(Integer, default=1, nullable=False)
->>>>>>> 182d746 (Versão atual da infra com backend da VM)

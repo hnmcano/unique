@@ -54,4 +54,3 @@ def dados_usuario(db: Session = Depends(get_db), user_current: dict = Depends(ge
         "status": usuario_existente.ativo,
         "criado_em": usuario_existente.criado_em
     }
->>>>>>> 182d746 (Versão atual da infra com backend da VM)

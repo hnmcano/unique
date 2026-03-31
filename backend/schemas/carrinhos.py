@@ -20,5 +20,5 @@ class Carrinho(BaseModel):
 
 class CarrinhoUpdate(Carrinho):
     id: UUID
->>>>>>> 182d746 (Versão atual da infra com backend da VM)
+
     quantidade: int = Field(..., ge=1)

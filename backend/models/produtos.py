@@ -48,4 +48,3 @@ class Produto(Base):
     def __repr__(self):
         return f"Product(id={self.id}, name={self.nome})"
 
->>>>>>> 182d746 (Versão atual da infra com backend da VM)

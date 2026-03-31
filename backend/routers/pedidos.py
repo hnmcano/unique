@@ -522,4 +522,3 @@ async def atualizar_status(data_atualizacao: AtualizarStatus, db: Session = Depe
     })
 
     return pedido_response
->>>>>>> 182d746 (Versão atual da infra com backend da VM)

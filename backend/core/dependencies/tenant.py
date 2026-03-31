@@ -16,5 +16,5 @@ def get_estabelecimento(x_tenant_slug:str = Header(None), db: Session = Depends(
     if not estabelecimento.ativo:
         raise HTTPException(status_code=400, detail="Estabelecimento is not active")
     
->>>>>>> 182d746 (Versão atual da infra com backend da VM)
+
     return estabelecimento

@@ -12,4 +12,4 @@ class UsuariosResponse(BaseModel):
     email: EmailStr
     ativo: bool
     criado_em: str
->>>>>>> 182d746 (Versão atual da infra com backend da VM)
+
