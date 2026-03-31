@@ -26,8 +26,6 @@ class AddHorarios(QMainWindow, add_horarios):
             "horario_final": self.hora_final.text(),
         }
 
-        print(data_json)
-
         response = APPContext.api_client.post(
             "/estabelecimento/horarios",
             data_json

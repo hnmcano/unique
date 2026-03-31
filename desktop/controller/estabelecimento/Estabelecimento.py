@@ -2,6 +2,7 @@ from PySide6.QtWidgets import *
 from windows.form_establishment.form_estabelecimento_ui import Ui_MainWindow as estabelecimento
 
 from core.app_context import app_context as APPContext
+from services.websocket import HorarioStore
 
 from PySide6.QtNetwork import *
 from PySide6.QtCore import *
@@ -12,7 +13,19 @@ import os
 from config.config import settings
 import base64
 from datetime import datetime
+from time import sleep
 
+def indice_dia_semana(dia_semana):
+    dias = {
+        0:"segunda-feira",
+        1:"terca-feira",
+        2:"quarta-feira",
+        3:"quinta-feira",
+        4:"sexta-feira",
+        5:"sabado",
+        6:"domingo"
+    }
+    return dias.get(dia_semana)
 
 def enviar_dados_estabelecimento(parent=None):
     id = parent.IdLine.text()
@@ -34,6 +47,7 @@ def enviar_dados_estabelecimento(parent=None):
     subdominio = parent.SubDominioLine.text()
     data_criacao = parent.DataCriacaoLine.text()
     data_atualizacao = parent.DataAtualizacaoLine.text()
+    botao_checked = parent.grupo.checkedButton()
 
     if parent.estabelecimento_logo.text() == "":
         pixmap = QPixmap(parent.pixmap_original)
@@ -68,7 +82,8 @@ def enviar_dados_estabelecimento(parent=None):
             "data_expiracao": f"{data_expiracao}",
             "subdominio": f"{subdominio}",
             "criado_em": f"{data_criacao}",
-            "atualizado_em": f"{data_atualizacao}"
+            "atualizado_em": f"{data_atualizacao}",
+            "redirecionamento": f"{botao_checked.objectName()}"
         }
         
         response = APPContext.api_client.put("/estabelecimento/atualizar-infos", data_json)
@@ -98,12 +113,29 @@ class Estabelecimento(QMainWindow, estabelecimento):
         response = carregar_dados(self)
         self.atualizar_dados(response)
         self.EnviaDados.clicked.connect(lambda: enviar_dados_estabelecimento(self))
+        self.layout_tabela()
+        
+        APPContext.horarios_store = HorarioStore()
+        self.horarios_store = APPContext.horarios_store
+
+        horarios = self.horarios_store.listar()
+        
+        if horarios is not None:
+            response = APPContext.api_client.get("/estabelecimento/horarios")
+            print("Horários carregados do servidor:", response)
+            self.atualizar_tabela_horarios(response)
+
+        self.horarios_store.horario_adicionado.connect(self.atualizar_tabela_horarios)
 
         self.btn_informacoes.clicked.connect(
             lambda: self.stackedWidget.setCurrentWidget(self.page)
         )
         self.btn_layout.clicked.connect(
             lambda: self.stackedWidget.setCurrentWidget(self.page_2)
+        )
+
+        self.btn_horarios_config.clicked.connect(
+            lambda: self.stackedWidget.setCurrentWidget(self.page_3)
         )
 
         self.btn_orange.clicked.connect(
@@ -119,9 +151,13 @@ class Estabelecimento(QMainWindow, estabelecimento):
             lambda: self.atualizar_cor_designer(self.btn_red)
         )
 
+        self.grupo = QButtonGroup()
+        self.grupo.setExclusive(True)
+
+        self.grupo.addButton(self.unique)
+        self.grupo.addButton(self.whatsapp)
+
     def atualizar_dados(self, response):
-
-
         self.IdLine.setText(response["id"])
         self.NomeLine.setText(str(response["nome"]))
         self.DocumentoLine.setText(str(response["documento"]))
@@ -209,3 +245,35 @@ class Estabelecimento(QMainWindow, estabelecimento):
                 self.cor_definida.setStyleSheet(f"background-color: {cor};")
             else:
                 self.cor_definida.setStyleSheet("background-color: transparent;")
+
+    def layout_tabela(self):
+        columns = [ "dia_semana", "hora_inicio", "hora_fim"]
+
+        quantidade_columns = len(columns)
+        self.tableWidget.setColumnCount(quantidade_columns)
+        self.tableWidget.setHorizontalHeaderLabels(columns)
+        header = self.tableWidget.horizontalHeader()
+        header.setSectionResizeMode(QHeaderView.Stretch)
+        header.setSectionResizeMode(0, QHeaderView.ResizeToContents)
+        self.tableWidget.setSortingEnabled(True)
+        self.tableWidget.verticalHeader().setVisible(False)
+        self.tableWidget.setSelectionBehavior(QTableWidget.SelectRows)
+        self.tableWidget.setSelectionMode(QTableWidget.SingleSelection)
+        self.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
+
+    def atualizar_tabela_horarios(self, horario):
+        self.tableWidget.setRowCount(len(horario))
+
+        for index, item in enumerate(horario):
+
+            dia_semana = indice_dia_semana(item["dia_semana"])
+            dia_semana = QTableWidgetItem(str(dia_semana))
+            self.tableWidget.setItem(index, 0, dia_semana)
+
+            hora_abertura = QTableWidgetItem(str(item["hora_abertura"][:5]))
+            hora_abertura.setTextAlignment(Qt.AlignCenter)
+            self.tableWidget.setItem(index, 1, hora_abertura)
+
+            hora_fechamento = QTableWidgetItem(str(item["hora_fechamento"][:5]))
+            hora_fechamento.setTextAlignment(Qt.AlignCenter)
+            self.tableWidget.setItem(index, 2, hora_fechamento)

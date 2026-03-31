@@ -5,7 +5,6 @@ import json
 from config.config import settings
 from core.app_context import app_context as APPContext
 
-
 class WebSocketService(QThread):
     mensagem_recebida = Signal(dict)
     status = Signal(str)
@@ -73,6 +72,9 @@ class WebSocketService(QThread):
         elif tipo == "pedido_removido":
             APPContext.pedido_store.remover(dados)
 
+        elif tipo == "horario_criado":
+            APPContext.horarios_store.adicionar(dados)
+
 class PedidoStore(QObject):
 
     pedido_adicionado = Signal(dict)
@@ -108,3 +110,18 @@ class PedidoStore(QObject):
 
     def contar_pendentes(self):
         return sum(1 for p in self.pedidos if p["status"] == "PENDENTE")
+    
+class HorarioStore(QObject):
+
+    horario_adicionado = Signal(dict)
+
+    def __init__(self):
+        super().__init__()
+        self.horarios = []
+
+    def adicionar(self, horario):
+        self.horarios.append(horario)
+        self.horario_adicionado.emit(horario)
+    
+    def listar(self):
+        return self.horarios
