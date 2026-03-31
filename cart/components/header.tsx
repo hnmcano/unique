@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { Menu, X } from "lucide-react"
 import { useState } from "react"
+import Link from "next/link"
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -37,21 +38,23 @@ export function Header() {
             Preços
           </a>
         </div>
-
         <div className="hidden items-center gap-4 md:flex">
-          <Button variant="ghost" size="sm">
-            Entrar
-          </Button>
-          <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90">
-            Começar Grátis
-          </Button>
+          <Link href="/login">
+            <Button variant="ghost" size="sm">
+              Entrar
+            </Button>
+          </Link>
+          <Link href="/register">
+            <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90">
+              Começar Grátis
+            </Button>
+          </Link>
         </div>
 
         <button className="md:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
           {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
       </nav>
-
       {mobileMenuOpen && (
         <div className="border-t border-border bg-background md:hidden">
           <div className="container space-y-4 px-4 py-6">
@@ -65,12 +68,16 @@ export function Header() {
               Preços
             </a>
             <div className="flex flex-col gap-2 pt-4">
-              <Button variant="outline" size="sm" className="w-full bg-transparent">
-                Entrar
-              </Button>
-              <Button size="sm" className="w-full bg-primary text-primary-foreground">
-                Começar Grátis
-              </Button>
+              <Link href="/login">
+                <Button variant="outline" size="sm" className="w-full bg-transparent">
+                  Entrar
+                </Button>
+              </Link>
+              <Link href="/register">
+                <Button size="sm" className="w-full bg-primary text-primary-foreground">
+                  Começar Grátis
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
