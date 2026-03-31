@@ -101,6 +101,7 @@ def format_data(data):
 def carregar_dados(self):
     try:
         response = APPContext.api_client.get("/estabelecimento/carregar-infos")
+        print("Dados carregados do servidor:", response["redirecionamento"])
         return response
     except Exception as e:
         QMessageBox.critical(self, "Erro", f"Erro ao buscar dados: {str(e)}")
@@ -110,10 +111,17 @@ class Estabelecimento(QMainWindow, estabelecimento):
         super().__init__(parent)
         self.setupUi(self)
 
+        self.grupo = QButtonGroup()
+        self.grupo.setExclusive(True)
+
+        self.grupo.addButton(self.unique)
+        self.grupo.addButton(self.whatsapp)
+
         response = carregar_dados(self)
         self.atualizar_dados(response)
         self.EnviaDados.clicked.connect(lambda: enviar_dados_estabelecimento(self))
         self.layout_tabela()
+
         
         APPContext.horarios_store = HorarioStore()
         self.horarios_store = APPContext.horarios_store
@@ -151,11 +159,7 @@ class Estabelecimento(QMainWindow, estabelecimento):
             lambda: self.atualizar_cor_designer(self.btn_red)
         )
 
-        self.grupo = QButtonGroup()
-        self.grupo.setExclusive(True)
 
-        self.grupo.addButton(self.unique)
-        self.grupo.addButton(self.whatsapp)
 
     def atualizar_dados(self, response):
         self.IdLine.setText(response["id"])
@@ -172,6 +176,13 @@ class Estabelecimento(QMainWindow, estabelecimento):
         self.LimiteUsuarioLine.setText(str(response["limite_usuarios"]))
         self.AtivoLine.setText(str(response["ativo"]))
         self.SubDominioLine.setText(str(response["subdominio"]))
+
+        self.redirecionado = response["redirecionamento"]
+
+        for i in self.grupo.buttons():
+            if i.objectName() == self.redirecionado:
+                i.setChecked(True)
+                break
 
         if response["data_expiracao"] == None:
             data_expiracao = None
