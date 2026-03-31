@@ -24,6 +24,7 @@ class Estabelecimento(Base):
     rede_social = Column(String(300))
     descricao = Column(String(300))
     cor_layout = Column(String(300))
+    redirecionamento = Column(String(300))
 
     plano = Column(String(50), default="basico")
     limite_usuarios = Column(Integer, default=1)
