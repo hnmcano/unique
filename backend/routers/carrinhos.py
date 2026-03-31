@@ -73,5 +73,3 @@ async def update_product(product_id: int, quantidade: int, db: Session = Depends
         return {"message": "Produto atualizado com sucesso"}
     return {"message": "Produto nao encontrado"}
 
-
->>>>>>> 182d746 (Versão atual da infra com backend da VM)

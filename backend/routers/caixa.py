@@ -129,4 +129,3 @@ def carregamento_caixa(db: Session = Depends(get_db), user_current: dict = Depen
         }
         for i in result
     ]
->>>>>>> 182d746 (Versão atual da infra com backend da VM)

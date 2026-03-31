@@ -11,5 +11,5 @@ class Clientes(BaseModel):
     bairro: str
     cidade: str
     complemento: str
->>>>>>> 182d746 (Versão atual da infra com backend da VM)
+
     referencia: str | None = None

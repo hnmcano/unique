@@ -73,4 +73,4 @@ class MesasResponse(BaseModel):
     model_config = {
         "from_attributes": True
     }
->>>>>>> 182d746 (Versão atual da infra com backend da VM)
+

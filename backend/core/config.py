@@ -10,5 +10,5 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
 
->>>>>>> 182d746 (Versão atual da infra com backend da VM)
+
 settings = Settings()

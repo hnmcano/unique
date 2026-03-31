@@ -18,5 +18,3 @@ class Clientes(Base):
 
     def __repr__(self):
         return f"Cliente(id={self.id}, nome={self.nome}, email={self.email}, telefone={self.telefone})"
-    
->>>>>>> 182d746 (Versão atual da infra com backend da VM)

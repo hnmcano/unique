@@ -26,5 +26,5 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Security(securi
         }
     except JWTError:
         raise HTTPException(status_code=401, detail="Token inválido")
->>>>>>> 182d746 (Versão atual da infra com backend da VM)
+
         

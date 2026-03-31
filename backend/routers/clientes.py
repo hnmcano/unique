@@ -35,5 +35,4 @@ async def clientes_cadastados(db: Session = Depends(get_db), user_current: dict 
     print(db_clientes)
 
     return db_clientes
- 
->>>>>>> 182d746 (Versão atual da infra com backend da VM)
+

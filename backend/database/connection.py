@@ -29,4 +29,4 @@ def get_db():
     finally:
         db.close()
 
->>>>>>> 182d746 (Versão atual da infra com backend da VM)
+

@@ -49,5 +49,3 @@ class PedidoItens(Base):
     pedido = relationship("PedidosMesa", back_populates="itens")
     produto = relationship("Produto", back_populates="itens_mesa", uselist=False)
 
-
->>>>>>> 182d746 (Versão atual da infra com backend da VM)
