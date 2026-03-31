@@ -111,6 +111,7 @@ async def atualizar_estabelecimento(estabelecimento: EstabelecimentoSchemaAtuali
         db_estabelecimento.descricao = estabelecimento.descricao
         db_estabelecimento.cor_layout = estabelecimento.cor_layout
         db_estabelecimento.subdominio = estabelecimento.subdominio
+        db_estabelecimento.redirecionamento = estabelecimento.redirecionamento
         db.commit()
         db.flush()
     
@@ -211,4 +212,3 @@ async def gerar_horarios(db: Session = Depends(get_db), user_current: dict = Dep
         return []
 
     return horarios
->>>>>>> 182d746 (Versão atual da infra com backend da VM)

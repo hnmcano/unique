@@ -33,6 +33,7 @@ class EstabelecimentoSchemaAtualizar(BaseModel):
     subdominio: str
     criado_em: str
     atualizado_em: str
+    redirecionamento: str
 
     model_config = {
         "from_attributes": True
@@ -57,6 +58,7 @@ class EstabelecimentoResponse(BaseModel):
     subdominio: str | None
     criado_em: datetime | None
     atualizado_em: datetime | None
+    redirecionamento: str
 
     model_config = {
         "from_attributes": True
