@@ -27,13 +27,15 @@ class AdicionarProdutoPedido(QMainWindow, addProdutosPedido):
 
     def filtrar_produtos(self, text):
         for row in range(self.tableWidget.rowCount()):
-            item = self.tableWidget.item(row, 1)
+            item = self.tableWidget.item(row, 0)
             if text.lower() in item.text().lower():
                 self.tableWidget.showRow(row)
             else:
                 self.tableWidget.hideRow(row)
 
     def adicionar_produto(self, row, data):
+        print("Adicionar produto na linha:", row)
+        print("Data recebida:", data)
         try:
             produto = self.tableWidget.item(row, 0).data(Qt.UserRole)
             pedido_id = data["id_pedido"]

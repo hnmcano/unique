@@ -6,5 +6,6 @@ class AppContext:
         self.pedido_store = None
         self.impressora_store = None
         self.horarios_store = None
+        self.produtos_store = None
 
 app_context = AppContext()

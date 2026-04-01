@@ -38,10 +38,10 @@ class WebSocketService(QThread):
     def on_message(self, ws, message: str):
         try:
             evento = json.loads(message)
-
+            print("Evento recebido:", evento)    
             # apenas emite o evento
             self.mensagem_recebida.emit(evento)
-
+            
         except Exception as e:
             print("Erro ao processar WS:", e)
 
@@ -74,6 +74,9 @@ class WebSocketService(QThread):
 
         elif tipo == "horario_criado":
             APPContext.horarios_store.adicionar(dados)
+
+        elif tipo == "Atualizar_produtos":
+            APPContext.produtos_store.atualizar(dados)
 
 class PedidoStore(QObject):
 
@@ -125,3 +128,37 @@ class HorarioStore(QObject):
     
     def listar(self):
         return self.horarios
+    
+class ProdutosStore(QObject):
+    produtos_atualizados = Signal(list)
+    def __init__(self):
+        super().__init__()
+        self.produtos = []
+
+    def atualizar(self, produtos):
+        if isinstance(produtos, dict):
+            produtos = [produtos]
+            print("Produtos atualizados:", produtos)
+
+        print("Atualizando produtos...")
+        print("Produtos recebidos:", produtos)
+
+        for prod in produtos:
+            encontrado = False
+            for i, p in enumerate(self.produtos):
+                if p["id_produto"] == prod["id_produto"]:
+                    self.produtos[i] = prod
+                    encontrado = True
+                    break
+            if not encontrado:
+                self.produtos.append(prod)
+
+        self.produtos_atualizados.emit(self.produtos)
+
+    def adicionar(self, produto):
+        print("Adicionando produto:", produto)
+        self.produtos.append(produto)
+        self.produtos_atualizados.emit(self.produtos)
+
+    def listar(self):
+        return self.produtos

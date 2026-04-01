@@ -12,7 +12,7 @@ from controller.pedidos.Pedidos import Pedidos
 from controller.caixa.Caixa import Caixa
 from controller.mesas.Mesas import Mesas
 from windows.unique_ui import Ui_Unique as uniq
-from services.websocket import PedidoStore
+from services.websocket import PedidoStore, ProdutosStore, HorarioStore
 from config.config import settings
 from datetime import datetime, timedelta
 from pictures import imagens_rc
@@ -95,7 +95,10 @@ class Uniq(QMainWindow, uniq):
         
         self.sound = SoundService()
         APPContext.pedido_store = PedidoStore()
+        APPContext.produtos_store = ProdutosStore()
+        self.produtos_store = APPContext.produtos_store
         self.pedido_store = APPContext.pedido_store
+
         self.websocket = APPContext.websocket_client
         self.websocket.status.connect(self.atualizar_status)
 
@@ -156,7 +159,7 @@ class Uniq(QMainWindow, uniq):
 
     def abrir_produtos(self):
 
-        self.produtos_window = Produtos(parent=self)
+        self.produtos_window = Produtos(produtos_store=self.produtos_store, parent=self)
         self.produtos_window.showNormal()
         self.produtos_window.raise_()
         self.produtos_window.activateWindow()

@@ -6,7 +6,7 @@ from windows.form_products.produtos_ui import Ui_MainWindow as produtos
 from .DadosProdutos import DadosProduto
 from .AddCategoria import AddCategoria
 from .Addprodutos import AddProdutos
-from services.websocket import WebSocketService
+from services.websocket import ProdutosStore
 from core.app_context import app_context as APPContext
 
 from PySide6.QtCore import Qt, Signal
@@ -45,11 +45,10 @@ def carregar_produto(self):
         QMessageBox.critical(self, "Erro", f"Erro ao buscar produtos: {str(e)}")
 
 
-
 class Produtos(QMainWindow, produtos):
     mensagem_recebida = Signal(dict)
 
-    def __init__(self, parent=None):
+    def __init__(self,produtos_store, parent=None):
         super().__init__(parent)
         self.setupUi(self)
         center_window(self)
@@ -57,13 +56,19 @@ class Produtos(QMainWindow, produtos):
         self.layout_tabela()
         self.tableWidget.cellDoubleClicked.connect(self.abrir_dados_produto)
 
+        self.produtos_store = produtos_store
+        self.produtos_store.produtos_atualizados.connect(self.on_evento_recebido)
 
-        data = carregar_produto(self)
-        self.atualizar_tabela(data)
+        if self.produtos_store.listar() == []:
+            data = carregar_produto(self)
+            for produto in data:
+                self.produtos_store.adicionar(produto)
 
-
-        # Ao clicar no botão adicionar produto, abre a janela de adicionar produtos
-        
+            self.atualizar_tabela(data)
+        else:
+            data = self.produtos_store.listar()
+            self.atualizar_tabela(data)
+              
         self.add_products.clicked.connect(self.abrir_add_produto)
         self.add_categoria.clicked.connect(self.abrir_categoria)
 
@@ -94,9 +99,8 @@ class Produtos(QMainWindow, produtos):
 
         parent.tableWidget.setRowCount(len(data))
 
-        for i, prod in enumerate(data):
-
-            item_cod_pdv = QTableWidgetItem(prod["cod_pdv"])
+        for i, prod in enumerate(data):  
+            item_cod_pdv = QTableWidgetItem(str(prod["cod_pdv"]))
             item_cod_pdv.setData(Qt.UserRole, prod)
             item_cod_pdv.setTextAlignment(Qt.AlignCenter)
             parent.tableWidget.setItem(i, 0, item_cod_pdv)
@@ -137,7 +141,6 @@ class Produtos(QMainWindow, produtos):
             item_status.setTextAlignment(Qt.AlignCenter)
             parent.tableWidget.setItem(i, 8, item_status)
 
-
     def abrir_add_produto(self):
         self.add_produto_window = AddProdutos(parent=self)# type: ignore
         self.add_produto_window.show()# type: ignore
@@ -160,20 +163,5 @@ class Produtos(QMainWindow, produtos):
             else:
                 self.tableWidget.hideRow(row)
 
-    def on_evento_recebido(self, evento: dict):
-        data = evento["dados"]
-
-        if evento["tipo"] == "Atualizar_produtos":
-            # Se vier um dicionário único, transformamos em lista
-            if isinstance(data, dict):
-                data = [data]
-
-            self.atualizar_tabela(data)
-
-    def showEvent(self, event):
-        super().showEvent(event)
-        
-        APPContext.websocket_client.mensagem_recebida.connect(
-            self.on_evento_recebido
-        )
-
+    def on_evento_recebido(self, data: dict):
+        self.atualizar_tabela(data)

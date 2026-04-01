@@ -31,6 +31,46 @@ function FormasPagPedido() {
     const [respostaServidor, setRespostaServidor] = useState(null);
     const navigate = useNavigate();
 
+    console.log(encodeURIComponent("🧾 Pedido 🍔"));
+
+    const enviarPedidoWhatsApp = () => {
+        if (!estabelecimento?.telefone) {
+            alert("Telefone do estabelecimento não encontrado");
+            return;
+        }
+
+        const total = data.valor_total;
+
+        const mensagem = [
+            "🧾 Pedido - " + estabelecimento.nome,
+            "",
+            "👤 Cliente: " + (data.cliente?.nome || "Não informado"),
+            "📞 Telefone: " + (data.cliente?.telefone || "Não informado"),
+            "",
+            "📍 Cep: " + (data.entrega?.cep || "Não informado"),
+            "📍 Endereço: " + (data.entrega?.endereco + " " + data.entrega?.numero || "Não informado"),
+            "📍 Bairro: " + (data.entrega?.bairro || "Não informado"),
+            "📍 Cidade: " + (data.entrega?.cidade || "Não informado"),
+            "",
+            "🏷️ Observações: " + (data.observacoes || "Não informado"),
+            "💰 Forma de Pagamento: " + (data.metodo_pagamento || "Não informado"), 
+            "",
+            "📦 Itens:",
+            ...data.itens.map((item) => {
+                const totalItem = item.quantidade * item.valor_unitario;
+                return `- ${item.quantidade}x ${item.produto_id} - R$ ${totalItem.toFixed(2)}`;
+            }), 
+            "",
+            "🚚 Taxa de Entrega: R$ " + (data.entrega?.taxa_entrega?.toFixed(2) || "0.00"),
+            "💰 Total: R$ " + (total?.toFixed(2) || "0.00")
+        ].join("\n");
+
+        const url = `https://api.whatsapp.com/send?phone=${estabelecimento.telefone}&text=${encodeURIComponent(mensagem)}`;
+
+        window.open(url, "_blank");
+    };
+
+
     if (respostaServidor) {
         return (
             <>
@@ -60,19 +100,39 @@ function FormasPagPedido() {
 
         setIsLoading(true);
         setIsSuccess(false);
-
         try{
-            const response = await api.post("/pedidos/react", data);
-            
-            setIsLoading(false);
-            setIsSuccess(true);
+            const dados_estabelecimento = await api.get(`/estabelecimento/carregar-dados`);
 
-            setTimeout(() => {
-                setIsSuccess(false);
-                console.log("resposta-servidor, sucesso",response);
-                atualizarPedido(response.data);
-                navigate(`/Status/Pedido/${response.data.id_pedido}`);
-            }, 2000);
+
+            if (dados_estabelecimento.data.redirecionamento === "unique") {
+                try{
+                    const response = await api.post("/pedidos/react", data);
+    
+                    setIsLoading(false);
+                    setIsSuccess(true);
+
+                    setTimeout(() => {
+                        setIsSuccess(false);
+                        console.log("resposta-servidor, sucesso",response);
+                        atualizarPedido(response.data);
+                        navigate(`/Status/Pedido/${response.data.id_pedido}`);
+                    }, 2000);
+
+                }catch(error){
+                    console.log(error);
+                    setIsLoading(false);
+                    setError(error);
+                    setRespostaServidor(error.response.data.detail);
+                }
+            } else {
+                try{
+                    enviarPedidoWhatsApp();
+                    setIsLoading(false);
+                    setIsSuccess(true);
+                }catch(error){
+                    console.log(error);
+                }
+            }
 
         }catch(error){
             console.log(error);
@@ -80,7 +140,6 @@ function FormasPagPedido() {
             setError(error);
             setRespostaServidor(error.response.data.detail);
         }
-
     }
     
     return (
