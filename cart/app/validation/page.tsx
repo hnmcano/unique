@@ -1,8 +1,8 @@
-import { Main } from "next/document";
+// import { Main } from "next/document";
 
-export default function Validation() {
-    return (
-        <Main>     
-        </Main>
-    )
-}
+// export default function Validation() {
+//     return (
+//         <Main>     
+//         </Main>
+//     )
+// }
