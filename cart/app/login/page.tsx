@@ -1,4 +1,4 @@
-import LoginFormulation from "@/components/formulationLogin";
+import LoginFormulation from "../../components/formulationLogin";
 
 export default function Login() {
     return (

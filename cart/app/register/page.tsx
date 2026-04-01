@@ -1,4 +1,4 @@
-import RegisterFormulation from "@/components/formulationRegister";
+import RegisterFormulation from "../../components/formulationRegister";
 
 
 export default function Register() {
