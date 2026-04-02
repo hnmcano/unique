@@ -323,13 +323,14 @@ async def delete_item_pedido(itemDeletar: DeletarItem , db: Session = Depends(ge
 
     produto = db.get(ProdutoModel, item.produto_id)
     produto.estoque += item.quantidade  
-    pedido.valor_total += -(item.quantidade * item.valor_unitario)
+    item.valor_total += -(item.quantidade * item.valor_unitario)
 
     if produto.estoque > 0:
         produto.status_venda = "Ativo"
 
     caixa_aberto = db.query(CaixaModel).filter(CaixaModel.estabelecimento_id == user_current["estabelecimento_id"],
                                     CaixaModel.id == pedido.caixa_id).with_for_update().first()
+
 
     caixa_aberto.valor_final -= item.valor_total
 

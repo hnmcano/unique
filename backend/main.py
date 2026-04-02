@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from service import websocketservice
-from routers import clientes, produtos, carrinhos, pedidos, caixa, estabelecimento, categorias, mesas, usuarios, impressoras
+from routers import clientes, produtos, carrinhos, pedidos, caixa, estabelecimento, categorias, mesas, usuarios, impressoras, update
 from fastapi.middleware.cors import CORSMiddleware
 from prometheus_fastapi_instrumentator import Instrumentator
 
@@ -33,3 +33,4 @@ app.include_router(mesas.router, prefix="/mesas", tags=["mesas"])
 app.include_router(websocketservice.router, prefix="/ws", tags=["websocket"])
 app.include_router(usuarios.router, prefix="/usuarios", tags=["usuarios"])
 app.include_router(impressoras.router, prefix="/impressoras", tags=["impressoras"])
+app.include_router(update.router, prefix="/update", tags=["update"])

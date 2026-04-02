@@ -41,6 +41,12 @@ async def read_categories(db: Session = Depends(get_db), user_current: dict = De
 async def delete_category(category_id: str, db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
     estabelecimento_id = user_current["estabelecimento_id"]
     db_category = db.query(CategoryModel).filter(CategoryModel.nome == category_id, CategoryModel.estabelecimento_id == estabelecimento_id).first()
+
+    categoria_produtos = db.query(ProductModel).filter(ProductModel.categoria_id == db_category.id_categoria).all()
+    
+    if categoria_produtos:
+        raise HTTPException(status_code=400, detail="Não é possível excluir a categoria, existem produtos associados a ela.")
+
     if db_category:
         db.delete(db_category)
         db.commit()

@@ -1,5 +1,6 @@
 from models.produtos import Produto as ProductModel
 from schemas.produtos import Produto as ProdutoSchema
+from schemas.produtos import ProdutoSchema as ProdutoSchemaResponse
 from models.produtos import Categoria as CategoryModel
 from models.estabelecimento import Estabelecimento as EstabelecimentoModel
 
@@ -15,6 +16,8 @@ import base64
 from service.depencias import get_current_user
 from core.dependencies.tenant import get_estabelecimento
 from fastapi import HTTPException, Header
+
+from uuid import UUID
 
 router = APIRouter()
 
@@ -229,7 +232,7 @@ async def list_products(db: Session = Depends(get_db), estabelecimento: Estabele
     ]
 
 @router.delete("/desktop/delete-product-data-base/{product_id}")
-async def delete_product(product_id: str, db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
+async def delete_product(product_id: UUID, db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
     estabelecimento_id = user_current["estabelecimento_id"]
 
     db_product = db.query(ProductModel).filter(ProductModel.id_produto == product_id, ProductModel.estabelecimento_id == estabelecimento_id).first()
@@ -240,7 +243,7 @@ async def delete_product(product_id: str, db: Session = Depends(get_db), user_cu
     raise HTTPException(status_code=404, detail="Produto nao encontrado")
 
 @router.put("/desktop/alter-product-data-base/{product_id}")
-async def update_product(product_id: str, product: ProdutoSchema, db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
+async def update_product(product_id: UUID, product: ProdutoSchema, db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
 
     estabelecimento_id = user_current["estabelecimento_id"]
 
@@ -249,55 +252,47 @@ async def update_product(product_id: str, product: ProdutoSchema, db: Session = 
     if not db_product:
         raise HTTPException(status_code=404, detail="Produto nao encontrado")
 
+    allowed_fields = {
+        "nome", "preco_custo", "preco_venda", "medida",
+        "estoque", "estoque_min", "descricao",
+        "ficha_tecnica", "status_venda", "categoria_id"
+    }
+
     for key, value in product.dict(exclude_unset=True).items():
-        setattr(db_product, key, value)
+        if key in allowed_fields:
+            setattr(db_product, key, value)
 
     db.commit()
     db.flush()
 
     produtos = db.query(ProductModel).filter(
-        ProductModel.estabelecimento_id == estabelecimento_id
-    ).all()
+        ProductModel.estabelecimento_id == estabelecimento_id,
+        ProductModel.id_produto == product_id
+    ).first()
 
     categorias = db.query(CategoryModel).filter(
-        CategoryModel.estabelecimento_id == estabelecimento_id
-    )
-    categorias_map = {
-        c.id_categoria: c.nome for c in categorias
+        CategoryModel.estabelecimento_id == estabelecimento_id,
+        ProductModel.categoria_id == CategoryModel.id_categoria
+    ).first()
+
+    nome_categoria = categorias.nome if categorias else "Sem categoria"
+    data = {
+        "estabelecimento_id": produtos.estabelecimento_id,
+        "id_produto": produtos.id_produto,
+        "categoria_id": produtos.categoria_id,
+        "cod_pdv": produtos.cod_pdv,
+        "nome": produtos.nome,
+        "preco_custo": produtos.preco_custo,
+        "preco_venda": produtos.preco_venda,
+        "medida": produtos.medida,
+        "estoque": produtos.estoque,
+        "estoque_min": produtos.estoque_min,
+        "descricao": produtos.descricao,
+        "ficha_tecnica": produtos.ficha_tecnica,
+        "status_venda": produtos.status_venda,
+        "imagem_name": produtos.imagem_name,
+        "imagem": produtos.imagem,
+        "nome_categoria": nome_categoria
     }
-
-    data = []
-
-    for p in produtos:
-
-        nome_categoria = categorias_map.get(p.categoria_id, "Sem categoria")
-
-        produto = {
-            "estabelecimento_id": p.estabelecimento_id,
-            "id_produto": p.id_produto,
-            "categoria_id": p.categoria_id,
-            "cod_pdv": p.cod_pdv,
-            "nome": p.nome,
-            "preco_custo": p.preco_custo,
-            "preco_venda": p.preco_venda,
-            "medida": p.medida,
-            "estoque": p.estoque,
-            "estoque_min": p.estoque_min,
-            "descricao": p.descricao,
-            "ficha_tecnica": p.ficha_tecnica,
-            "status_venda": p.status_venda,
-            "imagem_name": p.imagem_name,
-            "imagem": p.imagem
-        }
-
-        produto["nome_categoria"] = nome_categoria
-        data.append(produto)
-
-    estabelecimento_id = db_product.estabelecimento_id
-
-    await notificar_todos(estabelecimento_id, {
-                            "tipo": "Atualizar_produtos",
-                            "dados": jsonable_encoder(data)
-                            })
 
     return data
