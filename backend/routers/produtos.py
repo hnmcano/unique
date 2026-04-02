@@ -42,50 +42,34 @@ async def adicionar_produto(product: ProdutoSchema, db: Session = Depends(get_db
     db.commit()
     db.refresh(db_product)
 
-    produtos = db.query(ProductModel).filter(
-        ProductModel.estabelecimento_id == estabelecimento_id
-    ).all()
+    produto = db.query(ProductModel).filter(
+        ProductModel.estabelecimento_id == estabelecimento_id,
+        ProductModel.id_produto == db_product.id_produto
+    ).first()
 
     categorias = db.query(CategoryModel).filter(
-        CategoryModel.estabelecimento_id == estabelecimento_id
-    )
-    categorias_map = {
-        c.id_categoria: c.nome for c in categorias
+        CategoryModel.estabelecimento_id == estabelecimento_id,
+        produto.categoria_id == CategoryModel.id_categoria
+    ).first()
+
+    data = {
+        "estabelecimento_id": produto.estabelecimento_id,
+        "id_produto": produto.id_produto,
+        "categoria_id": produto.categoria_id,
+        "cod_pdv": produto.cod_pdv,
+        "nome": produto.nome,
+        "preco_custo": produto.preco_custo,
+        "preco_venda": produto.preco_venda,
+        "medida": produto.medida,
+        "estoque": produto.estoque,
+        "estoque_min": produto.estoque_min,
+        "descricao": produto.descricao,
+        "ficha_tecnica": produto.ficha_tecnica,
+        "status_venda": produto.status_venda,
+        "imagem_name": produto.imagem_name,
+        "imagem": produto.imagem,
+        "nome_categoria": categorias.nome
     }
-
-    data = []
-
-    for p in produtos:
-
-        nome_categoria = categorias_map.get(p.categoria_id, "Sem categoria")
-
-        produto = {
-            "estabelecimento_id": p.estabelecimento_id,
-            "id_produto": p.id_produto,
-            "categoria_id": p.categoria_id,
-            "cod_pdv": p.cod_pdv,
-            "nome": p.nome,
-            "preco_custo": p.preco_custo,
-            "preco_venda": p.preco_venda,
-            "medida": p.medida,
-            "estoque": p.estoque,
-            "estoque_min": p.estoque_min,
-            "descricao": p.descricao,
-            "ficha_tecnica": p.ficha_tecnica,
-            "status_venda": p.status_venda,
-            "imagem_name": p.imagem_name,
-            "imagem": p.imagem
-        }
-
-        produto["nome_categoria"] = nome_categoria
-        data.append(produto)
-
-        estabelecimento_id = db_product.estabelecimento_id
-
-    await notificar_todos(estabelecimento_id, {
-                            "tipo": "Atualizar_produtos",
-                            "dados": jsonable_encoder(data)
-                            })
 
     return data
 
