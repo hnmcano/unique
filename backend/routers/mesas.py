@@ -17,16 +17,8 @@ import json
 
 router = APIRouter()
 
-@router.post(
-    "/abrir-mesa",
-    status_code=status.HTTP_200_OK,
-    response_model=MesasResponse
-)
-def abrir_mesa(
-        mesa: AberturaMesa, 
-        db: Session = Depends(get_db),
-        user_current: dict = Depends(get_current_user)
-    ):
+@router.post("/abrir-mesa",status_code=status.HTTP_200_OK,response_model=MesasResponse)
+def abrir_mesa(mesa: AberturaMesa,db: Session = Depends(get_db),user_current: dict = Depends(get_current_user)):
 
     caixa = db.query(CaixaModel).filter(CaixaModel.status == "ABERTO", CaixaModel.estabelecimento_id == user_current["estabelecimento_id"]).first()
     if not caixa:
@@ -85,16 +77,8 @@ def abrir_mesa(
         "pedido": db_pedido
     }
 
-@router.put(
-    "/adicionar-produto",
-    status_code=status.HTTP_201_CREATED,
-    response_model=MesasResponse
-)
-async def adicionar_produto(
-    mesa: AdicionarItensMesa,
-    db: Session = Depends(get_db),
-    user_current: dict = Depends(get_current_user)
-):
+@router.put("/adicionar-produto",status_code=status.HTTP_201_CREATED,response_model=MesasResponse)
+async def adicionar_produto(mesa: AdicionarItensMesa,db: Session = Depends(get_db),user_current: dict = Depends(get_current_user)):
 
     mesa_existente = db.query(MesaModel).filter(
         MesaModel.id_mesa == mesa.mesa_id,
@@ -188,15 +172,8 @@ async def adicionar_produto(
         "pedido": pedido_aberto
     }
 
-@router.put(
-    "/finalizar-pedido-mesa/{mesa_id}",
-    status_code=status.HTTP_204_NO_CONTENT
-)
-async def fechar_mesa(
-    mesa_id: int, 
-    db: Session = Depends(get_db),
-    user_current: dict = Depends(get_current_user)
-):
+@router.put("/finalizar-pedido-mesa/{mesa_id}",status_code=status.HTTP_204_NO_CONTENT)
+async def fechar_mesa(mesa_id: int, db: Session = Depends(get_db),user_current: dict = Depends(get_current_user)):
 
     mesa_existente = db.query(MesaModel).filter(
         MesaModel.id_mesa == mesa_id,
@@ -218,15 +195,8 @@ async def fechar_mesa(
     pedido_aberto.status = "FECHADO"
     db.commit()
 
-@router.delete(
-        "/excluir-pedido-mesa/{mesa_id}", 
-        status_code=status.HTTP_204_NO_CONTENT
-    )
-async def excluir_pedido_mesa(
-    mesa_id: int, 
-    db: Session = Depends(get_db),
-    user_current: dict = Depends(get_current_user)
-):
+@router.delete("/excluir-pedido-mesa/{mesa_id}",status_code=status.HTTP_204_NO_CONTENT)
+async def excluir_pedido_mesa(mesa_id: int,db: Session = Depends(get_db),user_current: dict = Depends(get_current_user)):
 
     mesa_existente = db.query(MesaModel).filter(
         MesaModel.id_mesa == mesa_id,
@@ -248,15 +218,8 @@ async def excluir_pedido_mesa(
     db.delete(pedido_aberto)
     db.commit()
 
-@router.delete(
-        "/excluir-mesa/{mesa_id}", 
-        status_code=status.HTTP_204_NO_CONTENT
-    )
-async def excluir_mesa(
-    mesa_id: UUID, 
-    db: Session = Depends(get_db),
-    user_current: dict = Depends(get_current_user)
-):
+@router.delete("/excluir-mesa/{mesa_id}",status_code=status.HTTP_204_NO_CONTENT)
+async def excluir_mesa(mesa_id: UUID,db: Session = Depends(get_db),user_current: dict = Depends(get_current_user)):
 
     mesa_existente = db.query(MesaModel).filter(
         MesaModel.id_mesa == mesa_id,
@@ -297,14 +260,8 @@ async def excluir_mesa(
 
     raise HTTPException(status_code=200, detail="Mesa excluida com sucesso")
 
-@router.get(
-        "/em-atendimento", 
-        status_code=status.HTTP_200_OK
-    )
-async def mesas_em_atendimento(
-    db: Session = Depends(get_db),
-    user_current: dict = Depends(get_current_user)
-):
+@router.get("/em-atendimento",status_code=status.HTTP_200_OK)
+async def mesas_em_atendimento(db: Session = Depends(get_db),user_current: dict = Depends(get_current_user)):
     pedidos_abertos = db.query(PedidosMesaModel).filter(PedidosMesaModel.status == "ABERTO",
         PedidosMesaModel.estabelecimento_id == user_current["estabelecimento_id"]).all()
     
@@ -316,17 +273,8 @@ async def mesas_em_atendimento(
 
     return mesas_em_atendimento
 
-@router.delete(
-        "/excluir-item/{mesa_id}/{pedido_id}/{item_id}", 
-        status_code=status.HTTP_200_OK
-)
-async def excluir_item_pedido_mesa(
-    mesa_id: UUID, 
-    pedido_id: UUID, 
-    item_id: UUID, 
-    db: Session = Depends(get_db),
-    user_current: dict = Depends(get_current_user)
-):  
+@router.delete("/excluir-item/{mesa_id}/{pedido_id}/{item_id}",status_code=status.HTTP_200_OK)
+async def excluir_item_pedido_mesa(mesa_id: UUID,pedido_id: UUID,item_id: UUID,db: Session = Depends(get_db),user_current: dict = Depends(get_current_user)):  
     mesa = db.query(MesaModel).filter(MesaModel.id_mesa == mesa_id, MesaModel.estabelecimento_id == user_current["estabelecimento_id"]).first()
     pedido = db.query(
         PedidosMesaModel
