@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, text
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, text, UniqueConstraint
 from typing import List
 from sqlalchemy.orm import relationship, Mapped
 from database.connection import Base
@@ -12,9 +12,13 @@ class Categoria(Base):
 
     id_categoria = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4,server_default=text("gen_random_uuid()"), nullable=False)
     estabelecimento_id = Column(UUID(as_uuid=True), ForeignKey("estabelecimentos.id"), nullable=False, index=True)
-    nome = Column(String(30), unique=True, nullable=False)
+    nome = Column(String(30), nullable=False)
 
-    produtos: Mapped[List["Produto"]] = relationship("Produto", back_populates="categoria_object", order_by="Produto.id_produto")
+    __table_args__ = (
+        UniqueConstraint('estabelecimento_id', 'nome', name='uix_categoria_nome_estabelecimento'),
+    )
+
+    produtos: Mapped[List["Produto"]] = relationship("Produto", back_populates="categoria_object")
 
     def __repr__(self):
         return f"Category(id={self.id}, name={self.nome})"
@@ -27,7 +31,10 @@ class Produto(Base):
     id_produto = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, server_default=text("gen_random_uuid()"), nullable=False)
     estabelecimento_id = Column(UUID(as_uuid=True), ForeignKey("estabelecimentos.id"), nullable=False, index=True)
     categoria_id = Column(UUID(as_uuid=True), ForeignKey("categorias.id_categoria"), nullable=False)
-    cod_pdv = Column(String(20), unique=True, nullable=False)
+    cod_pdv = Column(String(20), nullable=False)
+    __table_args__ = (
+        UniqueConstraint('estabelecimento_id', 'cod_pdv', name='uix_cod_pdv_estabelecimento'),
+    )
     nome = Column(String(80), nullable=False)
     preco_custo = Column(Float, nullable=False)
     preco_venda = Column(Float, nullable=False)

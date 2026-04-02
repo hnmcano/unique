@@ -72,8 +72,6 @@ async def carregar_dados(
 
     horario_ok = dentro_do_horario(horarios)
 
-    print(horario_ok)
-
     online = False
 
     if online_ws == True and caixa_existente and horario_ok:
@@ -89,11 +87,11 @@ async def carregar_dados(
         "descricao": x_tenant_estabelecimento.descricao,
         "cor_layout": x_tenant_estabelecimento.cor_layout,
         "online": online,
+        "redirecionamento": x_tenant_estabelecimento.redirecionamento,
         "horarios": jsonable_encoder(horarios)
     }
 
     return estabelecimento
-
 @router.put("/atualizar-infos", response_model=EstabelecimentoResponse)
 async def atualizar_estabelecimento(estabelecimento: EstabelecimentoSchemaAtualizar, db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
     db_estabelecimento = db.query(EstabelecimentoModel).filter(EstabelecimentoModel.id == user_current["estabelecimento_id"]).first()

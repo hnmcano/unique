@@ -30,3 +30,19 @@ class Categoria(BaseModel):
         "from_attributes": True
     }
 
+
+class ProdutoSchema(Produto):
+    produto_id: UUID
+    estabelecimento_id: UUID
+    nome: str
+    preco_custo: float
+    preco_venda: float
+    medida: str
+    estoque: int
+    estoque_min: int
+    descricao: str | None = None
+    ficha_tecnica: str | None = None
+    status_venda: str
+    imagem_name: str | None = None
+    imagem: str | None = None
+

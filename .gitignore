@@ -66,3 +66,5 @@ views/
 **/.next
 
 git push origin master
+**/update/**
+**/update.py
