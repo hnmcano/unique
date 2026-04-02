@@ -31,6 +31,4 @@ class AddHorarios(QMainWindow, add_horarios):
             data_json
         )
 
-        print(response)
-
         QMessageBox.information(self, "Sucesso", "Horarios adicionados com sucesso")

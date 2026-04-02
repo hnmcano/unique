@@ -26,43 +26,7 @@
    <string>PRODUTOS</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">#centralwidget{
-	background-color: black;
-}
-
-#centralwidget QLineEdit{
-	background-color: #131314;
-}
-
-#centralwidget QPlainTextEdit{
-
-	background-color: #131314;
-	
-}
-
-#centralwidget #frame{
-	background-color: #131314;
-}
-
-
-#centralwidget #frame QPushButton{
-	background-color: black;
-}
-
-#centralwidget #frame QPushButton:hover{
-	background-color: #3c3c3c;
-}
-
-
-#centralwidget #frame_2{
-	background-color: #131314;
-}
-
-#centralwidget #image_label{
-	background-color: #131314;
-}
-
-</string>
+   <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="styleSheet">
@@ -597,21 +561,6 @@
        </size>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_10">
-       <property name="spacing">
-        <number>0</number>
-       </property>
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>15</number>
-       </property>
        <item>
         <widget class="QPushButton" name="atualizar_dados">
          <property name="font">
@@ -621,15 +570,10 @@
           </font>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: transparent;</string>
+          <string notr="true"/>
          </property>
          <property name="text">
           <string>ATUALIZAR</string>
-         </property>
-         <property name="icon">
-          <iconset>
-           <selectedon>:/unique/atualizar.png</selectedon>
-          </iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -657,15 +601,10 @@
           </font>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: transparent;</string>
+          <string notr="true"/>
          </property>
          <property name="text">
           <string>EXCLUIR</string>
-         </property>
-         <property name="icon">
-          <iconset>
-           <selectedon>:/unique/excluir.png</selectedon>
-          </iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -675,6 +614,37 @@
          </property>
          <property name="autoRepeat">
           <bool>false</bool>
+         </property>
+         <property name="autoDefault">
+          <bool>true</bool>
+         </property>
+         <property name="default">
+          <bool>true</bool>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="duplicar_produtos">
+         <property name="font">
+          <font>
+           <pointsize>16</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+         <property name="text">
+          <string>DUPLICAR</string>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>40</width>
+           <height>40</height>
+          </size>
          </property>
          <property name="autoDefault">
           <bool>true</bool>

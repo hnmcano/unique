@@ -101,7 +101,6 @@ def format_data(data):
 def carregar_dados(self):
     try:
         response = APPContext.api_client.get("/estabelecimento/carregar-infos")
-        print("Dados carregados do servidor:", response["redirecionamento"])
         return response
     except Exception as e:
         QMessageBox.critical(self, "Erro", f"Erro ao buscar dados: {str(e)}")
@@ -130,7 +129,6 @@ class Estabelecimento(QMainWindow, estabelecimento):
         
         if horarios is not None:
             response = APPContext.api_client.get("/estabelecimento/horarios")
-            print("Horários carregados do servidor:", response)
             self.atualizar_tabela_horarios(response)
 
         self.horarios_store.horario_adicionado.connect(self.atualizar_tabela_horarios)

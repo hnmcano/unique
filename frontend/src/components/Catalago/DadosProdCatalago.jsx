@@ -92,7 +92,7 @@ function ProdutoData({ open, closeModalProduto, produto, categoria}) {
                             <h2>{produto.nome}</h2>
                         </div>
                         <div className="modal-descricao-produto-data">
-                            <p>{produto.descricao}</p>
+                            <p style={{ textAlign: 'left', whiteSpace: 'pre-line' }}>{produto.descricao}</p>
                         </div>
                         <div className="modal-preco-produto-data">
                             <label>R$</label>

@@ -1,17 +1,11 @@
+import json
+
 from PySide6.QtWidgets import QMainWindow, QMessageBox
 from windows.form_products.add_categorias_ui import Ui_Category as addcategorias
 from core.app_context import app_context as APPContext
 
 from config.config import settings
 
-
-def excluir_categoria(parent=None, categoria_selecionada=None):
-    try:
-        response = APPContext.api_client.delete(f"/categorias/category/{categoria_selecionada}")
-        QMessageBox.information(parent, "Sucesso", "Categoria excluida com sucesso!")
-        parent.preencher_dropdown()  # Atualiza o dropdown
-    except Exception as e:
-        QMessageBox.critical(parent, "Erro", f"Erro ao excluir categoria: {str(e)}")
 
 def adicionar_categoria(parent=None):
     nova_categoria = parent.adicionar_cat_input.text().strip()
@@ -68,11 +62,21 @@ class AddCategoria(QMainWindow, addcategorias):
             QMessageBox.warning(self, "Erro", "Nenhuma categoria selecionada para exclusão.")
             return
         
-        excluir_categoria(self, categoria_selecionada)
-
         try:
-            response = APPContext.api_client.delete(f"/categorias/category/{categoria_selecionada}")
-            QMessageBox.information(self, "Sucesso", "Categoria excluída com sucesso!")
+            response = APPContext.api_client.delete(f"/categorias/category/{categoria_selecionada}", data=None)
+            QMessageBox.information(self, "Sucesso", "Categoria excluida com sucesso!")
             self.preencher_dropdown()  # Atualiza o dropdown
         except Exception as e:
-            QMessageBox.critical(self, "Erro", f"Erro ao excluir categoria: {str(e)}")
+            print("Erro ao excluir categoria:", str(e))
+            erro_msg = str(e)
+            print(erro_msg)
+
+            # tenta extrair detail se vier como JSON dentro da exception
+            try:
+                erro_json = json.loads(str(e))
+                erro_msg = erro_json.get("detail", erro_msg)
+            except:
+                pass
+
+            QMessageBox.critical(self, "Erro", f"Erro ao adicionar categoria: {erro_msg}")
+

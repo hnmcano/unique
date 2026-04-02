@@ -98,7 +98,6 @@ class Caixa(QMainWindow, caixa):
 
         try:
             response = APPContext.api_client.get("caixa/valid_box")
-            print(response)
             self.ValorCaixa.setText(f"{response['valor_inicial']:.2f}")
             self.LabelTotal.setText(f"{response["valor_final"]:.2f}")
             data_abertura = (datetime.fromisoformat(response['data_abertura']) - timedelta(hours=3)).strftime("%d/%m/%Y - %H:%M:%S") 
@@ -120,4 +119,4 @@ class Caixa(QMainWindow, caixa):
             response = APPContext.api_client.get("caixa/desktop/carregar-tabela")
             self.atualizar_tabela(response)
         except Exception as e:
-            print(e)
+            QMessageBox.critical(self, "Erro", f"Erro ao buscar dados: {str(e)}")

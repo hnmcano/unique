@@ -1,4 +1,5 @@
 from PySide6.QtCore import *
+from PySide6.QtWidgets import *
 import websocket
 import json
 
@@ -33,23 +34,20 @@ class WebSocketService(QThread):
                 self.ws.run_forever()
 
             except Exception as e:
-                print("Erro ao conectar ao WS:", e)
+                QMessageBox.critical(None, "Erro de Conexão", f"Não foi possível conectar ao servidor: {e}, tentando novamente em 5 segundos...")
 
     def on_message(self, ws, message: str):
         try:
-            evento = json.loads(message)
-            print("Evento recebido:", evento)    
-            # apenas emite o evento
+            evento = json.loads(message) 
             self.mensagem_recebida.emit(evento)
             
         except Exception as e:
-            print("Erro ao processar WS:", e)
+            print("WS ERRO:", e)
 
     def _on_open(self, ws):
         self.ws = ws
         self.status_atual = "conectado"
         self.status.emit("conectado")
-        print("WS CONECTADO")
 
     def _on_error(self, ws, error):
         print("WS ERRO:", error)
@@ -57,7 +55,6 @@ class WebSocketService(QThread):
     def _on_close(self, ws, *args):
         self.status_atual = "desconectado"
         self.status.emit("desconectado")
-        print("WS FECHADO")
 
     def processar_evento(self, evento):
         tipo = evento.get("tipo")
@@ -74,9 +71,6 @@ class WebSocketService(QThread):
 
         elif tipo == "horario_criado":
             APPContext.horarios_store.adicionar(dados)
-
-        elif tipo == "Atualizar_produtos":
-            APPContext.produtos_store.atualizar(dados)
 
 class PedidoStore(QObject):
 
@@ -130,7 +124,8 @@ class HorarioStore(QObject):
         return self.horarios
     
 class ProdutosStore(QObject):
-    produtos_atualizados = Signal(list)
+    produtos_atualizados = Signal(dict)
+    produto_adicionado = Signal(dict)
     def __init__(self):
         super().__init__()
         self.produtos = []
@@ -138,27 +133,33 @@ class ProdutosStore(QObject):
     def atualizar(self, produtos):
         if isinstance(produtos, dict):
             produtos = [produtos]
-            print("Produtos atualizados:", produtos)
-
-        print("Atualizando produtos...")
-        print("Produtos recebidos:", produtos)
 
         for prod in produtos:
+            prod_id = str(prod["id_produto"])  # força padrão
+
             encontrado = False
             for i, p in enumerate(self.produtos):
-                if p["id_produto"] == prod["id_produto"]:
+                if str(p["id_produto"]) == prod_id:
                     self.produtos[i] = prod
                     encontrado = True
                     break
+
             if not encontrado:
                 self.produtos.append(prod)
 
         self.produtos_atualizados.emit(self.produtos)
 
     def adicionar(self, produto):
-        print("Adicionando produto:", produto)
+        print("Adicionando produto:", produto)  # Debug: Verifique o produto recebido
         self.produtos.append(produto)
-        self.produtos_atualizados.emit(self.produtos)
+        self.produto_adicionado.emit(self.produtos)
+
+    def remover(self, produto):
+        for p in self.produtos:
+            if p["id_produto"] == produto["id_produto"]:
+                self.produtos.remove(p)
+                self.produtos_atualizados.emit(self.produtos)
+                break
 
     def listar(self):
         return self.produtos

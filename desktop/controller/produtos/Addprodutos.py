@@ -94,6 +94,8 @@ def salvar_dados_produtos(parent=None):
                 button.setChecked(False)
 
             parent.buttonGroup.setExclusive(True) # type: ignore
+            print("produto adicionado, resposta da api",response)
+            APPContext.produtos_store.adicionar(response) # type: ignore
 
         except ValueError:
             QMessageBox.warning(parent, "Erro", "A informação está incorreta.")
@@ -136,17 +138,19 @@ class AddProdutos(QMainWindow, addprodutos):
     janela_fechada = Signal()
     atualizar_tabela = Signal(dict)
 
-    def __init__(self, parent=None):
+    def __init__(self,produtos_store, parent=None):
         super().__init__(parent)
         self.setupUi(self)
         center_window(self)
+
+        self.produtos_store = produtos_store
 
         # Esconde o botão do windows de fechar(X) a janela
         self.setWindowFlag(Qt.WindowCloseButtonHint, False)# type: ignore
 
         # Gerenciador de rede para requisições HTTP
         self.network_manager = QNetworkAccessManager(self)
-    
+        
         preencher_dropdown_categoria(self)
         # Ao clicar no botão selecionar imagem, Aciona a função de inserir imagem localizada em scripts/aux_func.py
         self.selecionar_imagem.clicked.connect(lambda: inserir_imagem(self))

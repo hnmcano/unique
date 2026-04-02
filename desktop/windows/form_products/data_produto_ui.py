@@ -28,43 +28,7 @@ class Ui_MainWindow(object):
         MainWindow.resize(880, 562)
         MainWindow.setMinimumSize(QSize(880, 562))
         MainWindow.setMaximumSize(QSize(880, 562))
-        MainWindow.setStyleSheet(u"#centralwidget{\n"
-"	background-color: black;\n"
-"}\n"
-"\n"
-"#centralwidget QLineEdit{\n"
-"	background-color: #131314;\n"
-"}\n"
-"\n"
-"#centralwidget QPlainTextEdit{\n"
-"\n"
-"	background-color: #131314;\n"
-"	\n"
-"}\n"
-"\n"
-"#centralwidget #frame{\n"
-"	background-color: #131314;\n"
-"}\n"
-"\n"
-"\n"
-"#centralwidget #frame QPushButton{\n"
-"	background-color: black;\n"
-"}\n"
-"\n"
-"#centralwidget #frame QPushButton:hover{\n"
-"	background-color: #3c3c3c;\n"
-"}\n"
-"\n"
-"\n"
-"#centralwidget #frame_2{\n"
-"	background-color: #131314;\n"
-"}\n"
-"\n"
-"#centralwidget #image_label{\n"
-"	background-color: #131314;\n"
-"}\n"
-"\n"
-"")
+        MainWindow.setStyleSheet(u"")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.centralwidget.setStyleSheet(u"")
@@ -339,19 +303,14 @@ class Ui_MainWindow(object):
         self.widget.setMinimumSize(QSize(0, 75))
         self.widget.setMaximumSize(QSize(16777215, 55))
         self.horizontalLayout_10 = QHBoxLayout(self.widget)
-        self.horizontalLayout_10.setSpacing(0)
         self.horizontalLayout_10.setObjectName(u"horizontalLayout_10")
-        self.horizontalLayout_10.setContentsMargins(0, 0, 0, 15)
         self.atualizar_dados = QPushButton(self.widget)
         self.atualizar_dados.setObjectName(u"atualizar_dados")
         font = QFont()
         font.setPointSize(16)
         font.setBold(True)
         self.atualizar_dados.setFont(font)
-        self.atualizar_dados.setStyleSheet(u"background-color: transparent;")
-        icon = QIcon()
-        icon.addFile(u":/unique/atualizar.png", QSize(), QIcon.Mode.Selected, QIcon.State.On)
-        self.atualizar_dados.setIcon(icon)
+        self.atualizar_dados.setStyleSheet(u"")
         self.atualizar_dados.setIconSize(QSize(40, 40))
         self.atualizar_dados.setAutoDefault(True)
         self.atualizar_dados.setFlat(True)
@@ -361,16 +320,23 @@ class Ui_MainWindow(object):
         self.excluir_produtos = QPushButton(self.widget)
         self.excluir_produtos.setObjectName(u"excluir_produtos")
         self.excluir_produtos.setFont(font)
-        self.excluir_produtos.setStyleSheet(u"background-color: transparent;")
-        icon1 = QIcon()
-        icon1.addFile(u":/unique/excluir.png", QSize(), QIcon.Mode.Selected, QIcon.State.On)
-        self.excluir_produtos.setIcon(icon1)
+        self.excluir_produtos.setStyleSheet(u"")
         self.excluir_produtos.setIconSize(QSize(40, 40))
         self.excluir_produtos.setAutoRepeat(False)
         self.excluir_produtos.setAutoDefault(True)
         self.excluir_produtos.setFlat(True)
 
         self.horizontalLayout_10.addWidget(self.excluir_produtos)
+
+        self.duplicar_produtos = QPushButton(self.widget)
+        self.duplicar_produtos.setObjectName(u"duplicar_produtos")
+        self.duplicar_produtos.setFont(font)
+        self.duplicar_produtos.setStyleSheet(u"")
+        self.duplicar_produtos.setIconSize(QSize(40, 40))
+        self.duplicar_produtos.setAutoDefault(True)
+        self.duplicar_produtos.setFlat(True)
+
+        self.horizontalLayout_10.addWidget(self.duplicar_produtos)
 
 
         self.gridLayout.addWidget(self.widget, 4, 0, 1, 2)
@@ -382,6 +348,7 @@ class Ui_MainWindow(object):
 
         self.atualizar_dados.setDefault(True)
         self.excluir_produtos.setDefault(True)
+        self.duplicar_produtos.setDefault(True)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -409,5 +376,6 @@ class Ui_MainWindow(object):
         self.label_5.setText(QCoreApplication.translate("MainWindow", u"Estoque m\u00edn", None))
         self.atualizar_dados.setText(QCoreApplication.translate("MainWindow", u"ATUALIZAR", None))
         self.excluir_produtos.setText(QCoreApplication.translate("MainWindow", u"EXCLUIR", None))
+        self.duplicar_produtos.setText(QCoreApplication.translate("MainWindow", u"DUPLICAR", None))
     # retranslateUi
 

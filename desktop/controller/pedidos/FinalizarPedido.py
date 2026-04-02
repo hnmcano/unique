@@ -129,7 +129,6 @@ class FinalizarPedido(QMainWindow, Ui_MainWindow):
                                             })
                 
                 QMessageBox.information(self, "Sucesso", "Pedido Finalizado com sucesso!")
-                print("Pedido atualizado com sucesso")
                 self.close() # type: ignore
 
             except Exception as e:

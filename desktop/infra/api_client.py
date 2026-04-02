@@ -4,9 +4,7 @@ class APIClient:
     def __init__(self, base_url: str):
         self.base_url = base_url
         self.token = None
-
-        print("base_url:", self.base_url, "token:", self.token)
-
+        
     def set_token(self, token: str):
         self.token = token
 

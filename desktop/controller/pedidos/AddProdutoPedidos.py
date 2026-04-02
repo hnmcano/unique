@@ -34,8 +34,6 @@ class AdicionarProdutoPedido(QMainWindow, addProdutosPedido):
                 self.tableWidget.hideRow(row)
 
     def adicionar_produto(self, row, data):
-        print("Adicionar produto na linha:", row)
-        print("Data recebida:", data)
         try:
             produto = self.tableWidget.item(row, 0).data(Qt.UserRole)
             pedido_id = data["id_pedido"]

@@ -44,7 +44,6 @@ def carregar_produto(self):
     except Exception as e:
         QMessageBox.critical(self, "Erro", f"Erro ao buscar produtos: {str(e)}")
 
-
 class Produtos(QMainWindow, produtos):
     mensagem_recebida = Signal(dict)
 
@@ -57,7 +56,8 @@ class Produtos(QMainWindow, produtos):
         self.tableWidget.cellDoubleClicked.connect(self.abrir_dados_produto)
 
         self.produtos_store = produtos_store
-        self.produtos_store.produtos_atualizados.connect(self.on_evento_recebido)
+        self.produtos_store.produtos_atualizados.connect(self.on_produtos_atualizados)
+        self.produtos_store.produto_adicionado.connect(self.on_produto_adicionado)
 
         if self.produtos_store.listar() == []:
             data = carregar_produto(self)
@@ -93,6 +93,10 @@ class Produtos(QMainWindow, produtos):
         parent.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
     def atualizar_tabela(parent, data):
+
+        print("Atualizando tabela com dados:", data)  # Debug: Verifique os dados recebidos
+
+        parent.tableWidget.setSortingEnabled(False)
 
         if isinstance(data, str):
             data = json.loads(data)
@@ -141,8 +145,10 @@ class Produtos(QMainWindow, produtos):
             item_status.setTextAlignment(Qt.AlignCenter)
             parent.tableWidget.setItem(i, 8, item_status)
 
-    def abrir_add_produto(self):
-        self.add_produto_window = AddProdutos(parent=self)# type: ignore
+        parent.tableWidget.setSortingEnabled(True)
+
+    def abrir_add_produto(self, produtos_store):
+        self.add_produto_window = AddProdutos(produtos_store=produtos_store, parent=self)# type: ignore
         self.add_produto_window.show()# type: ignore
 
     def abrir_dados_produto(self, row):
@@ -163,5 +169,10 @@ class Produtos(QMainWindow, produtos):
             else:
                 self.tableWidget.hideRow(row)
 
-    def on_evento_recebido(self, data: dict):
-        self.atualizar_tabela(data)
+    def on_produtos_atualizados(self):
+        produtos = self.produtos_store.listar()
+        self.atualizar_tabela(produtos)
+
+    def on_produto_adicionado(self):
+        produtos = self.produtos_store.listar()
+        self.atualizar_tabela(produtos)

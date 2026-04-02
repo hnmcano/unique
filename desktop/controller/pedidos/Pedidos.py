@@ -145,9 +145,6 @@ class Pedidos(QMainWindow, delivery):
 
     def on_pedido_atualizado(self, data):
         pedidos = self.pedido_store.listar()
-
-        print("listar", pedidos)
-
         data_pedidos = []
 
         for p in pedidos:   

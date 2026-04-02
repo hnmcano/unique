@@ -198,7 +198,6 @@ class Uniq(QMainWindow, uniq):
             tempo_aberto = datetime.strptime(data_atual, "%H:%M:%S") - datetime.strptime(data_abertura, "%H:%M:%S")
             QMessageBox.information(self, "Caixa Aberto", f"Seu caixa esta aberto há {tempo_aberto}")
         except Exception as e:
-            print(e)
             QMessageBox.information(self, "Caixa Fechado", "Seu caixa esta fechado, por favor abra-o")
 
     def dados_cliente(self):
