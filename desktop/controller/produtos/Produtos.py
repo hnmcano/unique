@@ -71,7 +71,7 @@ class Produtos(QMainWindow, produtos):
               
         self.add_products.clicked.connect(self.abrir_add_produto)
         self.add_categoria.clicked.connect(self.abrir_categoria)
-
+        
     def layout_tabela(parent):
 
         columns = ["CODIGO PDV", "CATEGORIA", "NOME", "PREÇO DE CUSTO", "PREÇO DE VENDA","ESTOQUE MIN", "ESTOQUE", "MEDIDA", "STATUS"]

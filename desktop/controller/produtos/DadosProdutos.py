@@ -12,6 +12,36 @@ import json
 import os
 from config.config import settings
 
+def tamanhos_valores(self):
+    return {
+        "Pequena": {"sigla": "P", "valor": 20},
+        "Media": {"sigla": "M", "valor": 23},
+        "Grande": {"sigla": "G", "valor": 28},
+    }
+
+def dias_valores(self):
+    return {
+        "Segunda-feira": {"indice": 0},
+        "Terca-feira": {"indice": 1},
+        "Quarta-feira": {"indice": 2},
+        "Quinta-feira": {"indice": 3},
+        "Sexta-feira": {"indice": 4},
+        "Sabádo": {"indice": 5},
+        "Domingo": {"indice": 6},
+    }
+
+def pegar_radio_selecionado_tamanhos(self):
+    for radio in self.groupBox_2.findChildren(QRadioButton):
+        if radio.isChecked():
+            return radio.text()
+    return None
+
+def pegar_radio_selecionado_dias(self):
+    for radio in self.groupBox.findChildren(QRadioButton):
+        if radio.isChecked():
+            return radio.text()
+    return None
+
 def inserir_imagem(parent=None):
     file_dialog = QFileDialog()
     file_path, _ = file_dialog.getOpenFileName(parent, "Selecionar Imagem", "", "Arquivos de Imagem (*.png *.jpg *.jpeg *.bmp *.gif)")
@@ -39,6 +69,40 @@ def coletar_dados_produtos(self):
         estoque_min = int(self.estoque_min_input.text())# type: ignore
         descricao_ = self.desc_input.toPlainText()# type: ignore
         pixmap = QPixmap(self.image_label.pixmap())
+        dia_semana = pegar_radio_selecionado_dias(self=self)
+        tamanhos = pegar_radio_selecionado_tamanhos(self=self)
+
+        if dia_semana == "Todos os dias":
+            dia_semana = None
+        else:
+            dia_venda = dias_valores(self=self)
+            dia_semana = dia_venda[dia_semana]["indice"]
+
+        if tamanhos == "Nenhum":
+            tamanhos = []
+
+        elif tamanhos == "Todos":
+            tamanho = tamanhos_valores(self=self)
+            
+            tamanhos = []
+            for key, value in tamanho.items():
+                tamanhos.append({
+                    "tamanho": value["sigla"],
+                    "valor": value["valor"],
+                })
+        else:
+            tamanho = tamanhos_valores(self=self)
+            
+            for key, value in tamanho.items():
+                if key == tamanhos:
+                    tamanhos = [
+                            {
+                                "tamanho": value["sigla"],
+                                "valor": value["valor"],
+                            }
+                    ]
+
+
     except Exception as e:
         QMessageBox.warning(self, "Erro", f"Erro ao coletar dados: {str(e)}")
         return
@@ -55,7 +119,6 @@ def coletar_dados_produtos(self):
         QMessageBox.warning(self, "Erro", "Selecione uma unidade de medida e um status.")
         return
 
-
     return {
         "id_produto": produto_id,
         "categoria_id": f"{categoria_id}",
@@ -70,7 +133,9 @@ def coletar_dados_produtos(self):
         "ficha_tecnica": "Não",
         "status_venda": f"{status}",
         "imagem_name": f"{nome}.png",
-        "imagem": f"{imagem_data_string}"
+        "imagem": f"{imagem_data_string}",
+        "dias_vendas": dia_semana,
+        "tamanhos": tamanhos
     }
 
 def preencher_dropdown_categoria(parent=None):
@@ -87,7 +152,6 @@ def preencher_dropdown_categoria(parent=None):
     except Exception as e:
         QMessageBox.critical(parent, "Erro", f"Erro ao buscar categorias: {str(e)}")
 
-
 class DadosProduto(QMainWindow, DataProduto):
     def __init__(self, produto: dict, parent=None):
 
@@ -100,6 +164,8 @@ class DadosProduto(QMainWindow, DataProduto):
         self.id = produto["id_produto"]
 
         preencher_dropdown_categoria(self)
+        self.dias_valores = dias_valores(self)
+        self.tamanhos_valores = tamanhos_valores(self)
 
         self.nome_input.setText(produto["nome"])
         self.cod_pdv_input.setText(produto["cod_pdv"])
@@ -123,6 +189,32 @@ class DadosProduto(QMainWindow, DataProduto):
                 i.setChecked(True)
                 break
 
+        for i in self.groupBox.findChildren(QRadioButton):
+            print(produto)
+            if produto["dias_vendas"] == None and i.text() == "Todos os dias":
+                i.setChecked(True)
+                break
+            elif produto["dias_vendas"] != None and i.text() != "Todos os dias":
+                indice = self.dias_valores[i.text()]["indice"]
+                if indice == produto["dias_vendas"]:
+                    i.setChecked(True)
+                    break
+
+        for i in self.groupBox_2.findChildren(QRadioButton):
+            print(len(produto["tamanhos"]))
+            if len(produto["tamanhos"]) == 3 and i.text() == "Todos":
+                i.setChecked(True)
+                break
+            elif len(produto["tamanhos"]) == 0 and i.text() == "Nenhum":
+                    i.setChecked(True)
+                    break
+            else:
+                sigla = produto["tamanhos"][0]["tamanho"]
+                for key, value in self.tamanhos_valores.items():
+                    if key == sigla:
+                        i.setChecked(True)
+                        break
+
         self.desc_input.setPlainText(produto["descricao"])
         
         data = base64.b64decode(produto["imagem"])
@@ -130,6 +222,17 @@ class DadosProduto(QMainWindow, DataProduto):
         self.pixmap.loadFromData(data)
         visualizacao = self.pixmap.scaled(self.image_label.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
         self.image_label.setPixmap(visualizacao)
+
+        self.btn_dados.clicked.connect(
+            lambda: self.stackedWidget.setCurrentWidget(self.dados)
+        )
+
+        self.btn_config.clicked.connect(
+            lambda: self.stackedWidget.setCurrentWidget(self.configuracoes)
+        )
+
+
+
 
         self.selecionar_imagem.clicked.connect(lambda: inserir_imagem(self))
         self.limp_img.clicked.connect(self.limpar_imagem)
@@ -142,6 +245,8 @@ class DadosProduto(QMainWindow, DataProduto):
 
     def atualizar_dados_produtos(self, id):
         dados_produto = coletar_dados_produtos(self)
+
+        print(dados_produto)
 
         if dados_produto is None:
             return
@@ -156,7 +261,6 @@ class DadosProduto(QMainWindow, DataProduto):
         except Exception as e:
             QMessageBox.critical(self, "Erro de BD", f"Ocorreu um erro: {e}")
 
-    
     def excluir_produto_base_dados(self, id):
         confirmacao_exclusao = QMessageBox(self)
         confirmacao_exclusao.setIcon(QMessageBox.Question)

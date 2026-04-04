@@ -1,17 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../../styles/DadosProduto.css"
-import api from "../../api/api";
-
 
 import { useCarrinho } from "../../contexts/CarrinhoContext";
 
 
 function ProdutoData({ open, closeModalProduto, produto, categoria}) {
     const { produtos, setProdutos, adicionarProduto } = useCarrinho();
-
     const [quantidade, setQuantidade] = useState(1);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [tamanhoSelected, setTamanhoSelected] = useState(null);
+
 
     const handleQuantidade = (delta) => {
         setQuantidade(prevQuantidade => {
@@ -20,7 +19,22 @@ function ProdutoData({ open, closeModalProduto, produto, categoria}) {
         });
     }
 
+    const handleTamanho = (tamanho) => {
+        console.log(tamanho.target.value);
+        setTamanhoSelected(tamanho.target.value);
+    }
+
+    useEffect(() => {
+        if (produto?.tamanhos?.length > 0) {
+            setTamanhoSelected(produto.tamanhos[0].valor)
+        }
+    }, [produto])
+
+
     const addProduct =  async (categoria, produto) => {
+        const precoFinal = tamanhoSelected 
+            ? Number(tamanhoSelected) 
+            : produto.preco_venda;
         
         setLoading(true);
         setError(null);
@@ -31,7 +45,7 @@ function ProdutoData({ open, closeModalProduto, produto, categoria}) {
             nome: produto.nome,
             categoria: categoria.nome_categoria,
             preco_custo: produto.preco_custo,
-            preco_venda: produto.preco_venda,
+            preco_venda: precoFinal,
             medida: produto.medida,
             estoque: produto.estoque,
             estoque_min: produto.estoque_min,
@@ -94,10 +108,30 @@ function ProdutoData({ open, closeModalProduto, produto, categoria}) {
                         <div className="modal-descricao-produto-data">
                             <p style={{ textAlign: 'left', whiteSpace: 'pre-line' }}>{produto.descricao}</p>
                         </div>
-                        <div className="modal-preco-produto-data">
-                            <label>R$</label>
-                            <label>{(quantidade * produto.preco_venda).toFixed(2)}</label>
-                        </div>
+                        { produto.tamanhos.length > 0 && (
+                            <div className="modal-tamanho-produto-data">
+                                <label style={{width: "100%", textAlign: "left"}}>Tamanho:</label>
+                                <select className="select-tamanho" name="tamanho" id="tamanho" value={tamanhoSelected} onChange={(e) => handleTamanho(e)}>
+                                    {produto.tamanhos.map((tamanho) => (
+                                        <option key={tamanho.id} name={tamanho.tamanho} value={tamanho.valor}>{
+                                            tamanho.tamanho === "P" ? "PEQUENA": 
+                                            tamanho.tamanho === "M" ? "MÉDIA": "GRANDE" }
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        )}
+                        {tamanhoSelected ? (
+                            <div className="modal-preco-produto-data">
+                                <label>R$</label>
+                                <label>{(quantidade * tamanhoSelected).toFixed(2)}</label>
+                            </div>
+                        ) : (
+                            <div className="modal-preco-produto-data">
+                                <label>R$</label>
+                                <label>{(quantidade * produto.preco_venda).toFixed(2)}</label>
+                            </div>
+                        )}
                         <div className="quantidade-product-cart">
                             <div className="adicionar-carrinho">
                                 <label onClick={() => handleQuantidade(1)} className="modifique">+</label>
@@ -107,7 +141,7 @@ function ProdutoData({ open, closeModalProduto, produto, categoria}) {
                                 <label onClick={() => handleQuantidade(-1)} className="modifique">-</label>
                             </div>
                         </div>
-    
+
                         <div className="modal-footer-produto-data">
                             <button onClick={() => addProduct(categoria, produto )} className="cartBtn">
                             <svg className="cart" fill="white" viewBox="0 0 576 512" height="1.5em" xmlns="http://www.w3.org/2000/svg">

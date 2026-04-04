@@ -10,7 +10,7 @@ def dias_da_semana():
 
 class AddHorarios(QMainWindow, add_horarios):
     def __init__(self, parent=None):
-        super().__init__()
+        super().__init__(parent)
         self.setupUi(self)
 
         self.dias_da_semana = dias_da_semana()

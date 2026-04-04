@@ -90,7 +90,7 @@ class Uniq(QMainWindow, uniq):
             pass
 
         data = self.dados_cliente()
-        self.IdUsuario.setText(f"ID USUARIO: {data['id']}")
+        # self.IdUsuario.setText(f"ID USUARIO: {data['id']}")
         self.BemVindo.setText(f"Seja bem vindo, {data['nome']}")
         
         self.sound = SoundService()

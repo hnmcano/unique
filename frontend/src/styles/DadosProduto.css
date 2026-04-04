@@ -307,7 +307,29 @@
       color: #f0eeef;
     }
 
+    .modal-tamanho-produto-data{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        width: 100%;
+        margin-top: 10px;
+        font-size: clamp(14px, 2vw, 20px);
+    }
 
+    .select-tamanho{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        width: 100%;
+        height: 30px;
+        border: 1px solid rgb(255, 255, 255);
+        background-color: rgb(255, 255, 255);
+    }
+  
 }
 
 @media (min-width: 500px)  {

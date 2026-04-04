@@ -190,6 +190,25 @@ border-right: 1px solid red;</string>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item>
+           <widget class="QPushButton" name="config_tamanhos">
+            <property name="minimumSize">
+             <size>
+              <width>50</width>
+              <height>45</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>45</height>
+             </size>
+            </property>
+            <property name="text">
+             <string> CONFIG. TAMANHOS</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QPushButton" name="add_categoria">
             <property name="maximumSize">
              <size>
@@ -224,25 +243,6 @@ border-right: 1px solid red;</string>
             </property>
             <property name="text">
              <string>ADD PRODUTO</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="atualizar_estoque">
-            <property name="minimumSize">
-             <size>
-              <width>50</width>
-              <height>45</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>45</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>ESTOQUE</string>
             </property>
            </widget>
           </item>

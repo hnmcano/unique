@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import *
 from windows.form_establishment.form_estabelecimento_ui import Ui_MainWindow as estabelecimento
+from controller.estabelecimento.AdicionarHorarios import AddHorarios
 
 from core.app_context import app_context as APPContext
 from services.websocket import HorarioStore
@@ -144,6 +145,10 @@ class Estabelecimento(QMainWindow, estabelecimento):
             lambda: self.stackedWidget.setCurrentWidget(self.page_3)
         )
 
+        self.btn_adicionar.clicked.connect(
+            self.adicionar_novo_horario
+        )
+
         self.btn_orange.clicked.connect(
             lambda: self.atualizar_cor_designer(self.btn_orange)
         )
@@ -156,8 +161,6 @@ class Estabelecimento(QMainWindow, estabelecimento):
         self.btn_red.clicked.connect(
             lambda: self.atualizar_cor_designer(self.btn_red)
         )
-
-
 
     def atualizar_dados(self, response):
         self.IdLine.setText(response["id"])
@@ -286,3 +289,7 @@ class Estabelecimento(QMainWindow, estabelecimento):
             hora_fechamento = QTableWidgetItem(str(item["hora_fechamento"][:5]))
             hora_fechamento.setTextAlignment(Qt.AlignCenter)
             self.tableWidget.setItem(index, 2, hora_fechamento)
+
+    def adicionar_novo_horario(self):
+        self.add_horario_window = AddHorarios(parent=self)
+        self.add_horario_window.show() 

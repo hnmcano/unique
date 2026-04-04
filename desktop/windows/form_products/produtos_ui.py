@@ -104,6 +104,13 @@ class Ui_MainWindow(object):
         self.widget_5.setStyleSheet(u"")
         self.horizontalLayout_2 = QHBoxLayout(self.widget_5)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.config_tamanhos = QPushButton(self.widget_5)
+        self.config_tamanhos.setObjectName(u"config_tamanhos")
+        self.config_tamanhos.setMinimumSize(QSize(50, 45))
+        self.config_tamanhos.setMaximumSize(QSize(16777215, 45))
+
+        self.horizontalLayout_2.addWidget(self.config_tamanhos)
+
         self.add_categoria = QPushButton(self.widget_5)
         self.add_categoria.setObjectName(u"add_categoria")
         self.add_categoria.setMaximumSize(QSize(16777215, 45))
@@ -118,13 +125,6 @@ class Ui_MainWindow(object):
         self.add_products.setStyleSheet(u"")
 
         self.horizontalLayout_2.addWidget(self.add_products)
-
-        self.atualizar_estoque = QPushButton(self.widget_5)
-        self.atualizar_estoque.setObjectName(u"atualizar_estoque")
-        self.atualizar_estoque.setMinimumSize(QSize(50, 45))
-        self.atualizar_estoque.setMaximumSize(QSize(16777215, 45))
-
-        self.horizontalLayout_2.addWidget(self.atualizar_estoque)
 
 
         self.horizontalLayout.addWidget(self.widget_5)
@@ -168,8 +168,8 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"PRODUTOS", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"PRODUTO", None))
+        self.config_tamanhos.setText(QCoreApplication.translate("MainWindow", u" CONFIG. TAMANHOS", None))
         self.add_categoria.setText(QCoreApplication.translate("MainWindow", u"ADD CATEGORIA", None))
         self.add_products.setText(QCoreApplication.translate("MainWindow", u"ADD PRODUTO", None))
-        self.atualizar_estoque.setText(QCoreApplication.translate("MainWindow", u"ESTOQUE", None))
     # retranslateUi
 

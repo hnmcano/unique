@@ -78,8 +78,12 @@ def salvar_dados_produtos(parent=None):
                     "ficha_tecnica": "Não",
                     "status_venda": "Ativo",
                     "imagem_name": f"{nome}.png",
-                    "imagem": f"{imagem_data_string}"
+                    "imagem": f"{imagem_data_string}",
+                    "dias_vendas": None,
+                    "tamanhos": []
             }
+
+            print(data_json)
 
             response = APPContext.api_client.post("/produtos/desktop/add/product", data_json)
 
