@@ -1,4 +1,5 @@
 from models.estabelecimento import Estabelecimento as EstabelecimentoModel
+from schemas.estabelecimento import DadosGeraisResponse
 from models.estabelecimento import HorariosFuncionamento
 from models.caixa import Caixa as CaixaModel
 from models.produtos import Produto as ProductModel
@@ -210,3 +211,16 @@ async def gerar_horarios(db: Session = Depends(get_db), user_current: dict = Dep
         return []
 
     return horarios
+
+
+@router.get("/dados-gerais", response_model=DadosGeraisResponse)
+async def dados_gerais(db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
+    db_estabelecimento = db.query(EstabelecimentoModel).filter(EstabelecimentoModel.id == user_current["estabelecimento_id"]).first()
+    db_usuario = db.query(UsuariosModel).filter(UsuariosModel.estabelecimento_id == db_estabelecimento.id, UsuariosModel.ativo == True).first()
+
+    dados = DadosGeraisResponse.model_validate({
+        "estabelecimento":db_estabelecimento,
+        "usuario":db_usuario
+    })
+
+    return dados

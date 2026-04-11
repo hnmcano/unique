@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field, EmailStr
 from datetime import datetime, time
+from .usuarios import UsuariosResponse as usuarios 
 from uuid import UUID
 
 class EstabelecimentoBase(BaseModel):
@@ -79,6 +80,14 @@ class HorariosFuncionamentoResponse(BaseModel):
     dia_semana: int
     hora_abertura: time
     hora_fechamento: time
+
+    model_config = {
+        "from_attributes": True
+    }
+
+class DadosGeraisResponse(BaseModel):
+    estabelecimento: EstabelecimentoResponse
+    usuario: usuarios
 
     model_config = {
         "from_attributes": True

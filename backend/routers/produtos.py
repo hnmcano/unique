@@ -1,5 +1,7 @@
 from models.produtos import Produto as ProductModel
+from models.produtos import Tamanhos as TamanhosModel
 from schemas.produtos import Produto as ProdutoSchema
+from schemas.produtos import TamanhosSchema
 from schemas.produtos import ProdutoSchema as ProdutoSchemaResponse
 from models.produtos import Categoria as CategoryModel
 from models.estabelecimento import Estabelecimento as EstabelecimentoModel
@@ -22,11 +24,13 @@ from uuid import UUID
 router = APIRouter()
 
 ########################################### PRODUTOS ################################################
-
 # Rotas para inserir produtos ao banco de dados, com a validação do Pydantic, baseado no envio do desktop
 @router.post("/desktop/add/product")
 async def adicionar_produto(product: ProdutoSchema, db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
-    db_product = ProductModel(**product.dict())
+    data = product.dict()
+    tamanhos = data.pop("tamanhos", None)  # remove do dict
+
+    db_product = ProductModel(**data)
     estabelecimento_id = user_current["estabelecimento_id"]
     db_product.estabelecimento_id = estabelecimento_id
 
@@ -51,6 +55,7 @@ async def adicionar_produto(product: ProdutoSchema, db: Session = Depends(get_db
         CategoryModel.estabelecimento_id == estabelecimento_id,
         produto.categoria_id == CategoryModel.id_categoria
     ).first()
+    
 
     data = {
         "estabelecimento_id": produto.estabelecimento_id,
@@ -68,7 +73,9 @@ async def adicionar_produto(product: ProdutoSchema, db: Session = Depends(get_db
         "status_venda": produto.status_venda,
         "imagem_name": produto.imagem_name,
         "imagem": produto.imagem,
-        "nome_categoria": categorias.nome
+        "nome_categoria": categorias.nome,
+        "dias_vendas": produto.dias_vendas,
+        "tamanhos" : produto.tamanhos_object
     }
 
     return data
@@ -109,7 +116,9 @@ async def read_products(db: Session = Depends(get_db), user_current: dict = Depe
             "ficha_tecnica": p.ficha_tecnica,
             "status_venda": p.status_venda,
             "imagem_name": p.imagem_name,
-            "imagem": p.imagem
+            "imagem": p.imagem,
+            "dias_vendas": p.dias_vendas,
+            "tamanhos" : p.tamanhos_object
         }
 
         produto["nome_categoria"] = nome_categoria
@@ -167,15 +176,31 @@ async def list_products(db: Session = Depends(get_db), estabelecimento: Estabele
 
     produtos = db.query(ProductModel).filter(ProductModel.estabelecimento_id == estabelecimento.id).all()
     categorias = db.query(CategoryModel).filter(CategoryModel.estabelecimento_id == estabelecimento.id).all()
+    tamanhos = db.query(TamanhosModel).filter(
+        TamanhosModel.estabelecimento_id == estabelecimento.id
+    ).all()
 
     if not produtos:
         return []
-    
+        
     categorias_map = {
         c.id_categoria: c.nome for c in categorias
     }
 
+    tamanhos_map = {}
+
+    for t in tamanhos:
+        if t.produto_id not in tamanhos_map:
+            tamanhos_map[t.produto_id] = []
+
+        tamanhos_map[t.produto_id].append({
+            "id": t.tamanho_id,
+            "tamanho": t.tamanho,
+            "valor": t.valor
+        })
+
     resultado = {}
+
 
     for p in produtos:
         if p.status_venda != "Ativo":
@@ -197,7 +222,9 @@ async def list_products(db: Session = Depends(get_db), estabelecimento: Estabele
             "status_venda": p.status_venda,
             "sit_estoque": p.sit_estoque,
             "imagem_name": p.imagem_name,
-            "imagem": p.imagem
+            "imagem": p.imagem,
+            "dias_vendas": p.dias_vendas,
+            "tamanhos": tamanhos_map.get(p.id_produto, [])
         }
 
         if nome_categoria not in resultado:
@@ -239,15 +266,37 @@ async def update_product(product_id: UUID, product: ProdutoSchema, db: Session =
     allowed_fields = {
         "nome", "preco_custo", "preco_venda", "medida",
         "estoque", "estoque_min", "descricao",
-        "ficha_tecnica", "status_venda", "categoria_id"
+        "ficha_tecnica", "status_venda", "categoria_id", 
+        "dias_vendas","tamanhos","imagem_name","imagem"
     }
+
+    tamanhos_data = None
 
     for key, value in product.dict(exclude_unset=True).items():
         if key in allowed_fields:
+            if key == "tamanhos":
+                tamanhos_data = value
+            else:
+                setattr(db_product, key, value)
+
             setattr(db_product, key, value)
 
+    if tamanhos_data is not None:
+        db.query(TamanhosModel).filter(
+            TamanhosModel.produto_id == db_product.id_produto
+        ).delete()
+
+    for t in tamanhos_data:
+        novo_tamanho = TamanhosModel(
+            produto_id=db_product.id_produto,
+            tamanho=t["tamanho"],
+            valor=t["valor"],
+            estabelecimento_id=estabelecimento_id
+        )
+        db.add(novo_tamanho)
+
     db.commit()
-    db.flush()
+    db.refresh(db_product)
 
     produtos = db.query(ProductModel).filter(
         ProductModel.estabelecimento_id == estabelecimento_id,
@@ -258,6 +307,11 @@ async def update_product(product_id: UUID, product: ProdutoSchema, db: Session =
         CategoryModel.estabelecimento_id == estabelecimento_id,
         ProductModel.categoria_id == CategoryModel.id_categoria
     ).first()
+
+    tamanhos = db.query(TamanhosModel).filter(
+        TamanhosModel.estabelecimento_id == estabelecimento_id,
+        TamanhosModel.produto_id == produtos.id_produto
+    ).all()
 
     nome_categoria = categorias.nome if categorias else "Sem categoria"
     data = {
@@ -276,7 +330,9 @@ async def update_product(product_id: UUID, product: ProdutoSchema, db: Session =
         "status_venda": produtos.status_venda,
         "imagem_name": produtos.imagem_name,
         "imagem": produtos.imagem,
-        "nome_categoria": nome_categoria
+        "nome_categoria": nome_categoria,
+        "dias_vendas": produtos.dias_vendas,
+        "tamanhos": tamanhos
     }
 
     return data

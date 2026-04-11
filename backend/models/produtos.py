@@ -23,7 +23,6 @@ class Categoria(Base):
     def __repr__(self):
         return f"Category(id={self.id}, name={self.nome})"
     
-
 # Iserção da tabela de produtos no banco de dados
 class Produto(Base):
     __tablename__ = "produtos"
@@ -47,11 +46,28 @@ class Produto(Base):
     status_venda = Column(String(20), nullable=False)
     imagem_name = Column(String(300), nullable=True)
     imagem = Column(String, nullable=True)
+    dias_vendas = Column(Integer, nullable=True)
 
     categoria_object = relationship("Categoria", back_populates="produtos")
+    tamanhos_object = relationship("Tamanhos", back_populates="produto", cascade="all, delete-orphan")
     itens_mesa = relationship("PedidoItens", back_populates="produto")
     itens_pedidos = relationship("ItemPedido", back_populates="produtos")
+
 
     def __repr__(self):
         return f"Product(id={self.id}, name={self.nome})"
 
+class Tamanhos(Base):
+    __tablename__ = "aux_tamanhos"
+
+    tamanho_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, server_default=text("gen_random_uuid()"), nullable=False)
+    produto_id = Column(UUID(as_uuid=True), ForeignKey("produtos.id_produto"), nullable=False)
+    estabelecimento_id = Column(UUID(as_uuid=True), ForeignKey("estabelecimentos.id"), nullable=False, index=True)
+    tamanho = Column(String(300), nullable=True)
+    valor = Column(Float, nullable=True)
+
+    __table_args__ = (
+        UniqueConstraint('produto_id', 'tamanho', name='uix_tamanho_produto'),
+    )
+
+    produto = relationship("Produto", back_populates="tamanhos_object")

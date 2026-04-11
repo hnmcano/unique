@@ -150,6 +150,7 @@ class PedidoResponse(BaseModel):
     cliente: ClienteResponse 
     endereco_entrega: EnderecoPedidoResponse # Relação 1:1
     itens: List[ItemPedidoResponse] # Relação 1:N
+    
 
     model_config = {
         "from_attributes": True

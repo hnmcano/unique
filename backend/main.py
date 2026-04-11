@@ -10,7 +10,8 @@ Instrumentator().instrument(app).expose(app)
 
 origins = [
     "http://hookahshisha.localhost:5173",
-    "http://boahora.localhost:5173"
+    "http://boahora.localhost:5173",
+    "http://localhost:5173"
 ]
 
 app.add_middleware(
