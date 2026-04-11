@@ -12,7 +12,7 @@ import { Footer } from './components/footer';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
-import PrivateRoute from "./components/privateRoute";
+import PrivateRoute from './components/PrivateRoute';
 
 function HomePage() {
   return (
