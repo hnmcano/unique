@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect } from "react";
 
 const CarrinhoContext = createContext();
 
-const DUAS_HORAS_MS = 2 * 60 * 60 * 1000;
+const DUAS_HORAS_MS = 6 * 60 * 60 * 1000;
 
 function carregarCarrinhoSalvo() {
     try {
