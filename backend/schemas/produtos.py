@@ -1,5 +1,23 @@
 from pydantic import BaseModel, Field
+from typing import Optional
 from uuid import UUID
+
+
+# Modelo para categorias
+class Categoria(BaseModel):
+    nome: str = Field(..., min_length=3, max_length=30)
+
+    model_config = {
+        "from_attributes": True
+    }
+
+class TamanhosSchema(BaseModel):
+    tamanho: str | None = None
+    valor: int | None = None
+
+    model_config = {
+        "from_attributes": True
+    }
 
 # Modelo padrão para produtos
 class Produto(BaseModel):
@@ -16,22 +34,14 @@ class Produto(BaseModel):
     status_venda: str = Field(..., min_length=3, max_length=20)
     imagem_name: str | None = None
     imagem: str | None = None
-
+    dias_vendas: int | None = None
+    tamanhos: Optional[list[TamanhosSchema]] = None
+    
     model_config = {
         "from_attributes": True
     }
 
-
-# Modelo para categorias
-class Categoria(BaseModel):
-    nome: str = Field(..., min_length=3, max_length=30)
-
-    model_config = {
-        "from_attributes": True
-    }
-
-
-class ProdutoSchema(Produto):
+class ProdutoSchema(BaseModel):
     produto_id: UUID
     estabelecimento_id: UUID
     nome: str
@@ -45,4 +55,9 @@ class ProdutoSchema(Produto):
     status_venda: str
     imagem_name: str | None = None
     imagem: str | None = None
+    dias_vendas: int | None = None
+    tamanhos: Optional[list[TamanhosSchema]] = None
 
+    model_config = {
+        "from_atributes": True
+    }
