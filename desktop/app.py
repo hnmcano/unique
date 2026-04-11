@@ -23,57 +23,80 @@ import requests
 import subprocess
 import sys
 import json
+import winreg
 
-CURRENT_VERSION = settings.CURRENT_VERSION
-UPDATE_URL = settings.UPDATE_URL
+import winreg
+import requests
+import subprocess
+import sys
 
-
-def exibir_confirmacao_atualizacao(self):
-    msg_box = QMessageBox(self)
-    msg_box.setIcon(QMessageBox.Question) # type: ignore
-    msg_box.setWindowTitle("Atualização Disponível!")
-    msg_box.setText("Gostaria de baixar a nova versão?")
-    msg_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No) # type: ignore
-
-    # A resposta é armazenada aqui, o código é bloqueado até o usuário interagir
-    resposta = msg_box.exec()
-
-    if resposta == QMessageBox.Yes: # type: ignore
-        return True
-    else:
-        return False
-
-def check_update():
+def get_installed_version():
     try:
-        data = requests.get(UPDATE_URL) 
-        data = data.json() 
+        key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, r"Software\UniqueSystems")
+        value, _ = winreg.QueryValueEx(key, "version")
+        winreg.CloseKey(key)
+        return value
+    except FileNotFoundError:
+        return "0.0.0"
 
+CURRENT_VERSION = get_installed_version()
+UPDATE_URL = settings.UPDATE_URL # Ajuste conforme necessário
+
+def exibir_confirmacao_atualizacao(parent=None):
+    msg_box = QMessageBox(parent)
+    msg_box.setIcon(QMessageBox.Icon.Question)
+    msg_box.setWindowTitle("Atualização Disponível!")
+    msg_box.setText(f"Versão atual: {CURRENT_VERSION}\nNova versão disponível!\n\nGostaria de baixar a atualização?")
+    msg_box.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+    
+    return msg_box.exec() == QMessageBox.StandardButton.Yes
+
+def check_update(parent=None):
+    try:
+        response = requests.get(UPDATE_URL, timeout=10)
+        response.raise_for_status()
+        data = response.json()
+        
         if data["version"] != CURRENT_VERSION:
-            autorizacao = exibir_confirmacao_atualizacao(None)
-            if autorizacao:
-                QMessageBox.information(None, "Atualização", "Iniciando download da atualização...")
-                download_and_update(data["url"])
+            if exibir_confirmacao_atualizacao(parent):
+                download_and_update(data["url"], parent)
             else:
-                QMessageBox.information(None, "Atualização", "Ao reiniciar o aplicativo, a atualização estará disponível.")
-                return
+                QMessageBox.information(parent, "Atualização", 
+                    "A atualização estará disponível na próxima inicialização.")
         else:
-            QMessageBox.information(None, "Atualização", "Aplicativo atualizado.")
+            QMessageBox.information(parent, "Atualização", 
+                "Seu aplicativo está atualizado!")
+                
+    except requests.exceptions.RequestException:
+        QMessageBox.warning(parent, "Erro", 
+            "Não foi possível verificar atualizações.\nVerifique sua conexão com a internet.")
     except Exception as e:
-        QMessageBox.warning(None, "Erro de Atualização", "Não foi possível verificar atualizações. Verifique sua conexão com a internet.")
+        QMessageBox.critical(parent, "Erro Crítico", f"Erro na verificação: {str(e)}")
 
-def download_and_update(url):
-    response = requests.get(url, stream=True)
+def download_and_update(url, parent=None):
+    try:
+        response = requests.get(url, stream=True, timeout=30)
+        response.raise_for_status()
+        
+        # Mostra progresso (opcional)
+        QMessageBox.information(parent, "Download", 
+            "Baixando atualização... O aplicativo será reiniciado automaticamente.")
+        
+        with open("update_installer.exe", "wb") as f:
+            for chunk in response.iter_content(chunk_size=8192):
+                f.write(chunk)
+        
+        # Executa o instalador em modo silencioso
+        subprocess.Popen(
+            ["update_installer.exe", "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART"],
+            shell=True
+        )
+        sys.exit(0)
+        
+    except Exception as e:
+        QMessageBox.critical(parent, "Erro no Download", 
+            f"Falha ao baixar atualização:\n{str(e)}")
 
-    with open("update.exe", "wb") as f:
-        QMessageBox.information(None, "Download", "Baixando atualização... Isso pode levar alguns minutos.")
-        for chunk in response.iter_content(1024):
-            f.write(chunk)
-
-    QMessageBox.information(None, "Download", "Download concluído. Iniciando atualização...")
-
-    subprocess.run(["update.exe"])
-
-    sys.exit()
 
 #funcao para centralizar a janelas
 def center_window(self):

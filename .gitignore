@@ -68,3 +68,5 @@ views/
 git push origin master
 **/update/**
 **/update.py
+
+/cart.zip

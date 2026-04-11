@@ -13,8 +13,6 @@ class Settings:
         raise   Exception("API_URL is not set")
     if not WS_URL:
         raise   Exception("WS_URL is not set")
-    if not CURRENT_VERSION:
-        raise   Exception("CURRENT_VERSION is not set")
     if not UPDATE_URL:
         raise   Exception("UPDATE_URL is not set")
     

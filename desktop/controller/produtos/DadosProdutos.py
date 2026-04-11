@@ -26,7 +26,7 @@ def dias_valores(self):
         "Quarta-feira": {"indice": 2},
         "Quinta-feira": {"indice": 3},
         "Sexta-feira": {"indice": 4},
-        "Sabádo": {"indice": 5},
+        "Sabado": {"indice": 5},
         "Domingo": {"indice": 6},
     }
 
@@ -209,11 +209,15 @@ class DadosProduto(QMainWindow, DataProduto):
                     i.setChecked(True)
                     break
             else:
-                sigla = produto["tamanhos"][0]["tamanho"]
-                for key, value in self.tamanhos_valores.items():
-                    if key == sigla:
-                        i.setChecked(True)
-                        break
+                if  produto["tamanhos"] == []:
+                    break
+                else:      
+                    sigla = produto["tamanhos"][0]["tamanho"]
+                    for key, value in self.tamanhos_valores.items():
+                        if key == sigla:
+                            i.setChecked(True)
+                            break
+                
 
         self.desc_input.setPlainText(produto["descricao"])
         
@@ -230,8 +234,6 @@ class DadosProduto(QMainWindow, DataProduto):
         self.btn_config.clicked.connect(
             lambda: self.stackedWidget.setCurrentWidget(self.configuracoes)
         )
-
-
 
 
         self.selecionar_imagem.clicked.connect(lambda: inserir_imagem(self))

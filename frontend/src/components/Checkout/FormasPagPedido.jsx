@@ -9,20 +9,23 @@ import { IconePix, IconeCredito, IconeDebito, IconeDinheiro } from "./pagamentos
 import { ButtonBack} from "./buttons/ButtonsCheckout";
 import { useState } from "react";
 import { MdOutlineCancel } from "react-icons/md";
+import { useProdutos } from "../../hooks/useProdutos";
 import "../../styles/Enviar.css";
+import { useCarrinho } from "../../contexts/CarrinhoContext";
 
 function FormasPagPedido() {
-    const { data, 
-            setData,    
+    const { data,     
             valor_total, 
             SelecionarMetodo, 
             opcoesDisponiveis,
             formaPagamento,
-            SelecionarBandeira,
-            statusPedido
         } = useCheckout();
+    const{base}= useProdutos();
+    const {valorSelected} = useCarrinho();
 
-    const { pedidos, atualizarPedido } = useStatus();
+    console.log("valor selecionado", valorSelected);
+
+    const { atualizarPedido } = useStatus();
     const { estabelecimento } = useEstabelecimento();
 
     const [isLoading, setIsLoading] = useState(false);
@@ -39,7 +42,16 @@ function FormasPagPedido() {
             return;
         }
 
+        const produtosMap = {};
+
+        base.forEach(categoria => {
+            categoria.produtos.forEach(produto => {
+                produtosMap[produto.id] = produto;
+            });
+        });
         const total = data.valor_total;
+
+        console.log("valor selecionado", valorSelected);
 
         const mensagem = [
             "🧾 Pedido - " + estabelecimento.nome,
@@ -57,8 +69,15 @@ function FormasPagPedido() {
             "",
             "📦 Itens:",
             ...data.itens.map((item) => {
+                
+                const produto = produtosMap[item.produto_id];
+
+                const nomeProduto = produto ? produto.nome : "Produto não encontrado";
+
+                console.log("data produto", produto);
+
                 const totalItem = item.quantidade * item.valor_unitario;
-                return `- ${item.quantidade}x ${item.produto_id} - R$ ${totalItem.toFixed(2)}`;
+                return `- ${item.quantidade}x ${nomeProduto} ${"tamanho"} - R$ ${totalItem.toFixed(2)}`;
             }), 
             "",
             "🚚 Taxa de Entrega: R$ " + (data.entrega?.taxa_entrega?.toFixed(2) || "0.00"),

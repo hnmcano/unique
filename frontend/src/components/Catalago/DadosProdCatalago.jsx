@@ -5,12 +5,12 @@ import { useCarrinho } from "../../contexts/CarrinhoContext";
 
 
 function ProdutoData({ open, closeModalProduto, produto, categoria}) {
-    const { produtos, setProdutos, adicionarProduto } = useCarrinho();
+    const { adicionarProduto } = useCarrinho();
     const [quantidade, setQuantidade] = useState(1);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [tamanhoSelected, setTamanhoSelected] = useState(null);
-
+    const {valorSelected, setValorSelected} = useCarrinho();
+    
 
     const handleQuantidade = (delta) => {
         setQuantidade(prevQuantidade => {
@@ -21,19 +21,25 @@ function ProdutoData({ open, closeModalProduto, produto, categoria}) {
 
     const handleTamanho = (tamanho) => {
         console.log(tamanho.target.value);
-        setTamanhoSelected(tamanho.target.value);
+        setValorSelected(tamanho.target.value);
     }
 
     useEffect(() => {
         if (produto?.tamanhos?.length > 0) {
-            setTamanhoSelected(produto.tamanhos[0].valor)
+            
+            setValorSelected(prevValorSelected => {
+                if (prevValorSelected === null) {
+                    return produto.tamanhos[0];
+                }
+                return prevValorSelected;
+            })
         }
     }, [produto])
 
 
     const addProduct =  async (categoria, produto) => {
-        const precoFinal = tamanhoSelected 
-            ? Number(tamanhoSelected) 
+        const precoFinal = valorSelected 
+            ? Number(valorSelected) 
             : produto.preco_venda;
         
         setLoading(true);
@@ -111,7 +117,7 @@ function ProdutoData({ open, closeModalProduto, produto, categoria}) {
                         { produto.tamanhos.length > 0 && (
                             <div className="modal-tamanho-produto-data">
                                 <label style={{width: "100%", textAlign: "left"}}>Tamanho:</label>
-                                <select className="select-tamanho" name="tamanho" id="tamanho" value={tamanhoSelected} onChange={(e) => handleTamanho(e)}>
+                                <select className="select-tamanho" name="tamanho" id="tamanho" value={valorSelected} onChange={(e) => handleTamanho(e)}>
                                     {produto.tamanhos.map((tamanho) => (
                                         <option key={tamanho.id} name={tamanho.tamanho} value={tamanho.valor}>{
                                             tamanho.tamanho === "P" ? "PEQUENA": 
@@ -121,10 +127,10 @@ function ProdutoData({ open, closeModalProduto, produto, categoria}) {
                                 </select>
                             </div>
                         )}
-                        {tamanhoSelected ? (
+                        {valorSelected ? (
                             <div className="modal-preco-produto-data">
                                 <label>R$</label>
-                                <label>{(quantidade * tamanhoSelected).toFixed(2)}</label>
+                                <label>{(quantidade * valorSelected).toFixed(2)}</label>
                             </div>
                         ) : (
                             <div className="modal-preco-produto-data">
