@@ -1,18 +1,18 @@
 // App.jsx
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { ContextProvider } from './Context/ContextData'
-import { Header } from './components/Header'
-import { Hero } from './components/Hero'
-import { Features } from './components/Features'
-import { Stats } from './components/Stats'
-import { Testimonials } from './components/Testimonials'
-import { Pricing } from './components/Pricing'
-import { CTA } from './components/cta'
-import { Footer } from './components/Footer'
-import Register from './pages/Register'
-import Login from './pages/Login'
-import Dashboard from './pages/Dashboard'
-import PrivateRoute from "./components/PrivateRoute";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ContextProvider } from './Context/ContextData';
+import { Header } from './components/header';
+import { Hero } from './components/hero';
+import { Features } from './components/features';
+import { Stats } from './components/stats'
+import { Testimonials } from './components/testimonials';
+import { Pricing } from './components/pricing';
+import { CTA } from './components/cta';
+import { Footer } from './components/footer';
+import Register from './pages/Register';
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
+import PrivateRoute from "./components/privateRoute";
 
 function HomePage() {
   return (
