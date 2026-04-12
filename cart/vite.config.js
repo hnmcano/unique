@@ -5,6 +5,7 @@ import path from 'path'
 export default defineConfig({
   plugins: [react()], // Sem tailwindcss()
   resolve: {
+    dedupe: ['react', 'react-dom'],
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
