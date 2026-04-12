@@ -8,3 +8,13 @@ export async function GetDados(token) {
     });
     return response;
 }
+
+
+export async function GetExecutavel(token) {
+    const response = await api.get("/update/", {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    return response;
+}

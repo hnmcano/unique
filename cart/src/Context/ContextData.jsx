@@ -7,6 +7,7 @@ export function ContextProvider({children}) {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [token, setTokenState] = useState(() => localStorage.getItem("token") ?? null);
+    const [executavel, setExecutavel] = useState(false);
 
     function setToken(value) {
         if (value) {
@@ -18,7 +19,7 @@ export function ContextProvider({children}) {
     }
 
     return (
-        <contextData.Provider value={{data, setData, token, setToken, isLoading, setIsLoading, error, setError}}>
+        <contextData.Provider value={{data, setData, token, setToken, isLoading, setIsLoading, error, setError, executavel, setExecutavel}}>
             {children}
         </contextData.Provider>
     )

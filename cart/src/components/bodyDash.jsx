@@ -1,69 +1,142 @@
-import { ChevronDown, ArrowDown } from "lucide-react";
+import { ChevronDown, ArrowDown, Download } from "lucide-react";
 import { useState } from "react";
+import { useData } from "../Context/ContextData";
 
-const accordions = [
-  {
-    title: "Informações do Sistema",
-    content: "Detalhes sobre versão, configurações e status do sistema.",
-  },
-  {
-    title: "Informações do Estabelecimento",
-    content: "Nome, endereço, CNPJ e dados do estabelecimento.",
-  },
-  {
-    title: "Informações do Usuário",
-    content: "Perfil, permissões e preferências do usuário logado.",
-  },
-  {
-    title: "Informações da Conta",
-    content: "Plano, faturamento e dados da conta.",
-  },
-];
+function formatCNPJ(doc) {
+  if (!doc) return "-";
+  return doc.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5");
+}
 
-function Accordion({ title, content }) {
+function formatTelefone(tel) {
+  if (!tel) return "-";
+  return tel.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+}
+
+function formatData(iso) {
+  if (!iso) return "-";
+  return new Date(iso).toLocaleDateString("pt-BR");
+}
+
+function Accordion({ title, children, cor }) {
   const [open, setOpen] = useState(false);
 
+
   return (
-    <div className="w-full border border-solid border-foreground rounded-lg overflow-hidden hover:border-primary transition-colors">
+    <div
+      className="w-full rounded-xl overflow-hidden transition-colors"
+      style={{
+        border: open
+          ? `0.5px solid ${cor}60`
+          : "0.5px solid var(--color-border-tertiary)",
+        background: "var(--color-background-primary)",
+      }}
+    >
       <button
         onClick={() => setOpen(!open)}
-        className="flex w-full p-4 justify-between items-center text-left"
+        className="flex w-full px-4 py-3.5 justify-between items-center text-left border-b border-border/30"
       >
-        <span>{title}</span>
+        <div className="flex items-center gap-2.5">
+          <div
+            className="w-2 h-2 rounded-full flex-shrink-0"
+            style={{ background: cor }}
+          />
+          <span className="text-sm font-medium">{title}</span>
+        </div>
         <ChevronDown
-          className="transition-transform duration-300"
+          size={16}
+          className="text-muted-foreground transition-transform duration-300"
           style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)" }}
         />
       </button>
+
       <div
         className="overflow-hidden transition-all duration-300"
-        style={{ maxHeight: open ? "200px" : "0px" }}
+        style={{ maxHeight: open ? "400px" : "0px" }}
       >
-        <div className="px-4 pb-4 text-sm text-muted-foreground">
-          {content}
+        <div className="px-4 pb-4 pl-9 flex flex-col gap-0">
+          {children}
         </div>
       </div>
     </div>
   );
 }
 
-export default function BodyDash() {
+function Row({ label, value, badge }) {
   return (
-    <div className="flex flex-col justify-between min-w-full h-full p-4">
-      <nav className="flex items-center justify-between min-w-full flex-col">
-        <div className="container flex items-center p-2 gap-2 justify-between min-w-full">
-          <span className="p-3">Download arquivo .exe</span>
-          <button className="flex flex-row border border-primary rounded-lg hover:bg-primary">
-            <span className="p-3"><ArrowDown size={20} /></span>
-            <span className="p-3">Download .exe</span>
-          </button>
-        </div>
-        <div className="flex flex-col w-full p-14 justify-between gap-4">
-          {accordions.map((item) => (
-            <Accordion key={item.title} title={item.title} content={item.content} />
-          ))}
-        </div>
-      </nav>
+    <div className="flex justify-between items-baseline py-1.5 border-b border-border/30 last:border-none">
+      <span className="text-xs text-muted-foreground">{label}</span>
+      {badge ? (
+        <span
+          className="text-[11px] font-medium px-2 py-0.5 rounded-full"
+          style={{ background: "#ffffff15", color: "#e52c29" }}
+        >
+          {value}
+        </span>
+      ) : (
+        <span className="text-xs font-medium">{value ?? "-"}</span>
+      )}
+    </div>
+  );
+}
+
+export default function BodyDash() {
+  const { data } = useData();
+  const est = data?.estabelecimento;
+  const usuario = data?.usuario;
+  const cor = est?.cor_layout ?? "#e52c29";
+
+  return (
+    <div className="flex flex-col min-w-full h-full p-4">
+
+      {/* barra superior */}
+      <div className="flex items-center justify-between px-2 py-3 mb-6">
+        <span className="text-sm text-muted-foreground">Painel de configurações</span>
+        <button
+          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white transition-opacity hover:opacity-90"
+          style={{ background: cor }}
+        >
+          <ArrowDown size={14} />
+          Download .exe
+        </button>
+      </div>
+
+      {/* acordeões */}
+      <div className="flex flex-col gap-3 w-[90%] mx-auto">
+
+        <Accordion title="Informações do Sistema" cor={cor}>
+          <Row label="Plano" value={est?.plano} badge />
+          <Row label="Subdomínio" value={est?.subdominio} />
+          <Row label="Redirecionamento" value={est?.redirecionamento} />
+          <Row label="Limite de usuários" value={est?.limite_usuarios} />
+          <Row label="Status" value={est?.ativo ? "ativo" : "inativo"} badge />
+        </Accordion>
+
+        <Accordion title="Informações do Estabelecimento" cor={cor}>
+          <Row label="Nome fantasia" value={est?.nome_fantasia} />
+          <Row label="CNPJ" value={formatCNPJ(est?.documento)} />
+          <Row label="Email" value={est?.email} />
+          <Row label="Telefone" value={formatTelefone(est?.telefone)} />
+          <Row label="Endereço" value={est?.endereco} />
+          <Row label="Rede social" value={est?.rede_social ? `@${est.rede_social}` : "-"} />
+          <Row label="Descrição" value={est?.descricao} />
+        </Accordion>
+
+        <Accordion title="Informações do Usuário" cor={cor}>
+          <Row label="Nome" value={usuario?.nome} />
+          <Row label="Email" value={usuario?.email} />
+          <Row label="Status" value={usuario?.ativo ? "ativo" : "inativo"} badge />
+          <Row label="Criado em" value={formatData(usuario?.criado_em)} />
+        </Accordion>
+
+        <Accordion title="Informações da Conta" cor={cor}>
+          <Row label="Plano atual" value={est?.plano} badge />
+          <Row label="Expiração" value={formatData(est?.data_expiracao) ?? "sem expiração"} />
+          <Row label="Cor do layout" value={est?.cor_layout} />
+          <Row label="Criado em" value={formatData(est?.criado_em)} />
+          <Row label="Atualizado em" value={formatData(est?.atualizado_em)} />
+        </Accordion>
+
+      </div>
     </div>
   );
 }

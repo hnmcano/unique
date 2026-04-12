@@ -1,13 +1,13 @@
 import HeaderDash from "../components/headerDash";
 import BodyDash from "../components/bodyDash";
 import FooterDash from "../components/footerDash";
-import { GetDados } from "../hooks/get";
+import { GetDados, GetExecutavel } from "../hooks/get";
 import { useEffect } from "react";
 import { useData } from "../Context/ContextData";
 
 export default function Dashboard() {
     const {setData, token} = useData();
-    
+
     useEffect(() => {
         async function fetchDados() {
         try {

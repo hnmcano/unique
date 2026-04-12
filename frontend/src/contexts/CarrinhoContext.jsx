@@ -7,11 +7,12 @@ const DUAS_HORAS_MS = 6 * 60 * 60 * 1000;
 function carregarCarrinhoSalvo() {
     try {
         const salvo = localStorage.getItem("carrinho");
-        if (!salvo) return [];
+        if (!salvo) return []; // ← retorna array vazio, nunca undefined
 
         const { produtos, timestamp } = JSON.parse(salvo);
+        if (!Array.isArray(produtos)) return []; // ← proteção extra
+        
         const expirado = Date.now() - timestamp > DUAS_HORAS_MS;
-
         if (expirado) {
             localStorage.removeItem("carrinho");
             return [];
@@ -20,14 +21,14 @@ function carregarCarrinhoSalvo() {
         return produtos;
     } catch {
         localStorage.removeItem("carrinho");
-        return [];
+        return []; // ← nunca undefined
     }
 }
 
 export function CarrinhoProvider({ children }) {
     const [produtoModalOpen, setProdutoModalOpen] = useState(false);
     const [valorSelected, setValorSelected] = useState([]);
-    const [produtos, setProdutos] = useState(carregarCarrinhoSalvo);
+    const [produtos, setProdutos] = useState(() => carregarCarrinhoSalvo() ?? []);
 
     // ✅ salva com timestamp sempre que o carrinho mudar
     useEffect(() => {
@@ -98,7 +99,7 @@ export function CarrinhoProvider({ children }) {
         );
     }
 
-    const totalCarrinho = produtos.reduce((acc, p) => acc + p.valor_total, 0);
+    const totalCarrinho = (produtos ?? []).reduce((acc, p) => acc + p.valor_total, 0);
 
     return (
         <CarrinhoContext.Provider value={{
