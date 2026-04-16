@@ -13,6 +13,7 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import PrivateRoute from './components/PrivateRoute';
+import HelpTutorial from './pages/HelpTutorial';
 
 function HomePage() {
   return (
@@ -40,6 +41,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/ajuda" element={<HelpTutorial />} />
             <Route path="/dashboard" element={
                 <PrivateRoute >
                   <Dashboard />

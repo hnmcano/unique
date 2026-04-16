@@ -83,8 +83,6 @@ def salvar_dados_produtos(parent=None):
                     "tamanhos": []
             }
 
-            print(data_json)
-
             response = APPContext.api_client.post("/produtos/desktop/add/product", data_json)
 
             QMessageBox.information(parent, "Sucesso", "Produto adicionado com sucesso!")
@@ -98,7 +96,6 @@ def salvar_dados_produtos(parent=None):
                 button.setChecked(False)
 
             parent.buttonGroup.setExclusive(True) # type: ignore
-            print("produto adicionado, resposta da api",response)
             APPContext.produtos_store.adicionar(response) # type: ignore
 
         except ValueError:

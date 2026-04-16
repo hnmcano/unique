@@ -80,9 +80,9 @@ class Uniq(QMainWindow, uniq):
 
         try:
             impressora_padrao = self.validar_impressora()
-
+            APPContext.impressora_store = impressora_padrao
             for impressoras_conetadas in get_printers():
-                if impressoras_conetadas == impressora_padrao:
+                if impressoras_conetadas == impressora_padrao["impressora"]:
                     APPContext.impressora_store = impressora_padrao
                 elif impressoras_conetadas != impressora_padrao:
                     pass
@@ -244,14 +244,15 @@ class Uniq(QMainWindow, uniq):
     def validar_impressora(self):
         try:
             response = APPContext.api_client.get("impressoras/default/disponivel")
-            Impressora_padrao = response["impressora"]
-            return Impressora_padrao
+            return response
+        
         except Exception as e:
             QMessageBox.information(self, "Impressora Desconectada", "Impressora desconectada, por favor conecte-a")
 
     def imprimir_pedido(self, pedido=None):
-        nome = APPContext.impressora_store
-        linhas_cupom = imprimir_cupom_pedido(self, pedido)
+        nome = APPContext.impressora_store["impressora"]
+        tamanho = APPContext.impressora_store["tamanho"]
+        linhas_cupom = imprimir_cupom_pedido(self, pedido, tamanho=tamanho)
 
         imprimir_raw_windows(
             nome,

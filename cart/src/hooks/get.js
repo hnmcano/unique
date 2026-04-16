@@ -11,10 +11,13 @@ export async function GetDados(token) {
 
 
 export async function GetExecutavel(token) {
+    console.log(token);
     const response = await api.get("/update/", {
         headers: {
             Authorization: `Bearer ${token}`,
         },
+        responseType: 'blob',
+        // ← Remova o timeout também
     });
     return response;
 }

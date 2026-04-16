@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
 const contextData = createContext();
 
@@ -7,7 +7,9 @@ export function ContextProvider({children}) {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [token, setTokenState] = useState(() => localStorage.getItem("token") ?? null);
-    const [executavel, setExecutavel] = useState(false);
+    const [executavel, setExecutavel] = useState({ loading: false, url: null });
+
+    console.log("response executavel", executavel);
 
     function setToken(value) {
         if (value) {

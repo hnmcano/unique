@@ -94,8 +94,6 @@ class Produtos(QMainWindow, produtos):
 
     def atualizar_tabela(parent, data):
 
-        print("Atualizando tabela com dados:", data)  # Debug: Verifique os dados recebidos
-
         parent.tableWidget.setSortingEnabled(False)
 
         if isinstance(data, str):

@@ -7,11 +7,11 @@ const DUAS_HORAS_MS = 6 * 60 * 60 * 1000;
 function carregarCarrinhoSalvo() {
     try {
         const salvo = localStorage.getItem("carrinho");
-        if (!salvo) return []; // ← retorna array vazio, nunca undefined
+        if (!salvo) return [];
 
         const { produtos, timestamp } = JSON.parse(salvo);
-        if (!Array.isArray(produtos)) return []; // ← proteção extra
-        
+        if (!Array.isArray(produtos)) return [];
+
         const expirado = Date.now() - timestamp > DUAS_HORAS_MS;
         if (expirado) {
             localStorage.removeItem("carrinho");
@@ -21,16 +21,15 @@ function carregarCarrinhoSalvo() {
         return produtos;
     } catch {
         localStorage.removeItem("carrinho");
-        return []; // ← nunca undefined
+        return [];
     }
 }
 
 export function CarrinhoProvider({ children }) {
     const [produtoModalOpen, setProdutoModalOpen] = useState(false);
-    const [valorSelected, setValorSelected] = useState([]);
-    const [produtos, setProdutos] = useState(() => carregarCarrinhoSalvo() ?? []);
+    const [valorSelected, setValorSelected] = useState(null);
+    const [produtos, setProdutos] = useState(() => carregarCarrinhoSalvo());
 
-    // ✅ salva com timestamp sempre que o carrinho mudar
     useEffect(() => {
         localStorage.setItem("carrinho", JSON.stringify({
             produtos,
@@ -38,7 +37,6 @@ export function CarrinhoProvider({ children }) {
         }));
     }, [produtos]);
 
-    // ✅ verifica expiração a cada minuto enquanto a aba está aberta
     useEffect(() => {
         const intervalo = setInterval(() => {
             const salvo = localStorage.getItem("carrinho");
@@ -49,47 +47,66 @@ export function CarrinhoProvider({ children }) {
                 setProdutos([]);
                 localStorage.removeItem("carrinho");
             }
-        }, 60 * 1000);
+        }, 60000);
 
         return () => clearInterval(intervalo);
     }, []);
 
-    function adicionarProduto(novoProduto) {
-        setProdutos(prevProdutos => {
-            const produtoExistente = prevProdutos.find(p => p.produto_id === novoProduto.produto_id);
+    // 🔑 ID ÚNICO REAL (resolve tudo)
+    const gerarIdItem = (p) => {
+        const tamanho = p.tamanho && p.tamanho !== "" ? p.tamanho : "UNICO";
+        return `${p.produto_id}-${tamanho}`;
+    };
 
-            if (produtoExistente) {
-                return prevProdutos.map(p =>
-                    p.produto_id === novoProduto.produto_id
+    const montarNome = (p) => {
+        const nomeBase = p.nome || "Produto";
+        return p.tamanho ? `${nomeBase}` : nomeBase;
+    };
+
+    function adicionarProduto(novoProduto) {
+        const id_item = gerarIdItem(novoProduto);
+
+        setProdutos(prev => {
+            const existente = prev.find(p => p.id_item === id_item);
+
+            if (existente) {
+                const novaQuantidade = existente.quantidade + novoProduto.quantidade;
+
+                return prev.map(p =>
+                    p.id_item === id_item
                         ? {
                             ...p,
-                            quantidade: p.quantidade + novoProduto.quantidade,
-                            valor_total: (p.quantidade + novoProduto.quantidade) * p.preco_venda
+                            quantidade: novaQuantidade,
+                            valor_total: novaQuantidade * p.preco_venda
                         }
                         : p
                 );
-            } else {
-                return [
-                    ...prevProdutos,
-                    {
-                        ...novoProduto,
-                        quantidade: novoProduto.quantidade,
-                        valor_total: novoProduto.quantidade * novoProduto.preco_venda
-                    }
-                ];
             }
+
+            return [
+                ...prev,
+                {
+                    ...novoProduto,
+                    id_item,
+                    nome: montarNome(novoProduto),
+                    quantidade: novoProduto.quantidade,
+                    valor_total: novoProduto.quantidade * novoProduto.preco_venda
+                }
+            ];
         });
     }
 
-    function removerProduto(produtoId) {
-        setProdutos(prevProdutos => prevProdutos.filter(p => p.produto_id !== produtoId));
+    function removerProduto(id_item) {
+        setProdutos(prev => prev.filter(p => p.id_item !== id_item));
     }
 
-    function atualizarQuantidade(produtoId, delta) {
+    function atualizarQuantidade(id_item, delta) {
         setProdutos(prev =>
             prev.map(p => {
-                if (p.produto_id !== produtoId) return p;
+                if (p.id_item !== id_item) return p;
+
                 const novaQuantidade = Math.max(1, p.quantidade + delta);
+
                 return {
                     ...p,
                     quantidade: novaQuantidade,
@@ -99,15 +116,20 @@ export function CarrinhoProvider({ children }) {
         );
     }
 
-    const totalCarrinho = (produtos ?? []).reduce((acc, p) => acc + p.valor_total, 0);
+    const totalCarrinho = produtos.reduce((acc, p) => acc + p.valor_total, 0);
 
     return (
         <CarrinhoContext.Provider value={{
-            produtos, setProdutos,
-            adicionarProduto, atualizarQuantidade, removerProduto,
+            produtos,
+            setProdutos,
+            adicionarProduto,
+            atualizarQuantidade,
+            removerProduto,
             totalCarrinho,
-            produtoModalOpen, setProdutoModalOpen,
-            valorSelected, setValorSelected
+            produtoModalOpen,
+            setProdutoModalOpen,
+            valorSelected,
+            setValorSelected
         }}>
             {children}
         </CarrinhoContext.Provider>

@@ -9,8 +9,15 @@ function ProdutoData({ open, closeModalProduto, produto, categoria}) {
     const [quantidade, setQuantidade] = useState(1);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const {valorSelected, setValorSelected} = useCarrinho();
-    
+    const [valorSelected, setValorSelected] = useState(null);
+    const tamanhoSelecionado = produto?.tamanhos?.find(
+        t => t.valor === Number(valorSelected)
+    );
+    const descricaoTamanho = tamanhoSelecionado?.tamanho ?? "";
+
+    console.log("produto",produto);
+
+    console.log(descricaoTamanho);
 
     const handleQuantidade = (delta) => {
         setQuantidade(prevQuantidade => {
@@ -27,23 +34,30 @@ function ProdutoData({ open, closeModalProduto, produto, categoria}) {
     useEffect(() => {
         if (produto?.tamanhos?.length > 0) {
             
-            setValorSelected(prevValorSelected => {
-                if (prevValorSelected === null) {
-                    return produto.tamanhos[0];
+            setValorSelected(prev => {
+                if (!prev) {
+                    return produto.tamanhos[0].valor; // ✅ agora sim
                 }
-                return prevValorSelected;
-            })
+                return prev;
+            });
         }
     }, [produto])
 
 
-    const addProduct =  async (categoria, produto) => {
-        const precoFinal = valorSelected 
-            ? Number(valorSelected) 
-            : produto.preco_venda;
-        
-        setLoading(true);
-        setError(null);
+    const addProduct = async (categoria, produto) => {
+        const temTamanho = produto?.tamanhos?.length > 0;
+
+        let precoFinal = produto.preco_venda;
+        let tamanhoFinal = "";
+
+        if (temTamanho) {
+            const tamanhoObj = produto.tamanhos.find(
+                t => t.valor === Number(valorSelected)
+            );
+
+            precoFinal = tamanhoObj?.valor || produto.preco_venda;
+            tamanhoFinal = tamanhoObj?.tamanho || "";
+        }
 
         const dadosEnviar = {
             produto_id: produto.id,
@@ -55,18 +69,19 @@ function ProdutoData({ open, closeModalProduto, produto, categoria}) {
             medida: produto.medida,
             estoque: produto.estoque,
             estoque_min: produto.estoque_min,
-            sit_estoque: produto.sit_estoque,   
+            sit_estoque: produto.sit_estoque,
             descricao: produto.descricao,
             ficha_tecnica: produto.ficha_tecnica,
             status_venda: produto.status_venda,
             imagem_url: produto.imagem,
-            quantidade: quantidade
+            quantidade: quantidade,
+            tamanho: tamanhoFinal
         };
+
         adicionarProduto(dadosEnviar);
-    }
+    };
 
     const imagem_url = (imagem) => `data:image/png;base64,${imagem}`;
-
 
     if (!open || !produto) return null;
 
@@ -127,7 +142,7 @@ function ProdutoData({ open, closeModalProduto, produto, categoria}) {
                                 </select>
                             </div>
                         )}
-                        {valorSelected ? (
+                        {produto.tamanhos.length > 0 && valorSelected ? (
                             <div className="modal-preco-produto-data">
                                 <label>R$</label>
                                 <label>{(quantidade * valorSelected).toFixed(2)}</label>

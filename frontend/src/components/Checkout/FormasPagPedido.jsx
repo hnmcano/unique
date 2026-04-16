@@ -6,25 +6,17 @@ import api from "../../api/api";
 import { PagamentoCredito, PagamentoDebito, PagamentoDinheiro, PagamentoPix } from "./pagamentos/FormasDePagamentos";
 import { useEstabelecimento } from "../../contexts/EstabelecimentoContext";
 import { IconePix, IconeCredito, IconeDebito, IconeDinheiro } from "./pagamentos/iconesSvg";
-import { ButtonBack} from "./buttons/ButtonsCheckout";
-import { useState } from "react";
+import { ButtonBack } from "./buttons/ButtonsCheckout";
+import { useState, useMemo } from "react";
 import { MdOutlineCancel } from "react-icons/md";
 import { useProdutos } from "../../hooks/useProdutos";
 import "../../styles/Enviar.css";
 import { useCarrinho } from "../../contexts/CarrinhoContext";
 
 function FormasPagPedido() {
-    const { data,     
-            valor_total, 
-            SelecionarMetodo, 
-            opcoesDisponiveis,
-            formaPagamento,
-        } = useCheckout();
-    const{base}= useProdutos();
-    const {valorSelected} = useCarrinho();
-
-    console.log("valor selecionado", valorSelected);
-
+    const { data, valor_total, SelecionarMetodo, opcoesDisponiveis, formaPagamento } = useCheckout();
+    const { base } = useProdutos();
+    const { produtos: produtosCarrinho } = useCarrinho();
     const { atualizarPedido } = useStatus();
     const { estabelecimento } = useEstabelecimento();
 
@@ -32,10 +24,53 @@ function FormasPagPedido() {
     const [isSuccess, setIsSuccess] = useState(false);
     const [error, setError] = useState(null);
     const [respostaServidor, setRespostaServidor] = useState(null);
+
     const navigate = useNavigate();
 
-    console.log(encodeURIComponent("🧾 Pedido 🍔"));
+    // ✅ DADOS DO PEDIDO (100% corretos vindos do carrinho)
+    const prepararDadosPedido = (dataPedido) => {
+        const itensFormatados = produtosCarrinho.map((p) => ({
+            produto_id: p.produto_id,
+            quantidade: p.quantidade,
+            valor_unitario: p.preco_venda,
+            valor_total: p.quantidade * p.preco_venda,
+            tamanho: p.tamanho || "",
+        }));
 
+        return {
+            ...dataPedido,
+            itens: itensFormatados
+        };
+    };
+
+    const dadosPedidoPronto = useMemo(
+        () => prepararDadosPedido(data),
+        [data, produtosCarrinho]
+    );
+
+    // ✅ AGRUPAR ITENS PARA WHATSAPP
+    const agruparItens = (itens) => {
+        const mapa = {};
+
+        itens.forEach(item => {
+            const nome = item.tamanho
+                ? `${item.nome || "Produto"} (${item.tamanho})`
+                : item.nome || "Produto";
+
+            if (!mapa[nome]) {
+                mapa[nome] = {
+                    ...item,
+                    quantidade: 0
+                };
+            }
+
+            mapa[nome].quantidade += item.quantidade;
+        });
+
+        return Object.values(mapa);
+    };
+
+    // ✅ WHATSAPP
     const enviarPedidoWhatsApp = () => {
         if (!estabelecimento?.telefone) {
             alert("Telefone do estabelecimento não encontrado");
@@ -43,15 +78,11 @@ function FormasPagPedido() {
         }
 
         const produtosMap = {};
-
         base.forEach(categoria => {
             categoria.produtos.forEach(produto => {
                 produtosMap[produto.id] = produto;
             });
         });
-        const total = data.valor_total;
-
-        console.log("valor selecionado", valorSelected);
 
         const mensagem = [
             "🧾 Pedido - " + estabelecimento.nome,
@@ -59,106 +90,76 @@ function FormasPagPedido() {
             "👤 Cliente: " + (data.cliente?.nome || "Não informado"),
             "📞 Telefone: " + (data.cliente?.telefone || "Não informado"),
             "",
-            "📍 Cep: " + (data.entrega?.cep || "Não informado"),
-            "📍 Endereço: " + (data.entrega?.endereco + " " + data.entrega?.numero || "Não informado"),
-            "📍 Bairro: " + (data.entrega?.bairro || "Não informado"),
-            "📍 Cidade: " + (data.entrega?.cidade || "Não informado"),
+            "📍 Endereço: " + (data.entrega?.endereco + " " + data.entrega?.numero || ""),
+            "📍 Bairro: " + (data.entrega?.bairro || ""),
+            "📍 Cidade: " + (data.entrega?.cidade || ""),
             "",
-            "🏷️ Observações: " + (data.observacoes || "Não informado"),
-            "💰 Forma de Pagamento: " + (data.metodo_pagamento || "Não informado"), 
+            "💰 Pagamento: " + (data.metodo_pagamento || ""),
             "",
             "📦 Itens:",
-            ...data.itens.map((item) => {
-                
+            ...agruparItens(dadosPedidoPronto.itens).map((item) => {
                 const produto = produtosMap[item.produto_id];
+                const nomeProduto = produto ? produto.nome : "Produto";
 
-                const nomeProduto = produto ? produto.nome : "Produto não encontrado";
+                const totalItem = item.quantidade * Number(item.valor_unitario || 0);
 
-                console.log("data produto", produto);
-
-                const totalItem = item.quantidade * item.valor_unitario;
-                return `- ${item.quantidade}x ${nomeProduto} ${"tamanho"} - R$ ${totalItem.toFixed(2)}`;
-            }), 
+                return `- ${item.quantidade}x ${nomeProduto}${item.tamanho ? ` (${item.tamanho})` : ""} - R$ ${totalItem.toFixed(2)}`;
+            }),
             "",
-            "🚚 Taxa de Entrega: R$ " + (data.entrega?.taxa_entrega?.toFixed(2) || "0.00"),
-            "💰 Total: R$ " + (total?.toFixed(2) || "0.00")
+            "🚚 Taxa: R$ " + (data.entrega?.taxa_entrega?.toFixed(2) || "0.00"),
+            "💰 Total: R$ " + (data.valor_total?.toFixed(2) || "0.00")
         ].join("\n");
 
         const url = `https://api.whatsapp.com/send?phone=${estabelecimento.telefone}&text=${encodeURIComponent(mensagem)}`;
-
         window.open(url, "_blank");
     };
 
-
-    if (respostaServidor) {
-        return (
-            <>
-                <div className="resposta-servidor-container">
-                    <MdOutlineCancel className="resposta-servidor-icon"/>
-                    <div className="resposta-servidor-text">
-                        <p className="resposta-servidor">{respostaServidor}</p>
-                    </div>
-                    <div className='resposta-servidor-contato'>
-                        <span>Qualquer Duvida, entre em contato:</span>
-                        <span onClick={() => window.open("https://wa.me/" + estabelecimento?.telefone)} className="contact-link">📞 {estabelecimento?.telefone}</span>
-                    </div>
-                    <div className="resposta-servidor-button">
-                        <Link to="/">
-                            <ButtonBack />
-                        </Link>
-                    </div>
-                </div>
-            </>
-        );
-    }
-
+    // ✅ ENVIO
     const handledSubmit = async (event) => {
         event.preventDefault();
-        
         if (isLoading) return;
 
         setIsLoading(true);
         setIsSuccess(false);
-        try{
+
+        try {
             const dados_estabelecimento = await api.get(`/estabelecimento/carregar-dados`);
 
-
             if (dados_estabelecimento.data.redirecionamento === "unique") {
-                try{
-                    const response = await api.post("/pedidos/react", data);
-    
-                    setIsLoading(false);
-                    setIsSuccess(true);
+                const response = await api.post("/pedidos/react", dadosPedidoPronto);
 
-                    setTimeout(() => {
-                        setIsSuccess(false);
-                        console.log("resposta-servidor, sucesso",response);
-                        atualizarPedido(response.data);
-                        navigate(`/Status/Pedido/${response.data.id_pedido}`);
-                    }, 2000);
+                setIsLoading(false);
+                setIsSuccess(true);
 
-                }catch(error){
-                    console.log(error);
-                    setIsLoading(false);
-                    setError(error);
-                    setRespostaServidor(error.response.data.detail);
-                }
+                setTimeout(() => {
+                    atualizarPedido(response.data);
+                    navigate(`/Status/Pedido/${response.data.id_pedido}`);
+                }, 2000);
+
             } else {
-                try{
-                    enviarPedidoWhatsApp();
-                    setIsLoading(false);
-                    setIsSuccess(true);
-                }catch(error){
-                    console.log(error);
-                }
+                enviarPedidoWhatsApp();
+                setIsLoading(false);
+                setIsSuccess(true);
             }
 
-        }catch(error){
+        } catch (error) {
             console.log(error);
             setIsLoading(false);
             setError(error);
-            setRespostaServidor(error.response.data.detail);
+            setRespostaServidor(error?.response?.data?.detail || "Erro ao enviar pedido");
         }
+    };
+
+    if (respostaServidor) {
+        return (
+            <div className="resposta-servidor-container">
+                <MdOutlineCancel className="resposta-servidor-icon" />
+                <p>{respostaServidor}</p>
+                <Link to="/">
+                    <ButtonBack />
+                </Link>
+            </div>
+        );
     }
     
     return (

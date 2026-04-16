@@ -80,10 +80,18 @@ function Row({ label, value, badge }) {
 }
 
 export default function BodyDash() {
-  const { data } = useData();
+  const { data, executavel } = useData();
   const est = data?.estabelecimento;
   const usuario = data?.usuario;
   const cor = est?.cor_layout ?? "#e52c29";
+
+  function handleDownload() {
+      const a = document.createElement('a');
+      a.href = executavel.url;
+      a.download = 'unique.exe'; // ✅ força download com nome certo
+      a.click();
+  }
+
 
   return (
     <div className="flex flex-col min-w-full h-full p-4">
@@ -92,11 +100,14 @@ export default function BodyDash() {
       <div className="flex items-center justify-between px-2 py-3 mb-6">
         <span className="text-sm text-muted-foreground">Painel de configurações</span>
         <button
-          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white transition-opacity hover:opacity-90"
-          style={{ background: cor }}
+          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+          style={{ 
+            background: executavel.loading || !executavel.url ? '#9CA3AF' : cor // ← Cinza quando desabilitado
+          }}
+          disabled={executavel.loading || !executavel.url}
+          onClick={handleDownload}
         >
-          <ArrowDown size={14} />
-          Download .exe
+          {executavel.loading ? "Preparando..." : executavel.url ? "Download .exe" : "Carregando..."} {/* ← Só mostra Download quando tiver URL */}
         </button>
       </div>
 

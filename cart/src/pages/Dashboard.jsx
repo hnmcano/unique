@@ -6,30 +6,45 @@ import { useEffect } from "react";
 import { useData } from "../Context/ContextData";
 
 export default function Dashboard() {
-    const {setExecutavel, setData, token} = useData();
+    const { setExecutavel, setData, token, setIsLoading, setError } = useData();
 
     useEffect(() => {
-        async function fetchDados() {
-            try {
-                const response = await GetDados(token);
-                setData(response.data); // ajuste conforme a estrutura da resposta
-            } catch (error) {
-                console.error("Erro ao buscar dados:", error);
+        if (!token) return;
+
+        async function fetchTudo() {
+                // 1. busca dados gerais primeiro
+                try {
+                    setIsLoading(true);
+                    const response = await GetDados(token);
+                    setData(response.data);
+                } catch (error) {
+                    setError(error);
+                    console.error("Erro ao buscar dados:", error);
+                } finally {
+                    setIsLoading(false); // ← dashboard renderiza aqui
             }
+
+            // 2. busca executável em segundo plano (sem bloquear o dashboard)
+            fetchExecutavel();
         }
 
         async function fetchExecutavel() {
             try {
+                setExecutavel({ loading: true, url: null }); // ← sinaliza carregando
                 const response = await GetExecutavel(token);
-                console.log("Executavel:", response.data);
-                setExecutavel(response.data); // ajuste conforme a estrutura da resposta
+                const blob = new Blob([response.data], { type: 'application/octet-stream' });
+                const url = URL.createObjectURL(blob);
+                setExecutavel({ loading: false, url });
             } catch (error) {
-                console.error("Erro ao buscar dados:", error);
+                setExecutavel({ loading: false, url: null });
+                console.error("Erro ao buscar executável:", error);
             }
         }
 
-        if (token) fetchDados() && fetchExecutavel();
+        
+        fetchTudo(); // ← chamada que faltava
     }, [token]);
+
 
     return (
         <div className="h-screen">

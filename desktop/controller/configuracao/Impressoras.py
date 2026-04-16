@@ -5,145 +5,266 @@ from datetime import datetime, timedelta
 import win32print
 
 
+# =========================
+# CONFIG PAPEL
+# =========================
+def tamanho_papel(tamanho: str) -> int:
+    if not tamanho:
+        return 48
+
+    tamanhos = {
+        "80mm": 48,
+        "60mm": 42,
+        "58mm": 36,
+        "a4": 80,
+        "a5": 60
+    }
+
+    return tamanhos.get(str(tamanho).lower(), 48)
+
+
+# =========================
+# IMPRESSORAS
+# =========================
 def get_printers():
-    printers = win32print.EnumPrinters(win32print.PRINTER_ENUM_LOCAL | win32print.PRINTER_ENUM_CONNECTIONS)
+    printers = win32print.EnumPrinters(
+        win32print.PRINTER_ENUM_LOCAL | win32print.PRINTER_ENUM_CONNECTIONS
+    )
+    return [p[2] for p in printers]
 
-    lista = []
-    for p in printers:
-        nome = p[2]
-        lista.append(nome)
 
-    return lista
+# =========================
+# FORMATADORES
+# =========================
+def formatar_telefone(telefone: str) -> str:
+    telefone = str(telefone or "")
 
-def imprimir_cupom_pedido(self, data):
-    linhas = []
-    largura_total = 48
+    if len(telefone) >= 10:
+        return f"({telefone[:2]}) {telefone[2:7]}-{telefone[7:]}"
+    return telefone
 
-    data_pedido = (datetime.fromisoformat(data.get("data_criacao", "")) - timedelta(hours=3)).strftime("%d/%m/%Y %H:%M:%S")
 
-    def add_centralizado(texto):
-        linhas.append(f"{str(texto or ''):^{largura_total}}")
+def formatar_cep(cep: str) -> str:
+    cep = str(cep or "")
 
-    def add(texto):
-        linhas.append(str(texto) if texto is not None else "")
+    if len(cep) == 8:
+        return f"{cep[:5]}-{cep[5:]}"
+    return cep
 
-    add("\n") 
 
-    add_centralizado("UNIQUE SYSTEMS")
-    add(f"Pedido: {data.get('id_pedido',''):<15}")
-    add(f"Data: {str(data_pedido or ''):<15}")
-    add("-" * largura_total)
+def formatar_data(data_iso: str) -> str:
+    try:
+        return (
+            datetime.fromisoformat(data_iso) - timedelta(hours=3)
+        ).strftime("%d/%m/%Y %H:%M:%S")
+    except Exception:
+        return ""
+
+
+# =========================
+# BUILDER DE CUPOM
+# =========================
+class CupomBuilder:
+    def __init__(self, largura):
+        self.largura = largura
+        self.linhas = []
+
+        self.col_qtd = 4
+        self.col_preco = 9
+        self.col_item = largura - self.col_qtd - self.col_preco - 2
+
+    def add(self, texto=""):
+        self.linhas.append(str(texto))
+
+    def centro(self, texto=""):
+        self.linhas.append(f"{str(texto):^{self.largura}}")
+
+    def sep(self):
+        self.linhas.append("-" * self.largura)
+
+    def linha_item(self, qtd, nome, preco):
+        nome = str(nome)[:self.col_item]
+        self.linhas.append(
+            f"{str(qtd):<{self.col_qtd}} "
+            f"{nome:<{self.col_item}} "
+            f"{preco:>{self.col_preco}.2f}"
+        )
+
+    def resultado(self):
+        return self.linhas
+
+
+# =========================
+# GERAR CUPOM
+# =========================
+def imprimir_cupom_pedido(self,data, tamanho):
+    largura = tamanho_papel(tamanho)
+    cupom = CupomBuilder(largura)
 
     entrega = data.get("endereco_entrega", {}) or {}
-    add_centralizado("DADOS DE ENTREGA")
-    add(f"CEP: {str(entrega.get('cep',''))[0:5] + '-' + str(entrega.get('cep',''))[5:9]}")
-    add(f"Endereço: {entrega.get('endereco','')}   Nº: {entrega.get('numero','')}")
-    add(f"Bairro: {entrega.get('bairro','')}")
-    add(f"Comp: {entrega.get('complemento','')}")
-    add(f"Previsão: 50 a 70 minutos")
-    add("-" * largura_total)
-
     cliente = data.get("cliente", {}) or {}
-    add_centralizado("DADOS DO CLIENTE")
-    add(f"Nome: {cliente.get('nome','')}")
-    add(f"Telefone: {'(' + str(cliente.get('telefone',''))[0:2] + ') ' + str(cliente.get('telefone',''))[2:7] + '-' + str(cliente.get('telefone',''))[7:]}")
-    add("-" * largura_total)
 
-    add(f"{'QTD':<4} {'ITEM':<33} {'PREÇO':>9}")
-    
-    for item in data.get("itens", []) or []:
-        qtd = item.get("quantidade", 1)
-        produto = item.get("produtos", {})
-        nome = str(produto.get("nome", ""))[:32] 
-        preco = float(produto.get("preco_venda", 0) or 0)
-        add(f"{str(qtd):<4} {nome:<33} {preco:>9.2f}")
+    data_formatada = formatar_data(data.get("data_criacao"))
 
-    add("-" * largura_total)
-    
-    v_total = float(data.get('valor_total', 0) or 0)
-    v_taxa = float(entrega.get('taxa_entrega', 0) or 0)
+    v_total = float(data.get("valor_total", 0) or 0)
+    v_taxa = float(entrega.get("taxa_entrega", 0) or 0)
     v_subtotal = v_total - v_taxa
-    
-    add(f"{'SUB-TOTAL:':<30} R$ {v_subtotal:>14.2f}")
-    add(f"{'TAXA DE ENTREGA:':<30} R$ {v_taxa:>14.2f}")
-    add(f"{'TOTAL:':<30} R$ {v_total:>14.2f}")
-    add("-" * largura_total)
 
-    # Pagamento
-    add(f"PAGAMENTO: {data.get('metodo_pagamento', ''):<20}")
+    # =========================
+    # CABEÇALHO
+    # =========================
+    cupom.add()
+    cupom.centro("UNIQUE SYSTEMS")
+    cupom.add(f"Pedido: {data.get('id_pedido','')}")
+    cupom.add(f"Data: {data_formatada}")
+    cupom.sep()
 
-    if data.get("metodo_pagamento") == "dinheiro":
+    # =========================
+    # ENTREGA
+    # =========================
+    cupom.centro("DADOS DE ENTREGA")
+    cupom.add(f"CEP: {formatar_cep(entrega.get('cep'))}")
+    cupom.add(f"Endereço: {entrega.get('endereco','')} Nº: {entrega.get('numero','')}")
+    cupom.add(f"Bairro: {entrega.get('bairro','')}")
+    cupom.add(f"Comp: {entrega.get('complemento','')}")
+    cupom.add("Previsão: 50 a 70 minutos")
+    cupom.sep()
+
+    # =========================
+    # CLIENTE
+    # =========================
+    cupom.centro("DADOS DO CLIENTE")
+    cupom.add(f"Nome: {cliente.get('nome','')}")
+    cupom.add(f"Telefone: {formatar_telefone(cliente.get('telefone'))}")
+    cupom.sep()
+
+    # =========================
+    # ITENS
+    # =========================
+    cupom.add(
+        f"{'QTD':<{cupom.col_qtd}} "
+        f"{'ITEM':<{cupom.col_item}} "
+        f"{'PREÇO':>{cupom.col_preco}}"
+    )
+
+    for item in data.get("itens", []) or []:
+        produto = item.get("produtos", {}) or {}
+
+        nome_base = produto.get("nome", "")
+        tamanho = item.get("tamanho", "") or ""
+
+        nome = f"{nome_base} ({tamanho})" if tamanho else nome_base
+
+        # 🔥 AQUI ESTÁ O CORRETO
+        preco_unitario = float(item.get("valor_unitario", 0) or 0)
+
+        qtd = item.get("quantidade", 1)
+
+        total = preco_unitario * qtd
+
+        cupom.linha_item(qtd, nome, total)
+
+    cupom.sep()
+
+    # =========================
+    # TOTAIS
+    # =========================
+    cupom.add(f"{'SUB-TOTAL:':<30} R$ {v_subtotal:>10.2f}")
+    cupom.add(f"{'TAXA ENTREGA:':<30} R$ {v_taxa:>10.2f}")
+    cupom.add(f"{'TOTAL:':<30} R$ {v_total:>10.2f}")
+    cupom.sep()
+
+    # =========================
+    # PAGAMENTO
+    # =========================
+    metodo = data.get("metodo_pagamento", "")
+    cupom.add(f"PAGAMENTO: {metodo}")
+
+    if metodo == "dinheiro":
         valor_pago = float(str(data.get('opcoes_pagamento', '0')).replace(',', '.') or 0)
-        troco = valor_pago - v_total
-        add(f"{'VALOR RECEBIDO:':<30} R$ {valor_pago:>14.2f}")
-        add(f"{'TROCO:':<30} R$ {max(0, troco):>14.2f}")
+        troco = max(0, valor_pago - v_total)
+
+        cupom.add(f"{'VALOR RECEBIDO:':<30} R$ {valor_pago:>10.2f}")
+        cupom.add(f"{'TROCO:':<30} R$ {troco:>10.2f}")
     else:
-        add(f"BANDEIRA:  {data.get('opcoes_pagamento', ''):<20}")
+        cupom.add(f"BANDEIRA: {data.get('opcoes_pagamento','')}")
 
-    add("-" * largura_total)
+    cupom.sep()
 
+    # =========================
+    # OBS
+    # =========================
     obs = entrega.get("observacoes", "")
     if obs:
-        add("OBSERVAÇÕES:")
-        add(obs)
-    
+        cupom.add("OBSERVAÇÕES:")
+        cupom.add(obs)
+
     if cliente.get("cpf"):
-        add(f"CPF NA NOTA: {cliente.get('cpf')}")
+        cupom.add(f"CPF NA NOTA: {cliente.get('cpf')}")
 
-    add("\n\n") 
-    
-    return linhas
+    cupom.add("\n\n")
 
+    return cupom.resultado()
+
+
+# =========================
+# IMPRESSÃO RAW
+# =========================
 def imprimir_raw_windows(nome, conteudo):
-    # 1. Transforma a lista em string única
     if isinstance(conteudo, list):
-        texto_final = "\n".join(str(item) for item in conteudo if item is not None) + "\n"
+        texto = "\n".join(str(x) for x in conteudo if x is not None) + "\n"
     else:
-        texto_final = conteudo
+        texto = str(conteudo)
 
-    comando_corte = "\x1d\x56\x00" 
-    avanco_papel = "\n\n\n\n\n" 
+    comando_corte = "\x1d\x56\x00"
+    avanco = "\n\n\n\n\n"
 
     hPrinter = win32print.OpenPrinter(nome)
+
     try:
-        hJob = win32print.StartDocPrinter(hPrinter, 1, ("Cupom", None, "RAW"))
+        win32print.StartDocPrinter(hPrinter, 1, ("Cupom", None, "RAW"))
         win32print.StartPagePrinter(hPrinter)
 
-        # Enviamos o texto + avanço + comando de corte
-        corpo_do_cupom = texto_final + avanco_papel + comando_corte
-        
-        win32print.WritePrinter(hPrinter, corpo_do_cupom.encode("cp850"))
+        final = texto + avanco + comando_corte
+        win32print.WritePrinter(hPrinter, final.encode("cp850", errors="replace"))
 
         win32print.EndPagePrinter(hPrinter)
         win32print.EndDocPrinter(hPrinter)
+
     finally:
         win32print.ClosePrinter(hPrinter)
 
+
+# =========================
+# UI
+# =========================
 class impressoras(QMainWindow, impressoras_ui):
     def __init__(self, parent=None):
         super().__init__()
         self.setupUi(self)
 
-        printers = get_printers()
-        self.ListImpressoras.addItems(printers)
+        self.ListImpressoras.addItems(get_printers())
+        self.tamanho.addItems(["80mm", "60mm", "58mm", "A4", "A5"])
 
         self.TestarImp.clicked.connect(self.testar_impressao)
-        self.AplicarAlteracoes.clicked.connect(self.atualizar_impressora)
+        self.AplicarAlteracoes.clicked.connect(self.salvar_config)
 
     def testar_impressao(self):
         nome = self.ListImpressoras.currentText()
 
         imprimir_raw_windows(
             nome,
-            "=== TESTE DE IMPRESSAO ===\nSistema OK\n\n\n"
+            ["=== TESTE DE IMPRESSÃO ===", "Sistema OK", ""]
         )
 
-    def atualizar_impressora(self):
+    def salvar_config(self):
         impressora = self.ListImpressoras.currentText()
+        tamanho_nome = self.tamanho.currentText()
 
-        if self.checkBox.isChecked():
-            padrao = True
-        else:
-            padrao = False
+        padrao = self.checkBox.isChecked()
 
-        APPContext.api_client.post("/impressoras/default", {"impressora": impressora, "padrao": padrao})
+        APPContext.api_client.post("/impressoras/default", {
+            "impressora": impressora,
+            "padrao": padrao,
+            "tamanho": tamanho_nome
+        })

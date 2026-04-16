@@ -72,7 +72,9 @@ class AdicionarProdutoMesa(QMainWindow, addProdutosMesa):
         self.tableWidget.setEditTriggers(QTableWidget.NoEditTriggers)    
 
     def atualizar_tabela(self, produtos=None, data=None):
-
+        for produto in produtos:
+            print(produto.get("tamanhos", {"tamanho": "N/A"}))
+        
         if isinstance(produtos, str):
             produtos = json.loads(produtos)
 

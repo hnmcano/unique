@@ -126,7 +126,12 @@ class DadosPedido(QMainWindow, dados_pedidos):
 
             for i, item in enumerate(data["itens"]):
 
-                item_nome = QTableWidgetItem(str(item["produtos"]["nome"]))
+                if item["tamanho"] != "":
+                    tamanho = "(" + item["tamanho"] + ")"
+                else:
+                    tamanho = ""
+                    
+                item_nome = QTableWidgetItem(str(item["produtos"]["nome"]) + " " + tamanho)
                 self.tableWidget.setItem(i, 0, item_nome)
 
                 item_quantidade = QTableWidgetItem(str(item["quantidade"]))

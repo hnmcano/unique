@@ -107,8 +107,6 @@ def coletar_dados_produtos(self):
         QMessageBox.warning(self, "Erro", f"Erro ao coletar dados: {str(e)}")
         return
     
-    print("dados coletados:", produto_id, categoria_id, cod_pdv, nome, medida, status, preco_custo, preco_venda, estoque, estoque_min, descricao_, pixmap)
-
     buffer = QBuffer()
     buffer.open(QIODevice.OpenModeFlag.WriteOnly)
     pixmap.save(buffer, "PNG")
@@ -190,7 +188,6 @@ class DadosProduto(QMainWindow, DataProduto):
                 break
 
         for i in self.groupBox.findChildren(QRadioButton):
-            print(produto)
             if produto["dias_vendas"] == None and i.text() == "Todos os dias":
                 i.setChecked(True)
                 break
@@ -201,7 +198,6 @@ class DadosProduto(QMainWindow, DataProduto):
                     break
 
         for i in self.groupBox_2.findChildren(QRadioButton):
-            print(len(produto["tamanhos"]))
             if len(produto["tamanhos"]) == 3 and i.text() == "Todos":
                 i.setChecked(True)
                 break
@@ -247,8 +243,6 @@ class DadosProduto(QMainWindow, DataProduto):
 
     def atualizar_dados_produtos(self, id):
         dados_produto = coletar_dados_produtos(self)
-
-        print(dados_produto)
 
         if dados_produto is None:
             return
