@@ -97,7 +97,7 @@ class DadosPedido(QMainWindow, dados_pedidos):
         self.btn_finalizar.clicked.connect(lambda: self.finalizar_pedido(pedido=pedido))
 
     def setup_table(self):
-        columns = ["NOME", "QUANTIDADE", "VALOR", "EDITAR", "EXCLUIR"]
+        columns = ["NOME", "QTD", "VALOR", "EDITAR", "EXCLUIR"]
 
         quantidade_columns = len(columns)
         self.tableWidget.setColumnCount(quantidade_columns)
@@ -125,11 +125,14 @@ class DadosPedido(QMainWindow, dados_pedidos):
             self.tableWidget.setRowCount(len(data["itens"]))
 
             for i, item in enumerate(data["itens"]):
+                tamanho_valor = item.get("tamanho") or ""
 
-                if item["tamanho"] != "":
-                    tamanho = "(" + item["tamanho"] + ")"
+                if tamanho_valor:
+                    tamanho = f"({tamanho_valor})"
+                    item_valor_formatado = item['quantidade'] * float(item['valor_unitario'])
                 else:
                     tamanho = ""
+                    item_valor_formatado = item['quantidade'] * float(item['produtos']['preco_venda'])
                     
                 item_nome = QTableWidgetItem(str(item["produtos"]["nome"]) + " " + tamanho)
                 self.tableWidget.setItem(i, 0, item_nome)
@@ -138,7 +141,7 @@ class DadosPedido(QMainWindow, dados_pedidos):
                 item_quantidade.setTextAlignment(Qt.AlignCenter)
                 self.tableWidget.setItem(i, 1, item_quantidade)
 
-                item_valor_formatado = item['quantidade'] * item['produtos']['preco_venda']
+                
                 item_valor = QTableWidgetItem(str(f"R$ {item_valor_formatado:.2f}"))
                 item_valor.setTextAlignment(Qt.AlignCenter)
                 self.tableWidget.setItem(i, 2, item_valor)
@@ -219,8 +222,9 @@ class DadosPedido(QMainWindow, dados_pedidos):
         self.produtos.show()
 
     def imprimir_pedido(self, pedido=None):
-        nome = APPContext.impressora_store
-        linhas_cupom = imprimir_cupom_pedido(self, pedido)
+        nome = APPContext.impressora_store["impressora"]
+        tamanho = APPContext.impressora_store["tamanho"]
+        linhas_cupom = imprimir_cupom_pedido(self, pedido, tamanho=tamanho)
 
         imprimir_raw_windows(
             nome,

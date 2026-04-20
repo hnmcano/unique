@@ -10,7 +10,7 @@ const api = axios.create({
 api.interceptors.request.use((config) => {
     const slug = getSlugFromHost();
     if (slug) {
-        config.headers['x-tenant-Slug'] = slug;
+        config.headers['x-tenant-slug'] = slug;
     }
 
     return config;

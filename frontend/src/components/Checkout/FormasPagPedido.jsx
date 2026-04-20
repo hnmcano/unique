@@ -14,7 +14,7 @@ import "../../styles/Enviar.css";
 import { useCarrinho } from "../../contexts/CarrinhoContext";
 
 function FormasPagPedido() {
-    const { data, valor_total, SelecionarMetodo, opcoesDisponiveis, formaPagamento } = useCheckout();
+    const { data, valor_total_com_taxa, SelecionarMetodo, opcoesDisponiveis, formaPagamento } = useCheckout();
     const { base } = useProdutos();
     const { produtos: produtosCarrinho } = useCarrinho();
     const { atualizarPedido } = useStatus();
@@ -227,7 +227,7 @@ function FormasPagPedido() {
                 <div style={{"width":"100%"}}>
                     <div className="container-total-geral" style={{marginBottom: "20px"}}>
                         <h3 style={{"color": "white"}}>TOTAL GERAL</h3>
-                        <h3 className="value-total-geral"><label>R${valor_total.toFixed(2)}</label></h3>
+                        <h3 className="value-total-geral"><label>R${valor_total_com_taxa.toFixed(2)}</label></h3>
                     </div>
                     <div className="Botoes-Checkout">
                         <Link to="/Checkout/Etapa3">

@@ -4,9 +4,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { ButtonBack, ButtonNext } from "./buttons/ButtonsCheckout";
 
 function ListProdutosPedido({}){
-    const { data, produtos, totalQuantidade, totalCarrinho, valor_total, entregaTaxa } = useCheckout();
+    const { data, produtos, totalQuantidade, totalCarrinho, valor_total_com_taxa } = useCheckout();
     const [checked, setChecked] = useState(false);
     const navigate = useNavigate();
+
+    console.log(data);
 
     const handlesubmit = (e) => {
         e.preventDefault();
@@ -57,7 +59,7 @@ function ListProdutosPedido({}){
                         </thead>
                         <tbody>
                             <tr>
-                                <td style={{"padding": "10px", "display": "flex","justifyContent": "space-between"}}><label>R$</label>{entregaTaxa.toFixed(2)}</td>
+                                <td style={{"padding": "10px", "display": "flex","justifyContent": "space-between"}}><label>R$</label>{data.entrega.taxa_entrega.toFixed(2)}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -65,7 +67,7 @@ function ListProdutosPedido({}){
                 <div>
                     <div className="container-total-geral">
                         <h3 style={{"color": "white"}}>TOTAL GERAL</h3>
-                        <h3 className="value-total-geral"><label>R${valor_total.toFixed(2)}</label></h3>
+                        <h3 className="value-total-geral"><label>R${valor_total_com_taxa.toFixed(2)}</label></h3>
                     </div>
                     <div className="checkbox-wrapper-33">
                         <label className="checkbox">

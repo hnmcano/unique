@@ -69,9 +69,14 @@ class CupomBuilder:
         self.largura = largura
         self.linhas = []
 
-        self.col_qtd = 4
-        self.col_preco = 9
-        self.col_item = largura - self.col_qtd - self.col_preco - 2
+        if largura == 36:
+            self.col_qtd = 3
+            self.col_preco = 8
+            self.col_item = largura - self.col_qtd - self.col_preco - 2
+        else:
+            self.col_qtd = 4
+            self.col_preco = 9
+            self.col_item = largura - self.col_qtd - self.col_preco - 2
 
     def add(self, texto=""):
         self.linhas.append(str(texto))
@@ -85,20 +90,52 @@ class CupomBuilder:
     def linha_item(self, qtd, nome, preco):
         nome = str(nome)[:self.col_item]
         self.linhas.append(
-            f"{str(qtd):<{self.col_qtd}} "
-            f"{nome:<{self.col_item}} "
-            f"{preco:>{self.col_preco}.2f}"
+            f"{str(qtd):<{self.col_qtd}}"
+            f"{nome:<{self.col_item}}"
+            f"{preco:<{self.col_preco}.2f}"
         )
 
     def resultado(self):
         return self.linhas
 
 
+def formatar_nome_produto(nome, tamanho=None):
+    if not nome:
+        return ""
+
+    ignorar = {"de", "da", "do", "das", "dos", "e"}
+
+    palavras = nome.strip().split()
+
+    # Se for só uma palavra
+    if len(palavras) == 1:
+        return f"{nome} ({tamanho})" if tamanho else nome
+
+    ultima_palavra = palavras[-1]
+
+    iniciais = ""
+    for p in palavras[:-1]:
+        if p.lower() not in ignorar:
+            iniciais += p[0].upper() + "."
+
+    nome_formatado = f"{iniciais} {ultima_palavra}"
+
+    if tamanho:
+        nome_formatado += f" ({tamanho})"
+
+    return nome_formatado
+
 # =========================
 # GERAR CUPOM
 # =========================
 def imprimir_cupom_pedido(self,data, tamanho):
     largura = tamanho_papel(tamanho)
+
+    if largura == 36:
+        espaco = 15
+    else:
+        espaco = 30
+
     cupom = CupomBuilder(largura)
 
     entrega = data.get("endereco_entrega", {}) or {}
@@ -142,9 +179,9 @@ def imprimir_cupom_pedido(self,data, tamanho):
     # ITENS
     # =========================
     cupom.add(
-        f"{'QTD':<{cupom.col_qtd}} "
-        f"{'ITEM':<{cupom.col_item}} "
-        f"{'PREÇO':>{cupom.col_preco}}"
+        f"{'QTD ':<{cupom.col_qtd}}"
+        f"{'ITEM':<{cupom.col_item}}"
+        f"{'PREÇO':<{cupom.col_preco}}"
     )
 
     for item in data.get("itens", []) or []:
@@ -153,7 +190,7 @@ def imprimir_cupom_pedido(self,data, tamanho):
         nome_base = produto.get("nome", "")
         tamanho = item.get("tamanho", "") or ""
 
-        nome = f"{nome_base} ({tamanho})" if tamanho else nome_base
+        nome = formatar_nome_produto(nome_base, tamanho)
 
         # 🔥 AQUI ESTÁ O CORRETO
         preco_unitario = float(item.get("valor_unitario", 0) or 0)
@@ -169,9 +206,9 @@ def imprimir_cupom_pedido(self,data, tamanho):
     # =========================
     # TOTAIS
     # =========================
-    cupom.add(f"{'SUB-TOTAL:':<30} R$ {v_subtotal:>10.2f}")
-    cupom.add(f"{'TAXA ENTREGA:':<30} R$ {v_taxa:>10.2f}")
-    cupom.add(f"{'TOTAL:':<30} R$ {v_total:>10.2f}")
+    cupom.add(f"{'SUB-TOTAL:':<{espaco}} R$ {v_subtotal:>10.2f}")
+    cupom.add(f"{'TAXA ENTREGA:':<{espaco}} R$ {v_taxa:>10.2f}")
+    cupom.add(f"{'TOTAL:':<{espaco}} R$ {v_total:>10.2f}")
     cupom.sep()
 
     # =========================
@@ -184,8 +221,8 @@ def imprimir_cupom_pedido(self,data, tamanho):
         valor_pago = float(str(data.get('opcoes_pagamento', '0')).replace(',', '.') or 0)
         troco = max(0, valor_pago - v_total)
 
-        cupom.add(f"{'VALOR RECEBIDO:':<30} R$ {valor_pago:>10.2f}")
-        cupom.add(f"{'TROCO:':<30} R$ {troco:>10.2f}")
+        cupom.add(f"{'VALOR RECEBIDO:':<{espaco}} R$ {valor_pago:>10.2f}")
+        cupom.add(f"{'TROCO:':<{espaco}} R$ {troco:>10.2f}")
     else:
         cupom.add(f"BANDEIRA: {data.get('opcoes_pagamento','')}")
 

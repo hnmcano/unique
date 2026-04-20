@@ -24,9 +24,9 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(840, 640)
-        MainWindow.setMinimumSize(QSize(840, 640))
-        MainWindow.setMaximumSize(QSize(840, 640))
+        MainWindow.resize(985, 661)
+        MainWindow.setMinimumSize(QSize(838, 640))
+        MainWindow.setMaximumSize(QSize(16777215, 16777215))
         MainWindow.setStyleSheet(u"#centralwidget{\n"
 "	background-color: black;\n"
 "}\n"
@@ -161,9 +161,9 @@ class Ui_MainWindow(object):
         self.widget_6.setObjectName(u"widget_6")
         self.widget_6.setMaximumSize(QSize(16777215, 175))
         self.verticalLayout_5 = QVBoxLayout(self.widget_6)
-        self.verticalLayout_5.setSpacing(0)
+        self.verticalLayout_5.setSpacing(10)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
-        self.verticalLayout_5.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_5.setContentsMargins(9, 9, 9, 0)
         self.widget_8 = QWidget(self.widget_6)
         self.widget_8.setObjectName(u"widget_8")
         self.widget_8.setMaximumSize(QSize(16777215, 95))
@@ -196,8 +196,9 @@ class Ui_MainWindow(object):
         self.widget_9.setObjectName(u"widget_9")
         self.widget_9.setMaximumSize(QSize(16777215, 95))
         self.horizontalLayout_5 = QHBoxLayout(self.widget_9)
+        self.horizontalLayout_5.setSpacing(20)
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
-        self.horizontalLayout_5.setContentsMargins(9, -1, -1, -1)
+        self.horizontalLayout_5.setContentsMargins(9, -1, -1, 9)
         self.widget_17 = QWidget(self.widget_9)
         self.widget_17.setObjectName(u"widget_17")
         sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
@@ -212,7 +213,7 @@ class Ui_MainWindow(object):
         self.widget_23 = QWidget(self.widget_17)
         self.widget_23.setObjectName(u"widget_23")
         self.horizontalLayout_14 = QHBoxLayout(self.widget_23)
-        self.horizontalLayout_14.setSpacing(0)
+        self.horizontalLayout_14.setSpacing(10)
         self.horizontalLayout_14.setObjectName(u"horizontalLayout_14")
         self.horizontalLayout_14.setContentsMargins(0, 0, 0, -1)
         self.label_5 = QLabel(self.widget_23)
@@ -231,7 +232,7 @@ class Ui_MainWindow(object):
         self.widget_24 = QWidget(self.widget_17)
         self.widget_24.setObjectName(u"widget_24")
         self.horizontalLayout_13 = QHBoxLayout(self.widget_24)
-        self.horizontalLayout_13.setSpacing(0)
+        self.horizontalLayout_13.setSpacing(10)
         self.horizontalLayout_13.setObjectName(u"horizontalLayout_13")
         self.horizontalLayout_13.setContentsMargins(0, 0, 0, 0)
         self.label_7 = QLabel(self.widget_24)
@@ -258,13 +259,13 @@ class Ui_MainWindow(object):
         sizePolicy2.setHeightForWidth(self.widget_20.sizePolicy().hasHeightForWidth())
         self.widget_20.setSizePolicy(sizePolicy2)
         self.verticalLayout_12 = QVBoxLayout(self.widget_20)
-        self.verticalLayout_12.setSpacing(0)
+        self.verticalLayout_12.setSpacing(10)
         self.verticalLayout_12.setObjectName(u"verticalLayout_12")
         self.verticalLayout_12.setContentsMargins(0, 0, 0, 0)
         self.widget_22 = QWidget(self.widget_20)
         self.widget_22.setObjectName(u"widget_22")
         self.horizontalLayout_12 = QHBoxLayout(self.widget_22)
-        self.horizontalLayout_12.setSpacing(0)
+        self.horizontalLayout_12.setSpacing(10)
         self.horizontalLayout_12.setObjectName(u"horizontalLayout_12")
         self.horizontalLayout_12.setContentsMargins(0, 0, 0, 0)
         self.label_8 = QLabel(self.widget_22)
@@ -274,6 +275,11 @@ class Ui_MainWindow(object):
 
         self.RedeSocialLine = QLineEdit(self.widget_22)
         self.RedeSocialLine.setObjectName(u"RedeSocialLine")
+        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.RedeSocialLine.sizePolicy().hasHeightForWidth())
+        self.RedeSocialLine.setSizePolicy(sizePolicy3)
 
         self.horizontalLayout_12.addWidget(self.RedeSocialLine)
 
@@ -283,7 +289,7 @@ class Ui_MainWindow(object):
         self.widget_21 = QWidget(self.widget_20)
         self.widget_21.setObjectName(u"widget_21")
         self.horizontalLayout_11 = QHBoxLayout(self.widget_21)
-        self.horizontalLayout_11.setSpacing(0)
+        self.horizontalLayout_11.setSpacing(10)
         self.horizontalLayout_11.setObjectName(u"horizontalLayout_11")
         self.horizontalLayout_11.setContentsMargins(0, 0, 0, 0)
         self.label_9 = QLabel(self.widget_21)
@@ -420,9 +426,6 @@ class Ui_MainWindow(object):
 
         self.SubDominioLine = QLineEdit(self.widget_12)
         self.SubDominioLine.setObjectName(u"SubDominioLine")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
-        sizePolicy3.setHorizontalStretch(0)
-        sizePolicy3.setVerticalStretch(0)
         sizePolicy3.setHeightForWidth(self.SubDominioLine.sizePolicy().hasHeightForWidth())
         self.SubDominioLine.setSizePolicy(sizePolicy3)
         self.SubDominioLine.setMaximumSize(QSize(200, 16777215))
@@ -581,27 +584,74 @@ class Ui_MainWindow(object):
         self.horizontalLayout_15.setObjectName(u"horizontalLayout_15")
         self.widget_25 = QWidget(self.page_3)
         self.widget_25.setObjectName(u"widget_25")
-        self.widget_25.setMaximumSize(QSize(410, 575))
+        sizePolicy.setHeightForWidth(self.widget_25.sizePolicy().hasHeightForWidth())
+        self.widget_25.setSizePolicy(sizePolicy)
+        self.widget_25.setMaximumSize(QSize(16777215, 16777215))
         self.horizontalLayout_16 = QHBoxLayout(self.widget_25)
         self.horizontalLayout_16.setObjectName(u"horizontalLayout_16")
         self.frame_2 = QFrame(self.widget_25)
         self.frame_2.setObjectName(u"frame_2")
+        sizePolicy.setHeightForWidth(self.frame_2.sizePolicy().hasHeightForWidth())
+        self.frame_2.setSizePolicy(sizePolicy)
         self.frame_2.setFrameShape(QFrame.Shape.NoFrame)
         self.frame_2.setFrameShadow(QFrame.Shadow.Raised)
         self.verticalLayout_15 = QVBoxLayout(self.frame_2)
         self.verticalLayout_15.setObjectName(u"verticalLayout_15")
-        self.widget_34 = QWidget(self.frame_2)
+        self.widget_29 = QWidget(self.frame_2)
+        self.widget_29.setObjectName(u"widget_29")
+        sizePolicy.setHeightForWidth(self.widget_29.sizePolicy().hasHeightForWidth())
+        self.widget_29.setSizePolicy(sizePolicy)
+        self.widget_29.setMaximumSize(QSize(16777215, 16777215))
+        self.verticalLayout_18 = QVBoxLayout(self.widget_29)
+        self.verticalLayout_18.setSpacing(0)
+        self.verticalLayout_18.setObjectName(u"verticalLayout_18")
+        self.verticalLayout_18.setContentsMargins(0, 0, 0, 0)
+        self.widget_34 = QWidget(self.widget_29)
         self.widget_34.setObjectName(u"widget_34")
-
-        self.verticalLayout_15.addWidget(self.widget_34)
-
-        self.widget_33 = QWidget(self.frame_2)
+        sizePolicy.setHeightForWidth(self.widget_34.sizePolicy().hasHeightForWidth())
+        self.widget_34.setSizePolicy(sizePolicy)
+        self.verticalLayout_19 = QVBoxLayout(self.widget_34)
+        self.verticalLayout_19.setObjectName(u"verticalLayout_19")
+        self.widget_33 = QWidget(self.widget_34)
         self.widget_33.setObjectName(u"widget_33")
+        self.widget_33.setMaximumSize(QSize(16777215, 16777215))
 
-        self.verticalLayout_15.addWidget(self.widget_33)
+        self.verticalLayout_19.addWidget(self.widget_33)
+
+        self.widget_37 = QWidget(self.widget_34)
+        self.widget_37.setObjectName(u"widget_37")
+        self.widget_37.setMaximumSize(QSize(16777215, 70))
+        self.verticalLayout_20 = QVBoxLayout(self.widget_37)
+        self.verticalLayout_20.setSpacing(0)
+        self.verticalLayout_20.setObjectName(u"verticalLayout_20")
+        self.verticalLayout_20.setContentsMargins(0, 0, 0, 0)
+        self.btn_editar_taxas = QPushButton(self.widget_37)
+        self.btn_editar_taxas.setObjectName(u"btn_editar_taxas")
+        sizePolicy.setHeightForWidth(self.btn_editar_taxas.sizePolicy().hasHeightForWidth())
+        self.btn_editar_taxas.setSizePolicy(sizePolicy)
+
+        self.verticalLayout_20.addWidget(self.btn_editar_taxas)
+
+        self.btn_editar_localizacao = QPushButton(self.widget_37)
+        self.btn_editar_localizacao.setObjectName(u"btn_editar_localizacao")
+        sizePolicy.setHeightForWidth(self.btn_editar_localizacao.sizePolicy().hasHeightForWidth())
+        self.btn_editar_localizacao.setSizePolicy(sizePolicy)
+
+        self.verticalLayout_20.addWidget(self.btn_editar_localizacao)
+
+
+        self.verticalLayout_19.addWidget(self.widget_37)
+
+
+        self.verticalLayout_18.addWidget(self.widget_34)
+
+
+        self.verticalLayout_15.addWidget(self.widget_29)
 
         self.widget_32 = QWidget(self.frame_2)
         self.widget_32.setObjectName(u"widget_32")
+        sizePolicy.setHeightForWidth(self.widget_32.sizePolicy().hasHeightForWidth())
+        self.widget_32.setSizePolicy(sizePolicy)
         self.widget_32.setMinimumSize(QSize(0, 210))
         self.widget_32.setMaximumSize(QSize(16777215, 210))
         self.verticalLayout_16 = QVBoxLayout(self.widget_32)
@@ -625,8 +675,8 @@ class Ui_MainWindow(object):
 
         self.frame_3 = QFrame(self.widget_32)
         self.frame_3.setObjectName(u"frame_3")
-        sizePolicy3.setHeightForWidth(self.frame_3.sizePolicy().hasHeightForWidth())
-        self.frame_3.setSizePolicy(sizePolicy3)
+        sizePolicy.setHeightForWidth(self.frame_3.sizePolicy().hasHeightForWidth())
+        self.frame_3.setSizePolicy(sizePolicy)
         self.frame_3.setMinimumSize(QSize(0, 90))
         self.frame_3.setMaximumSize(QSize(16777215, 90))
         self.frame_3.setFrameShape(QFrame.Shape.StyledPanel)
@@ -693,7 +743,7 @@ class Ui_MainWindow(object):
 
         self.widget_26 = QWidget(self.page_3)
         self.widget_26.setObjectName(u"widget_26")
-        self.widget_26.setMaximumSize(QSize(410, 575))
+        self.widget_26.setMaximumSize(QSize(16777215, 16777215))
         self.verticalLayout_13 = QVBoxLayout(self.widget_26)
         self.verticalLayout_13.setSpacing(0)
         self.verticalLayout_13.setObjectName(u"verticalLayout_13")
@@ -731,9 +781,9 @@ class Ui_MainWindow(object):
 
         self.widget_28 = QWidget(self.widget_26)
         self.widget_28.setObjectName(u"widget_28")
-        sizePolicy2.setHeightForWidth(self.widget_28.sizePolicy().hasHeightForWidth())
-        self.widget_28.setSizePolicy(sizePolicy2)
-        self.widget_28.setMaximumSize(QSize(410, 440))
+        sizePolicy.setHeightForWidth(self.widget_28.sizePolicy().hasHeightForWidth())
+        self.widget_28.setSizePolicy(sizePolicy)
+        self.widget_28.setMaximumSize(QSize(16777215, 16777215))
         self.horizontalLayout_17 = QHBoxLayout(self.widget_28)
         self.horizontalLayout_17.setObjectName(u"horizontalLayout_17")
         self.tableWidget = QTableWidget(self.widget_28)
@@ -749,12 +799,6 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_13.addWidget(self.widget_28)
 
-        self.widget_29 = QWidget(self.widget_26)
-        self.widget_29.setObjectName(u"widget_29")
-        self.widget_29.setMaximumSize(QSize(16777215, 45))
-
-        self.verticalLayout_13.addWidget(self.widget_29)
-
 
         self.horizontalLayout_15.addWidget(self.widget_26)
 
@@ -767,7 +811,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget.setCurrentIndex(2)
+        self.stackedWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -811,6 +855,8 @@ class Ui_MainWindow(object):
         self.btn_green.setText("")
         self.btn_purple.setText("")
         self.btn_red.setText("")
+        self.btn_editar_taxas.setText(QCoreApplication.translate("MainWindow", u"EDITAR TAXAS", None))
+        self.btn_editar_localizacao.setText(QCoreApplication.translate("MainWindow", u"EDITAR COORDENADAS", None))
         self.label_10.setText(QCoreApplication.translate("MainWindow", u"Configura\u00e7\u00f5es de Canal - Pedidos", None))
         self.unique.setText("")
         self.label_18.setText(QCoreApplication.translate("MainWindow", u"Ao selecionar est\u00e1 op\u00e7\u00e3o os atendimento realizados pelo catalago a online, passam a ser redirecionados para o sistema UNIQUE", None))

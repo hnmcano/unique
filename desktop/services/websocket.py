@@ -97,7 +97,6 @@ class PedidoStore(QObject):
         print("O sinal esta chegando")
         for i, p in enumerate(self.pedidos):
             if p["id_pedido"] == pedido_atualizado["id_pedido"]:
-                print("Pedido atualizado:", pedido_atualizado)
                 self.pedidos[i] = pedido_atualizado
                 self.pedido_atualizado.emit(pedido_atualizado)
                 break
@@ -150,7 +149,6 @@ class ProdutosStore(QObject):
         self.produtos_atualizados.emit(self.produtos)
 
     def adicionar(self, produto):
-        print("Adicionando produto:", produto)  # Debug: Verifique o produto recebido
         self.produtos.append(produto)
         self.produto_adicionado.emit(self.produtos)
 

@@ -1,10 +1,12 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { useCarrinho } from "./CarrinhoContext";
+import { useEstabelecimento } from "./EstabelecimentoContext";
 
 const CheckoutContext = createContext();
 
 export function CheckoutProvider({ children }) {
     const { produtos, totalCarrinho } = useCarrinho();
+    const { estabelecimento } = useEstabelecimento();
     const [ formaPagamento, setFormaPagamento ] = useState(null);
     const [ opcoesDisponiveis, setOpcoesDisponiveis ] = useState(null)
 
@@ -39,7 +41,9 @@ export function CheckoutProvider({ children }) {
             estado: "",
             complemento: "",
             referencia: "",
-            taxa_entrega: 7.0,
+            taxa_entrega: 0,
+            distancia: 0,
+            faixa_km: ""
         }
     });
 
@@ -49,9 +53,7 @@ export function CheckoutProvider({ children }) {
         (acc, p) => acc + p.quantidade, 0
     );
 
-    const entregaTaxa = 7.0;
-
-    const valor_total = totalCarrinho + entregaTaxa
+    const valor_total_com_taxa = totalCarrinho + data.entrega.taxa_entrega
 
     useEffect(() => {
         setData(prevState => ({
@@ -61,9 +63,9 @@ export function CheckoutProvider({ children }) {
                 quantidade: p.quantidade,
                 valor_unitario: p.preco_venda,
             })),
-            valor_total: totalCarrinho  + entregaTaxa
+            valor_total: valor_total_com_taxa
         }));
-    }, [produtos, totalCarrinho, totalQuantidade]);
+    }, [produtos, totalCarrinho, totalQuantidade, data.entrega.taxa_entrega]);
 
     const SelecionarMetodo = (metodo) => {
 
@@ -74,7 +76,7 @@ export function CheckoutProvider({ children }) {
         setData(prevState => ({
             ...prevState,
             metodo_pagamento: metodo,
-            opcoes_pagamento: metodo === "pix" ? "14991231554" : "",
+            opcoes_pagamento: metodo === `${estabelecimento.telefone}` ? "" : "",
         }))
 
     };
@@ -90,7 +92,7 @@ export function CheckoutProvider({ children }) {
 
     
     return (
-        <CheckoutContext.Provider value={{ data, setData, produtos, totalQuantidade, totalCarrinho, entregaTaxa, SelecionarMetodo, opcoesDisponiveis, formaPagamento, valor_total, SelecionarBandeira }} >
+        <CheckoutContext.Provider value={{ data, setData, produtos, totalQuantidade, totalCarrinho, SelecionarMetodo, opcoesDisponiveis, formaPagamento, valor_total_com_taxa, SelecionarBandeira }} >
             {children}
         </CheckoutContext.Provider>
     )

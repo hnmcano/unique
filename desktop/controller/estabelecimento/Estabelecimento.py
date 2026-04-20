@@ -1,6 +1,8 @@
 from PySide6.QtWidgets import *
 from windows.form_establishment.form_estabelecimento_ui import Ui_MainWindow as estabelecimento
 from controller.estabelecimento.AdicionarHorarios import AddHorarios
+from controller.estabelecimento.TaxasEntregas import TaxasEntregas
+from controller.estabelecimento.CoordEstabelecimento import CoordEstabelecimento
 
 from core.app_context import app_context as APPContext
 from services.websocket import HorarioStore
@@ -8,13 +10,14 @@ from services.websocket import HorarioStore
 from PySide6.QtNetwork import *
 from PySide6.QtCore import *
 from PySide6.QtGui import *
+from PySide6.QtWebEngineWidgets import QWebEngineView
 
-import json
-import os
 from config.config import settings
 import base64
 from datetime import datetime
 from time import sleep
+import folium
+from io import BytesIO
 
 def indice_dia_semana(dia_semana):
     dias = {
@@ -111,44 +114,48 @@ class Estabelecimento(QMainWindow, estabelecimento):
         super().__init__(parent)
         self.setupUi(self)
 
+        self.coords_estabelecimento = None
+
+        self.timer = QTimer()
         self.grupo = QButtonGroup()
-        self.grupo.setExclusive(True)
+        self.map_view = QWebEngineView()
 
-        self.grupo.addButton(self.unique)
-        self.grupo.addButton(self.whatsapp)
+        self.map_layout = self.widget_33.layout()
 
-        response = carregar_dados(self)
-        self.atualizar_dados(response)
-        self.EnviaDados.clicked.connect(lambda: enviar_dados_estabelecimento(self))
-        self.layout_tabela()
+        if self.map_layout is None:
+            self.map_layout = QVBoxLayout(self.widget_33)
 
-        
         APPContext.horarios_store = HorarioStore()
         self.horarios_store = APPContext.horarios_store
+        self.horarios_store.horario_adicionado.connect(self.atualizar_tabela_horarios)
 
-        horarios = self.horarios_store.listar()
+        self.map_layout.addWidget(self.map_view)
+        self.grupo.setExclusive(True)
+        self.grupo.addButton(self.unique)
+        self.grupo.addButton(self.whatsapp)
+        self.response = carregar_dados(self)
+        self.atualizar_dados(self.response)
+        self.tabela = self.carregar_taxas()
+        self.EnviaDados.clicked.connect(lambda: enviar_dados_estabelecimento(self))
+        self.layout_tabela()
         
+        horarios = self.horarios_store.listar()
         if horarios is not None:
             response = APPContext.api_client.get("/estabelecimento/horarios")
             self.atualizar_tabela_horarios(response)
-
-        self.horarios_store.horario_adicionado.connect(self.atualizar_tabela_horarios)
-
+     
         self.btn_informacoes.clicked.connect(
             lambda: self.stackedWidget.setCurrentWidget(self.page)
         )
         self.btn_layout.clicked.connect(
             lambda: self.stackedWidget.setCurrentWidget(self.page_2)
         )
-
         self.btn_horarios_config.clicked.connect(
             lambda: self.stackedWidget.setCurrentWidget(self.page_3)
         )
-
         self.btn_adicionar.clicked.connect(
             self.adicionar_novo_horario
         )
-
         self.btn_orange.clicked.connect(
             lambda: self.atualizar_cor_designer(self.btn_orange)
         )
@@ -160,6 +167,12 @@ class Estabelecimento(QMainWindow, estabelecimento):
         )
         self.btn_red.clicked.connect(
             lambda: self.atualizar_cor_designer(self.btn_red)
+        )
+        self.btn_editar_taxas.clicked.connect(
+           lambda: self.preencher_tabela()
+        )
+        self.btn_editar_localizacao.clicked.connect(
+           lambda: self.atualizar_localizacao()
         )
 
     def atualizar_dados(self, response):
@@ -293,3 +306,84 @@ class Estabelecimento(QMainWindow, estabelecimento):
     def adicionar_novo_horario(self):
         self.add_horario_window = AddHorarios(parent=self)
         self.add_horario_window.show() 
+
+    def carregar_taxas(self):
+        """Carregar dados do backend"""
+        try:
+            # Simulando dados (substituir por chamadas reais)
+            self.fretes = APPContext.api_client.get("/estabelecimento/desktop/taxas-km")
+
+            # Buscar coordenadas do estabelecimento
+            self.coords_estabelecimento = APPContext.api_client.get("/estabelecimento/desktop/coordenadas-estabelecimento")
+            
+            # Desenhar mapa inicial
+            self.atualizar_mapa()
+
+            return self.fretes  
+            
+        except Exception as e:
+            QMessageBox.critical(self, "Erro", f"Erro ao carregar dados: {str(e)}")
+            return
+
+    def atualizar_mapa(self):
+        if not self.coords_estabelecimento or not self.fretes:
+            return
+        
+        cores = ['green', 'yellowgreen', 'orange', 'red']
+
+        mapa = folium.Map(
+            location=[self.coords_estabelecimento['lat'], self.coords_estabelecimento['lon']],
+            zoom_start=14,
+            tiles="CartoDB positron"
+        )
+        
+        folium.Marker(
+            location=[self.coords_estabelecimento['lat'], self.coords_estabelecimento['lon']],
+            popup=self.coords_estabelecimento['nome'],
+            icon=folium.Icon(color='blue', icon='home')
+        ).add_to(mapa)
+        
+        for idx, frete in enumerate(sorted(self.fretes, key=lambda x: x['km_maximo'], reverse=True)):
+            if not frete['ativo']:
+                continue
+            
+            raio = frete['km_maximo'] * 1000  # Converter KM para metros
+            cor = cores[idx % len(cores)]
+            
+            circle = folium.Circle(
+                location=[self.coords_estabelecimento['lat'], self.coords_estabelecimento['lon']],
+                radius=raio,
+                color=cor,
+                fill=True,
+                fillColor=cor,
+                fillOpacity=0.2,
+                weight=2
+            )
+
+            popup = folium.Popup(
+                f"""
+                <div style='text-align:center;'>
+                    <b>{frete['km_minimo']:.1f} - {frete['km_maximo']:.1f} km</b><br>
+                    R$ {frete['valor']:.2f}
+                </div>
+                """,
+                max_width=200
+            )
+
+            circle.add_child(popup)
+            circle.add_to(mapa)
+        
+        # Salvar mapa em HTML
+        data = BytesIO()
+        mapa.save(data, close_file=False)
+        
+        html = data.getvalue().decode()
+        self.map_view.setHtml(html)
+        
+    def preencher_tabela(self):
+        self.form_taxas = TaxasEntregas(parent=self, fretes=self.tabela)
+        self.form_taxas.show()
+
+    def atualizar_localizacao(self):
+        self.form_coordenadas = CoordEstabelecimento(parent=self)
+        self.form_coordenadas.show()

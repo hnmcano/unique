@@ -97,7 +97,6 @@ def download_and_update(url, parent=None):
         QMessageBox.critical(parent, "Erro no Download", 
             f"Falha ao baixar atualização:\n{str(e)}")
 
-
 #funcao para centralizar a janelas
 def center_window(self):
 
