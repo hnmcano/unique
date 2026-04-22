@@ -53,6 +53,8 @@ def get_or_create_cliente(cliente_data, db: Session, estabelecimento: dict) -> T
 @router.post("/react", status_code=status.HTTP_200_OK, response_model=PedidoResponse)
 async def criar_novo_pedido(novo_pedido_data: NovoPedidoSchema,db: Session = Depends(get_db), estabelecimento: EstabelecimentoModel = Depends(get_estabelecimento)):
 
+    print(novo_pedido_data)
+
     caixa = db.query(CaixaModel).filter(CaixaModel.status == "ABERTO", CaixaModel.estabelecimento_id == estabelecimento.id).first()
 
     status_estabelecimento = estabelecimento_esta_online(estabelecimento.id)
@@ -102,6 +104,7 @@ async def criar_novo_pedido(novo_pedido_data: NovoPedidoSchema,db: Session = Dep
         # 5. CRIAÇÃO DO ENDEREÇO HISTÓRICO (1:1)
         
         # Converte o Pydantic 'EntregaInput' para o modelo SQLAlchemy 'EnderecoPedido'
+        print(novo_pedido_data.entrega.model_dump(exclude_unset=True))
         db_endereco = EnderecoPedido(
             pedido_id=db_pedido.id_pedido,
             **novo_pedido_data.entrega.model_dump(exclude_unset=True),
@@ -116,7 +119,9 @@ async def criar_novo_pedido(novo_pedido_data: NovoPedidoSchema,db: Session = Dep
                 pedido_id=db_pedido.id_pedido,
                 produto_id=item_data.produto_id,
                 quantidade=item_data.quantidade,
+                tamanho=item_data.tamanho,
                 valor_unitario=item_data.valor_unitario,
+                valor_total=item_data.quantidade * item_data.valor_unitario,
                 estabelecimento_id=estabelecimento.id
             )
             db.add(db_item)     
@@ -324,6 +329,7 @@ async def delete_item_pedido(itemDeletar: DeletarItem , db: Session = Depends(ge
     produto = db.get(ProdutoModel, item.produto_id)
     produto.estoque += item.quantidade  
     item.valor_total += -(item.quantidade * item.valor_unitario)
+    pedido.valor_total += -(item.quantidade * item.valor_unitario)
 
     if produto.estoque > 0:
         produto.status_venda = "Ativo"
@@ -391,7 +397,8 @@ async def read_products(db: Session = Depends(get_db), user_current: dict = Depe
             "ficha_tecnica": p.ficha_tecnica,
             "status_venda": p.status_venda,
             "imagem_name": p.imagem_name,
-            "imagem": p.imagem
+            "imagem": p.imagem,
+            "tamanhos": p.tamanhos_object
         }
 
         produto["nome_categoria"] = nome_categoria
@@ -419,6 +426,7 @@ async def adicionar_produto(pedido_add: AdicionarProdutosPedido, db: Session = D
     item_existente = db.query(ItemPedido).filter(
         ItemPedido.pedido_id == pedido_add.pedido_id,
         ItemPedido.produto_id == pedido_add.produto_id,
+        ItemPedido.tamanho == pedido_add.tamanho,  # 🔥 ESSENCIAL
         ItemPedido.estabelecimento_id == user_current["estabelecimento_id"]
     ).with_for_update().first()
 
@@ -432,13 +440,21 @@ async def adicionar_produto(pedido_add: AdicionarProdutosPedido, db: Session = D
 
     if item_existente:
         item_existente.quantidade += pedido_add.quantidade
-        item_existente.valor_total = item_existente.quantidade * pedido_add.valor_unitario
-        pedido.valor_total += pedido_add.quantidade * item_existente.valor_unitario
-        produto_existente.estoque -= 1
 
-        pedido_response = PedidoResponse.model_validate(pedido)
+        # 🔥 ATUALIZA O PREÇO CORRETO
+        item_existente.valor_unitario = float(pedido_add.valor_unitario)
+
+        item_existente.valor_total = (
+            item_existente.quantidade * item_existente.valor_unitario
+        )
+
+        pedido.valor_total = sum(i.valor_total for i in pedido.itens)
+
+        produto_existente.estoque -= pedido_add.quantidade
 
         db.commit()
+
+        pedido_response = PedidoResponse.model_validate(pedido)
 
         await notificar_todos(estabelecimento_id,{
             "tipo": "pedido_em_delivery",
@@ -452,9 +468,10 @@ async def adicionar_produto(pedido_add: AdicionarProdutosPedido, db: Session = D
     item = ItemPedido(
         produto_id=pedido_add.produto_id,
         quantidade=pedido_add.quantidade,
-        valor_unitario=pedido_add.valor_unitario,
-        valor_total=pedido_add.quantidade * pedido_add.valor_unitario,
-        estabelecimento_id=user_current["estabelecimento_id"]
+        valor_unitario=float(pedido_add.valor_unitario),
+        valor_total=pedido_add.quantidade * float(pedido_add.valor_unitario),
+        estabelecimento_id=user_current["estabelecimento_id"],
+        tamanho=pedido_add.tamanho,
     )
     
     pedido.itens.append(item)

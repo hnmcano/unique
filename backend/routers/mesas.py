@@ -481,7 +481,8 @@ async def read_products(db: Session = Depends(get_db), user_current: dict = Depe
             "ficha_tecnica": p.ficha_tecnica,
             "status_venda": p.status_venda,
             "imagem_name": p.imagem_name,
-            "imagem": p.imagem
+            "imagem": p.imagem,
+            "tamanhos": p.tamanhos_object
         }
 
         produto["nome_categoria"] = nome_categoria

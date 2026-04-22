@@ -15,6 +15,22 @@ class EstabelecimentoBase(BaseModel):
         "from_attributes": True
     }
 
+class TaxasEntregas(BaseModel):
+    km_minimo: float
+    km_maximo: float
+    valor: float
+    ativo: bool
+
+class CoordenadasEstabelecimento(BaseModel):
+    lat: float
+    lon: float
+    nome: str
+
+class CoordenadasEstabelecimentoResponse(BaseModel):
+    lat: float | None
+    lon: float | None
+    nome: str | None
+
 class EstabelecimentoSchemaAtualizar(BaseModel):
     id: UUID
     nome: str = Field(..., min_length= 3, max_length=50)
@@ -39,6 +55,15 @@ class EstabelecimentoSchemaAtualizar(BaseModel):
     model_config = {
         "from_attributes": True
     }
+
+class TaxasEntregasResponse(BaseModel):
+    km_minimo: float
+    km_maximo: float
+    valor: float
+    ativo: bool
+
+
+
 
 class EstabelecimentoResponse(BaseModel):
     id: UUID
@@ -92,3 +117,5 @@ class DadosGeraisResponse(BaseModel):
     model_config = {
         "from_attributes": True
     }
+
+

@@ -35,6 +35,7 @@ class AdicionarItensMesa(BaseModel):
     produto_id: UUID
     quantidade: int
     valor_unitario: float
+    tamanho: str
 
     model_config = {
         "from_attributes": True

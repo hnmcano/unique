@@ -50,6 +50,8 @@ class EnderecoPedido(Base):
     referencia = Column(String(200), nullable=True)
 
     taxa_entrega = Column(Numeric(10, 2), nullable=False)
+    distancia = Column(Numeric(10, 2), nullable=True)
+    faixa_km = Column(String(50), nullable=True)
 
     pedido = relationship("Pedido", back_populates="endereco_entrega")
 
@@ -63,6 +65,7 @@ class ItemPedido(Base):
     estabelecimento_id = Column(UUID(as_uuid=True), ForeignKey('estabelecimentos.id'), nullable=False, index=True)
     pedido_id = Column(UUID(as_uuid=True), ForeignKey('pedidos.id_pedido'), nullable=False, index=True)
     produto_id = Column(UUID(as_uuid=True), ForeignKey('produtos.id_produto'), nullable=False, index=True)
+    tamanho = Column(String(4), nullable=True)
     quantidade = Column(Integer, nullable=False)
     valor_unitario = Column(Float, nullable=False)
     valor_total = Column(Float, nullable=True)

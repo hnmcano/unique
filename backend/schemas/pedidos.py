@@ -7,7 +7,8 @@ from uuid import UUID
 
 class ItemPedidoInput(BaseModel):
     produto_id: UUID
-    quantidade: int 
+    quantidade: int
+    tamanho: str | None
     valor_unitario: float 
 
     model_config = {
@@ -34,6 +35,8 @@ class EntregaInput(BaseModel):
     complemento: str | None
     referencia: str | None
     taxa_entrega: float
+    distancia: float
+    faixa_km: str
 
     model_config = {
         "from_attributes": True
@@ -63,10 +66,11 @@ class AtualizarStatus(BaseModel):
     status_novo: str
     
 class AdicionarProdutosPedido(BaseModel):
-    pedido_id: UUID
-    produto_id: UUID
+    pedido_id: str
+    produto_id: str
     quantidade: int
     valor_unitario: float
+    tamanho: Optional[str] = None
 
     model_config = {
         "from_attributes": True
@@ -97,6 +101,7 @@ class ItemPedidoResponse(BaseModel):
     id_itens_pedido: UUID
     produto_id: UUID
     quantidade: int
+    tamanho: str | None
     # O preço histórico é crucial e deve ser retornado com precisão
     valor_unitario: Decimal = Field(..., decimal_places=2) 
     observacoes: Optional[str] = None

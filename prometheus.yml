@@ -1,0 +1,36 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: 'pdv-monitor'
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+
+rule_files: []
+
+scrape_configs:
+  # Monitora o próprio Prometheus
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Monitora sua API FastAPI
+  - job_name: 'fastapi-pdv'
+    static_configs:
+      - targets: ['backend:8000']
+        labels:
+          service: 'pdv-api'
+          environment: 'production'
+          version: '1.0.0'
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+    scrape_timeout: 10s
+    scheme: http
+    
+  # Se quiser monitorar o PostgreSQL também (opcional)
+  # - job_name: 'postgres'
+  #   static_configs:
+  #     - targets: ['postgres-exporter:9187']

@@ -7,6 +7,9 @@ services:
       - "8000:8000"
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/deliverydb
+            - APP_NAME=pdv-system
+      - PROMETHEUS_PREFIX=fastapi
+      - PROMETHEUS_ENABLED=true
     depends_on:
       - db
 

@@ -3,7 +3,7 @@ from sqlalchemy.dialects.postgresql import UUID
 
 from sqlalchemy.sql import func
 from sqlalchemy.orm import Session, relationship
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, text, Time, Date, ForeignKey
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, text, Time, Date, ForeignKey, Float
 from database.connection import Base
 
 class Estabelecimento(Base):
@@ -61,3 +61,22 @@ class HorariosExcecao(Base):
     hora_abertura = Column(Time, nullable=True)
     hora_fechamento = Column(Time, nullable=True)
     fechado = Column(Boolean, default=False)
+
+class EntregasTaxas(Base):
+    __tablename__ = "taxas_de_entregas"
+
+    id_frete_taxa = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, server_default=text("gen_random_uuid()"), index=True)
+    estabelecimento_id = Column(UUID(as_uuid=True), ForeignKey('estabelecimentos.id'), nullable=False, index=True)
+    km_minimo = Column(Float, nullable=False)
+    km_maximo = Column(Float, nullable=False)
+    valor = Column(Float, nullable=False)
+    ativo = Column(Boolean, default=True)
+
+class LocalizacaoEstab(Base):
+    __tablename__ = "coordenadas"
+    
+    id_coordenadas = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, server_default=text("gen_random_uuid()"), index=True)
+    estabelecimento_id = Column(UUID(as_uuid=True), ForeignKey('estabelecimentos.id'), nullable=False, index=True)
+    lat = Column(Float, nullable=False)
+    lon = Column(Float, nullable=False)
+    nome = Column(String(50), nullable=False)
