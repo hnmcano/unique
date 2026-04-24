@@ -146,19 +146,46 @@ function FormasPagPedido() {
             console.log(error);
             setIsLoading(false);
             setError(error);
-            setRespostaServidor(error?.response?.data?.detail || "Erro ao enviar pedido");
+            setRespostaServidor(error?.response?.data?.detail);
         }
     };
 
     if (respostaServidor) {
+        console.log(respostaServidor);
         return (
+            <>
             <div className="resposta-servidor-container">
-                <MdOutlineCancel className="resposta-servidor-icon" />
-                <p>{respostaServidor}</p>
-                <Link to="/">
-                    <ButtonBack />
-                </Link>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", margin: "20px", gap: "20px"}}>
+                    <MdOutlineCancel className="resposta-servidor-icon" />
+                    <p style={{
+                        fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
+                        fontSize: '1rem',
+                        backgroundColor: '#FFEBEE',
+                        padding: '10px',
+                        borderRadius: '8px',
+                        color: '#B71C1C',
+                        borderLeft: '4px solid #B71C1C'
+                    }}>
+                        {respostaServidor}
+                    </p>
+                </div>
+                <div style={
+                    {
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        gap: "20px"
+                    }
+                }>
+                    <p style={{margin: "10px", color: "red", fontSize: "1rem", textAlign: "center"}}>Para mais informações, por favor entre em contato conosco pelo WhatsApp.</p>
+                    <span onClick={() => window.open("https://wa.me/" + estabelecimento?.telefone)} className="contact-link">📞 {estabelecimento?.telefone}</span>
+                    
+                    <Link to="/">
+                        <ButtonBack />
+                    </Link>
+                </div>
             </div>
+            </>
         );
     }
     

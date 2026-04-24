@@ -20,6 +20,7 @@
         <file>desconectado.png</file>
         <file>icone.ico</file>
         <file>impressora.png</file>
+        <file>ifood-logo.png</file>
     </qresource>
     <qresource prefix="/Sound">
         <file>Sound/notificacao.wav</file>

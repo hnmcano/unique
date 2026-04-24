@@ -251,10 +251,10 @@ class Ui_MainWindow(object):
         self.widget_9.setStyleSheet(u"")
         self.horizontalLayout_2 = QHBoxLayout(self.widget_9)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.pushButton_2 = QPushButton(self.widget_9)
-        self.pushButton_2.setObjectName(u"pushButton_2")
+        self.finalizar_pedido = QPushButton(self.widget_9)
+        self.finalizar_pedido.setObjectName(u"finalizar_pedido")
 
-        self.horizontalLayout_2.addWidget(self.pushButton_2)
+        self.horizontalLayout_2.addWidget(self.finalizar_pedido)
 
         self.pushButton_3 = QPushButton(self.widget_9)
         self.pushButton_3.setObjectName(u"pushButton_3")
@@ -287,7 +287,7 @@ class Ui_MainWindow(object):
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"TOTAL MESA", None))
         self.valor_total_mesa.setText("")
         self.btn_excluir.setText(QCoreApplication.translate("MainWindow", u"EXCLUIR", None))
-        self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"FINALIZAR", None))
+        self.finalizar_pedido.setText(QCoreApplication.translate("MainWindow", u"FINALIZAR", None))
         self.pushButton_3.setText(QCoreApplication.translate("MainWindow", u"IMPRIMIR", None))
     # retranslateUi
 

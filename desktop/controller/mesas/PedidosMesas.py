@@ -1,7 +1,8 @@
 
 from PySide6.QtWidgets import (QHBoxLayout,QApplication, QPushButton, QMainWindow, QMessageBox, QTableWidgetItem, QWidget, QHeaderView, QTableWidget, QAbstractItemView, QFileDialog, QStyle)
 from windows.form_orders.pedido_mesa_ui import Ui_MainWindow as pedido_mesa
-from .AddProdutoMesas import AdicionarProdutoMesa
+from .AddProdutosMesas import AdicionarProdutoMesa
+from .FinalizarMesa import FinalizarMesa
 from PySide6.QtNetwork import ( QNetworkAccessManager)
 from PySide6.QtCore import Signal, Qt
 from datetime import datetime
@@ -44,6 +45,10 @@ def abrir_produto(self, data=None):
     self.produtos = AdicionarProdutoMesa(parent=self, data=data)
     self.produtos.show()    
 
+def finalizar_pedido_form(self, data=None):
+    self.finalizar = FinalizarMesa(parent=self, data=data)
+    self.finalizar.show()
+
 class DadosMesa(QMainWindow, pedido_mesa):
     mesa_excluida = Signal(dict)
     mensagem_recebida = Signal(dict)
@@ -69,6 +74,7 @@ class DadosMesa(QMainWindow, pedido_mesa):
         # Ao clicar no botão cancelar, Aciona a função de confirmação de exclusão localizada em scripts/aux_func.py
         self.btn_excluir.clicked.connect(lambda: exibir_confirmacao_exclusao(self, data))
         self.adicionar_produto.clicked.connect(lambda: abrir_produto(self, data))
+        self.finalizar_pedido.clicked.connect(lambda: finalizar_pedido_form(self, data))
 
     def setup_table(self):
         columns = ["NOME", "QUANTIDADE", "VALOR", "EDITAR", "EXCLUIR"]

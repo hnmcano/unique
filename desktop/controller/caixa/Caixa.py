@@ -21,7 +21,7 @@ class Caixa(QMainWindow, caixa):
         
 
     def layout_tabela(self):
-        columns = [ "Abertura Caixa", "Forma de Pagamento", "Bandeira", "Total"]
+        columns = [ "Forma de Pagamento", "Bandeira", "Total"]
 
         quantidade_columns = len(columns)
         self.tableCaixa.setColumnCount(quantidade_columns)
@@ -39,22 +39,22 @@ class Caixa(QMainWindow, caixa):
         self.tableCaixa.setRowCount(len(dados))
 
         for index, item in enumerate(dados):
-            dataDeAbertura = (datetime.fromisoformat(item["data_abertura"]) - timedelta(hours=3)).strftime("%d/%m/%Y")
-            self.data_abertura =QTableWidgetItem(dataDeAbertura)
-            self.data_abertura.setTextAlignment(Qt.AlignCenter)
-            self.tableCaixa.setItem(index, 0, self.data_abertura)
+            # dataDeAbertura = (datetime.fromisoformat(item["data_abertura"]) - timedelta(hours=3)).strftime("%d/%m/%Y")
+            # self.data_abertura =QTableWidgetItem(dataDeAbertura)
+            # self.data_abertura.setTextAlignment(Qt.AlignCenter)
+            # self.tableCaixa.setItem(index, 0, self.data_abertura)
 
             self.forma_pagamento = QTableWidgetItem(item["forma_pagamento"])
             self.forma_pagamento.setTextAlignment(Qt.AlignCenter)
-            self.tableCaixa.setItem(index, 1, self.forma_pagamento)
+            self.tableCaixa.setItem(index, 0, self.forma_pagamento)
 
             self.bandeira = QTableWidgetItem(item["bandeira"])
             self.bandeira.setTextAlignment(Qt.AlignCenter)
-            self.tableCaixa.setItem(index, 2, self.bandeira)
+            self.tableCaixa.setItem(index, 1, self.bandeira)
 
             self.valor_total = QTableWidgetItem(str(f"R$ {item["total"]:.2f}"))
             self.valor_total.setTextAlignment(Qt.AlignCenter)
-            self.tableCaixa.setItem(index, 3, self.valor_total)
+            self.tableCaixa.setItem(index, 2, self.valor_total)
 
     def iniciar_caixa(self):
         valor_caixa = float(self.ValorCaixa.text().replace(",", "."))
