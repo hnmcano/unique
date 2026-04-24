@@ -13,3 +13,4 @@ class Impressoras(Base):
     data_adicao = Column(DateTime(timezone=True), server_default=func.now())
     impressora = Column(String(100))
     padrao = Column(Boolean, default=False)
+    tamanho = Column(String(100))

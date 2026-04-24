@@ -1,5 +1,5 @@
 {
-  "version": "1.0.1",
+  "version": "1.0.3",
   "url": "https://api.uniqsystems.com.br/update/",
-  "notes": "Correções em produto, criação de dias e tamanhos"
+  "notes": "Incluindo solução de entregas e taxa, além do mapeamento por raio"
 }

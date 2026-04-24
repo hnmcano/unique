@@ -11,46 +11,76 @@ from uuid import UUID
 router = APIRouter()
 
 @router.post("/default", status_code=status.HTTP_200_OK, response_model=ImpressoraResponse)
-def definindo_impressora_padrao(data: ImpressoraInput,db: Session= Depends(get_db), user_current: dict = Depends(get_current_user)):
-    estabelecimento = db.query(EstabelecimentoModel).filter(EstabelecimentoModel.id == user_current["estabelecimento_id"]).first()
+def definindo_impressora_padrao(data: ImpressoraInput, db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
+    """
+    Define uma impressora como padrão. 
+    Remove a flag padrão de qualquer outra impressora do estabelecimento.
+    """
+    estabelecimento = db.query(EstabelecimentoModel).filter(
+        EstabelecimentoModel.id == user_current["estabelecimento_id"]
+    ).first()
 
     if not estabelecimento:
-        raise HTTPException(status=404, detail="Estabelecimento não localizado na base!")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Estabelecimento não localizado na base!")
 
-    data = ImpressoraModel(
+    # Desativa a impressora padrão anterior (se existir)
+    impressora_anterior = db.query(ImpressoraModel).filter(
+        ImpressoraModel.estabelecimento_id == user_current["estabelecimento_id"],
+        ImpressoraModel.padrao == True
+    ).first()
+
+    if impressora_anterior:
+        impressora_anterior.padrao = False
+
+    # Cria a nova impressora como padrão
+    nova_impressora = ImpressoraModel(
         estabelecimento_id=estabelecimento.id,
         impressora=data.impressora,
-        padrao=data.padrao
+        padrao=True,  # Sempre True nesta rota
+        tamanho=data.tamanho
     )
 
-    db.add(data)
+    db.add(nova_impressora)
     db.commit()
-    db.flush()
+    db.refresh(nova_impressora)
 
-    default = db.query(ImpressoraModel).filter(ImpressoraModel.estabelecimento_id == user_current["estabelecimento_id"], ImpressoraModel.padrao == True).first()
+    return ImpressoraResponse.model_validate(nova_impressora)
 
-    default_serializado = ImpressoraResponse.modal_validate(default)
-
-    return default_serializado
 
 @router.get("/default/disponivel", response_model=ImpressoraResponse)
 def extrair_impressora_padrao(db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
-    default = db.query(ImpressoraModel).filter(ImpressoraModel.estabelecimento_id == user_current["estabelecimento_id"], ImpressoraModel.padrao == True).first()
+    """
+    Retorna a impressora padrão do estabelecimento.
+    """
+    default = db.query(ImpressoraModel).filter(
+        ImpressoraModel.estabelecimento_id == user_current["estabelecimento_id"],
+        ImpressoraModel.padrao == True
+    ).first()
 
     if not default:
-        raise HTTPException(status=404, detail="Impressora padrão não definida, por favor defina em configuracoes!")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Impressora padrão não definida, por favor defina em configurações!"
+        )
 
-    default_serializado = ImpressoraResponse.model_validate(default)
+    return ImpressoraResponse.model_validate(default)
 
-    return default_serializado
 
-@router.delete("/default/deletar/{impressora_id}", status_code=status.HTTP_200_OK)
+@router.delete("/default/deletar/{impressora_id}", status_code=status.HTTP_204_NO_CONTENT)
 def deletar_impressora(impressora_id: UUID, db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
-    default = db.query(ImpressoraModel).filter(ImpressoraModel.estabelecimento_id == user_current["estabelecimento_id"], ImpressoraModel.impressora_id == impressora_id).first()
+    """
+    Deleta uma impressora do estabelecimento.
+    """
+    impressora = db.query(ImpressoraModel).filter(
+        ImpressoraModel.estabelecimento_id == user_current["estabelecimento_id"],
+        ImpressoraModel.impressora_id == impressora_id
+    ).first()
 
-    if not default:
-        raise HTTPExeception(status=404, detail="Impressora padrão não definida, por favor defina em configuracoes!")
+    if not impressora:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Impressora não encontrada!"
+        )
 
-    db.delete(default)
+    db.delete(impressora)
     db.commit()
-    db.flush()

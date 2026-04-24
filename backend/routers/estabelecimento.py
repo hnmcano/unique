@@ -1,4 +1,5 @@
 from models.estabelecimento import Estabelecimento as EstabelecimentoModel
+from models.estabelecimento import EntregasTaxas, LocalizacaoEstab
 from schemas.estabelecimento import DadosGeraisResponse
 from models.estabelecimento import HorariosFuncionamento
 from models.caixa import Caixa as CaixaModel
@@ -21,9 +22,13 @@ from fastapi import HTTPException, Header
 from schemas.estabelecimento import EstabelecimentoBase as Estabelecimentoschema
 from schemas.estabelecimento import EstabelecimentoSchemaAtualizar as EstabelecimentoSchemaAtualizar
 from schemas.estabelecimento import AtualizacaoHorarios, HorariosFuncionamentoResponse
+from schemas.estabelecimento import TaxasEntregasResponse, CoordenadasEstabelecimentoResponse
+from schemas.estabelecimento import CoordenadasEstabelecimento
 from schemas.estabelecimento import EstabelecimentoResponse
+from schemas.estabelecimento import TaxasEntregas 
 from auth.security import autenticar_usuario, gerar_hash
 from service.websocketservice import estabelecimento_esta_online
+from utils.metrics_decorator import track_metrics
 
 from uuid import UUID
 
@@ -55,10 +60,9 @@ def dentro_do_horario(horarios):
     return False
 
 @router.get("/carregar-dados")
-async def carregar_dados(
-    db: Session = Depends(get_db),
-    x_tenant_estabelecimento: EstabelecimentoModel = Depends(get_estabelecimento)
-):
+@track_metrics("carregar-dados")
+async def carregar_dados(db: Session = Depends(get_db),
+    x_tenant_estabelecimento: EstabelecimentoModel = Depends(get_estabelecimento)):
 
     online_ws = estabelecimento_esta_online(x_tenant_estabelecimento.id)
 
@@ -93,6 +97,8 @@ async def carregar_dados(
     }
 
     return estabelecimento
+
+
 @router.put("/atualizar-infos", response_model=EstabelecimentoResponse)
 async def atualizar_estabelecimento(estabelecimento: EstabelecimentoSchemaAtualizar, db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
     db_estabelecimento = db.query(EstabelecimentoModel).filter(EstabelecimentoModel.id == user_current["estabelecimento_id"]).first()
@@ -126,7 +132,7 @@ async def atualizar_estabelecimento(estabelecimento: EstabelecimentoSchemaAtuali
     return estabelecimento_serializado
 
 @router.get("/carregar-infos", response_model=EstabelecimentoResponse)
-async def get_estabelecimento( db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
+async def get_estabelecimento_( db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
     estabelecimento = db.query(EstabelecimentoModel).filter(EstabelecimentoModel.id == user_current["estabelecimento_id"]).first()
     return estabelecimento
 
@@ -137,7 +143,7 @@ async def info_data_estabelecimento(dados_estabelecimento: Estabelecimentoschema
             nome_fantasia=dados_estabelecimento.nome_fantasia,
             documento=dados_estabelecimento.documento,
             telefone=dados_estabelecimento.telefone,
-            email=dados_estabelecimento.email
+            email=dados_estabelecimento.email,
     )
 
     db.add(bd_estabelecimento)
@@ -212,7 +218,6 @@ async def gerar_horarios(db: Session = Depends(get_db), user_current: dict = Dep
 
     return horarios
 
-
 @router.get("/dados-gerais", response_model=DadosGeraisResponse)
 async def dados_gerais(db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
     db_estabelecimento = db.query(EstabelecimentoModel).filter(EstabelecimentoModel.id == user_current["estabelecimento_id"]).first()
@@ -224,3 +229,133 @@ async def dados_gerais(db: Session = Depends(get_db), user_current: dict = Depen
     })
 
     return dados
+
+@router.get("/taxas-km")
+async def taxas_entregas__(
+    db: Session = Depends(get_db), 
+    estabelecimento: EstabelecimentoModel = Depends(get_estabelecimento)
+):
+    
+    db_fretes = db.query(EntregasTaxas).filter(EntregasTaxas.estabelecimento_id == estabelecimento.id).all()
+
+    fretes = []
+    
+    for f in db_fretes:
+        fretes_ = TaxasEntregasResponse.model_validate({
+            "km_minimo":f.km_minimo,
+            "km_maximo":f.km_maximo,
+            "valor":f.valor,
+            "ativo":f.ativo
+        })
+
+        fretes.append(fretes_)
+
+    return fretes
+
+@router.put("/desktop/taxas-km")
+async def taxas_entregas(fretes: List[TaxasEntregas], db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
+
+    db_fretes = db.query(EntregasTaxas).filter(EntregasTaxas.estabelecimento_id == user_current["estabelecimento_id"]).all()
+
+    print(fretes)
+
+    if db_fretes:
+        for frete in db_fretes:
+            db.delete(frete)
+        db.commit()
+
+    for f in fretes:
+        db_fretes = EntregasTaxas(
+            estabelecimento_id=user_current["estabelecimento_id"],
+            km_minimo=f.km_minimo,
+            km_maximo=f.km_maximo,
+            valor=f.valor,
+            ativo=f.ativo
+        )
+
+        db.add(db_fretes)
+    
+    db.commit()
+
+@router.get("/desktop/taxas-km", response_model=List[TaxasEntregasResponse])
+async def taxas_entregas_(db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
+
+    db_fretes = db.query(EntregasTaxas).filter(EntregasTaxas.estabelecimento_id == user_current["estabelecimento_id"]).all()
+
+    fretes = []
+    
+    for f in db_fretes:
+        fretes_ = TaxasEntregasResponse.model_validate({
+            "km_minimo":f.km_minimo,
+            "km_maximo":f.km_maximo,
+            "valor":f.valor,
+            "ativo":f.ativo
+        })
+
+        fretes.append(fretes_)
+
+    return fretes
+
+@router.put("/coordenadas-estabelecimento")
+async def coordenadas(coord: CoordenadasEstabelecimento, db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
+    
+    db_coordernadas = db.query(LocalizacaoEstab).filter(LocalizacaoEstab.estabelecimento_id == user_current["estabelecimento_id"]).first()
+    if db_coordernadas:
+        
+        db.delete(db_coordernadas)
+        db.commit()
+
+    db_coordernadas = LocalizacaoEstab(
+        estabelecimento_id=user_current["estabelecimento_id"],
+        lat=coord.lat,
+        lon=coord.lon,
+        nome=coord.nome
+    )
+
+    db.add(db_coordernadas)
+    db.commit()
+
+@router.get("/desktop/coordenadas-estabelecimento", response_model=CoordenadasEstabelecimentoResponse)
+async def coordenadas_(db: Session = Depends(get_db), user_current: dict = Depends(get_current_user)):
+
+    db_coord = db.query(LocalizacaoEstab).filter(LocalizacaoEstab.estabelecimento_id == user_current["estabelecimento_id"]).first()
+
+    if not db_coord:
+        coord = {
+            "lat":0,
+            "lon":0,
+            "nome":"undefined"
+        }
+
+        return coord
+
+    coord = CoordenadasEstabelecimentoResponse.model_validate({
+        "lat":db_coord.lat,
+        "lon":db_coord.lon,
+        "nome":db_coord.nome,
+    })
+
+    return coord
+
+@router.get("/react/coordenadas-estabelecimento", response_model=CoordenadasEstabelecimentoResponse)
+async def coordenadas__(db: Session = Depends(get_db), estabelecimento: EstabelecimentoModel = Depends(get_estabelecimento)):
+
+    db_coord = db.query(LocalizacaoEstab).filter(LocalizacaoEstab.estabelecimento_id == estabelecimento.id).first()
+
+    if not db_coord:
+        coord = {
+            "lat":0,
+            "lon":0,
+            "nome":"undefined"
+        }
+
+        return coord
+
+
+    coord = CoordenadasEstabelecimento.model_validate({
+        "lat":db_coord.lat,
+        "lon":db_coord.lon,
+        "nome":db_coord.nome,
+    })
+
+    return coord

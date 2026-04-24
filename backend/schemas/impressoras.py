@@ -8,6 +8,7 @@ from uuid import UUID
 class ImpressoraInput(BaseModel):
     impressora: str
     padrao: bool
+    tamanho: str
 
     model_config = {
         "from_attributes": True
@@ -19,6 +20,7 @@ class ImpressoraResponse(BaseModel):
     data_adicao: datetime | None = None
     impressora: str
     padrao: bool
+    tamanho: str | None = None
 
     model_config = {
         "from_attributes": True
